@@ -3537,8 +3537,8 @@
     storageBucket:"firstphone-munkaasztal.firebasestorage.app", messagingSenderId:"992346625761", appId:"1:992346625761:web:fad4af05009a20574fc9a0" };
   /* ezek a bolt közös adatai — a többi (téma, animáció, utolsó oldal, nyomtatási mód) gépenként marad */
   const SYNC = ["firstphone_beosztas_tervezo_v2","firstphone_leltar_last","firstphone_leltar_prog","firstphone_leltar_by","firstphone_leltar_sig",
-    "firstphone_kassza","firstphone_csomag","firstphone_csomag_logo","firstphone_selejt","firstphone_termekek","firstphone_admin_msg"];
-  const MSG_KEY = "firstphone_admin_msg";
+    "firstphone_kassza","firstphone_csomag","firstphone_csomag_logo","firstphone_selejt","firstphone_termekek","firstphone_admin_msg","firstphone_admin_news"];
+  const MSG_KEY = "firstphone_admin_msg", NEWS_KEY = "firstphone_admin_news";
   /* belépés boltnévvel: „kaposvar” → kaposvar@firstphone.hu, „admin” → admin@admin.com; teljes e-mail cím is megy */
   const FP_DOMAIN = "firstphone.hu";
   const toEmail = v=>{ v = String(v || "").trim(); if(v.includes("@")) return v.toLowerCase(); const n = v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9._-]/g, ""); if(!n) return ""; if(n === "admin") return "admin@admin.com";
@@ -3604,8 +3604,8 @@
     const snap = await col().get();
     const remote = {};
     for(const doc of snap.docs){ if(doc.id.includes("__")) continue; remote[doc.id] = doc.data(); }
-    const hasRemote = SYNC.some(k=> k !== MSG_KEY && remote[k] && !remote[k].del);
-    const localKeys = SYNC.filter(k=> k !== MSG_KEY && lsGet(k) !== null);
+    const hasRemote = SYNC.some(k=> k !== MSG_KEY && k !== NEWS_KEY && remote[k] && !remote[k].del);
+    const localKeys = SYNC.filter(k=> k !== MSG_KEY && k !== NEWS_KEY && lsGet(k) !== null);
     let changed = false;
     if(!hasRemote){
       if(S.admin){ localKeys.forEach(lsDel); return localKeys.length > 0; }
@@ -4081,11 +4081,244 @@
       }
     };
   }
+  /* ===== Újdonságok: havi kiadások (diák). Az admin kapcsolja be/ki, a boltoknál egy feltűnő gombbal nyílik. ===== */
+  const NEWS = [
+    { id:"2026-10", title:"2026. október", sub:"Első kiadás — minden, ami a Munkaasztalban van", slides:[
+      { ic:"👋", c:"#d9ad46", t:"Üdv a FirstPhone Munkaasztalban!", x:"Egy helyen minden, ami a bolti munkához kell — a weboldalon, telefonon és gépen is ugyanaz.", b:["Belépés a <b>bolt nevével</b> és a jelszóval","Minden adat a <b>felhőbe</b> mentődik — a bolt minden gépén ugyanaz látszik","Lapozz végig: ← → nyilak, vagy húzd el az ujjad"] },
+      { ic:"📅", c:"#7b8cff", t:"Beosztás", x:"A havi munkarend pár kattintással, PDF-ben és jelenléti ívvel.", b:["Kattints egy napra, és válaszd ki, ki dolgozik és mettől meddig","Dolgozónként látszik, hány napot dolgozik a hónapban, és mennyi a cél","<b>Letöltés</b>: beosztás + jelenléti ív — akár <b>minden dolgozóé egyben</b>, egy PDF-ben"] },
+      { ic:"🏷️", c:"#4fb3c4", t:"Cetli generátor", x:"Szállítási és egyéb cetlik a bolt logójával, nyomtatásra készen.", b:["Post-it sablon A4-re — Kaposvárban <b>P-touch</b> is","Telefonszám és <b>e-mail cím</b> is rákerülhet a címkére","A bolt adatai (cím, telefon) maguktól kitöltődnek"] },
+      { ic:"📋", c:"#30b37a", t:"Leltár", x:"Hétfőn Telefon + ShieldUp, pénteken Telefon + AirPods — vonalkódolvasóval.", b:["Töltsd be a rendszer Excel exportját, aztán olvasd be a termékeket","<b>Hangos visszajelzés</b> minden beolvasásnál (🔊 hangerő állítható)","A végén PDF, aláírással"] },
+      { ic:"💰", c:"#e2bf55", t:"Kassza számoló", x:"Címletenként beírod a darabszámot — a többit kiszámolja.", b:["Pénz hátul + a kasszában = <b>Összesen</b>","Kasszajelentés: zöld = egyezik, piros = hiány, narancs = többlet","<b>🧾 Köteg cetli</b>: 100 000-es sorok pipával a pénzes zacskóra"] },
+      { ic:"📦", c:"#c98a3a", t:"Csomag nyilvántartó", x:"GLS és Magyar Posta csomagok beolvasása, kiadása, havi összesítő.", b:["Beolvasáskor magától felismeri a futárt","Kiadáskor rögzíti, ki adta át és mikor","Havi összesítő: mi érkezett, mi vár még"] },
+      { ic:"🗑️", c:"#e2585a", t:"Selejt", x:"A mai selejt egy helyen — a ShieldUp fóliák külön válogatva.", b:["Termék, darab, ok — vonalkóddal is","<b>🛡️ ShieldUp</b> és selejt külön lapon, külön cetlin","Excel letöltés és nyomtatható cetli"] },
+      { ic:"📚", c:"#8a5aa8", t:"Tudástár", x:"Segédlet, Kézikönyv és az Üzletek elérhetősége — kereshetően.", b:["Írj be pár betűt (pl. <b>sztornó</b>, <b>garancia</b>) — kiemelve mutatja","<b>🏬 Üzletek</b>: minden bolt telefonja, gyorshívója, e-mailje, címe","Kattintásra hív, levelet ír vagy térképet nyit"] },
+      { ic:"🧩", c:"#4fb3c4", t:"Programok és beállítás", x:"A bolt beállításánál kipipálod, mely programokat használjátok.", b:["A kikapcsolt programok eltűnnek a menüből (az adatok megmaradnak)","Üzlet adatai, nyitvatartás, dolgozók egy helyen","Világos / sötét téma, animációk ki-be"] },
+      { ic:"💬", c:"#30b37a", t:"Új: Chat és üzenetek", x:"Közvetlen vonal a központhoz.", b:["Jobb lent a <b>💬 Chat</b> gomb: írj a központnak, itt jön a válasz is","A központ fontos <b>üzenetei</b> a munkaasztal tetején jelennek meg","Ez az <b>✨ Újdonságok</b> gomb mindig megmutatja, mi változott a hónapban"] },
+      { ic:"❓", c:"#d9ad46", t:"Ha elakadsz", x:"Minden oldalnak saját, animált súgója van.", b:["Fent a <b>❓</b> gomb: lépésről lépésre, képekkel","<b>▶ Bemutató</b>: körbevezet az egész munkaasztalon","Kérdés? Írj a <b>💬 Chatben</b>!"] }
+    ]}
+  ];
+  /* ===================== ✨ Újdonságok (diák) ===================== */
+  function newsCss(){
+    if(document.getElementById("fpNewsCss")) return;
+    const st = document.createElement("style"); st.id = "fpNewsCss";
+    st.textContent = `
+    .nw-btn{position:fixed;left:18px;bottom:18px;z-index:9990;display:flex;align-items:center;gap:9px;border:0;cursor:pointer;padding:12px 18px 12px 14px;border-radius:999px;font:800 14px 'Poppins','Inter',sans-serif;color:#1a1405;background:linear-gradient(135deg,#ffe39a,#d9ad46 55%,#c08a1e);box-shadow:0 10px 30px rgba(217,173,70,.45),0 0 0 0 rgba(217,173,70,.6);animation:nwPulse 2.2s ease-in-out infinite;}
+    .nw-btn i{font-style:normal;font-size:18px;animation:nwSpin 3.5s linear infinite;display:inline-block;}
+    .nw-btn small{font:800 10px 'Inter',sans-serif;background:rgba(0,0,0,.16);padding:2px 7px;border-radius:999px;}
+    .nw-btn:hover{transform:translateY(-2px) scale(1.03);}
+    @keyframes nwPulse{0%,100%{box-shadow:0 10px 30px rgba(217,173,70,.45),0 0 0 0 rgba(217,173,70,.55);}50%{box-shadow:0 10px 30px rgba(217,173,70,.45),0 0 0 14px rgba(217,173,70,0);}}
+    @keyframes nwSpin{0%,80%{transform:rotate(0)}90%{transform:rotate(-18deg) scale(1.2)}100%{transform:rotate(0)}}
+    html.fp-lite .nw-btn,html.fp-lite .nw-btn i{animation:none;}
+    .nw-back{position:fixed;inset:0;z-index:99995;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,6,10,.72);backdrop-filter:blur(8px);animation:nwFade .25s ease;}
+    @keyframes nwFade{from{opacity:0}to{opacity:1}}
+    .nw-box{position:relative;width:min(760px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column;border-radius:28px;overflow:hidden;background:var(--bg-panel,#15151a);border:1px solid var(--border,#2b2b33);box-shadow:0 30px 90px rgba(0,0,0,.55);color:var(--text,#eee);}
+    .nw-top{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border,#2b2b33);}
+    .nw-top b{font:800 16px 'Poppins',sans-serif;} .nw-top small{display:block;font-size:12px;color:var(--text-dim,#9c9ca6);font-weight:600;}
+    .nw-top .nw-x{margin-left:auto;width:36px;height:36px;border-radius:12px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;cursor:pointer;font-size:15px;}
+    .nw-bar{height:3px;background:var(--bg-panel2,#1e1e25);} .nw-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#d9ad46,#4fb3c4);transition:width .45s ease;}
+    .nw-stage{position:relative;flex:1;min-height:min(480px,calc(100vh - 200px));overflow:hidden;touch-action:pan-y;}
+    .nw-slide{position:absolute;inset:0;padding:30px 34px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;overflow:auto;} .nw-slide > *{flex-shrink:0;}
+    .nw-slide.in-r{animation:nwInR .55s cubic-bezier(.2,.8,.2,1) both;} .nw-slide.in-l{animation:nwInL .55s cubic-bezier(.2,.8,.2,1) both;}
+    .nw-slide.out-l{animation:nwOutL .45s ease both;} .nw-slide.out-r{animation:nwOutR .45s ease both;}
+    @keyframes nwInR{from{opacity:0;transform:translateX(70px) scale(.97)}to{opacity:1;transform:none}}
+    @keyframes nwInL{from{opacity:0;transform:translateX(-70px) scale(.97)}to{opacity:1;transform:none}}
+    @keyframes nwOutL{to{opacity:0;transform:translateX(-70px) scale(.97)}}
+    @keyframes nwOutR{to{opacity:0;transform:translateX(70px) scale(.97)}}
+    .nw-ic{position:relative;width:104px;height:104px;border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:50px;margin:4px 0 6px;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--c) 55%,#fff 0%),var(--c));box-shadow:0 18px 40px color-mix(in srgb,var(--c) 45%,transparent);animation:nwPop .7s cubic-bezier(.2,1.4,.4,1) both .1s;}
+    .nw-ic::after{content:"";position:absolute;inset:-10px;border-radius:40px;border:2px solid color-mix(in srgb,var(--c) 60%,transparent);animation:nwRing 2.4s ease-out infinite .6s;opacity:0;}
+    @keyframes nwPop{from{opacity:0;transform:scale(.4) rotate(-12deg)}to{opacity:1;transform:none}}
+    @keyframes nwRing{0%{opacity:.8;transform:scale(.9)}100%{opacity:0;transform:scale(1.25)}}
+    .nw-slide h3{margin:0;font:800 clamp(21px,3.2vw,28px) 'Poppins',sans-serif;animation:nwUp .5s ease both .18s;}
+    .nw-slide p{margin:0;max-width:540px;font-size:15px;line-height:1.55;color:var(--text-dim,#a8a8b3);font-weight:600;animation:nwUp .5s ease both .26s;}
+    .nw-slide ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px;width:min(560px,100%);text-align:left;}
+    .nw-slide li{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;border-radius:14px;background:var(--bg-cell,#1c1c23);border:1px solid var(--border,#2b2b33);font-size:14px;line-height:1.45;animation:nwUp .5s ease both;}
+    .nw-slide li::before{content:"✓";flex:0 0 22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font:900 12px 'Inter',sans-serif;color:#1a1405;background:var(--c);}
+    @keyframes nwUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    html.fp-lite .nw-slide,html.fp-lite .nw-slide *{animation:none !important;}
+    .nw-foot{display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid var(--border,#2b2b33);}
+    .nw-dots{flex:1;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+    .nw-dots button{width:9px;height:9px;padding:0;border-radius:99px;border:0;background:var(--border,#3a3a44);cursor:pointer;transition:width .3s,background .3s;}
+    .nw-dots button.on{width:26px;background:#d9ad46;}
+    .nw-foot .nw-nb{border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:800 13.5px 'Inter',sans-serif;padding:10px 16px;border-radius:12px;cursor:pointer;min-width:96px;}
+    .nw-foot .nw-nb.go{background:linear-gradient(135deg,#ffe39a,#d9ad46);color:#1a1405;border-color:transparent;}
+    .nw-foot .nw-nb:disabled{opacity:.35;cursor:default;}
+    .nw-auto{border:0;background:none;color:var(--text-dim,#9c9ca6);font:700 12px 'Inter',sans-serif;cursor:pointer;}
+    @media (max-width:600px){ .nw-box{height:calc(100vh - 32px);} .nw-slide{padding:22px 16px 14px;} .nw-stage{min-height:0;} .nw-ic{width:84px;height:84px;font-size:40px;border-radius:26px;} .nw-btn{left:12px;bottom:12px;padding:10px 14px 10px 12px;font-size:13px;} .nw-foot .nw-nb{min-width:0;padding:10px 12px;} }
+    /* ===== 💬 Chat ===== */
+    .ch-btn{position:fixed;right:18px;bottom:18px;z-index:9990;width:58px;height:58px;border-radius:20px;border:0;cursor:pointer;font-size:26px;color:#fff;background:linear-gradient(135deg,#5ec7d6,#2f8fa0);box-shadow:0 12px 30px rgba(47,143,160,.45);transition:transform .15s;}
+    .ch-btn:hover{transform:translateY(-2px) scale(1.04);}
+    .ch-btn b{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:#e2585a;color:#fff;font:800 12px/22px 'Inter',sans-serif;box-shadow:0 0 0 3px var(--bg,#0d0d10);animation:chBump .5s ease;}
+    @keyframes chBump{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:none}}
+    html.ch-on .tt-top{bottom:88px !important;}
+    .ch-panel{position:fixed;right:18px;bottom:88px;z-index:99980;width:min(400px,calc(100vw - 24px));height:min(560px,calc(100vh - 120px));display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:var(--bg-panel,#15151a);border:1px solid var(--border,#2b2b33);box-shadow:0 26px 70px rgba(0,0,0,.5);color:var(--text,#eee);transform-origin:bottom right;animation:chIn .28s cubic-bezier(.2,.8,.2,1);}
+    @keyframes chIn{from{opacity:0;transform:translateY(16px) scale(.94)}to{opacity:1;transform:none}}
+    .ch-h{display:flex;align-items:center;gap:10px;padding:14px 16px;background:linear-gradient(135deg,rgba(94,199,214,.18),rgba(94,199,214,.04));border-bottom:1px solid var(--border,#2b2b33);}
+    .ch-h i{font-style:normal;width:38px;height:38px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;background:linear-gradient(135deg,#ffe39a,#d9ad46);}
+    .ch-h b{display:block;font:800 15px 'Poppins',sans-serif;} .ch-h small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);font-weight:600;}
+    .ch-h button{margin-left:auto;width:34px;height:34px;border-radius:11px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;cursor:pointer;}
+    .ch-list{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;}
+    .ch-empty{margin:auto;text-align:center;color:var(--text-dim,#9c9ca6);font-size:13px;line-height:1.5;padding:20px;}
+    .ch-empty span{display:block;font-size:34px;margin-bottom:6px;}
+    .ch-day{align-self:center;font:800 10.5px 'Inter',sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-faint,#6a6a74);padding:4px 10px;border-radius:999px;background:var(--bg-panel2,#1e1e25);}
+    .ch-m{max-width:82%;display:flex;flex-direction:column;gap:2px;animation:nwUp .25s ease;}
+    .ch-m.me{align-self:flex-end;align-items:flex-end;} .ch-m.them{align-self:flex-start;}
+    .ch-m div{padding:9px 13px;border-radius:17px;font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;}
+    .ch-m.me div{background:linear-gradient(135deg,#5ec7d6,#2f8fa0);color:#fff;border-bottom-right-radius:6px;}
+    .ch-m.them div{background:var(--bg-cell,#1f1f27);border:1px solid var(--border,#2b2b33);border-bottom-left-radius:6px;}
+    .ch-m small{font-size:10.5px;color:var(--text-faint,#6a6a74);font-weight:700;padding:0 4px;}
+    .ch-f{display:flex;gap:8px;padding:10px;border-top:1px solid var(--border,#2b2b33);align-items:flex-end;}
+    .ch-f textarea{flex:1;min-height:42px;max-height:120px;resize:none;box-sizing:border-box;border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:600 14px 'Inter',sans-serif;padding:10px 12px;border-radius:14px;outline:none;}
+    .ch-f textarea:focus{border-color:#5ec7d6;}
+    .ch-f button{width:44px;height:42px;border-radius:13px;border:0;cursor:pointer;font-size:18px;color:#fff;background:linear-gradient(135deg,#5ec7d6,#2f8fa0);}
+    .ch-f button:disabled{opacity:.4;}
+    .ch-who{display:flex;gap:6px;align-items:center;padding:6px 12px 0;font-size:11.5px;color:var(--text-dim,#9c9ca6);font-weight:700;}
+    .ch-who input{flex:1;min-width:0;border:1px solid var(--border,#2b2b33);background:none;color:inherit;font:700 12px 'Inter',sans-serif;padding:5px 8px;border-radius:8px;outline:none;}
+    /* admin chat */
+    .ad-chat{display:grid;grid-template-columns:270px minmax(0,1fr);gap:0;height:min(640px,calc(100vh - 170px));border-radius:20px;overflow:hidden;border:1px solid var(--border,#2b2b33);background:color-mix(in srgb,var(--bg-panel,#17171c) 92%,transparent);}
+    .ad-chat-l{border-right:1px solid var(--border,#2b2b33);overflow:auto;display:flex;flex-direction:column;}
+    .ad-chat-l input{margin:10px;border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:600 13px 'Inter',sans-serif;padding:9px 11px;border-radius:11px;outline:none;}
+    .ad-ct{display:flex;width:100%;box-sizing:border-box;gap:10px;align-items:center;padding:10px 12px;border:0;border-top:1px solid var(--border,#2b2b33);background:none;color:inherit;text-align:left;cursor:pointer;font-family:'Inter',sans-serif;}
+    .ad-ct:hover{background:var(--bg-cell,#1c1c23);} .ad-ct.on{background:rgba(94,199,214,.12);box-shadow:inset 3px 0 0 #5ec7d6;}
+    .ad-ct span{flex:1;min-width:0;} .ad-ct b{display:block;font:700 13px 'Poppins',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .ad-ct small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ad-ct em{font-style:normal;min-width:20px;height:20px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:#e2585a;color:#fff;font:800 11px/20px 'Inter',sans-serif;text-align:center;}
+    .ad-chat-r{display:flex;flex-direction:column;min-width:0;}
+    .ad-chat-r .ch-list{background:transparent;}
+    .ad-nwbox{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+    .ad-sw{position:relative;width:64px;height:36px;border-radius:999px;border:0;cursor:pointer;background:var(--border,#3a3a44);transition:background .25s;flex:0 0 auto;}
+    .ad-sw::after{content:"";position:absolute;left:4px;top:4px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .25s cubic-bezier(.2,.8,.2,1);}
+    .ad-sw.on{background:linear-gradient(135deg,#ffe39a,#d9ad46);} .ad-sw.on::after{transform:translateX(28px);}
+    .ad-nwst b{display:block;font:800 16px 'Poppins',sans-serif;} .ad-nwst small{font-size:12.5px;color:var(--text-dim,#9c9ca6);font-weight:600;}
+    .ad-sel{border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:700 13px 'Inter',sans-serif;padding:9px 12px;border-radius:11px;}
+    .ad-nwlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:12px;}
+    .ad-nwlist div{display:flex;gap:9px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--bg-cell,#1c1c23);font-size:13px;font-weight:700;}
+    .ad-nwlist div i{font-style:normal;font-size:20px;}
+    @media (max-width:860px){ .ad-chat{grid-template-columns:1fr;height:auto;} .ad-chat-l{max-height:220px;border-right:0;border-bottom:1px solid var(--border,#2b2b33);} .ad-chat-r{height:460px;} .ch-btn{right:12px;bottom:12px;width:52px;height:52px;} .ch-panel{right:12px;bottom:76px;} }`;
+    document.head.appendChild(st);
+  }
+  function newsById(id){ return NEWS.find(n=> n.id === id) || NEWS[0]; }
+  function newsShow(id, opt){
+    newsCss(); const N = newsById(id); if(!N) return;
+    const old = document.getElementById("nwBack"); if(old) old.remove();
+    const b = document.createElement("div"); b.className = "nw-back"; b.id = "nwBack";
+    b.innerHTML = `<div class="nw-box" role="dialog" aria-label="Újdonságok"><div class="nw-top"><span style="font-size:24px">✨</span><div><b>Újdonságok · ${esc(N.title)}</b><small>${esc(N.sub || "")}</small></div><button type="button" class="nw-x" title="Bezárás">✕</button></div>
+      <div class="nw-bar"><i></i></div><div class="nw-stage"></div>
+      <div class="nw-foot"><button type="button" class="nw-nb" data-d="-1">← Előző</button><div class="nw-dots">${N.slides.map((_, i)=> `<button type="button" data-i="${i}" aria-label="${i + 1}. dia"></button>`).join("")}</div><button type="button" class="nw-nb go" data-d="1">Következő →</button></div></div>`;
+    document.body.appendChild(b);
+    const stage = b.querySelector(".nw-stage"), dots = Array.from(b.querySelectorAll(".nw-dots button")), bar = b.querySelector(".nw-bar i"), prevB = b.querySelector('[data-d="-1"]'), nextB = b.querySelector('[data-d="1"]');
+    let cur = -1, timer = null, auto = true;
+    const slideHtml = s=> `<div class="nw-ic" style="--c:${s.c}">${s.ic}</div><h3>${s.t}</h3><p>${s.x}</p><ul style="--c:${s.c}">${(s.b || []).map((t, i)=> `<li style="--c:${s.c};animation-delay:${.34 + i * .1}s"><span>${t}</span></li>`).join("")}</ul>`;
+    function go(i, dir){
+      if(i < 0 || i >= N.slides.length || i === cur) return;
+      dir = dir || (i > cur ? 1 : -1);
+      const prev = stage.querySelector(".nw-slide:not(.out-l):not(.out-r)");
+      if(prev){ prev.className = "nw-slide " + (dir > 0 ? "out-l" : "out-r"); setTimeout(()=> prev.remove(), 460); }
+      const s = document.createElement("div"); s.className = "nw-slide " + (dir > 0 ? "in-r" : "in-l"); s.innerHTML = slideHtml(N.slides[i]); stage.appendChild(s);
+      cur = i; dots.forEach((d, k)=> d.classList.toggle("on", k === i)); bar.style.width = ((i + 1) / N.slides.length * 100) + "%";
+      prevB.disabled = i === 0; nextB.textContent = i === N.slides.length - 1 ? "✓ Kész" : "Következő →";
+      clearTimeout(timer); if(auto) timer = setTimeout(()=>{ if(cur < N.slides.length - 1) go(cur + 1, 1); }, 9000);
+    }
+    const close = ()=>{ clearTimeout(timer); b.remove(); document.removeEventListener("keydown", key); if(opt && opt.onClose) opt.onClose(); };
+    const key = e=>{ if(e.key === "ArrowRight") { auto = false; go(cur + 1, 1); } else if(e.key === "ArrowLeft"){ auto = false; go(cur - 1, -1); } else if(e.key === "Escape") close(); };
+    document.addEventListener("keydown", key);
+    b.addEventListener("click", e=>{
+      if(e.target === b || e.target.closest(".nw-x")){ close(); return; }
+      const d = e.target.closest("[data-d]"); if(d){ auto = false; if(+d.dataset.d > 0 && cur === N.slides.length - 1){ close(); return; } go(cur + +d.dataset.d); return; }
+      const t = e.target.closest("[data-i]"); if(t){ auto = false; go(+t.dataset.i); }
+    });
+    let sx = null; stage.addEventListener("touchstart", e=>{ sx = e.touches[0].clientX; }, { passive:true });
+    stage.addEventListener("touchend", e=>{ if(sx == null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if(Math.abs(dx) > 50){ auto = false; go(cur + (dx < 0 ? 1 : -1)); } });
+    go(0, 1);
+  }
+  window.fpNewsShow = newsShow;
+  /* bolti oldal: ha az admin bekapcsolta, feltűnő gomb (és első alkalommal magától megnyílik) */
+  function newsInit(){
+    let n = null; try{ n = JSON.parse(lsGet(NEWS_KEY) || "null"); }catch(e){}
+    const old = document.getElementById("nwBtn");
+    if(!n || !n.on){ if(old) old.remove(); return; }
+    newsCss(); const N = newsById(n.id);
+    if(!old){ const btn = document.createElement("button"); btn.type = "button"; btn.id = "nwBtn"; btn.className = "nw-btn"; document.body.appendChild(btn); }
+    const btn = document.getElementById("nwBtn");
+    btn.innerHTML = `<i>✨</i>Újdonságok <small>${esc(N.title)}</small>`;
+    btn.onclick = ()=> newsShow(N.id);
+    if(lsGet(NEWS_KEY + "_seen") !== N.id){ setTimeout(()=>{ if(!document.querySelector(".nw-back,.fc-full,.modal-backdrop.show")) newsShow(N.id, { onClose:()=> lsSet(NEWS_KEY + "_seen", N.id) }); }, 1800); }
+  }
+
+  /* ===================== 💬 Chat (bolt ↔ központ) ===================== */
+  const chatCol = uid=> S.db.collection("boltok").doc(uid).collection("chat");
+  const hhmm = ms=>{ const d = new Date(ms); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
+  const dayLbl = ms=>{ const d = new Date(ms), t = new Date(); const y = new Date(); y.setDate(t.getDate() - 1);
+    if(d.toDateString() === t.toDateString()) return "Ma"; if(d.toDateString() === y.toDateString()) return "Tegnap";
+    return `${d.getFullYear()}. ${["jan.","febr.","márc.","ápr.","máj.","jún.","júl.","aug.","szept.","okt.","nov.","dec."][d.getMonth()]} ${d.getDate()}.`; };
+  function chatHtml(msgs, mine){
+    if(!msgs.length) return "";
+    let out = "", lastDay = "";
+    msgs.forEach(m=>{ const dl = dayLbl(m.ms); if(dl !== lastDay){ out += `<div class="ch-day">${dl}</div>`; lastDay = dl; }
+      const me = m.from === mine;
+      out += `<div class="ch-m ${me ? "me" : "them"}"><div>${esc(m.text)}</div><small>${me ? "" : esc(m.name || (m.from === "a" ? "Központ" : "Bolt")) + " · "}${hhmm(m.ms)}</small></div>`; });
+    return out;
+  }
+  /* egy bolt beszélgetésének figyelése: első betöltés + élő változások */
+  function chatWatch(uid, cb){
+    const map = new Map(); const emit = ()=> cb(Array.from(map.values()).sort((a, b)=> a.ms - b.ms));
+    chatCol(uid).get().then(s=>{ s.docs.forEach(d=> map.set(d.id, d.data())); emit(); }).catch(()=> emit());
+    return chatCol(uid).onSnapshot(s=>{ let ch = false; s.docChanges().forEach(c=>{ if(c.type === "removed") map.delete(c.doc.id); else map.set(c.doc.id, c.doc.data()); ch = true; }); if(ch) emit(); }, ()=>{});
+  }
+  async function chatSend(uid, from, name, text){
+    const ms = Date.now(), id = ms + "_" + Math.random().toString(36).slice(2, 7);
+    await chatCol(uid).doc(id).set({ from, name:name || "", text, ms });
+  }
+  /* bolti oldal: lebegő 💬 gomb + panel */
+  function chatInit(){
+    if(document.getElementById("chBtn")) return;
+    newsCss(); document.documentElement.classList.add("ch-on");
+    const SEEN = "firstphone_chat_seen", WHO = "firstphone_chat_name";
+    const btn = document.createElement("button"); btn.type = "button"; btn.id = "chBtn"; btn.className = "ch-btn"; btn.title = "Chat a központtal"; btn.innerHTML = "💬";
+    document.body.appendChild(btn);
+    let msgs = [], panel = null;
+    const unread = ()=>{ const s = +(lsGet(SEEN) || 0); return msgs.filter(m=> m.from === "a" && m.ms > s).length; };
+    const badge = ()=>{ const u = panel ? 0 : unread(); btn.innerHTML = "💬" + (u ? `<b>${u > 9 ? "9+" : u}</b>` : ""); };
+    const draw = ()=>{ if(!panel) return; const L = panel.querySelector(".ch-list");
+      L.innerHTML = chatHtml(msgs, "s") || `<div class="ch-empty"><span>💬</span>Írj a központnak — kérdés, hiány, bármi.<br>A válasz itt jelenik meg.</div>`; L.scrollTop = L.scrollHeight;
+      if(msgs.length) lsSet(SEEN, String(msgs[msgs.length - 1].ms)); };
+    chatWatch(S.user.uid, m=>{ const before = msgs.length; msgs = m; draw(); badge();
+      if(!panel && m.length > before && before && m[m.length - 1].from === "a") toast2("💬 Új üzenet a központtól"); });
+    btn.onclick = ()=>{
+      if(panel){ panel.remove(); panel = null; badge(); return; }
+      panel = document.createElement("div"); panel.className = "ch-panel";
+      panel.innerHTML = `<div class="ch-h"><i>👑</i><div><b>Chat a központtal</b><small>${esc(shopName())}</small></div><button type="button" title="Bezárás">✕</button></div>
+        <div class="ch-list"></div><div class="ch-who">✍️ Neved: <input type="text" maxlength="40" placeholder="nem kötelező" value="${esc(lsGet(WHO) || "")}"></div>
+        <div class="ch-f"><textarea rows="1" placeholder="Üzenet…" maxlength="2000"></textarea><button type="button" title="Küldés">➤</button></div>`;
+      document.body.appendChild(panel);
+      const ta = panel.querySelector("textarea"), send = panel.querySelector(".ch-f button"), who = panel.querySelector(".ch-who input");
+      who.oninput = ()=> lsSet(WHO, who.value.trim());
+      const go = async ()=>{ const t = ta.value.trim(); if(!t) return; send.disabled = true;
+        try{ await chatSend(S.user.uid, "s", (who.value.trim() ? who.value.trim() + " · " : "") + shopName(), t); ta.value = ""; ta.style.height = ""; }
+        catch(e){ toast2("⚠ Nem ment el: " + (e && e.message || e)); } send.disabled = false; ta.focus(); };
+      send.onclick = go;
+      ta.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); go(); } });
+      ta.addEventListener("input", ()=>{ ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; });
+      panel.querySelector(".ch-h button").onclick = ()=>{ panel.remove(); panel = null; badge(); };
+      draw(); badge(); setTimeout(()=> ta.focus(), 60);
+    };
+  }
+  /* admin: lebegő 💬 gomb, ha bármelyik boltból olvasatlan üzenet jött (bolt nézetben is) */
+  const adSeenK = uid=> "firstphone_chat_seen_a_" + uid;
+  async function adminChatBadge(){
+    if(document.getElementById("chBtn")) return;
+    let uids = []; try{ const s = await S.db.collection("boltok").get(); uids = s.docs.map(d=> d.id).filter(u=> u !== S.user.uid); }catch(e){ return; }
+    newsCss(); document.documentElement.classList.add("ch-on");
+    const btn = document.createElement("button"); btn.type = "button"; btn.id = "chBtn"; btn.className = "ch-btn"; btn.title = "Chat a boltokkal"; btn.innerHTML = "💬"; document.body.appendChild(btn);
+    const last = {};
+    const upd = ()=>{ const n = Object.entries(last).reduce((a, [u, L])=> a + L.filter(m=> m.from === "s" && m.ms > +(lsGet(adSeenK(u)) || 0)).length, 0); btn.innerHTML = "💬" + (n ? `<b>${n > 9 ? "9+" : n}</b>` : ""); };
+    uids.forEach(u=> chatWatch(u, L=>{ const had = last[u] ? last[u].length : -1; last[u] = L; upd(); if(had >= 0 && L.length > had && L[L.length - 1].from === "s") toast2("💬 Új üzenet: " + (L[L.length - 1].name || "bolt")); }));
+    btn.onclick = ()=>{ try{ sessionStorage.setItem("fp_admin_tab", "chat"); }catch(e){} adminChoose(); };
+    window.fpAdminChatUpd = upd;
+  }
   function adminPicker(){
     return new Promise(async res=>{
       css(); const old = document.getElementById("fcAdmin"); if(old) old.remove();
       const b = document.createElement("div"); b.className = "fc-full fc-admin"; b.id = "fcAdmin";
-      const NAV = [["dash","📊","Áttekintés"],["shops","🏬","Boltok"],["acc","🔑","Fiókok"],["msg","📢","Üzenet a boltoknak"],["data","💾","Adatok és mentés"]];
+      const NAV = [["dash","📊","Áttekintés"],["shops","🏬","Boltok"],["chat","💬","Chat"],["news","✨","Újdonságok"],["msg","📢","Üzenet a boltoknak"],["acc","🔑","Fiókok"],["data","💾","Adatok és mentés"]];
       b.innerHTML = `<div class="fc-glow"></div><div class="ad-shell">
         <aside class="ad-side"><div class="ad-brand"><i>👑</i><div><b>Admin központ</b><small>${esc(S.user.email)}</small></div></div>
           ${NAV.map(([k, i, t], n)=> `<button type="button" class="ad-nav${n ? "" : " on"}" data-nav="${k}"><i>${i}</i>${t}<em data-cnt="${k}" hidden></em></button>`).join("")}
@@ -4111,6 +4344,14 @@
             <div class="ad-pick" hidden></div>
             <div class="ad-prev"><i>💬</i><div class="ad-prevt">Az üzenet előnézete itt jelenik meg.</div></div>
             <div class="ad-row"><button type="button" class="fc-btn" data-x="msgsend">📢 Küldés</button><button type="button" class="fc-btn sec" data-x="msgdel">Üzenet visszavonása</button><span class="ad-out ad-mout"></span></div></div></section>
+          <section class="ad-pane" data-pane="chat"><div class="ad-chat"><div class="ad-chat-l"><input type="search" class="ad-cq" placeholder="🔎 Bolt keresése" autocomplete="off"><div class="ad-cts"></div></div>
+            <div class="ad-chat-r"><div class="ch-h"><i>🏬</i><div><b class="ad-cn">Válassz boltot</b><small class="ad-ce">bal oldalt</small></div></div><div class="ch-list"><div class="ch-empty"><span>💬</span>Válassz egy boltot a beszélgetéshez.</div></div>
+              <div class="ch-f"><textarea rows="1" placeholder="Válasz…" maxlength="2000" disabled></textarea><button type="button" disabled title="Küldés">➤</button></div></div></div></section>
+          <section class="ad-pane" data-pane="news"><div class="ad-card"><h3>✨ Újdonságok a boltoknak</h3><p>Ha bekapcsolod, <b>minden boltnál</b> megjelenik bal lent egy feltűnő, villogó <b>„✨ Újdonságok”</b> gomb. Rákattintva diás, animált bemutató mutatja, mi változott — első alkalommal magától is megnyílik. Addig marad kint, amíg ki nem kapcsolod.</p>
+            <div class="ad-nwbox"><button type="button" class="ad-sw" data-x="nwsw" aria-label="Újdonságok be/ki"></button><div class="ad-nwst"><b class="ad-nwt">Kikapcsolva</b><small class="ad-nwd">A boltok nem látják a gombot.</small></div>
+              <span style="flex:1"></span><select class="ad-sel ad-nwsel">${NEWS.map(n=> `<option value="${esc(n.id)}">${esc(n.title)} — ${n.slides.length} dia</option>`).join("")}</select><button type="button" class="fc-btn sec" data-x="nwprev" style="width:auto;padding:10px 14px">👁 Előnézet</button></div>
+            <div class="ad-out ad-nwout" style="margin-top:10px"></div></div>
+            <div class="ad-card"><h3>Ebben a kiadásban</h3><p>Minden hónapban új kiadás készül arról, ami változott. Az első kiadásban minden benne van.</p><div class="ad-nwlist"></div></div></section>
           <section class="ad-pane" data-pane="data"><div class="ad-card"><h3>💾 Biztonsági mentés</h3><p>Minden bolt összes adata (beosztás, leltár, kassza, csomag, selejt, termékek) egy fájlban. Érdemes havonta letölteni és eltenni.</p>
             <div class="ad-row"><button type="button" class="fc-btn" data-x="bak">⬇ Minden bolt letöltése (.json)</button><span class="ad-out ad-bout"></span></div></div>
             <div class="ad-card"><h3>🔄 Frissítés</h3><p>Az adatok a megnyitáskor töltődnek be. Ha közben egy bolt mentett valamit, frissítsd.</p><div class="ad-row"><button type="button" class="fc-btn sec" data-x="reload">↻ Adatok újratöltése</button></div></div></section>
@@ -4118,8 +4359,9 @@
       document.body.appendChild(b); document.documentElement.classList.add("fc-locked");
       const $ = s=> b.querySelector(s), $$ = s=> Array.from(b.querySelectorAll(s));
       const grid = $(".fc-adm-grid"), q = $(".fc-adm-q");
-      const close = v=>{ document.documentElement.classList.remove("fc-locked"); b.remove(); res(v); };
-      const TITLES = { dash:["Áttekintés","Minden bolt egy pillantással — kattints egy boltra a megnyitásához."], shops:["Boltok","Nyisd meg bármelyik boltot: látod és szerkesztheted az adatait."], acc:["Fiókok","Belépések, jelszavak, letiltás — csak az admin látja."], msg:["Üzenet a boltoknak","Közlemény a munkaasztal tetején, egy vagy több boltnak."], data:["Adatok és mentés","Biztonsági mentés minden boltról."] };
+      const unsubs = [];
+      const close = v=>{ unsubs.forEach(f=>{ try{ f(); }catch(e){} }); document.documentElement.classList.remove("fc-locked"); b.remove(); res(v); };
+      const TITLES = { chat:["Chat","Beszélgetés a boltokkal — a boltoknál jobb lent a 💬 gomb."], news:["Újdonságok","Havi újdonságok diás bemutatóval minden boltnak — te kapcsolod be és ki."], dash:["Áttekintés","Minden bolt egy pillantással — kattints egy boltra a megnyitásához."], shops:["Boltok","Nyisd meg bármelyik boltot: látod és szerkesztheted az adatait."], acc:["Fiókok","Belépések, jelszavak, letiltás — csak az admin látja."], msg:["Üzenet a boltoknak","Közlemény a munkaasztal tetején, egy vagy több boltnak."], data:["Adatok és mentés","Biztonsági mentés minden boltról."] };
       let pwLoaded = false;
       const nav = k=>{ $$(".ad-nav").forEach(x=> x.classList.toggle("on", x.dataset.nav === k)); $$(".ad-pane").forEach(x=> x.classList.toggle("on", x.dataset.pane === k));
         $(".ad-title").textContent = TITLES[k][0]; $(".ad-subt").textContent = TITLES[k][1];
@@ -4139,6 +4381,8 @@
           if(a === "reload"){ close(null); setTimeout(()=> adminChoose(), 50); return; }
           if(a === "bak"){ backup(); return; }
           if(a === "msgsend" || a === "msgdel"){ sendMsg(a === "msgdel", x); return; }
+          if(a === "nwsw"){ newsSet(!newsCfg.on, x); return; }
+          if(a === "nwprev"){ newsShow($(".ad-nwsel").value); return; }
           return; }
         const r = e.target.closest("[data-uid]"); if(r) close({ uid:r.dataset.uid, name:r.dataset.name });
         const th = e.target.closest("th[data-k]"); if(th){ if(sortK === th.dataset.k) sortUp = !sortUp; else { sortK = th.dataset.k; sortUp = th.dataset.k === "name"; } drawTbl(); }
@@ -4218,6 +4462,53 @@
           <span class="fc-st-row"><em>📦 ${x.wait == null ? "—" : x.wait} vár</em><em>🗑️ ${x.sx == null ? "—" : x.sx} db ma</em>${x.emp != null ? `<em>👥 ${x.emp}</em>` : ""}</span><span class="fc-st-t">💾 ${ago(x.ms)}${x.email ? " · " + esc(x.email) : ""}</span></button>`).join("") + noneH
           : `<div class="fc-adm-load">Nincs találat.</div>`; };
       q.oninput = draw; draw();
+      /* --- ✨ Újdonságok --- */
+      let newsCfg = { on:false, id:NEWS[0].id };
+      const cfgRef = colFor(S.user.uid).doc("news_cfg");
+      try{ const d = await cfgRef.get(); if(d.exists && d.data().v) newsCfg = Object.assign(newsCfg, JSON.parse(d.data().v)); }catch(e){}
+      const sel = $(".ad-nwsel"); sel.value = newsCfg.id;
+      const drawNews = ()=>{ $(".ad-sw").classList.toggle("on", !!newsCfg.on); $(".ad-nwt").textContent = newsCfg.on ? "Bekapcsolva" : "Kikapcsolva";
+        $(".ad-nwd").textContent = newsCfg.on ? `A boltoknál kint van a „✨ Újdonságok” gomb (${newsById(newsCfg.id).title}).` : "A boltok nem látják a gombot.";
+        const N = newsById(sel.value); $(".ad-nwlist").innerHTML = N.slides.map(s=> `<div><i>${s.ic}</i>${esc(s.t)}</div>`).join("");
+        cnt("news", newsCfg.on ? "BE" : null); };
+      sel.onchange = ()=>{ drawNews(); if(newsCfg.on) newsSet(true, null, true); };
+      const newsBody = on=> ({ v:JSON.stringify({ on, id:sel.value, at:Date.now() }), parts:0, by:"admin", t:firebase.firestore.FieldValue.serverTimestamp(), n:Date.now() });
+      async function newsSet(on, btn, quiet){
+        const out = $(".ad-nwout"); if(btn) btn.disabled = true; out.className = "ad-out ad-nwout"; out.textContent = "Mentés…";
+        newsCfg = { on, id:sel.value }; let ok = 0, bad = 0;
+        try{ await cfgRef.set({ v:JSON.stringify(newsCfg), parts:0, by:"admin", n:Date.now() }); }catch(e){}
+        const body = newsBody(on);
+        for(const x of list){ try{ await colFor(x.uid).doc(NEWS_KEY).set(body); x.raw = x.raw || {}; x.raw[NEWS_KEY] = body.v; ok++; }catch(e){ bad++; } }
+        if(btn) btn.disabled = false; drawNews();
+        out.className = "ad-out ad-nwout " + (bad ? "err" : "ok");
+        out.textContent = (on ? `✓ Bekapcsolva ${ok} boltnál` : `✓ Kikapcsolva ${ok} boltnál`) + (bad ? ` · ${bad} hiba` : "") + (none.length ? ` — a még be nem lépett ${none.length} bolt az első belépés után kapja meg, amikor legközelebb megnyitod az admin központot.` : ".");
+      }
+      drawNews();
+      /* ha be van kapcsolva: az azóta belépett boltok is megkapják */
+      if(newsCfg.on){ const want = { on:true, id:newsCfg.id }; const miss = list.filter(x=>{ try{ const o = JSON.parse((x.raw || {})[NEWS_KEY] || "null"); return !o || !o.on || o.id !== want.id; }catch(e){ return true; } });
+        if(miss.length){ const body = newsBody(true); miss.forEach(x=> colFor(x.uid).doc(NEWS_KEY).set(body).catch(()=>{})); } }
+      /* --- 💬 Chat --- */
+      const threads = {}; let curU = null;
+      const cts = $(".ad-cts"), cq = $(".ad-cq"), cl = $(".ad-chat-r .ch-list"), cta = $(".ad-chat-r textarea"), csend = $(".ad-chat-r .ch-f button");
+      const unreadOf = u=> (threads[u] || []).filter(m=> m.from === "s" && m.ms > +(lsGet(adSeenK(u)) || 0)).length;
+      const drawCts = ()=>{ const f = cq.value.trim().toLowerCase();
+        const L = list.filter(x=> !f || (nameOf(x) + " " + x.email).toLowerCase().includes(f)).sort((a, c)=>{ const A = (threads[a.uid] || []).slice(-1)[0], C = (threads[c.uid] || []).slice(-1)[0]; return (C ? C.ms : 0) - (A ? A.ms : 0) || nameOf(a).localeCompare(nameOf(c), "hu"); });
+        cts.innerHTML = L.map(x=>{ const T = threads[x.uid] || [], lm = T[T.length - 1], u = unreadOf(x.uid);
+          return `<button type="button" class="ad-ct${x.uid === curU ? " on" : ""}" data-cu="${esc(x.uid)}"><span><b>${esc(nameOf(x))}</b><small>${lm ? (lm.from === "a" ? "Te: " : "") + esc(lm.text.slice(0, 60)) : "nincs még üzenet"}</small></span>${u ? `<em>${u}</em>` : ""}</button>`; }).join("") || `<div class="ch-empty">Még nincs belépett bolt.</div>`;
+        const tot = list.reduce((a, x)=> a + unreadOf(x.uid), 0); cnt("chat", tot || null); if(window.fpAdminChatUpd) window.fpAdminChatUpd(); };
+      const drawThread = ()=>{ if(!curU) return; const x = list.find(y=> y.uid === curU); $(".ad-cn").textContent = nameOf(x); $(".ad-ce").textContent = x.email || "";
+        const T = threads[curU] || []; cl.innerHTML = chatHtml(T, "a") || `<div class="ch-empty"><span>👋</span>Még nem írtatok egymásnak. Írj elsőként!</div>`; cl.scrollTop = cl.scrollHeight;
+        if(T.length) lsSet(adSeenK(curU), String(T[T.length - 1].ms)); cta.disabled = false; csend.disabled = false; };
+      list.forEach(x=> unsubs.push(chatWatch(x.uid, T=>{ threads[x.uid] = T; if(x.uid === curU) drawThread(); drawCts(); })));
+      cq.oninput = drawCts;
+      cts.onclick = e=>{ const t = e.target.closest("[data-cu]"); if(!t) return; curU = t.dataset.cu; drawThread(); drawCts(); setTimeout(()=> cta.focus(), 40); };
+      const csGo = async ()=>{ const t = cta.value.trim(); if(!t || !curU) return; csend.disabled = true;
+        try{ await chatSend(curU, "a", "Központ", t); cta.value = ""; cta.style.height = ""; }catch(e){ cl.insertAdjacentHTML("beforeend", `<div class="ch-empty" style="color:#e2585a">⚠ Nem ment el: ${esc(e && e.message || e)}</div>`); }
+        csend.disabled = false; cta.focus(); };
+      csend.onclick = csGo;
+      cta.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); csGo(); } });
+      cta.addEventListener("input", ()=>{ cta.style.height = "auto"; cta.style.height = Math.min(120, cta.scrollHeight) + "px"; });
+      drawCts();
       let t0 = "dash"; try{ const t = sessionStorage.getItem("fp_admin_tab"); if(TITLES[t]) t0 = t; }catch(e){} nav(t0);
     });
   }
@@ -4320,7 +4611,8 @@
         if(changed && !sessionStorage.getItem("fp_cloud_reloaded")){ sessionStorage.setItem("fp_cloud_reloaded", "1"); location.reload(); return; }
         sessionStorage.removeItem("fp_cloud_reloaded");
         if(!S.admin && window.fpLockStore){ try{ fpLockStore(u.email); }catch(e){} }
-        if(!S.admin) showMsg();
+        if(!S.admin){ showMsg(); newsInit(); try{ chatInit(); }catch(e){} }
+        else { try{ adminChatBadge(); }catch(e){} }
       }catch(e){ S.lastErr = e && e.message || String(e); status(); toast2("⚠ A felhő nem érhető el: " + S.lastErr); }
     });
   }
@@ -4886,7 +5178,7 @@
   <div class="modal help-modal" role="dialog" aria-labelledby="shelpTitle">
     <div class="help-top"><h2 id="shelpTitle">⚙️ Beállítások — így működik</h2><div style="display:flex;gap:8px;align-items:center"><span class="help-count" id="shelpCount">1 / 6</span><button class="help-x" id="shelpX" title="Bezárás">✕</button></div></div>
     <div class="help-bars" id="shelpBars"></div>
-    <div class="help-body" id="shelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">📍</div><div><h3>1. Üzlet kiválasztása</h3><p>Először azt kérdezi, melyik üzletről van szó.</p></div></div><div class="hc-wrap"><div class="hc-stage z1"><div class="hc-lbl" style="left:20px;top:6px">🔎 ÜZLET KERESÉSE A LISTÁBAN</div><div class="hc-in in1" style="left:20px;top:21px;width:200px"><span class="old" style="position:absolute;left:10px"><span data-ex="old.name"></span></span><span class="tw"><span data-ex="loc.name"></span></span><span class="caret"></span></div><div class="dd" style="left:20px;top:58px;width:200px"><div class="ddi"><span data-ex="loc.mall"></span><small data-ex="loc.addr"></small></div></div><div class="hc-lbl" style="left:20px;top:110px;width:200px;line-height:1.5;font-weight:600">Kiválasztás után a hely, a cím és a nyitvatartás magától kitöltődik.</div><div class="fpbox" style="left:240px;top:10px;width:220px;height:118px"><img class="sh-fp" alt="" style="margin-top:-30px"><div class="fpsub sub-old" data-fit="old.name" style="top:72px;font-size:22px"><span data-ex="old.name"></span></div><div class="fpsub sub-new" data-fit="loc.name" style="top:72px;font-size:19px;opacity:0"><span data-ex="loc.name"></span></div></div><div class="okchip ok1" style="left:20px;top:150px">✓ Fejléc</div><div class="okchip ok2" style="left:100px;top:150px">✓ Beosztás PDF</div><div class="okchip ok3" style="left:220px;top:150px">✓ Jelenléti ív</div><div class="hc-ripple r1" style="left:120px;top:37px"></div><div class="hc-ripple r2" style="left:110px;top:72px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Kattints a jobb felső <b>„⚙️ Üzlet &amp; dolgozók”</b> gombra (a ⚡ és a 🌙 mellett).</div></li><li><div><span>Bolti belépésnél ez a lépés nincs — az üzletet a belépés adja.</span> Kezdd el beírni a várost, és <b>válaszd ki az üzletet a listából</b> — a cím és a nyitvatartás magától kitöltődik. <span>Nincs a listában? Írd be kézzel az „Üzlet helye” mezőbe.</span> A „FirstPhone” felirat mindig marad, alá kerül a hely.</div></li><li><div>Lent azonnal látod a <b>színes</b> és a <b>fekete</b> logót — ezek kerülnek a fejlécre, a PDF-re és a jelenléti ívre.</div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">🏢</div><div><h3>2. Cím és munkáltató</h3><p>Az adatok nagy része már ki van töltve — csak nézd át.</p></div></div><div class="hc-wrap"><div class="hc-stage z2"><div class="okchip note" style="left:20px;top:10px;opacity:0">✓ A cím a firstphone.hu üzletlistájából jött</div><div class="hc-lbl" style="left:20px;top:44px">ÜZLET CÍME</div><div class="hc-in addr" style="left:20px;top:57px;width:440px"><span data-ex="loc.addr"></span></div><div class="ecard"><div class="ehead">MUNKÁLTATÓ</div><div class="ename"><span style="white-space:nowrap">Milo Technologies Kft.</span></div><div class="ebtn bmod">✏️ Módosítás</div><div class="ebtn bdone" style="opacity:0;border-color:var(--gold)">✓ Kész</div><div class="efields"><div class="hc-in" style="position:relative;height:26px;font-size:10px;border-color:var(--gold)">1063 Budapest, Szinyei Merse utca 10. 2. · Adószám: 28845924-2-42<span class="caret"></span></div></div></div><div class="okchip esaved" style="left:20px;top:150px">✓ Munkáltató elmentve</div><div class="hc-lbl" style="left:20px;top:188px;width:440px;font-weight:600;line-height:1.5">Nincs a listában az üzlet? Itt kereshetsz az interneten is, vagy beírhatod kézzel.</div><div class="hc-ripple r1" style="left:418px;top:112px"></div><div class="hc-ripple r2" style="left:430px;top:112px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Ha az üzletet a listából választottad, a <b>cím</b> már ki van töltve — csak nézd át.</div></li><li><div>A <b>munkáltató</b> adatai előre ki vannak töltve. Ha nálatok más, kattints a <b>„✏️ Módosítás”</b> gombra, írd át, majd <b>„✓ Kész”</b> — a változás azonnal elmentődik.</div></li><li><div>Nincs a listában az üzlet? A <b>„Keresés az interneten”</b> gombbal vagy <b>kézzel</b> is megadhatod a címet.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">🕘</div><div><h3>3. Nyitvatartás</h3><p>Minden napra külön megadhatod.</p></div></div><div class="hc-wrap"><div class="hc-stage z3"><div class="hc-row" style="top:14px"><span style="width:110px">Hétfő – Péntek</span><div class="hc-toggle" style="position:relative"></div><span class="tm">09:00 – 20:00 · váltás 14:30</span></div><div class="hc-row" style="top:54px"><span style="width:110px">Szombat</span><div class="hc-toggle" style="position:relative"></div><span class="tm">09:00 – 20:00 · váltás 14:30</span></div><div class="hc-row" style="top:94px"><span style="width:110px">Vasárnap</span><div class="hc-toggle tg3" style="position:relative"></div><span style="position:relative;width:44px;font-size:10.5px"><span class="lbl-open" style="position:absolute;left:0;top:-7px">Nyitva</span><span class="lbl-closed" style="position:absolute;left:0;top:-7px;opacity:0;color:var(--text-dim)">Zárva</span></span><span class="tm t3">10:00 – 18:00</span></div><div class="okchip ok1" style="left:20px;top:150px">🗓️ Vasárnap zárva → a naptárban „ZÁRVA” lesz, nem osztható be</div><div class="hc-ripple r1" style="left:233px;top:105px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Állítsd be a <b>nyitás</b> és <b>zárás</b> idejét. <span>A „Hétfő → minden hétköznapra” gomb gyorsan átmásolja.</span></div></li><li><div>Ha egy nap zárva vagytok, kapcsold át a kapcsolót <b>Zárva</b> állásba.</div></li><li><div>A délelőtt / délután <b>váltás</b> automatikusan a nap közepére esik.</div></li></ol></section><section class="help-slide" data-i="4"><div class="hs-head"><div class="hs-icon">👥</div><div><h3>4. Dolgozók hozzáadása</h3><p>Bármennyi dolgozót felvehetsz, teljes névvel.</p></div></div><div class="hc-wrap"><div class="hc-stage z4"><div class="hc-row" style="top:12px"><span class="dot" style="background:var(--evelin)"></span><span data-ex="a.full"></span></div><div class="hc-row" style="top:50px"><span class="dot" style="background:var(--martin)"></span><span data-ex="b.two"></span></div><div class="hc-row new" style="top:88px;opacity:0;border-color:var(--gold)"><span class="dot" style="background:#34d399"></span><span class="tw"><span data-ex="c.full"></span></span><span class="caret"></span></div><div class="hc-btn s addb" style="left:20px;top:126px;width:200px;height:28px;border-style:dashed;border-width:2px">＋ Dolgozó hozzáadása</div><div class="hc-chip ntab" style="left:20px;top:168px;opacity:0"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;margin-right:5px"></span>Új fül: <span data-ex="c.full"></span></div><div class="hc-ripple r1" style="left:120px;top:139px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Írd be a dolgozó <b>teljes nevét</b> (vezeték- és keresztnév).</div></li><li><div>Új ember: <b>„＋ Dolgozó hozzáadása”</b> (vagy Enter a név mezőben). <span>A színes körre kattintva színt választhatsz.</span></div></li><li><div>Mindenki kap egy <b>saját fület</b>, és megjelenik a PDF / jelenléti ív választóban.</div></li></ol></section><section class="help-slide" data-i="5"><div class="hs-head"><div class="hs-icon">🧩</div><div><h3>5. Programok</h3><p>Csak az legyen a menüben, amit a bolt használ.</p></div></div><div class="hc-wrap"><div class="hc-stage zp"><div class="zc c1"><i>📅</i><b>Beosztás</b><s>✓</s></div><div class="zc c2"><i>📋</i><b>Leltár</b><s>✓</s></div><div class="zc c3"><i>📦</i><b>Csomag</b><s>✓</s></div><div class="zc c4 lk"><i>📚</i><b>Tudástár</b><s>🔒</s></div><div class="zm"><span>📅</span><span>📋</span><span class="x3">📦</span><span>📚</span></div></div></div><ol class="hs-steps"><li><div>A beállítás <b>„🧩 Programok”</b> lépésében minden program egy kártya: kattintással <b>ki- és bepipálhatod</b>. Fent a <b>„✓ Mind”</b> és a <b>„Csak a Tudástár”</b> gomb.</div></li><li><div>Mentés után a kikapcsolt programok <b>eltűnnek a felső menüből</b> (és a bemutatóból). Az adataik <b>nem vesznek el</b> — visszapipálva minden ott lesz.</div></li><li><div>A <b>📚 Tudástár</b> mindig elérhető, nem kapcsolható ki. Ha a Beosztást kikapcsolod, a ⚙️ gomb ugyanúgy a beállításokhoz visz.</div></li></ol></section><section class="help-slide" data-i="6"><div class="hs-head"><div class="hs-icon">💾</div><div><h3>6. Mentés</h3><p>Egy kattintás, és minden átáll.</p></div></div><div class="hc-wrap"><div class="hc-stage z5"><div class="hc-row" style="top:14px;width:200px;height:auto;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px"><span style="font-size:9px;color:var(--text-faint)">MUNKAHELY</span><span>FirstPhone <span data-ex="loc.name"></span></span><span style="font-size:9px;color:var(--text-faint);margin-top:4px">DOLGOZÓK (3)</span><span style="font-weight:600"><span data-ex="a.two"></span> · <span data-ex="b.two"></span> · <span data-ex="c.two"></span></span><span style="font-size:9px;color:var(--text-faint);margin-top:4px">NYITVATARTÁS</span><span style="font-weight:600">H–Szo 09–20 · V zárva</span></div><div class="hc-btn p savebtn" style="left:20px;top:172px;width:200px;height:30px">💾 Mentés és alkalmazás</div><div class="it it1" style="top:14px">🖼️ Logó a fejlécben<span class="ck">✓</span></div><div class="it it2" style="top:58px">🗂️ Fülek a dolgozókkal<span class="ck">✓</span></div><div class="it it3" style="top:102px">📄 Beosztás PDF<span class="ck">✓</span></div><div class="it it4" style="top:146px">🖨️ Jelenléti ív<span class="ck">✓</span></div><div class="hc-ripple r1" style="left:120px;top:187px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Az utolsó lépésben nézd át az adatokat.</div></li><li><div>Nyomd meg a <b>„Mentés és alkalmazás”</b> gombot.</div></li><li><div>Kész! A <b>logó</b>, a <b>fülek</b>, a <b>beosztás PDF</b> és a <b>jelenléti ív</b> is az új adatokkal készül.</div></li></ol></section><section class="help-slide" data-i="7"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Hogy egy másik bolt is gond nélkül használhassa.</p></div></div><div class="tips"><div class="tip"><div class="ti">🎬</div><div><b>Oldal bemutatása</b><span>Első indításkor egy üdvözlő ablak köszönt: a „✓ Oké, mehet” egyből ide, a beállításhoz hoz, az „▶ Oldal bemutatása” animáltan körbevezet. Innen bármikor újraindíthatod. <button type="button" class="tour-again">▶ Bemutató indítása</button></span></div></div><div class="tip"><div class="ti">🔐</div><div><b>Bolti belépés</b><span>A weboldalon belépéskor elég a <b>bolt nevét</b> (pl. <b>Kaposvár</b>, <b>Eger</b>, <b>Debrecen Fórum</b> — ékezet és nagybetű nem számít) és a jelszót beírni; a bolt magától kiválasztódik, és a ☁️ mellett a neve látszik. Ilyenkor a „Hely” lépés kimarad, csak az adatokat, a nyitvatartást, a dolgozókat és a programokat kell átnézni.</span></div></div><div class="tip"><div class="ti">👑</div><div><b>Boltfiókok (admin)</b><span>Az <b>admin</b> fiókkal az <b>👑 Admin központ</b> nyílik meg: <b>📊 Áttekintés</b> (minden bolt egy táblázatban: utolsó mentés, váró csomagok, mai selejt, kassza eltérés, utolsó leltár, dolgozók — oszlopra kattintva rendez, sorra kattintva megnyitja a boltot), <b>🏬 Boltok</b>, <b>🔑 Fiókok</b>, <b>📢 Üzenet a boltoknak</b> (közlemény a kiválasztott boltok munkaasztalának tetején, amíg el nem olvassák) és <b>💾 Adatok és mentés</b> (minden bolt adata egy fájlban). A Fiókok fülön a „👥 Tömeges létrehozás” résszel egyszerre létrehozhatod a boltok belépését: illeszd be a listát (e-mail + jelszó soronként, vagy a Bolt | Boltkód | Jelszó táblázatot). A <b>„🔑 Fiókok és jelszavak”</b> résszel minden bolt fiókját látod (aktív / letiltva / nincs fiók, utolsó belépés), <b>új jelszót</b> adhatsz, letilthatod vagy engedélyezheted a belépést — ezt csak az admin éri el. A boltválasztóban a még be nem lépett boltok is látszanak, halványan. A jelszavakat a program nem tárolja (a régieket a Firebase sem mutatja meg — elfelejtett jelszó helyett adj újat).</span></div></div><div class="tip"><div class="ti">🏬</div><div><b>Másik bolt</b><span>Nyissák meg a weboldalt, és lépjenek be a <b>saját boltjuk nevével</b> — a bolt magától kiválasztódik. Fájlból (felhő nélkül) első megnyitáskor a varázsló indul, és a listából kiválaszthatják az üzletüket.</span></div></div><div class="tip"><div class="ti">☁️</div><div><b>Felhő</b><span>A weboldalon belépve a beállítás (a programokkal együtt) és minden adat a bolt fiókjába mentődik — a bolt minden gépén ugyanaz. Felhő nélkül csak abban a böngészőben, ahol megadtad.</span></div></div><div class="tip"><div class="ti">🏢</div><div><b>Munkáltató</b><span>A munkáltató adatai előre ki vannak töltve; ha nálatok más, az Adatok lépésben a „✏️ Módosítás” gombbal átírhatod. Ezek kerülnek a jelenléti ívre és a leltárív céges elektronikus pecsétjére is.</span></div></div><div class="tip"><div class="ti">📅</div><div><b>A beosztás megmarad</b><span>Ha csak a helyet vagy a nyitvatartást módosítod, a beosztott napok nem vesznek el.</span></div></div><div class="tip"><div class="ti">🗑</div><div><b>Dolgozó törlése</b><span>A törölt dolgozó beosztott napjai is törlődnek — mentés előtt rákérdez.</span></div></div><div class="tip"><div class="ti">🎨</div><div><b>Színek</b><span>Mindenki saját színt kap; a színes körre kattintva bármikor átállíthatod.</span></div></div><div class="tip"><div class="ti">✏️</div><div><b>Bármikor módosíthatod</b><span>A jobb felső ⚙️ gombbal bármikor visszatérhetsz, és a lépések között szabadon ugrálhatsz.</span></div></div></div></section></div>
+    <div class="help-body" id="shelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">📍</div><div><h3>1. Üzlet kiválasztása</h3><p>Először azt kérdezi, melyik üzletről van szó.</p></div></div><div class="hc-wrap"><div class="hc-stage z1"><div class="hc-lbl" style="left:20px;top:6px">🔎 ÜZLET KERESÉSE A LISTÁBAN</div><div class="hc-in in1" style="left:20px;top:21px;width:200px"><span class="old" style="position:absolute;left:10px"><span data-ex="old.name"></span></span><span class="tw"><span data-ex="loc.name"></span></span><span class="caret"></span></div><div class="dd" style="left:20px;top:58px;width:200px"><div class="ddi"><span data-ex="loc.mall"></span><small data-ex="loc.addr"></small></div></div><div class="hc-lbl" style="left:20px;top:110px;width:200px;line-height:1.5;font-weight:600">Kiválasztás után a hely, a cím és a nyitvatartás magától kitöltődik.</div><div class="fpbox" style="left:240px;top:10px;width:220px;height:118px"><img class="sh-fp" alt="" style="margin-top:-30px"><div class="fpsub sub-old" data-fit="old.name" style="top:72px;font-size:22px"><span data-ex="old.name"></span></div><div class="fpsub sub-new" data-fit="loc.name" style="top:72px;font-size:19px;opacity:0"><span data-ex="loc.name"></span></div></div><div class="okchip ok1" style="left:20px;top:150px">✓ Fejléc</div><div class="okchip ok2" style="left:100px;top:150px">✓ Beosztás PDF</div><div class="okchip ok3" style="left:220px;top:150px">✓ Jelenléti ív</div><div class="hc-ripple r1" style="left:120px;top:37px"></div><div class="hc-ripple r2" style="left:110px;top:72px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Kattints a jobb felső <b>„⚙️ Üzlet &amp; dolgozók”</b> gombra (a ⚡ és a 🌙 mellett).</div></li><li><div><span>Bolti belépésnél ez a lépés nincs — az üzletet a belépés adja.</span> Kezdd el beírni a várost, és <b>válaszd ki az üzletet a listából</b> — a cím és a nyitvatartás magától kitöltődik. <span>Nincs a listában? Írd be kézzel az „Üzlet helye” mezőbe.</span> A „FirstPhone” felirat mindig marad, alá kerül a hely.</div></li><li><div>Lent azonnal látod a <b>színes</b> és a <b>fekete</b> logót — ezek kerülnek a fejlécre, a PDF-re és a jelenléti ívre.</div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">🏢</div><div><h3>2. Cím és munkáltató</h3><p>Az adatok nagy része már ki van töltve — csak nézd át.</p></div></div><div class="hc-wrap"><div class="hc-stage z2"><div class="okchip note" style="left:20px;top:10px;opacity:0">✓ A cím a firstphone.hu üzletlistájából jött</div><div class="hc-lbl" style="left:20px;top:44px">ÜZLET CÍME</div><div class="hc-in addr" style="left:20px;top:57px;width:440px"><span data-ex="loc.addr"></span></div><div class="ecard"><div class="ehead">MUNKÁLTATÓ</div><div class="ename"><span style="white-space:nowrap">Milo Technologies Kft.</span></div><div class="ebtn bmod">✏️ Módosítás</div><div class="ebtn bdone" style="opacity:0;border-color:var(--gold)">✓ Kész</div><div class="efields"><div class="hc-in" style="position:relative;height:26px;font-size:10px;border-color:var(--gold)">1063 Budapest, Szinyei Merse utca 10. 2. · Adószám: 28845924-2-42<span class="caret"></span></div></div></div><div class="okchip esaved" style="left:20px;top:150px">✓ Munkáltató elmentve</div><div class="hc-lbl" style="left:20px;top:188px;width:440px;font-weight:600;line-height:1.5">Nincs a listában az üzlet? Itt kereshetsz az interneten is, vagy beírhatod kézzel.</div><div class="hc-ripple r1" style="left:418px;top:112px"></div><div class="hc-ripple r2" style="left:430px;top:112px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Ha az üzletet a listából választottad, a <b>cím</b> már ki van töltve — csak nézd át.</div></li><li><div>A <b>munkáltató</b> adatai előre ki vannak töltve. Ha nálatok más, kattints a <b>„✏️ Módosítás”</b> gombra, írd át, majd <b>„✓ Kész”</b> — a változás azonnal elmentődik.</div></li><li><div>Nincs a listában az üzlet? A <b>„Keresés az interneten”</b> gombbal vagy <b>kézzel</b> is megadhatod a címet.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">🕘</div><div><h3>3. Nyitvatartás</h3><p>Minden napra külön megadhatod.</p></div></div><div class="hc-wrap"><div class="hc-stage z3"><div class="hc-row" style="top:14px"><span style="width:110px">Hétfő – Péntek</span><div class="hc-toggle" style="position:relative"></div><span class="tm">09:00 – 20:00 · váltás 14:30</span></div><div class="hc-row" style="top:54px"><span style="width:110px">Szombat</span><div class="hc-toggle" style="position:relative"></div><span class="tm">09:00 – 20:00 · váltás 14:30</span></div><div class="hc-row" style="top:94px"><span style="width:110px">Vasárnap</span><div class="hc-toggle tg3" style="position:relative"></div><span style="position:relative;width:44px;font-size:10.5px"><span class="lbl-open" style="position:absolute;left:0;top:-7px">Nyitva</span><span class="lbl-closed" style="position:absolute;left:0;top:-7px;opacity:0;color:var(--text-dim)">Zárva</span></span><span class="tm t3">10:00 – 18:00</span></div><div class="okchip ok1" style="left:20px;top:150px">🗓️ Vasárnap zárva → a naptárban „ZÁRVA” lesz, nem osztható be</div><div class="hc-ripple r1" style="left:233px;top:105px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Állítsd be a <b>nyitás</b> és <b>zárás</b> idejét. <span>A „Hétfő → minden hétköznapra” gomb gyorsan átmásolja.</span></div></li><li><div>Ha egy nap zárva vagytok, kapcsold át a kapcsolót <b>Zárva</b> állásba.</div></li><li><div>A délelőtt / délután <b>váltás</b> automatikusan a nap közepére esik.</div></li></ol></section><section class="help-slide" data-i="4"><div class="hs-head"><div class="hs-icon">👥</div><div><h3>4. Dolgozók hozzáadása</h3><p>Bármennyi dolgozót felvehetsz, teljes névvel.</p></div></div><div class="hc-wrap"><div class="hc-stage z4"><div class="hc-row" style="top:12px"><span class="dot" style="background:var(--evelin)"></span><span data-ex="a.full"></span></div><div class="hc-row" style="top:50px"><span class="dot" style="background:var(--martin)"></span><span data-ex="b.two"></span></div><div class="hc-row new" style="top:88px;opacity:0;border-color:var(--gold)"><span class="dot" style="background:#34d399"></span><span class="tw"><span data-ex="c.full"></span></span><span class="caret"></span></div><div class="hc-btn s addb" style="left:20px;top:126px;width:200px;height:28px;border-style:dashed;border-width:2px">＋ Dolgozó hozzáadása</div><div class="hc-chip ntab" style="left:20px;top:168px;opacity:0"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;margin-right:5px"></span>Új fül: <span data-ex="c.full"></span></div><div class="hc-ripple r1" style="left:120px;top:139px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Írd be a dolgozó <b>teljes nevét</b> (vezeték- és keresztnév).</div></li><li><div>Új ember: <b>„＋ Dolgozó hozzáadása”</b> (vagy Enter a név mezőben). <span>A színes körre kattintva színt választhatsz.</span></div></li><li><div>Mindenki kap egy <b>saját fület</b>, és megjelenik a PDF / jelenléti ív választóban.</div></li></ol></section><section class="help-slide" data-i="5"><div class="hs-head"><div class="hs-icon">🧩</div><div><h3>5. Programok</h3><p>Csak az legyen a menüben, amit a bolt használ.</p></div></div><div class="hc-wrap"><div class="hc-stage zp"><div class="zc c1"><i>📅</i><b>Beosztás</b><s>✓</s></div><div class="zc c2"><i>📋</i><b>Leltár</b><s>✓</s></div><div class="zc c3"><i>📦</i><b>Csomag</b><s>✓</s></div><div class="zc c4 lk"><i>📚</i><b>Tudástár</b><s>🔒</s></div><div class="zm"><span>📅</span><span>📋</span><span class="x3">📦</span><span>📚</span></div></div></div><ol class="hs-steps"><li><div>A beállítás <b>„🧩 Programok”</b> lépésében minden program egy kártya: kattintással <b>ki- és bepipálhatod</b>. Fent a <b>„✓ Mind”</b> és a <b>„Csak a Tudástár”</b> gomb.</div></li><li><div>Mentés után a kikapcsolt programok <b>eltűnnek a felső menüből</b> (és a bemutatóból). Az adataik <b>nem vesznek el</b> — visszapipálva minden ott lesz.</div></li><li><div>A <b>📚 Tudástár</b> mindig elérhető, nem kapcsolható ki. Ha a Beosztást kikapcsolod, a ⚙️ gomb ugyanúgy a beállításokhoz visz.</div></li></ol></section><section class="help-slide" data-i="6"><div class="hs-head"><div class="hs-icon">💾</div><div><h3>6. Mentés</h3><p>Egy kattintás, és minden átáll.</p></div></div><div class="hc-wrap"><div class="hc-stage z5"><div class="hc-row" style="top:14px;width:200px;height:auto;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px"><span style="font-size:9px;color:var(--text-faint)">MUNKAHELY</span><span>FirstPhone <span data-ex="loc.name"></span></span><span style="font-size:9px;color:var(--text-faint);margin-top:4px">DOLGOZÓK (3)</span><span style="font-weight:600"><span data-ex="a.two"></span> · <span data-ex="b.two"></span> · <span data-ex="c.two"></span></span><span style="font-size:9px;color:var(--text-faint);margin-top:4px">NYITVATARTÁS</span><span style="font-weight:600">H–Szo 09–20 · V zárva</span></div><div class="hc-btn p savebtn" style="left:20px;top:172px;width:200px;height:30px">💾 Mentés és alkalmazás</div><div class="it it1" style="top:14px">🖼️ Logó a fejlécben<span class="ck">✓</span></div><div class="it it2" style="top:58px">🗂️ Fülek a dolgozókkal<span class="ck">✓</span></div><div class="it it3" style="top:102px">📄 Beosztás PDF<span class="ck">✓</span></div><div class="it it4" style="top:146px">🖨️ Jelenléti ív<span class="ck">✓</span></div><div class="hc-ripple r1" style="left:120px;top:187px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Az utolsó lépésben nézd át az adatokat.</div></li><li><div>Nyomd meg a <b>„Mentés és alkalmazás”</b> gombot.</div></li><li><div>Kész! A <b>logó</b>, a <b>fülek</b>, a <b>beosztás PDF</b> és a <b>jelenléti ív</b> is az új adatokkal készül.</div></li></ol></section><section class="help-slide" data-i="7"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Hogy egy másik bolt is gond nélkül használhassa.</p></div></div><div class="tips"><div class="tip"><div class="ti">🎬</div><div><b>Oldal bemutatása</b><span>Első indításkor egy üdvözlő ablak köszönt: a „✓ Oké, mehet” egyből ide, a beállításhoz hoz, az „▶ Oldal bemutatása” animáltan körbevezet. Innen bármikor újraindíthatod. <button type="button" class="tour-again">▶ Bemutató indítása</button></span></div></div><div class="tip"><div class="ti">🔐</div><div><b>Bolti belépés</b><span>A weboldalon belépéskor elég a <b>bolt nevét</b> (pl. <b>Kaposvár</b>, <b>Eger</b>, <b>Debrecen Fórum</b> — ékezet és nagybetű nem számít) és a jelszót beírni; a bolt magától kiválasztódik, és a ☁️ mellett a neve látszik. Ilyenkor a „Hely” lépés kimarad, csak az adatokat, a nyitvatartást, a dolgozókat és a programokat kell átnézni.</span></div></div><div class="tip"><div class="ti">💬</div><div><b>Chat a központtal</b><span>Bolti belépéssel jobb lent a <b>💬</b> gomb: írj a központnak (kérdés, hiány, bármi), a válasz ugyanitt jelenik meg — piros szám jelzi az olvasatlant. Enter: küldés, Shift+Enter: új sor.</span></div></div><div class="tip"><div class="ti">✨</div><div><b>Újdonságok</b><span>Ha a központ bekapcsolja, bal lent megjelenik a villogó <b>„✨ Újdonságok”</b> gomb: diás, animált bemutató arról, mi változott a hónapban (← → nyilakkal vagy húzással lapozható). Első alkalommal magától megnyílik.</span></div></div><div class="tip"><div class="ti">👑</div><div><b>Boltfiókok (admin)</b><span>Az <b>admin</b> fiókkal az <b>👑 Admin központ</b> nyílik meg: <b>💬 Chat</b> (beszélgetés bármelyik bolttal), <b>✨ Újdonságok</b> (egy kapcsolóval minden boltnál megjelenik a havi újdonságok gombja, amíg ki nem kapcsolod), <b>📊 Áttekintés</b> (minden bolt egy táblázatban: utolsó mentés, váró csomagok, mai selejt, kassza eltérés, utolsó leltár, dolgozók — oszlopra kattintva rendez, sorra kattintva megnyitja a boltot), <b>🏬 Boltok</b>, <b>🔑 Fiókok</b>, <b>📢 Üzenet a boltoknak</b> (közlemény a kiválasztott boltok munkaasztalának tetején, amíg el nem olvassák) és <b>💾 Adatok és mentés</b> (minden bolt adata egy fájlban). A Fiókok fülön a „👥 Tömeges létrehozás” résszel egyszerre létrehozhatod a boltok belépését: illeszd be a listát (e-mail + jelszó soronként, vagy a Bolt | Boltkód | Jelszó táblázatot). A <b>„🔑 Fiókok és jelszavak”</b> résszel minden bolt fiókját látod (aktív / letiltva / nincs fiók, utolsó belépés), <b>új jelszót</b> adhatsz, letilthatod vagy engedélyezheted a belépést — ezt csak az admin éri el. A boltválasztóban a még be nem lépett boltok is látszanak, halványan. A jelszavakat a program nem tárolja (a régieket a Firebase sem mutatja meg — elfelejtett jelszó helyett adj újat).</span></div></div><div class="tip"><div class="ti">🏬</div><div><b>Másik bolt</b><span>Nyissák meg a weboldalt, és lépjenek be a <b>saját boltjuk nevével</b> — a bolt magától kiválasztódik. Fájlból (felhő nélkül) első megnyitáskor a varázsló indul, és a listából kiválaszthatják az üzletüket.</span></div></div><div class="tip"><div class="ti">☁️</div><div><b>Felhő</b><span>A weboldalon belépve a beállítás (a programokkal együtt) és minden adat a bolt fiókjába mentődik — a bolt minden gépén ugyanaz. Felhő nélkül csak abban a böngészőben, ahol megadtad.</span></div></div><div class="tip"><div class="ti">🏢</div><div><b>Munkáltató</b><span>A munkáltató adatai előre ki vannak töltve; ha nálatok más, az Adatok lépésben a „✏️ Módosítás” gombbal átírhatod. Ezek kerülnek a jelenléti ívre és a leltárív céges elektronikus pecsétjére is.</span></div></div><div class="tip"><div class="ti">📅</div><div><b>A beosztás megmarad</b><span>Ha csak a helyet vagy a nyitvatartást módosítod, a beosztott napok nem vesznek el.</span></div></div><div class="tip"><div class="ti">🗑</div><div><b>Dolgozó törlése</b><span>A törölt dolgozó beosztott napjai is törlődnek — mentés előtt rákérdez.</span></div></div><div class="tip"><div class="ti">🎨</div><div><b>Színek</b><span>Mindenki saját színt kap; a színes körre kattintva bármikor átállíthatod.</span></div></div><div class="tip"><div class="ti">✏️</div><div><b>Bármikor módosíthatod</b><span>A jobb felső ⚙️ gombbal bármikor visszatérhetsz, és a lépések között szabadon ugrálhatsz.</span></div></div></div></section></div>
     <div class="help-foot"><button class="action-btn secondary" id="shelpPrev">← Vissza</button><span class="hint">Tipp: lapozz a ← → nyilakkal</span><button class="action-btn primary" id="shelpNext">Tovább →</button></div>
   </div>
 </div>
