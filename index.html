@@ -3645,6 +3645,19 @@
       .fc-side{padding:16px 16px 34px;align-items:flex-start;}
       .fc-form{padding:24px 20px;}
     }
+    /* középre igazított, egyoszlopos belépő */
+    .fc-full:not(.fc-admin){grid-template-columns:1fr;align-content:safe center;justify-items:center;padding:28px 16px;}
+    .fc-full:not(.fc-admin) .fc-glow{background:radial-gradient(800px 520px at 50% 0%,rgba(217,173,70,.20),transparent 62%),radial-gradient(700px 460px at 50% 100%,rgba(79,179,196,.12),transparent 60%);}
+    .fc-full:not(.fc-admin) .fc-brand{border-right:none;align-items:center;text-align:center;gap:16px;padding:10px 8px 18px;max-width:640px;}
+    .fc-full:not(.fc-admin) .fc-brand h1{font-size:clamp(28px,4vw,44px);}
+    .fc-full:not(.fc-admin) .fc-brand h1 br{display:none;}
+    .fc-full:not(.fc-admin) .fc-lead{margin:0 auto;}
+    .fc-full:not(.fc-admin) .fc-feats{justify-content:center;margin:0 auto;}
+    .fc-full:not(.fc-admin) .fc-side{padding:4px 0 10px;width:100%;align-items:center;}
+    .fc-full:not(.fc-admin) .fc-form{margin:0 auto;text-align:left;}
+    .fc-full:not(.fc-admin) .fc-lock{margin-left:auto;margin-right:auto;}
+    .fc-full:not(.fc-admin) .fc-form h2,.fc-full:not(.fc-admin) .fc-sub{text-align:center;}
+    @media (max-width:860px){ .fc-full:not(.fc-admin){align-content:start;} .fc-full:not(.fc-admin) .fc-brand{padding-top:18px;} }
     html.fp-lite .fc-full,html.fp-lite .fc-feats span{animation:none !important;}
     /* admin boltválasztó */
     .fc-admin{display:block;}
@@ -3684,7 +3697,7 @@
     b.innerHTML = `<div class="fc-glow"></div>
       <section class="fc-brand">
         <div class="fc-brand-top">${logo ? `<img class="fc-logo-img" src="${logo}" alt="FirstPhone">` : `<b class="fc-word">First<span>Phone</span></b>`}<span class="fc-app">Munkaasztal</span></div>
-        <h1>A bolt napi munkája,<br><span>egy helyen.</span></h1>
+        <h1>A bolt napi munkája, <br><span>egy helyen.</span></h1>
         <p class="fc-lead">Lépj be a bolt fiókjával: a bolt minden gépén és telefonján ugyanazok az adatok látszanak, és csak a ti boltotok látja őket.</p>
         <div class="fc-feats">${feats.map(([i, t], k)=> `<span style="--d:${k * 70}ms"><i>${i}</i>${t}</span>`).join("")}</div>
         <div class="fc-safe">🔒 Boltonként külön, titkosított kapcsolattal mentve</div>
