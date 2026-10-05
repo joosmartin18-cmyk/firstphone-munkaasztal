@@ -3478,7 +3478,7 @@
   const host = location.hostname || "";
   const enabled = /^https?:$/.test(location.protocol) && !/(^|\.)claude(usercontent)?\.(ai|com)$/.test(host) && !/claude/.test(host);
   const S = { admin:false, target:null, on:false, user:null, db:null, ready:false, unsub:null, timers:{}, pending:new Set(), state:"off", lastErr:"" };
-  window.FP_CLOUD = S;
+  window.FP_CLOUD = S; S.enabled = enabled;
   if(!enabled) return;
   const LS = window.localStorage, P = Storage.prototype, rawSet = P.setItem, rawRemove = P.removeItem, rawGet = P.getItem;
   const lsGet = k=>{ try{ return rawGet.call(LS, k); }catch(e){ return null; } };
@@ -3848,6 +3848,7 @@
     S.db = firebase.firestore();
     try{ S.db.enablePersistence({ synchronizeTabs:true }).catch(()=>{}); }catch(e){}
     firebase.auth().onAuthStateChanged(async u=>{
+      S.authKnown = true;
       S.user = u || null;
       if(!u){ S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; } status(); if(lsGet(OFF_KEY) !== "1") login(); return; }
       const l = document.getElementById("fcLogin"); if(l) l.remove(); document.documentElement.classList.remove("fc-locked");
@@ -14145,7 +14146,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   });
   window.fpTour = fpTour; window.fpWelcome = fpWelcome;
   /* első indítás: az üdvözlő ablak */
-  if(!state.settings.configured && !fpWelcomeSeen()) setTimeout(fpWelcome, 350);
+  setTimeout(()=>{
+  /* az üdvözlő ablak csak a belépés után jön (a teljes képernyős belépő fölé nem) */
+  let wlT = 0;
+  (function wlWait(){ const C = window.FP_CLOUD; wlT++; if(document.documentElement.classList.contains("fc-locked") || (C && C.enabled && !C.authKnown && wlT < 20)) return setTimeout(wlWait, 600); if(!state.settings.configured && !fpWelcomeSeen() && !document.getElementById("wlBack")) fpWelcome(); })();
+  }, 350);
 
   /* ===================== PDF export (native, branded, no external deps) ===================== */
   const pdfModal = document.getElementById("pdfModal");
