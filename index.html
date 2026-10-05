@@ -3520,19 +3520,31 @@
   }
   /* ---------- admin: boltválasztó ---------- */
   async function storeList(){
-    const snap = await S.db.collection("boltok").get(), out = [];
     const today = new Date(), tk = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-    for(const d of snap.docs){
-      const m = d.data() || {}; if(m.email === ADMIN) continue;
-      const it = { uid:d.id, email:m.email || "", loc:m.loc || "", place:m.place || "", addr:m.addr || "", ms:m.ms || 0, wait:null, sx:null };
-      try{
-        const c = colFor(d.id), [cs, sx] = await Promise.all([c.doc("firstphone_csomag").get(), c.doc("firstphone_selejt").get()]);
-        if(cs.exists){ const v = await readDoc("firstphone_csomag", cs.data(), c); const o = v ? JSON.parse(v) : null; if(o && o.items) it.wait = o.items.filter(x=> !x.outAt).length; }
-        if(sx.exists){ const v = await readDoc("firstphone_selejt", sx.data(), c); const o = v ? JSON.parse(v) : null; if(o && o.items) it.sx = o.items.filter(x=> x.date === tk).reduce((a, x)=> a + (+x.qty || 0), 0); }
-      }catch(e){}
-      out.push(it);
+    const by = {};
+    const get = uid=> by[uid] || (by[uid] = { uid, email:"", loc:"", place:"", addr:"", ms:0, wait:null, sx:null, kv:{} });
+    /* 1) a boltok névjegye (ha már belépett az új változattal) */
+    try{ const snap = await S.db.collection("boltok").get(); snap.docs.forEach(d=>{ const m = d.data() || {}; const it = get(d.id); Object.assign(it, { email:m.email || "", loc:m.loc || "", place:m.place || "", addr:m.addr || "", ms:m.ms || 0 }); }); }catch(e){ var metaErr = e; }
+    /* 2) minden bolt mentett adata — így az is látszik, amelyik még nem küldött névjegyet */
+    let groupErr = null;
+    try{
+      const g = await S.db.collectionGroup("kv").get();
+      g.docs.forEach(d=>{ const uid = d.ref.parent.parent && d.ref.parent.parent.id; if(!uid) return; const it = get(uid); it.kv[d.id] = d.data();
+        const ms = d.data().n || 0; if(ms > it.ms) it.ms = ms; });
+    }catch(e){ groupErr = e; }
+    if(groupErr && metaErr) throw groupErr;
+    const val = (it, k)=>{ const d = it.kv[k]; if(!d || d.del) return null; if(!d.parts) return d.v == null ? null : String(d.v);
+      let out = ""; for(let i = 0; i < d.parts; i++){ const p = it.kv[k + "__" + i]; if(!p) return null; out += p.v || ""; } return out; };
+    const out = [];
+    for(const it of Object.values(by)){
+      if(it.email === ADMIN || it.uid === S.user.uid) continue;
+      try{ const st = JSON.parse(val(it, "firstphone_beosztas_tervezo_v2") || "null"); const se = st && st.settings || {}; if(!it.loc) it.loc = se.location || ""; if(!it.place) it.place = se.placeDetail || ""; if(!it.addr) it.addr = se.address || ""; }catch(e){}
+      try{ const o = JSON.parse(val(it, "firstphone_csomag") || "null"); if(o && o.items) it.wait = o.items.filter(x=> !x.outAt).length; }catch(e){}
+      try{ const o = JSON.parse(val(it, "firstphone_selejt") || "null"); if(o && o.items) it.sx = o.items.filter(x=> x.date === tk).reduce((a, x)=> a + (+x.qty || 0), 0); }catch(e){}
+      if(!it.loc && !it.email && !Object.keys(it.kv).length) continue;
+      delete it.kv; out.push(it);
     }
-    return out.sort((a, b)=> (a.loc || a.email).localeCompare(b.loc || b.email, "hu"));
+    return out.sort((a, b)=> (a.loc || a.email || a.uid).localeCompare(b.loc || b.email || b.uid, "hu"));
   }
   function ago(ms){ if(!ms) return "még nem mentett"; const m = Math.round((Date.now() - ms) / 60000); return m < 1 ? "épp most" : m < 60 ? m + " perce" : m < 1440 ? Math.round(m / 60) + " órája" : Math.round(m / 1440) + " napja"; }
   function adminPicker(){
@@ -3553,19 +3565,19 @@
       });
       let list = [];
       try{ list = await storeList(); }
-      catch(e){ grid.innerHTML = `<div class="fc-adm-load err">⚠ Nem sikerült betölteni a boltokat: ${esc(e && e.message || e)}<br><small>Ellenőrizd, hogy a Firestore szabályok között benne van-e az admin sor.</small></div>`; return; }
+      catch(e){ grid.innerHTML = `<div class="fc-adm-load err">⚠ Nem sikerült betölteni a boltokat: ${esc(e && e.message || e)}<br><small>Valószínűleg a Firestore szabályok még a régiek — másold be az új szabályokat (Firestore → Rules → Publish), majd frissítsd az oldalt.</small></div>`; return; }
       const draw = ()=>{ const f = q.value.trim().toLowerCase();
         const l = list.filter(x=> !f || (x.loc + " " + x.place + " " + x.email).toLowerCase().includes(f));
-        grid.innerHTML = l.length ? l.map(x=> `<button type="button" class="fc-store${x.uid === S.target ? " on" : ""}" data-uid="${esc(x.uid)}" data-name="${esc(x.loc || x.email)}">
-          <span class="fc-st-ic">🏬</span><b>${esc(x.loc ? "FirstPhone " + x.loc : x.email)}</b><small>${esc([x.place, x.addr].filter(Boolean).join(" · ") || x.email)}</small>
-          <span class="fc-st-row"><em>📦 ${x.wait == null ? "—" : x.wait} vár</em><em>🗑️ ${x.sx == null ? "—" : x.sx} db ma</em></span><span class="fc-st-t">💾 ${ago(x.ms)} · ${esc(x.email)}</span></button>`).join("")
-          : `<div class="fc-adm-load">${list.length ? "Nincs találat." : "Még egy bolt sem lépett be. Ha egy bolt belép a saját fiókjával, itt megjelenik."}</div>`; };
+        grid.innerHTML = l.length ? l.map(x=> `<button type="button" class="fc-store${x.uid === S.target ? " on" : ""}" data-uid="${esc(x.uid)}" data-name="${esc(x.loc ? "FirstPhone " + x.loc : (x.email || "Névtelen bolt"))}">
+          <span class="fc-st-ic">🏬</span><b>${esc(x.loc ? "FirstPhone " + x.loc : (x.email || "Névtelen bolt"))}</b><small>${esc([x.place, x.addr].filter(Boolean).join(" · ") || x.email)}</small>
+          <span class="fc-st-row"><em>📦 ${x.wait == null ? "—" : x.wait} vár</em><em>🗑️ ${x.sx == null ? "—" : x.sx} db ma</em></span><span class="fc-st-t">💾 ${ago(x.ms)}${x.email ? " · " + esc(x.email) : ""}</span></button>`).join("")
+          : `<div class="fc-adm-load">${list.length ? "Nincs találat." : "Még nincs mentett bolt. Ha egy bolt belép a saját fiókjával és ment valamit (pl. beállítja az üzletet), itt megjelenik. Ha biztosan van már bolt, ellenőrizd a Firestore szabályokat (az admin sorokat)."}</div>`; };
       q.oninput = draw; draw(); setTimeout(()=> q.focus(), 60);
     });
   }
   async function adminChoose(){
     const r = await adminPicker(); if(!r || r.uid === S.target) return;
-    lsSet(ADMIN_KEY, r.uid); S.target = r.uid; S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; }
+    lsSet(ADMIN_KEY, r.uid); lsSet(ADMIN_KEY + "_name", r.name || ""); S.target = r.uid; S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; }
     SYNC.forEach(lsDel);
     try{ await pull(); }catch(e){}
     sessionStorage.setItem("fp_cloud_reloaded", "1"); location.reload();
@@ -3643,6 +3655,7 @@
       } else { S.target = u.uid; }
       try{
         const changed = await pull();
+        if(S.admin){ try{ const st = JSON.parse(lsGet("firstphone_beosztas_tervezo_v2") || "null"); const loc = st && st.settings && st.settings.location; if(loc) S.targetName = "FirstPhone " + loc; else if(!S.targetName || S.targetName === "bolt") S.targetName = lsGet(ADMIN_KEY + "_name") || "bolt"; }catch(e){} }
         S.on = true; listen(); status(); writeMeta(true);
         if(changed && !sessionStorage.getItem("fp_cloud_reloaded")){ sessionStorage.setItem("fp_cloud_reloaded", "1"); location.reload(); return; }
         sessionStorage.removeItem("fp_cloud_reloaded");
