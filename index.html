@@ -3390,7 +3390,52 @@
     .fc-chip.busy i{background:#f0a030;} .fc-chip.err i{background:var(--red,#e2585a);} .fc-chip.offl i{background:var(--text-faint,#5e5e68);}
     .fc-ban{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:1900;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--bg-panel,#17171c);border:1px solid var(--gold,#d9ad46);color:var(--text,#f2f1ee);font:700 13px 'Inter',sans-serif;box-shadow:0 12px 30px rgba(0,0,0,.4);}
     .fc-ban button{border:none;border-radius:9px;padding:7px 11px;font:800 12px 'Inter',sans-serif;cursor:pointer;background:var(--gold,#d9ad46);color:#171106;}
-    @media (max-width:640px){ .fc-chip span{display:none;} .fc-chip{padding:0 11px;} }`;
+    @media (max-width:640px){ .fc-chip span{display:none;} .fc-chip{padding:0 11px;} }
+    /* teljes képernyős belépés */
+    html.fc-locked,html.fc-locked body{overflow:hidden !important;}
+    .fc-full{position:fixed;inset:0;z-index:2100;display:grid;grid-template-columns:1.1fr 1fr;background:var(--bg,#0c0c0f);color:var(--text,#f2f1ee);font-family:'Inter',sans-serif;overflow:auto;animation:fcIn .35s ease-out;}
+    .fc-full.out{opacity:0;transition:opacity .25s ease;}
+    @keyframes fcIn{from{opacity:0}to{opacity:1}}
+    .fc-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(900px 600px at 10% 10%,rgba(217,173,70,.20),transparent 60%),radial-gradient(700px 500px at 90% 100%,rgba(79,179,196,.12),transparent 60%);}
+    .fc-brand{position:relative;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:56px clamp(28px,6vw,90px);border-right:1px solid var(--border-soft,#232329);}
+    .fc-brand-top{display:flex;align-items:center;gap:14px;}
+    .fc-logo-img{height:58px;width:auto;}
+    .fc-word{font:900 italic 38px 'Poppins',sans-serif;color:var(--gold-light,#f0c766);} .fc-word span{color:var(--text,#f2f1ee);}
+    .fc-app{font:700 15px 'Poppins',sans-serif;color:var(--gold-light,#f0c766);padding:5px 12px;border-radius:99px;border:1px solid rgba(217,173,70,.45);background:rgba(217,173,70,.1);}
+    .fc-brand h1{margin:0;font:800 clamp(32px,4.2vw,52px)/1.08 'Poppins',sans-serif;letter-spacing:-.02em;}
+    .fc-brand h1 span{background:linear-gradient(135deg,var(--gold-light,#f0c766),var(--gold,#d9ad46));-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .fc-lead{margin:0;max-width:520px;font-size:15.5px;line-height:1.6;color:var(--text-dim,#9c9ca6);}
+    .fc-feats{display:flex;flex-wrap:wrap;gap:8px;max-width:560px;}
+    .fc-feats span{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:12px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);font-size:13px;font-weight:700;animation:fcUp .45s ease-out both;animation-delay:var(--d);}
+    .fc-feats i{font-style:normal;}
+    @keyframes fcUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .fc-safe{font-size:12.5px;font-weight:600;color:var(--text-dim,#9c9ca6);}
+    .fc-side{position:relative;display:flex;align-items:center;justify-content:center;padding:40px 24px;}
+    .fc-form{width:100%;max-width:400px;padding:30px 28px;border-radius:24px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);box-shadow:0 30px 70px rgba(0,0,0,.35);}
+    .fc-form.shake{animation:fcShake .4s ease;}
+    @keyframes fcShake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+    .fc-lock{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:linear-gradient(150deg,rgba(217,173,70,.3),rgba(217,173,70,.06));border:1px solid rgba(217,173,70,.45);margin-bottom:14px;}
+    .fc-form h2{margin:0;font:800 24px 'Poppins',sans-serif;}
+    .fc-sub{margin:4px 0 14px;font-size:13px;color:var(--text-dim,#9c9ca6);}
+    .fc-form label{display:block;font-size:12px;font-weight:700;color:var(--text-dim,#9c9ca6);margin:12px 0 6px;}
+    .fc-in{display:flex;align-items:center;gap:8px;border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);border-radius:13px;padding:0 6px 0 12px;transition:border-color .15s ease;}
+    .fc-in:focus-within{border-color:var(--gold,#d9ad46);}
+    .fc-in i{font-style:normal;font-size:15px;}
+    .fc-in input{flex:1;min-width:0;border:none !important;background:transparent !important;color:inherit;font:600 15px 'Inter',sans-serif;padding:13px 0;outline:none;box-shadow:none !important;}
+    .fc-eye{border:none;background:none;cursor:pointer;font-size:15px;padding:6px;opacity:.7;} .fc-eye:hover{opacity:1;}
+    .fc-go{width:100%;margin-top:6px;padding:14px !important;font-size:15px !important;}
+    .fc-form .fc-btn.sec{width:100%;margin-top:8px;}
+    .fc-help{margin:14px 0 0;font-size:11.5px;line-height:1.5;color:var(--text-faint,#5e5e68);text-align:center;}
+    body.light-theme .fc-form{box-shadow:0 30px 70px rgba(60,40,10,.12);}
+    @media (max-width:860px){
+      .fc-full{grid-template-columns:1fr;align-content:start;}
+      .fc-brand{border-right:none;padding:34px 22px 6px;gap:14px;}
+      .fc-brand h1{font-size:30px;} .fc-lead{font-size:14px;} .fc-feats span{padding:7px 10px;font-size:12px;} .fc-safe{display:none;}
+      .fc-logo-img{height:44px;}
+      .fc-side{padding:16px 16px 34px;align-items:flex-start;}
+      .fc-form{padding:24px 20px;}
+    }
+    html.fp-lite .fc-full,html.fp-lite .fc-feats span{animation:none !important;}`;
     document.head.appendChild(st);
   }
   function ask(title, html, yes, no){
@@ -3403,21 +3448,43 @@
   function login(msg){
     css();
     if(document.getElementById("fcLogin")) return;
-    const b = document.createElement("div"); b.className = "fc-back"; b.id = "fcLogin";
-    b.innerHTML = `<form class="fc-card" autocomplete="on"><div class="fc-logo">🔐</div><h2>Bolt belépés</h2>
-      <p>Lépj be a bolt fiókjával — így a bolt minden gépén és telefonján ugyanazok az adatok látszanak, és csak a ti boltotok látja őket.</p>
-      <label for="fcEmail">Bolt e-mail címe</label><input id="fcEmail" type="email" autocomplete="username" placeholder="pl. eger@firstphone-munkaasztal.hu" required>
-      <label for="fcPass">Jelszó</label><input id="fcPass" type="password" autocomplete="current-password" required>
-      <div class="fc-err" id="fcErr">${msg ? esc(msg) : ""}</div>
-      <div class="fc-btns"><button class="fc-btn" type="submit" id="fcGo">Belépés</button><button class="fc-btn sec" type="button" id="fcOff">Folytatás felhő nélkül (csak ezen a gépen)</button></div></form>`;
+    const b = document.createElement("div"); b.className = "fc-full"; b.id = "fcLogin";
+    const lg = document.querySelector("#logoInner img"), logo = lg && lg.getAttribute("src");
+    const feats = [["📅","Beosztás"],["🏷️","Cetli generátor"],["📋","Leltár"],["💰","Kassza"],["📦","Csomag"],["🗑️","Selejt"]];
+    b.innerHTML = `<div class="fc-glow"></div>
+      <section class="fc-brand">
+        <div class="fc-brand-top">${logo ? `<img class="fc-logo-img" src="${logo}" alt="FirstPhone">` : `<b class="fc-word">First<span>Phone</span></b>`}<span class="fc-app">Munkaasztal</span></div>
+        <h1>A bolt napi munkája,<br><span>egy helyen.</span></h1>
+        <p class="fc-lead">Lépj be a bolt fiókjával: a bolt minden gépén és telefonján ugyanazok az adatok látszanak, és csak a ti boltotok látja őket.</p>
+        <div class="fc-feats">${feats.map(([i, t], k)=> `<span style="--d:${k * 70}ms"><i>${i}</i>${t}</span>`).join("")}</div>
+        <div class="fc-safe">🔒 Boltonként külön, titkosított kapcsolattal mentve</div>
+      </section>
+      <section class="fc-side">
+        <form class="fc-form" autocomplete="on">
+          <div class="fc-lock">🔐</div>
+          <h2>Bolt belépés</h2>
+          <p class="fc-sub">Add meg a bolt e-mail címét és jelszavát.</p>
+          <label for="fcEmail">Bolt e-mail címe</label>
+          <div class="fc-in"><i>✉️</i><input id="fcEmail" type="email" autocomplete="username" inputmode="email" placeholder="pl. eger@firstphone-munkaasztal.hu" required></div>
+          <label for="fcPass">Jelszó</label>
+          <div class="fc-in"><i>🔑</i><input id="fcPass" type="password" autocomplete="current-password" placeholder="••••••••" required><button type="button" class="fc-eye" id="fcEye" title="Jelszó mutatása">👁️</button></div>
+          <div class="fc-err" id="fcErr">${msg ? esc(msg) : ""}</div>
+          <button class="fc-btn fc-go" type="submit" id="fcGo">Belépés →</button>
+          <button class="fc-btn sec" type="button" id="fcOff">Folytatás felhő nélkül (csak ezen a gépen)</button>
+          <p class="fc-help">Nincs még belépésed? A bolt fiókját a vezető hozza létre — kérd el tőle az e-mail címet és a jelszót.</p>
+        </form>
+      </section>`;
     document.body.appendChild(b);
-    const f = b.querySelector("form"), go = b.querySelector("#fcGo"), err = b.querySelector("#fcErr");
-    setTimeout(()=> b.querySelector("#fcEmail").focus(), 50);
-    f.onsubmit = async e=>{ e.preventDefault(); go.disabled = true; go.textContent = "Belépés…"; err.textContent = "";
-      try{ await firebase.auth().signInWithEmailAndPassword(b.querySelector("#fcEmail").value.trim(), b.querySelector("#fcPass").value); lsDel(OFF_KEY); }
+    document.documentElement.classList.add("fc-locked");
+    const f = b.querySelector("form"), go = b.querySelector("#fcGo"), err = b.querySelector("#fcErr"), pw = b.querySelector("#fcPass");
+    setTimeout(()=> b.querySelector("#fcEmail").focus(), 80);
+    b.querySelector("#fcEye").onclick = ()=>{ pw.type = pw.type === "password" ? "text" : "password"; pw.focus(); };
+    const done = ()=>{ document.documentElement.classList.remove("fc-locked"); };
+    f.onsubmit = async e=>{ e.preventDefault(); go.disabled = true; go.textContent = "Belépés…"; err.textContent = ""; f.classList.remove("shake");
+      try{ await firebase.auth().signInWithEmailAndPassword(b.querySelector("#fcEmail").value.trim(), pw.value); lsDel(OFF_KEY); done(); }
       catch(ex){ const c = ex && ex.code || ""; err.textContent = /wrong-password|invalid-credential|user-not-found|invalid-email|invalid-login/.test(c) ? "Hibás e-mail cím vagy jelszó." : /too-many/.test(c) ? "Túl sok próbálkozás — várj pár percet." : /network/.test(c) ? "Nincs internet — próbáld újra." : "Nem sikerült belépni: " + (ex.message || c);
-        go.disabled = false; go.textContent = "Belépés"; } };
-    b.querySelector("#fcOff").onclick = ()=>{ lsSet(OFF_KEY, "1"); b.remove(); S.state = "offl"; status(); };
+        void f.offsetWidth; f.classList.add("shake"); go.disabled = false; go.textContent = "Belépés →"; } };
+    b.querySelector("#fcOff").onclick = ()=>{ lsSet(OFF_KEY, "1"); b.classList.add("out"); done(); setTimeout(()=> b.remove(), 260); S.state = "offl"; status(); };
   }
   function banner(show){
     let el = document.getElementById("fcBan");
@@ -3469,7 +3536,7 @@
     firebase.auth().onAuthStateChanged(async u=>{
       S.user = u || null;
       if(!u){ S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; } status(); if(lsGet(OFF_KEY) !== "1") login(); return; }
-      const l = document.getElementById("fcLogin"); if(l) l.remove();
+      const l = document.getElementById("fcLogin"); if(l) l.remove(); document.documentElement.classList.remove("fc-locked");
       try{
         const changed = await pull();
         S.on = true; listen(); status();
