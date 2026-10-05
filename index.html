@@ -3870,7 +3870,7 @@
       const x = list[i]; nEl.textContent = `${i + 1} / ${list.length} …`;
       let st = "", cls = "";
       try{ await a2.createUserWithEmailAndPassword(x.email, x.pw); st = "✓ létrehozva"; cls = "ok"; ok++; try{ await a2.signOut(); }catch(_){} }
-      catch(e){ const c = e && e.code || ""; if(/email-already-in-use/.test(c)){ st = "• már létezett (kihagyva)"; cls = "ex"; ex++; } else { st = "✗ " + (/weak-password/.test(c) ? "gyenge jelszó" : /invalid-email/.test(c) ? "hibás e-mail" : /operation-not-allowed/.test(c) ? "a Firebase-ben nincs bekapcsolva az e-mail/jelszó regisztráció" : /too-many/.test(c) ? "túl sok próbálkozás — várj pár percet" : (e.message || c)); cls = "err"; bad++; } }
+      catch(e){ const c = e && e.code || ""; if(/email-already-in-use/.test(c)){ st = "• már létezett (kihagyva)"; cls = "ex"; ex++; } else { st = "✗ " + (/weak-password/.test(c) ? "gyenge jelszó" : /invalid-email/.test(c) ? "hibás e-mail" : /operation-not-allowed/.test(c) ? "a Firebase-ben nincs bekapcsolva az e-mail/jelszó regisztráció" : /admin-restricted/.test(c) ? "a Firebase tiltja az új fiók létrehozását — kapcsold be: Authentication → Settings → User actions → „Enable create (sign-up)”" : /too-many/.test(c) ? "túl sok próbálkozás — várj pár percet" : (e.message || c)); cls = "err"; bad++; } }
       outEl.insertAdjacentHTML("beforeend", `<div class="fc-acc-r ${cls}"><b>${esc(x.email)}</b><span>${esc(st)}</span></div>`);
       await new Promise(r=> setTimeout(r, 350));
     }
