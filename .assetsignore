@@ -5,3 +5,4 @@ wrangler.jsonc
 README.md
 .nojekyll
 node_modules
+.wrangler
