@@ -3552,7 +3552,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261005-232205";</script>
+<script>window.FP_BUILD="20261005-232822";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4497,6 +4497,66 @@
     .ad2 .ad-nav[data-nav="dash"]{--c:#c9971f;} .ad2 .ad-nav[data-nav="shops"]{--c:#2fa3b6;} .ad2 .ad-nav[data-nav="chat"]{--c:#3aa0c9;} .ad2 .ad-nav[data-nav="bugs"]{--c:#e08a1e;}
     .ad2 .ad-nav[data-nav="news"]{--c:#b07fd0;} .ad2 .ad-nav[data-nav="msg"]{--c:#d9474a;} .ad2 .ad-nav[data-nav="acc"]{--c:#6f7ff5;} .ad2 .ad-nav[data-nav="data"]{--c:#2ea472;}
     @media (max-width:700px){ .ad2 .ad-navs{justify-content:flex-start;} }
+    /* ===== Admin 3: bal oldali színes ikonsáv, színes fejléc-banner, kitöltött csempék ===== */
+    .ad3.ad-shell{display:grid;grid-template-columns:96px minmax(0,1fr);gap:22px;max-width:1440px;padding:18px 22px 50px;}
+    .ad3 .ad-side{position:sticky;top:18px;height:calc(100vh - 36px);box-sizing:border-box;flex-direction:column;align-items:stretch;gap:4px;padding:14px 8px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.01)),color-mix(in srgb,var(--bg-panel,#15151a) 92%,transparent);overflow-y:auto;scrollbar-width:none;}
+    .ad3 .ad-side::-webkit-scrollbar{display:none;}
+    .ad3 .ad-brand{flex-direction:column;justify-content:center;border:0;margin:0 0 8px;padding:0;} .ad3 .ad-brand i{width:48px;height:48px;font-size:24px;border-radius:16px;} .ad3 .ad-brand > div{display:none;}
+    .ad3 .ad-navs{display:flex;flex-direction:column;gap:4px;flex:1 0 auto;order:0;padding:0;border:0;overflow:visible;}
+    .ad3 .ad-nav{--c:#c9971f;position:relative;flex-direction:column;justify-content:center;gap:4px;width:100%;padding:8px 2px;border-radius:16px;border:0;font:700 10.5px 'Inter',sans-serif;line-height:1.15;text-align:center;color:var(--text-dim,#9c9ca6);background:none;box-shadow:none;}
+    .ad3 .ad-nav i{width:44px;height:44px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:20px;background:color-mix(in srgb,var(--c) 16%,transparent);transition:transform .15s,background .2s,box-shadow .2s;}
+    .ad3 .ad-nav span{display:block;max-width:84px;}
+    .ad3 .ad-nav:hover{background:none;color:var(--text,#eee);} .ad3 .ad-nav:hover i{transform:scale(1.07);background:color-mix(in srgb,var(--c) 26%,transparent);}
+    .ad3 .ad-nav.on{color:var(--text,#eee);background:none;box-shadow:none;} .ad3 .ad-nav.on i{background:linear-gradient(135deg,color-mix(in srgb,var(--c) 75%,#fff 25%),var(--c));box-shadow:0 10px 24px color-mix(in srgb,var(--c) 45%,transparent);}
+    .ad3 .ad-nav.on::before{content:"";position:absolute;left:-8px;top:14px;width:4px;height:30px;border-radius:0 4px 4px 0;background:var(--c);}
+    .ad3 .ad-nav em{position:absolute;top:2px;right:8px;margin:0;min-width:18px;padding:1px 5px;border-radius:999px;background:#e2585a;color:#fff;font-size:9.5px;box-shadow:0 0 0 2px var(--bg-panel,#15151a);}
+    .ad3 .ad-nav[data-nav="dash"]{--c:#c9971f;} .ad3 .ad-nav[data-nav="shops"]{--c:#2fa3b6;} .ad3 .ad-nav[data-nav="chat"]{--c:#3aa0c9;} .ad3 .ad-nav[data-nav="bugs"]{--c:#e08a1e;}
+    .ad3 .ad-nav[data-nav="news"]{--c:#b07fd0;} .ad3 .ad-nav[data-nav="msg"]{--c:#d9474a;} .ad3 .ad-nav[data-nav="acc"]{--c:#6f7ff5;} .ad3 .ad-nav[data-nav="data"]{--c:#2ea472;}
+    .ad3 .ad-sfoot{order:1;display:flex;flex-direction:column;gap:6px;margin:auto 0 0;padding:10px 0 0;border-top:1px solid var(--border,#2b2b33);}
+    .ad3 .ad-sfoot .fc-btn{width:100%;padding:9px 4px;font-size:11px;border-radius:12px;}
+    .ad3 .ad-me{display:none;}
+    .ad3 .ad-head{position:relative;overflow:hidden;align-items:flex-end;padding:22px 24px;border-radius:26px;color:#fff;background:radial-gradient(500px 220px at 100% 0%,rgba(255,255,255,.22),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--tc,#c9971f) 85%,#000 15%),color-mix(in srgb,var(--tc,#c9971f) 55%,#1a1a22));box-shadow:0 18px 44px color-mix(in srgb,var(--tc,#c9971f) 30%,transparent);transition:background .4s;}
+    .ad3 .ad-head::after{content:"";position:absolute;right:-60px;bottom:-80px;width:240px;height:240px;border-radius:50%;border:30px solid rgba(255,255,255,.08);}
+    .ad3 .ad-head h2{font-size:clamp(26px,3vw,36px);color:#fff;} .ad3 .ad-head p{color:rgba(255,255,255,.85);font-weight:600;}
+    .ad-hi{display:block;font:800 11.5px 'Inter',sans-serif;letter-spacing:.4px;opacity:.85;margin-bottom:4px;text-transform:none;}
+    .ad3 .ad-rl{position:relative;z-index:1;background:rgba(255,255,255,.18) !important;border-color:rgba(255,255,255,.35) !important;color:#fff !important;}
+    .ad3 .ad-card{border-radius:24px;padding:18px 20px;border:1px solid var(--border,#2b2b33);background:color-mix(in srgb,var(--bg-panel,#17171c) 96%,transparent);box-shadow:0 10px 30px rgba(0,0,0,.16);position:relative;overflow:hidden;}
+    .ad3 .ad-card::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--tc,#c9971f),transparent 70%);}
+    .ad3 .ad-card h3{font-size:16.5px;display:flex;align-items:center;gap:8px;}
+    .ad3 .ad-kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;}
+    .ad3 .ad-kpi{--k2:#c9971f;border:0;border-radius:22px;padding:16px 16px 14px;color:#fff;background:linear-gradient(145deg,color-mix(in srgb,var(--k2) 88%,#fff 12%),color-mix(in srgb,var(--k2) 70%,#000 30%));box-shadow:0 12px 28px color-mix(in srgb,var(--k2) 32%,transparent);transition:transform .15s;}
+    .ad3 .ad-kpi:hover{transform:translateY(-3px) rotate(-.4deg);} .ad3 .ad-kpi[data-go]{cursor:pointer;}
+    .ad3 .ad-kpi::after{right:-40px;top:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);}
+    .ad3 .ad-kpi small{color:rgba(255,255,255,.85);} .ad3 .ad-kpi b{font-size:34px;color:#fff;} .ad3 .ad-kpi b span,.ad3 .ad-kpi > span{color:rgba(255,255,255,.85);}
+    .ad3 .ad-kpi i{font-style:normal;position:absolute;right:12px;bottom:10px;font-size:40px;opacity:.28;z-index:0;}
+    .ad3 .ad-kpi s{display:block;height:6px;border-radius:9px;margin-top:10px;background:rgba(255,255,255,.22);position:relative;overflow:hidden;text-decoration:none;} .ad3 .ad-kpi s::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);border-radius:9px;background:#fff;}
+    .ad3 .ad-kpi.g{--k2:#2ea472;} .ad3 .ad-kpi.t{--k2:#2fa3b6;} .ad3 .ad-kpi.r{--k2:#d9474a;} .ad3 .ad-kpi.o{--k2:#e08a1e;} .ad3 .ad-kpi.p{--k2:#8a5aa8;}
+    .ad3 .ad-attl{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;}
+    .ad3 .ad-ai{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:16px;border:0;background:color-mix(in srgb,var(--a,#d9ad46) 12%,var(--bg-cell,#1c1c23));color:inherit;font:600 13px 'Inter',sans-serif;text-align:left;cursor:pointer;}
+    .ad3 .ad-ai i{font-style:normal;width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--a,#d9ad46);font-size:15px;} .ad3 .ad-ai span{flex:1;} .ad3 .ad-ai em{font-style:normal;opacity:.5;}
+    .ad3 .ad-ai.r{--a:#d9474a;} .ad3 .ad-ai.p{--a:#8a5aa8;} .ad3 .ad-ai.t{--a:#2fa3b6;} .ad3 .ad-ai.o{--a:#e08a1e;} .ad3 .ad-ai.g{--a:#2ea472;}
+    .ad3 .ad-ok{padding:14px;border-radius:16px;background:rgba(46,164,114,.14);color:#30b37a;font-weight:800;}
+    .ad3 .ad-tblw{border-radius:18px;border:1px solid var(--border,#2b2b33);} .ad3 .ad-tbl th{background:color-mix(in srgb,var(--tc,#c9971f) 14%,var(--bg-panel2,#1e1e25));color:var(--text,#eee);} .ad3 .ad-tbl tr.go:hover td{background:color-mix(in srgb,var(--tc,#c9971f) 10%,transparent);}
+    .ad3 .fc-adm-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+    .ad3 .fc-store{border-radius:22px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel,#17171c);position:relative;overflow:hidden;}
+    .ad3 .fc-store::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2fa3b6,#2ea472);}
+    .ad3 .fc-store.none::before{background:var(--border,#3a3a44);}
+    .ad3 .fc-adm-q,.ad3 .fc-pw-q,.ad3 .ad-cq{border-radius:16px;}
+    .ad3 .ad-chat{border-radius:24px;}
+    .ad3 .ad-sw.on{background:linear-gradient(135deg,color-mix(in srgb,var(--tc) 70%,#fff 30%),var(--tc));}
+    .ad3 .ad-tgl > div{border-radius:18px;}
+    .ad3 .ad-bug{border-radius:18px;}
+    body.light-theme .ad3 .ad-side,body.light-theme .ad3 .ad-card{background:rgba(255,255,255,.9);}
+    @media (max-width:860px){
+      .ad3.ad-shell{grid-template-columns:1fr;padding:12px 12px 96px;gap:14px;}
+      .ad3 .ad-side{position:fixed;left:8px;right:8px;bottom:8px;top:auto;height:auto;z-index:20;flex-direction:row;align-items:center;padding:6px;border-radius:22px;overflow-x:auto;box-shadow:0 -10px 30px rgba(0,0,0,.35);}
+      .ad3 .ad-brand,.ad3 .ad-sfoot .fc-btn[data-x="back"]{display:none;}
+      .ad3 .ad-side{flex-wrap:nowrap !important;overflow:hidden;} .ad3 .ad-navs{flex-direction:row;gap:2px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none;} .ad3 .ad-navs::-webkit-scrollbar{display:none;} .ad3 .ad-sfoot{flex:0 0 auto;margin:0 !important;width:auto !important;} .ad3 .ad-nav{width:auto;min-width:62px;padding:4px 2px;font-size:9.5px;} .ad3 .ad-nav i{width:38px;height:38px;font-size:17px;border-radius:13px;} .ad3 .ad-nav.on::before{display:none;}
+      .ad3 .ad-sfoot{flex-direction:row;margin:0;padding:0 0 0 4px;border:0;border-left:1px solid var(--border,#2b2b33);} .ad3 .ad-sfoot .fc-btn{width:auto;padding:10px;}
+      .ad3 .ad-head{padding:16px;border-radius:20px;} .ad3 .ad-head p{display:none;}
+      .ad3 .ad-kpis{grid-template-columns:1fr 1fr;gap:8px;} .ad3 .ad-kpi{padding:12px;border-radius:18px;} .ad3 .ad-kpi b{font-size:26px;} .ad3 .ad-kpi i{font-size:30px;}
+      .ad3 .ad-card{padding:14px;border-radius:20px;} .ad3 .ad-attl{grid-template-columns:1fr;}
+    }
     .ad-rules{width:100%;box-sizing:border-box;height:220px;border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:600 11.5px ui-monospace,Menlo,monospace;padding:10px 12px;border-radius:12px;resize:vertical;}
     .ch-panel{position:fixed;right:18px;bottom:88px;z-index:99980;width:min(400px,calc(100vw - 24px));height:min(560px,calc(100vh - 120px));display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:var(--bg-panel,#15151a);border:1px solid var(--border,#2b2b33);box-shadow:0 26px 70px rgba(0,0,0,.5);color:var(--text,#eee);transform-origin:bottom right;animation:chIn .28s cubic-bezier(.2,.8,.2,1);}
     @keyframes chIn{from{opacity:0;transform:translateY(16px) scale(.94)}to{opacity:1;transform:none}}
@@ -4882,12 +4942,12 @@ service cloud.firestore {
       css(); newsCss(); const old = document.getElementById("fcAdmin"); if(old) old.remove();
       const b = document.createElement("div"); b.className = "fc-full fc-admin"; b.id = "fcAdmin";
       const NAV = [["dash","📊","Áttekintés"],["shops","🏬","Boltok"],["chat","💬","Chat"],["bugs","🐞","Bejelentések"],["news","✨","Újdonságok"],["msg","📢","Üzenet a boltoknak"],["acc","🔑","Fiókok"],["data","💾","Adatok és mentés"]];
-      b.innerHTML = `<div class="fc-glow"></div><div class="ad-shell ad2">
+      b.innerHTML = `<div class="fc-glow"></div><div class="ad-shell ad3">
         <header class="ad-side"><div class="ad-brand"><i>👑</i><div><b>Admin központ</b><small>FirstPhone Munkaasztal</small></div></div>
           <nav class="ad-navs">${NAV.map(([k, i, t], n)=> `<button type="button" class="ad-nav${n ? "" : " on"}" data-nav="${k}"><i>${i}</i><span>${t}</span><em data-cnt="${k}" hidden></em></button>`).join("")}</nav>
-          <div class="ad-sfoot"><span class="ad-me" title="${esc(S.user.email)}">👤 ${esc(S.user.email)}</span>${S.target ? `<button type="button" class="fc-btn sec" data-x="back">← Vissza a bolthoz</button>` : ""}<button type="button" class="fc-btn sec" data-x="out" title="Kijelentkezés">⏻</button></div></header>
+          <div class="ad-sfoot"><span class="ad-me" title="${esc(S.user.email)}">👤 ${esc(S.user.email)}</span>${S.target ? `<button type="button" class="fc-btn sec" data-x="back" title="Vissza a bolthoz">← Bolt</button>` : ""}<button type="button" class="fc-btn sec" data-x="out" title="Kijelentkezés">⏻ Kilépés</button></div></header>
         <main class="ad-main">
-          <div class="ad-head"><div><h2 class="ad-title">Áttekintés</h2><p class="ad-subt">Minden bolt egy pillantással — kattints egy boltra az adataihoz.</p></div><button type="button" class="fc-btn sec ad-rl" data-x="reload" title="Adatok újratöltése">↻ Frissítés</button></div>
+          <div class="ad-head"><div><span class="ad-hi"></span><h2 class="ad-title">Áttekintés</h2><p class="ad-subt">Minden bolt egy pillantással — kattints egy boltra az adataihoz.</p></div><button type="button" class="fc-btn sec ad-rl" data-x="reload" title="Adatok újratöltése">↻ Frissítés</button></div>
           <section class="ad-pane on" data-pane="dash"><div class="ad-kpis"></div><div class="ad-card ad-att"><h3>⚠️ Figyelmet igényel</h3><div class="ad-attl"></div></div>
             <div class="ad-card"><h3>📋 Boltonként</h3><p>Kattints egy oszlopcímre a rendezéshez, egy sorra a bolt adatlapjához — onnan a „🏬 Bolt megnyitása” gombbal léphetsz be a boltba szerkeszteni.</p><div class="ad-tblw"><table class="ad-tbl"></table></div></div></section>
           <section class="ad-pane" data-pane="shops"><input class="fc-adm-q" type="search" placeholder="🔎 Keresés boltra, városra vagy e-mailre" autocomplete="off"><div class="fc-adm-grid"><div class="fc-adm-load">Boltok betöltése…</div></div></section>
@@ -4943,6 +5003,9 @@ service cloud.firestore {
       let pwLoaded = false;
       const nav = k=>{ $$(".ad-nav").forEach(x=> x.classList.toggle("on", x.dataset.nav === k)); $$(".ad-pane").forEach(x=> x.classList.toggle("on", x.dataset.pane === k));
         $(".ad-title").textContent = TITLES[k][0]; $(".ad-subt").textContent = TITLES[k][1];
+        const TC = { dash:"#c9971f", shops:"#2fa3b6", chat:"#3aa0c9", bugs:"#e08a1e", news:"#b07fd0", msg:"#d9474a", acc:"#6f7ff5", data:"#2ea472" };
+        b.style.setProperty("--tc", TC[k] || "#c9971f");
+        const hr = new Date().getHours(); $(".ad-hi").textContent = (hr < 10 ? "Jó reggelt" : hr < 18 ? "Szép napot" : "Jó estét") + ", Admin! · " + new Date().toLocaleDateString("hu-HU", { month:"long", day:"numeric", weekday:"long" });
         try{ sessionStorage.setItem("fp_admin_tab", k); }catch(e){} b.scrollTo({ top:0 });
         if(k === "acc" && !pwLoaded){ pwLoaded = true; pwPanel(b); }
         if(k === "shops") setTimeout(()=> q.focus(), 60); };
@@ -5120,7 +5183,7 @@ service cloud.firestore {
       /* ha van újabb kiadás (a munkaasztal frissült), bekapcsolt állapotban magától arra vált (ha nem szerkesztett saját változatot) */
       if(newsCfg.on && newsCfg.id !== NEWS[0].id){ newsCfg.id = NEWS[0].id; newsCfg.rev = 0; setTimeout(()=> newsSet(true, null, true), 400); }
       sel.value = newsCfg.id;
-      const drawNews = ()=>{ $(".ad-sw").classList.toggle("on", !!newsCfg.on); $(".ad-nwt").textContent = newsCfg.on ? "Bekapcsolva" : "Kikapcsolva";
+      const drawNews = ()=>{ $('[data-x="nwsw"]').classList.toggle("on", !!newsCfg.on); $(".ad-nwt").textContent = newsCfg.on ? "Bekapcsolva" : "Kikapcsolva";
         $(".ad-nwd").textContent = newsCfg.on ? `A boltoknál fent a ❓ mellett kint van a 🎁 gomb (${curEd().title}).` : "A boltok nem látják a gombot.";
         drawEd();
       };
