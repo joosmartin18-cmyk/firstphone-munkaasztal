@@ -3916,7 +3916,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-180405";</script>
+<script>window.FP_BUILD="20261006-185125";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4050,6 +4050,24 @@
     if(document.getElementById("fpCloudCss")) return;
     const st = document.createElement("style"); st.id = "fpCloudCss";
     st.textContent = `
+    .fc-pwm{position:fixed;inset:0;z-index:3500;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,7,12,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity .2s;font-family:'Inter',sans-serif;}
+    .fc-pwm.show{opacity:1;} .fc-pwm.force{background:radial-gradient(1200px 600px at 50% -10%,rgba(217,173,70,.18),transparent 60%),#0b0c12;}
+    .fc-pwm-c{position:relative;width:min(420px,100%);max-height:calc(100vh - 32px);overflow:auto;box-sizing:border-box;padding:28px 26px 22px;border-radius:20px;background:#14151c;color:#ecedf2;border:1px solid #262833;box-shadow:0 30px 80px rgba(0,0,0,.55);transform:translateY(14px) scale(.98);transition:transform .25s cubic-bezier(.2,.9,.3,1.2);}
+    .fc-pwm.show .fc-pwm-c{transform:none;}
+    .fc-pwm-x{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:0;background:#1f212b;color:#9a9caa;cursor:pointer;font-size:14px;}
+    .fc-pwm-ic{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,rgba(240,207,122,.22),rgba(217,173,70,.08));border:1px solid rgba(217,173,70,.35);margin-bottom:14px;}
+    .fc-pwm h2{margin:0 0 6px;font:700 20px 'Poppins','Inter',sans-serif;letter-spacing:-.01em;} .fc-pwm p{margin:0 0 16px;font-size:13.5px;line-height:1.55;color:#a3a5b3;}
+    .fc-pwm-acc{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:#1b1c25;margin-bottom:16px;} .fc-pwm-acc span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;background:linear-gradient(135deg,#7b8cff,#9a6cff);flex:none;}
+    .fc-pwm-acc b{display:block;font-size:13.5px;} .fc-pwm-acc small{display:block;font-size:12px;color:#9a9caa;overflow-wrap:anywhere;}
+    .fc-pwm-f{display:block;margin-bottom:10px;} .fc-pwm-f > span{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#9a9caa;margin-bottom:6px;}
+    .fc-pwm-f > div{display:flex;gap:6px;} .fc-pwm-f input{flex:1;min-width:0;box-sizing:border-box;padding:12px 13px;border-radius:11px;border:1.5px solid #2a2c38;background:#1b1c25;color:#ecedf2;font:600 15px 'Inter',sans-serif;outline:none;transition:border-color .15s;}
+    .fc-pwm-f input:focus{border-color:#d9ad46;} .fc-pwm-f button{width:46px;border-radius:11px;border:1.5px solid #2a2c38;background:#1b1c25;cursor:pointer;font-size:15px;}
+    .fc-pwm-bar{height:5px;border-radius:9px;background:#22242f;overflow:hidden;margin:-2px 0 12px;} .fc-pwm-bar i{display:block;height:100%;width:0;border-radius:9px;background:#f0686a;transition:width .25s,background .25s;} .fc-pwm-bar i[data-s="mid"]{background:#f0a030;} .fc-pwm-bar i[data-s="hi"]{background:#3ecf8e;}
+    .fc-pwm-req{list-style:none;margin:4px 0 14px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;font-size:12.5px;color:#8a8c9a;}
+    .fc-pwm-req li::before{content:"○";display:inline-block;width:17px;color:#5a5c6a;} .fc-pwm-req li.ok{color:#3ecf8e;} .fc-pwm-req li.ok::before{content:"✓";color:#3ecf8e;font-weight:700;}
+    .fc-pwm-err{font-size:13px;color:#f0686a;margin:-4px 0 12px;}
+    .fc-pwm-go{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#f0cf7a,#d9ad46);color:#1d1606;font:700 14.5px 'Inter',sans-serif;cursor:pointer;transition:filter .15s,opacity .15s;} .fc-pwm-go:disabled{opacity:.4;cursor:not-allowed;}
+    .fc-pwm-out{display:block;margin:12px auto 0;border:0;background:none;color:#9a9caa;font:600 13px 'Inter',sans-serif;cursor:pointer;} .fc-pwm-out:hover{color:#ecedf2;}
     .fc-back{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(8,8,12,.72);}
     body.light-theme .fc-back{background:rgba(40,32,15,.35);}
     .fc-card{width:100%;max-width:400px;border-radius:22px;padding:24px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);color:var(--text,#f2f1ee);box-shadow:0 24px 60px rgba(0,0,0,.45);font-family:'Inter',sans-serif;}
@@ -4431,8 +4449,8 @@
       const e = (map[String(s.c).toUpperCase()] || s.e).toLowerCase(); if(seen.has(e)) return; seen.add(e);
       rows.push({ name:s.n, code:s.c, email:e, u:users[e] || null });
     });
-    Object.keys(users).sort().forEach(e=>{ if(seen.has(e) || e === ADMIN) return; rows.push({ name:"Egyéb fiók", code:"", email:e, u:users[e] }); });
-    rows.push({ name:"👑 Admin", code:"", email:ADMIN, u:users[ADMIN] || null, admin:true });
+    Object.keys(users).sort().forEach(e=>{ if(seen.has(e) || e === ADMIN || users[e].admin) return; rows.push({ name:"Egyéb fiók", code:"", email:e, u:users[e] }); });
+    if(S.sup) rows.push({ name:"👑 Fő admin (te)", code:"", email:ADMIN, u:users[ADMIN] || null, admin:true });
     return rows;
   }
   const dt = ms=> { if(!ms) return "—"; const d = new Date(ms); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}. ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
@@ -4498,6 +4516,124 @@
       }
     };
   }
+  /* ---------- admin fiókok: létrehozás (név + e-mail + ideiglenes jelszó), új ideiglenes jelszó, letiltás, jog elvétele ---------- */
+  async function admPanel(root){
+    const box = root.querySelector(".fc-adm"), list = box.querySelector(".fc-an-list"), out = box.querySelector(".fc-an-out"), sum = box.querySelector(".fc-an-sum");
+    const iN = box.querySelector(".fc-an-name"), iM = box.querySelector(".fc-an-mail"), iP = box.querySelector(".fc-an-pass");
+    iP.value = genPw() + genPw().slice(-2);
+    let admins = [], msg = {};
+    const meE = (S.user.email || "").toLowerCase();
+    async function load(){
+      list.innerHTML = `<div class="fc-adm-load">Betöltés…</div>`;
+      const r = await api({ action:"list" });
+      if(!r.ok){ list.innerHTML = `<div class="fc-adm-load err">⚠ ${esc(r.error === "nosa" ? "Előbb a Bolti fiókok fülön látható egyszeri beállítás kell." : r.error === "noapi" || r.error === "net" ? "Ez csak a weboldalon működik (firstphone-munkaasztal.pages.dev)." : (r.error || "Hiba"))}</div>`; return; }
+      admins = (r.users || []).filter(u=> u.admin).sort((a, b)=> (b.sup - a.sup) || String(a.name || a.email).localeCompare(String(b.name || b.email), "hu"));
+      draw();
+    }
+    function draw(){
+      sum.textContent = admins.length ? `${admins.length} admin` : "";
+      list.innerHTML = admins.map(u=>{
+        const e = String(u.email).toLowerCase(), self = e === meE, m = msg[e];
+        const st = u.disabled ? `<span class="fc-an-st dis">⛔ letiltva</span>` : u.must ? `<span class="fc-an-st wait">⏳ még nem cserélt jelszót</span>` : `<span class="fc-an-st ok">✓ aktív</span>`;
+        const nm = u.sup ? "Fő admin" : (u.name || e.split("@")[0]);
+        const act = u.sup || self ? `<span class="fc-an-you">${self ? "ez te vagy" : "nem módosítható"}</span>`
+          : `<button type="button" class="ax-btn" data-ad="pw">🔑 Új ideiglenes jelszó</button><button type="button" class="ax-btn" data-ad="dis">${u.disabled ? "✅ Engedélyezés" : "⛔ Letiltás"}</button><button type="button" class="ax-btn warn" data-ad="rev">✕ Admin jog elvétele</button>`;
+        return `<div class="fc-an-r${u.disabled ? " off" : ""}" data-e="${esc(e)}"><span class="fc-an-av${u.sup ? " sup" : ""}">${u.sup ? "👑" : esc(nm.charAt(0).toUpperCase())}</span>
+          <div class="fc-an-who"><b>${esc(nm)}${self ? ` <em>te</em>` : ""}</b><small>${esc(e)}</small></div>
+          <div class="fc-an-meta">${st}<small>utolsó belépés: ${dt(u.last)}${u.by && !u.sup ? ` · létrehozta: ${esc(u.by)}` : ""}</small></div>
+          <div class="fc-an-a">${act}</div>${m ? `<div class="fc-pw-msg ${m.c}">${m.h}</div>` : ""}</div>`;
+      }).join("") || `<div class="fc-adm-load">Még nincs más admin.</div>`;
+    }
+    const shown = pw=> `<code>${esc(pw)}</code> <button type="button" class="ax-btn" data-ad="copy" data-v="${esc(pw)}">⧉ Másolás</button>`;
+    box.addEventListener("click", async e=>{
+      const b = e.target.closest("[data-ad]"); if(!b) return;
+      const a = b.dataset.ad;
+      if(a === "gen"){ iP.value = genPw() + genPw().slice(-2); return; }
+      if(a === "copy"){ try{ await navigator.clipboard.writeText(b.dataset.v); b.textContent = "✓ Kimásolva"; }catch(_){} return; }
+      if(a === "new"){
+        const name = iN.value.trim(), mail = iM.value.trim().toLowerCase(), pw = iP.value.trim();
+        const bad = name.length < 2 ? "Add meg a nevét." : !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(mail) ? "Hibás e-mail cím." : /@firstphone\.hu$/.test(mail) ? "Ez bolti cím — adminnak saját e-mail címet adj meg." : pw.length < 8 ? "Az ideiglenes jelszó legalább 8 karakter legyen." : "";
+        if(bad){ out.className = "fc-an-out err"; out.innerHTML = "✗ " + esc(bad); return; }
+        b.disabled = true; const o = b.textContent; b.textContent = "Létrehozás…";
+        const r = await api({ action:"createAdmin", name, email:mail, password:pw });
+        b.disabled = false; b.textContent = o;
+        if(r.ok){
+          out.className = "fc-an-out ok"; out.innerHTML = `✓ <b>${esc(name)}</b> admin fiókja kész (${esc(mail)}). Ideiglenes jelszó: ${shown(pw)}<br><small>Írd fel / add át most — később nem látszik. Első belépéskor új jelszót kell választania.</small>`;
+          iN.value = ""; iM.value = ""; iP.value = genPw() + genPw().slice(-2); try{ window.fpSound && fpSound("done", .5); }catch(_){}
+          load();
+        } else { out.className = "fc-an-out err"; out.innerHTML = "✗ " + esc(r.error || "Hiba"); }
+        return;
+      }
+      const row = b.closest("[data-e]"); if(!row) return; const em = row.dataset.e, u = admins.find(x=> String(x.email).toLowerCase() === em); if(!u) return;
+      if(a === "rev" || a === "pw"){ if(b.dataset.arm !== "1"){ b.dataset.arm = "1"; b.dataset.o = b.textContent; b.textContent = a === "rev" ? "Biztos? A fiók letiltódik" : "Biztos? Kattints újra"; setTimeout(()=>{ if(b.isConnected && b.dataset.arm === "1"){ b.dataset.arm = ""; b.textContent = b.dataset.o; } }, 4000); return; } }
+      b.disabled = true;
+      if(a === "pw"){
+        const pw = genPw() + genPw().slice(-2); const r = await api({ action:"password", email:em, password:pw });
+        msg[em] = r.ok ? { c:"ok", h:`✓ Új ideiglenes jelszó: ${shown(pw)} — belépéskor újat kell választania.` } : { c:"err", h:"✗ " + esc(r.error || "Hiba") }; if(r.ok) u.must = true;
+      } else if(a === "dis"){
+        const to = !u.disabled; const r = await api({ action:"disable", email:em, disabled:to });
+        msg[em] = r.ok ? { c:"ok", h: to ? "⛔ Letiltva — most nem tud belépni." : "✅ Engedélyezve." } : { c:"err", h:"✗ " + esc(r.error || "Hiba") }; if(r.ok) u.disabled = to;
+      } else if(a === "rev"){
+        const r = await api({ action:"revokeAdmin", email:em });
+        if(r.ok){ admins = admins.filter(x=> x !== u); out.className = "fc-an-out ok"; out.innerHTML = `✓ ${esc(u.name || em)} admin joga elvéve, a fiók letiltva. (Visszaadhatod: hozd létre újra ugyanazzal az e-maillel.)`; }
+        else msg[em] = { c:"err", h:"✗ " + esc(r.error || "Hiba") };
+      }
+      draw();
+    });
+    load();
+  }
+  /* ---------- jelszócsere ablak: első belépéskor kötelező (nem zárható be), máskor a 🔑 Jelszavam módosítása gombbal ---------- */
+  function pwModal(force){
+    css();
+    if(document.getElementById("fcPwM")) return;
+    const u = firebase.auth().currentUser; if(!u) return;
+    const nm = (u.displayName || "").trim();
+    const w = document.createElement("div"); w.id = "fcPwM"; w.className = "fc-pwm" + (force ? " force" : "");
+    w.innerHTML = `<div class="fc-pwm-c" role="dialog" aria-modal="true" aria-labelledby="fcPwMt">
+      ${force ? "" : `<button type="button" class="fc-pwm-x" data-p="x" title="Bezárás">✕</button>`}
+      <div class="fc-pwm-ic">🔐</div>
+      <h2 id="fcPwMt">${force ? `Szia${nm ? " " + esc(nm.split(" ").slice(-1)[0]) : ""}! Válassz saját jelszót` : "Jelszó módosítása"}</h2>
+      <p>${force ? "Ez az első belépésed admin fiókkal. Az ideiglenes jelszót most le kell cserélned egy sajátra — utána mindenhez hozzáférsz." : "Adj meg egy új jelszót a fiókodhoz."}</p>
+      <div class="fc-pwm-acc"><span>${esc((nm || u.email).charAt(0).toUpperCase())}</span><div><b>${esc(nm || "Admin")}</b><small>${esc(u.email)}</small></div></div>
+      <label class="fc-pwm-f"><span>Új jelszó</span><div><input type="password" class="fc-pwm-a" autocomplete="new-password" spellcheck="false"><button type="button" data-p="eye" title="Mutasd">👁</button></div></label>
+      <div class="fc-pwm-bar"><i></i></div>
+      <label class="fc-pwm-f"><span>Új jelszó még egyszer</span><div><input type="password" class="fc-pwm-b" autocomplete="new-password" spellcheck="false"></div></label>
+      <ul class="fc-pwm-req"><li data-r="len">Legalább 8 karakter</li><li data-r="let">Betű is van benne</li><li data-r="num">Szám is van benne</li><li data-r="eq">A kettő egyezik</li></ul>
+      <div class="fc-pwm-err" hidden></div>
+      <button type="button" class="fc-pwm-go" data-p="go" disabled>${force ? "Jelszó mentése és belépés" : "Új jelszó mentése"}</button>
+      ${force ? `<button type="button" class="fc-pwm-out" data-p="out">Kijelentkezés</button>` : ""}</div>`;
+    document.body.appendChild(w); requestAnimationFrame(()=> w.classList.add("show"));
+    const A = w.querySelector(".fc-pwm-a"), B = w.querySelector(".fc-pwm-b"), go = w.querySelector(".fc-pwm-go"), er = w.querySelector(".fc-pwm-err"), bar = w.querySelector(".fc-pwm-bar i");
+    const chk = ()=>{
+      const p = A.value, R = { len:p.length >= 8, let:/[a-zA-ZÀ-ž]/.test(p), num:/[0-9]/.test(p), eq:!!p && p === B.value };
+      Object.entries(R).forEach(([k, v])=> w.querySelector(`[data-r="${k}"]`).classList.toggle("ok", v));
+      let sc = (p.length >= 8) + (p.length >= 12) + (/[a-z]/.test(p) && /[A-Z]/.test(p)) + /[0-9]/.test(p) + /[^a-zA-Z0-9]/.test(p);
+      bar.style.width = Math.min(100, sc * 20) + "%"; bar.dataset.s = sc <= 2 ? "lo" : sc <= 3 ? "mid" : "hi";
+      go.disabled = !(R.len && R.let && R.num && R.eq); return !go.disabled;
+    };
+    A.oninput = chk; B.oninput = chk; setTimeout(()=> A.focus(), 80);
+    B.onkeydown = e=>{ if(e.key === "Enter" && chk()) go.click(); };
+    const close = ()=>{ w.classList.remove("show"); setTimeout(()=> w.remove(), 200); document.removeEventListener("keydown", ek); };
+    const ek = e=>{ if(e.key === "Escape" && !force) close(); }; document.addEventListener("keydown", ek);
+    w.onclick = async e=>{
+      if(e.target === w && !force){ close(); return; }
+      const b = e.target.closest("[data-p]"); if(!b) return; const a = b.dataset.p;
+      if(a === "x"){ close(); return; }
+      if(a === "eye"){ const t = A.type === "password" ? "text" : "password"; A.type = t; B.type = t; return; }
+      if(a === "out"){ await firebase.auth().signOut(); lsDel(ADMIN_KEY); location.reload(); return; }
+      if(a === "go"){
+        if(!chk()) return; const pw = A.value; go.disabled = true; go.textContent = "Mentés…"; er.hidden = true;
+        let r = await api({ action:"selfpw", password:pw });
+        if(r.ok){
+          try{ await firebase.auth().signInWithEmailAndPassword(u.email, pw); }catch(_){}
+          go.textContent = "✓ Kész"; try{ window.fpSound && fpSound("done", .5); }catch(_){}
+          setTimeout(()=> location.reload(), 600); return;
+        }
+        er.hidden = false; er.textContent = "✗ " + (r.error === "noapi" || r.error === "net" ? "Nem érhető el a szerver — próbáld újra pár perc múlva." : (r.error || "Hiba"));
+        go.disabled = false; go.textContent = force ? "Jelszó mentése és belépés" : "Új jelszó mentése"; chk();
+      }
+    };
+  }
   /* ===== Újdonságok: havi kiadások (diák). Az admin kapcsolja be/ki, a boltoknál egy feltűnő gombbal nyílik. ===== */
   const NEWS = [
     { id:"2026-10", title:"2026. október", sub:"Minden, ami a Munkaasztalban van — és ami új", slides:[
@@ -4519,7 +4655,7 @@
       { ic:"✅", c:"#d6589a", sc:"nwt", mod:"teendo", t:"Teendők", x:"Közös to-do lista — most csoportosítva, átláthatóbban.", b:["Feladat az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>mindkettőnek</b> — határidővel is","Csoportok: <b>⚠ Lejárt</b> · <b>📅 Ma</b> · <b>🗓️ Később</b> · <b>Nincs határidő</b>","Mindenki a saját nevénél pipálja ki"] },
       { ic:"📚", c:"#8a5aa8", sc:["thelpBody","1"], t:"Tudástár", x:"Segédlet, Kézikönyv és az Üzletek elérhetősége — kereshetően.", b:["Írj be pár betűt (pl. <b>sztornó</b>, <b>garancia</b>) — kiemelve mutatja","<b>🏬 Üzletek</b>: minden bolt telefonja, gyorshívója, e-mailje, címe","Új: <b>olvasási csík</b> — fent látod, melyik fejezetnél jársz"] },
       { ic:"🧩", c:"#4fb3c4", sc:"nwf", t:"Programok és funkciók", x:"A beállításban kiválasztod, mely programok és funkciók kellenek.", b:["Programonként külön <b>funkciók</b> is: pl. a Cetli generátorban minden, kivéve az Óra garanciát","A kikapcsolt rész eltűnik a menüből — az adatok megmaradnak","Üzlet adatai, nyitvatartás, dolgozók egy helyen"] },
-      { ic:"💬", c:"#8e7ff5", sc:"nwc", t:"Chat", x:"Közvetlen vonal az adminhoz és a többi bolthoz.", b:["Jobb lent a lila gomb: írj az <b>adminnak</b> vagy egy <b>másik boltnak</b>","Csak a <b>már belépett boltok</b> látszanak","Az admin fontos <b>üzenetei</b> a munkaasztal tetején jelennek meg"] },
+      { ic:"💬", c:"#8e7ff5", sc:"nwc", t:"Chat", x:"Közvetlen vonal az adminhoz és a többi bolthoz.", b:["Jobb lent a lila gomb: írj az <b>adminnak</b> vagy egy <b>másik boltnak</b>","Az admin válaszánál látszik, <b>melyik admin</b> írta (pl. Admin · Péter)","Az admin fontos <b>üzenetei</b> a munkaasztal tetején jelennek meg"] },
       { ic:"😊", c:"#9a6cff", sc:"nwg", t:"Emojik, GIF-ek, matricák", x:"Mókásabban is lehet írni.", b:["<b>😊 Emojik</b> kategóriákban, a legutóbbiak elöl","<b>GIF</b> gomb: GIPHY kereső, animált matricák, GIF link vagy saját GIF","A csak emojis üzenet nagyban jelenik meg"] },
       { ic:"✍️", c:"#8e7ff5", sc:"nww", t:"Ki írja? · Kézbesítve / Látta", x:"Kiválaszthatod a feladót, és látod, ha elolvasták.", b:["Az üzenetsor fölött: <b>Bolt</b>, egy <b>dolgozó</b> vagy <b>✏️ Más</b> név","<b>✓ Kézbesítve</b> · <b>✓✓ Látta</b> (lilán), időponttal","A dolgozó <b>profilképe</b> és neve látszik az üzenet mellett"] },
       { ic:"🐞", c:"#f0a030", sc:"nwb", t:"Hibabejelentés — az admin válaszol", x:"Saját gombja van fent a ❓ mellett — és most már választ is kapsz rá.", b:["Fent a <b>🐞</b> gomb: kiválasztod, melyik résznél (Leltár, Kassza…) és leírod, mi történt","Minden bejelentés kap egy <b>azonosítót</b> (pl. #V3AAC) — így könnyű hivatkozni rá","Ha az admin <b>válaszolt</b>, piros szám jelenik meg a 🐞 gombon, a válasz a bejelentés alatt olvasható","Látod az állapotát is: új, folyamatban vagy megoldva ✅"] },
@@ -5311,7 +5447,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function me() { return request.auth.token.email; }
-    function isAdmin() { return signedIn() && me() == 'admin@admin.com'; }
+    // admin: a fő admin, vagy egy admin fiók (claim: admin) — amíg az ideiglenes jelszót le nem cseréli, semmit nem ér el
+    function isAdmin() { return signedIn() && (me() == 'admin@admin.com' || (request.auth.token.get('admin', false) == true && request.auth.token.get('mustChange', false) != true)); }
     // csak a FirstPhone boltfiókok (…@firstphone.hu) — egy idegen, saját maga regisztrált fiók semmit nem ér el
     function isShop() { return signedIn() && me().matches('.*@firstphone[.]hu$'); }
     match /boltok/{uid}/{document=**} {
@@ -5572,6 +5709,7 @@ service cloud.firestore {
     dash:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
     shops:'<path d="M3 9l1.6-5h14.8L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M9.5 20v-5.5h5V20"/>',
     acc:'<circle cx="8" cy="15" r="4"/><path d="M10.9 12.1 20 3M16.5 6.5l3 3M14 9l2 2"/>',
+    key:'<rect x="4" y="10.5" width="16" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3"/>',
     inbox:'<path d="M21 11.5a8.4 8.4 0 0 1-12.2 7.5L3 20.5l1.6-5A8.5 8.5 0 1 1 21 11.5z"/>',
     tix:'<path d="M5 21V4h12l-2 4 2 4H5"/>',
     ann:'<path d="M3 10v4h4l8 5V5l-8 5H3z"/><path d="M18.5 9a4 4 0 0 1 0 6"/>',
@@ -5614,7 +5752,8 @@ service cloud.firestore {
       b.innerHTML = `<div class="ax-scrim"></div><div class="ax-app">
         <aside class="ax-side"><div class="ax-brand"><span class="ax-logo">FP</span><div><b>FirstPhone</b><small>Admin konzol</small></div></div>
           <nav class="ax-nav">${NAV.map(([g, L])=> `<div class="ax-ng">${g}</div>` + L.map(([k, t])=> `<button type="button" data-nav="${k}">${axI(k)}<span>${t}</span><em data-cnt="${k}" hidden></em></button>`).join("")).join("")}</nav>
-          <div class="ax-sfoot"><div class="ax-me"><span class="ax-meav">A</span><div><b>Admin</b><small title="${esc(S.user.email)}">${esc(S.user.email)}</small></div></div>
+          <div class="ax-sfoot"><div class="ax-me"><span class="ax-meav">${esc((S.adminName || "A").trim().charAt(0).toUpperCase() || "A")}</span><div><b>${esc(S.adminName || "Admin")}${S.sup ? ` <i class="ax-mesup" title="Fő admin">👑</i>` : ""}</b><small title="${esc(S.user.email)}">${esc(S.user.email)}</small></div></div>
+            <button type="button" class="ax-sbtn" data-x="mypw">${axI("key")}<span>Jelszó módosítása</span></button>
             ${S.target ? `<button type="button" class="ax-sbtn" data-x="back">${axI("back")}<span>Vissza a bolthoz</span></button>` : ""}<button type="button" class="ax-sbtn" data-x="out">${axI("out")}<span>Kijelentkezés</span></button></div></aside>
         <div class="ax-main">
           <header class="ax-top"><button type="button" class="ax-ib ax-burg" data-x="menu" title="Menü">${axI("menu")}</button>
@@ -5633,9 +5772,17 @@ service cloud.firestore {
                 ${seg("ax-sf", "sf", [["all","Mind"],["today","Aktív ma"],["stale","Inaktív"],["ks","Kassza eltérés"],["pkg","Csomag vár"]], "all")}<span class="ax-sp"></span>
                 ${seg("ax-sv", "sv", [["tbl","☰ Táblázat"],["grid","▦ Kártyák"]], lsGet("fp_admin_sview") === "grid" ? "grid" : "tbl")}</div>
               <div class="ax-card ax-flush ax-stw"><div class="ax-tblw"><table class="ax-tbl ax-stbl"></table></div></div><div class="ax-sgrid" hidden></div><div class="ax-card ax-none" hidden></div></section>
-            <section class="ax-pane" data-pane="acc"><div class="ax-tb">${seg("ax-accs", "sub", [["pw","🔑 Fiókok és jelszavak"],["bulk","👥 Tömeges létrehozás"]], "pw")}</div>
+            <section class="ax-pane" data-pane="acc"><div class="ax-tb">${seg("ax-accs", "sub", [["pw","🔑 Bolti fiókok"],["adm","👑 Admin fiókok"],["bulk","👥 Tömeges létrehozás"]], "pw")}</div>
               <div class="fc-acc fc-pw" data-subp="pw"><h3>Fiókok és jelszavak</h3><p>Minden bolt fiókja egy helyen. <b>Új jelszót</b> adhatsz bármelyik boltnak, letilthatod / engedélyezheted a belépést, és létrehozhatod a hiányzó fiókokat. A régi jelszót a Firebase sem tudja megmutatni (csak titkosítva őrzi) — ha valaki elfelejtette, adj neki újat.</p>
                 <div class="fc-pw-top"><input class="fc-pw-q" type="search" placeholder="🔎 Bolt, boltkód vagy e-mail" autocomplete="off"><span class="fc-pw-sum"></span></div><div class="fc-pw-list"></div></div>
+              <div class="fc-acc fc-adm" data-subp="adm" hidden><h3>Admin fiókok</h3><p>Egy admin fiók <b>mindenhez hozzáfér</b>, amihez te: boltok, fiókok, üzenetek, hibajegyek, közlemények, beállítások. Megadod a <b>nevét</b>, az <b>e-mail címét</b> és egy <b>ideiglenes jelszót</b> — az első belépéskor egy felugró ablak <b>kötelezően</b> új jelszót kér tőle, addig semmihez nem fér hozzá.</p>
+                <div class="fc-an-note">⚠ <b>Egyszer kell:</b> frissítsd a Firestore szabályokat (<b>Beállítások</b> → <b>Firestore szabályok</b> → Másolás → Firebase konzol → Rules → <b>Publish</b>) — enélkül az új admin nem látja a boltok adatait.</div>
+                <form class="fc-an" autocomplete="off" onsubmit="return false"><div class="fc-an-g">
+                  <label><span>Név</span><input class="ax-in fc-an-name" type="text" maxlength="60" placeholder="pl. Kiss Péter" autocomplete="off"></label>
+                  <label><span>E-mail cím</span><input class="ax-in fc-an-mail" type="email" placeholder="nev@pelda.hu" autocomplete="off" spellcheck="false"></label>
+                  <label><span>Ideiglenes jelszó</span><div class="fc-an-pw"><input class="ax-in fc-an-pass" type="text" autocomplete="new-password" spellcheck="false"><button type="button" class="ax-btn" data-ad="gen" title="Új véletlen jelszó">🎲</button></div></label></div>
+                  <div class="fc-an-bar"><button type="button" class="ax-btn pri" data-ad="new">👑 Admin fiók létrehozása</button><small>Az ideiglenes jelszót add át neki személyesen vagy telefonon — ne e-mailben.</small></div><div class="fc-an-out"></div></form>
+                <div class="fc-an-h"><b>Adminok</b><span class="fc-an-sum"></span></div><div class="fc-an-list"><div class="fc-adm-load">Betöltés…</div></div></div>
               <div class="fc-acc" data-subp="bulk" hidden><h3>Boltfiókok tömeges létrehozása</h3><p>Illeszd be a listát — soronként egy bolt: <b>e-mail</b> és <b>jelszó</b>, vagy a <b>Bolt | Boltkód | Jelszó</b> táblázatot úgy, ahogy van. A jelszavakat a program <b>nem menti el</b>, csak létrehozza velük a fiókokat. A már meglévőket kihagyja.</p>
                 <textarea class="fc-acc-in" rows="8" spellcheck="false" autocomplete="off" placeholder="kaposvar@firstphone.hu | jelszó&#10;— vagy a táblázat úgy, ahogy van: —&#10;| Kaposvár | KAPV | jelszó |&#10;…"></textarea>
                 <div class="fc-acc-bar"><button type="button" class="ax-btn pri" data-x="accgo">Fiókok létrehozása</button><span class="fc-acc-n"></span></div><div class="fc-acc-out"></div></div></section>
@@ -5677,7 +5824,7 @@ service cloud.firestore {
                 ${srow("Értesítő hang", "Hang új üzenetnél és hibajegynél.", sw("pf", "snd", sndOn(), "Értesítő hang") + `<button type="button" class="ax-btn sm" data-x="sndtest">▶ Próba</button>`)}
                 ${srow("Felugró jelzések", "Kis jelzés a sarokban új üzenetnél / jegynél.", sw("pf", "toast", P.toast, "Felugró jelzések"))}
                 ${srow("Asztali értesítés", "Akkor is szól, ha másik lapon vagy.", `<span class="ax-b ax-ntst"></span><button type="button" class="ax-btn sm" data-x="ntperm">Engedélyezés</button>`)}</div></div>
-              <div class="ax-card"><div class="ax-ch"><h3>Boltok közti chat — Firestore szabályok</h3><span class="ax-b ax-dmst">ellenőrzés…</span><span class="ax-sp"></span><button type="button" class="ax-btn sm" data-x="dmhow">Mutasd</button></div>
+              <div class="ax-card"><div class="ax-ch"><h3>Firestore szabályok — chat és admin fiókok</h3><span class="ax-b ax-dmst">ellenőrzés…</span><span class="ax-sp"></span><button type="button" class="ax-btn sm" data-x="dmhow">Mutasd</button></div>
                 <div class="ax-dmhow" hidden><p class="ax-hint">Egyszer kell beállítani: Firebase konzol → <b>Firestore Database</b> → <b>Rules</b> → töröld ki a régit, illeszd be ezt → <b>Publish</b>. A régi szabályok mindent tudnak, amit eddig — ez csak kiegészíti.</p>
                   <textarea class="ax-in ax-ta ax-rules" readonly spellcheck="false"></textarea><div class="ax-row"><button type="button" class="ax-btn" data-x="dmcopy">⧉ Szabályok másolása</button><span class="ax-out ax-dmout"></span></div></div></div></section>
             <section class="ax-pane" data-pane="data"><div class="ax-g2"><div class="ax-card"><div class="ax-ch"><h3>Biztonsági mentés</h3></div><p class="ax-hint">Minden bolt összes adata (beosztás, leltár, kassza, csomag, selejt, termékek) egy fájlban. Érdemes havonta letölteni és eltenni.</p>
@@ -5769,7 +5916,8 @@ service cloud.firestore {
         const tx = t.closest("[data-tix]"); if(tx){ gq.value = ""; gres.hidden = true; openTix(tx.dataset.tix); return; }
         const cu = t.closest("[data-cu]"); if(cu){ gq.value = ""; gres.hidden = true; if(!paneOn("inbox")) nav("inbox"); pick(cu.dataset.cu); return; }
         const ux = t.closest("[data-uid]"); if(ux){ gq.value = ""; gres.hidden = true; detail(ux.dataset.uid); return; }
-        const sb = t.closest("[data-sub]"); if(sb){ segOn("ax-accs", "sub", sb.dataset.sub); $$("[data-subp]").forEach(p=> p.hidden = p.dataset.subp !== sb.dataset.sub); return; }
+        const sb = t.closest("[data-sub]"); if(sb){ segOn("ax-accs", "sub", sb.dataset.sub); $$("[data-subp]").forEach(p=> p.hidden = p.dataset.subp !== sb.dataset.sub); if(sb.dataset.sub === "adm" && !b.dataset.admL){ b.dataset.admL = "1"; admPanel(b); } return; }
+        if(t.closest("[data-x='mypw']")){ pwModal(false); return; }
         const sf = t.closest("[data-sf]"); if(sf){ sFilt = sf.dataset.sf; segOn("ax-sf", "sf", sFilt); drawShops(); return; }
         const sv = t.closest("[data-sv]"); if(sv){ sView = sv.dataset.sv; lsSet("fp_admin_sview", sView); segOn("ax-sv", "sv", sView); drawShops(); return; }
         const cf = t.closest("[data-cf]"); if(cf){ cFilt = cf.dataset.cf; segOn("ax-cf", "cf", cFilt); drawCts(); return; }
@@ -6104,8 +6252,8 @@ service cloud.firestore {
       wireTools($(".ax-cr"));
       cq.oninput = drawCts;
       const csGo = async (extra, ftxt)=>{ const t = extra ? ftxt : cta.value.trim(); if(!t && !extra) return; if(!curU) return; csend.disabled = true;
-        if(curU === "*"){ let ok = 0; for(const x of list){ try{ await chatSend(x.uid, "a", "Admin", t, extra); ok++; }catch(e){} } cta.value = ""; cta.style.height = ""; cl.innerHTML = `<div class="ch-empty"><span>✅</span>Elküldve ${ok} boltnak. A válaszok a boltok saját beszélgetésében jelennek meg.</div>`; csend.disabled = false; logAdd("💬", `Chat üzenet minden boltnak (${ok})`); return; }
-        try{ await chatSend(curU, "a", "Admin", t, extra); if(!extra){ cta.value = ""; cta.style.height = ""; } try{ window.fpSound && fpSound("send", .5); }catch(_){} }catch(e){ cl.insertAdjacentHTML("beforeend", `<div class="ch-empty" style="color:#ef5a5a">⚠ Nem ment el: ${esc(e && e.message || e)}</div>`); }
+        if(curU === "*"){ let ok = 0; for(const x of list){ try{ await chatSend(x.uid, "a", S.adminLbl || "Admin", t, extra); ok++; }catch(e){} } cta.value = ""; cta.style.height = ""; cl.innerHTML = `<div class="ch-empty"><span>✅</span>Elküldve ${ok} boltnak. A válaszok a boltok saját beszélgetésében jelennek meg.</div>`; csend.disabled = false; logAdd("💬", `Chat üzenet minden boltnak (${ok})`); return; }
+        try{ await chatSend(curU, "a", S.adminLbl || "Admin", t, extra); if(!extra){ cta.value = ""; cta.style.height = ""; } try{ window.fpSound && fpSound("send", .5); }catch(_){} }catch(e){ cl.insertAdjacentHTML("beforeend", `<div class="ch-empty" style="color:#ef5a5a">⚠ Nem ment el: ${esc(e && e.message || e)}</div>`); }
         csend.disabled = false; cta.focus(); };
       csend.onclick = ()=> csGo();
       chatTools($(".ax-cr .ch-f"), cta, (extra, txt)=> csGo(extra, txt));
@@ -6210,7 +6358,22 @@ service cloud.firestore {
     .ax-nav em{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;min-width:20px;padding:1px 7px;border-radius:999px;background:var(--ax-panel2);color:var(--ax-dim);text-align:center;font-variant-numeric:tabular-nums;border:1px solid var(--ax-line);}
     .ax-nav em.hot{background:var(--ax-red);border-color:var(--ax-red);color:#fff;}
     .ax-sfoot{margin-top:auto;border-top:1px solid var(--ax-line);padding-top:12px;display:grid;gap:2px;}
-    .ax-me{display:flex;gap:10px;align-items:center;padding:2px 8px 10px;min-width:0;} .ax-me > div{min-width:0;}
+    .ax-me{display:flex;gap:10px;align-items:center;padding:2px 8px 10px;min-width:0;} .ax-me > div{min-width:0;} .ax-mesup{font-style:normal;font-size:11px;}
+    .fc-an-note{margin:12px 0 0;padding:10px 13px;border-radius:10px;font-size:12.5px;line-height:1.55;background:rgba(240,160,48,.09);border:1px solid rgba(240,160,48,.3);color:var(--ax-tx);}
+    .fc-adm .fc-an{margin:14px 0 4px;padding:16px;border-radius:12px;border:1px solid var(--ax-line);background:var(--ax-panel2);}
+    .fc-an-g{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;} .fc-an-g label{display:flex;flex-direction:column;gap:6px;min-width:0;} .fc-an-g label > span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ax-dim);}
+    .fc-an-g .ax-in{width:100%;box-sizing:border-box;padding:10px 12px;font-size:14px;} .fc-an-pw{display:flex;gap:6px;} .fc-an-pw .ax-in{font-family:ui-monospace,Menlo,monospace;letter-spacing:.4px;}
+    .fc-an-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;} .fc-an-bar small{color:var(--ax-dim);font-size:12px;}
+    .fc-an-out{font-size:13px;line-height:1.6;margin-top:10px;} .fc-an-out:empty{display:none;} .fc-an-out.ok{color:#3ecf8e;} .fc-an-out.err{color:#f0686a;} .fc-an-out small{color:var(--ax-dim);} .fc-an-out code{background:var(--ax-panel);padding:2px 8px;border-radius:6px;color:var(--ax-tx);font-size:13.5px;}
+    .fc-an-h{display:flex;align-items:baseline;gap:10px;margin:20px 0 8px;} .fc-an-h b{font:700 14px 'Inter',sans-serif;} .fc-an-sum{font-size:12px;color:var(--ax-dim);}
+    .fc-an-list{display:grid;gap:8px;}
+    .fc-an-r{display:grid;grid-template-columns:auto minmax(0,1.2fr) minmax(0,1.2fr) auto;gap:12px;align-items:center;padding:12px 14px;border-radius:12px;border:1px solid var(--ax-line);background:var(--ax-panel2);} .fc-an-r.off{opacity:.6;}
+    .fc-an-av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font:700 14px 'Inter',sans-serif;color:#fff;background:linear-gradient(135deg,#7b8cff,#9a6cff);} .fc-an-av.sup{background:linear-gradient(135deg,#f0cf7a,#d9ad46);font-size:17px;}
+    .fc-an-who b{display:flex;gap:6px;align-items:center;font:700 13.5px 'Inter',sans-serif;} .fc-an-who b em{font-style:normal;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--ax-panel);color:var(--ax-dim);} .fc-an-r small{display:block;font-size:11.5px;color:var(--ax-dim);overflow-wrap:anywhere;}
+    .fc-an-st{font-size:12px;font-weight:700;} .fc-an-st.ok{color:#3ecf8e;} .fc-an-st.wait{color:#f0a030;} .fc-an-st.dis{color:#f0686a;}
+    .fc-an-a{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;} .fc-an-a .ax-btn{padding:6px 10px;font-size:12px;} .fc-an-a .ax-btn.warn:hover{border-color:#f0686a;color:#f0686a;} .fc-an-you{font-size:12px;color:var(--ax-dim);}
+    .fc-an-r .fc-pw-msg{grid-column:1/-1;}
+    @media (max-width:860px){ .fc-an-g{grid-template-columns:1fr;} .fc-an-r{grid-template-columns:auto minmax(0,1fr);} .fc-an-meta,.fc-an-a,.fc-an-r .fc-pw-msg{grid-column:1/-1;} .fc-an-a{justify-content:flex-start;} }
     .ax-meav{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c6cf0,#5b95ff);color:#fff;font:700 13px 'Poppins',sans-serif;display:grid;place-items:center;flex:none;}
     .ax-me b{display:block;font-size:13px;} .ax-me small{display:block;font-size:11.5px;color:var(--ax-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .ax-main{display:flex;flex-direction:column;min-width:0;height:100%;}
@@ -6517,7 +6680,12 @@ service cloud.firestore {
       S.user = u || null;
       if(!u){ S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; } status(); if(lsGet(OFF_KEY) !== "1") login(); else { try{ newsInit(); }catch(e){} } return; }
       const l = document.getElementById("fcLogin"); if(l) l.remove(); document.documentElement.classList.remove("fc-locked");
-      S.admin = (u.email || "").toLowerCase() === ADMIN;
+      let CL = {}; try{ CL = (await u.getIdTokenResult()).claims || {}; }catch(e){}
+      S.sup = (u.email || "").toLowerCase() === ADMIN;
+      S.admin = S.sup || CL.admin === true;
+      S.adminName = (u.displayName || "").trim() || "Admin";
+      S.adminLbl = S.sup ? "Admin" : "Admin · " + S.adminName;
+      if(S.admin && !S.sup && CL.mustChange){ status(); pwModal(true); return; }
       if(S.admin){
         S.target = lsGet(ADMIN_KEY) || null;
         if(!S.target){ status(); await adminChoose(); return; }
