@@ -4033,7 +4033,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-213509";</script>
+<script>window.FP_BUILD="20261006-214147";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4783,7 +4783,7 @@
       { ic:"🎨", c:"#6f7ff5", sc:"nwm", t:"Színes fejléc", x:"Minden program saját színt kapott — egy pillantásra látod, hol vagy.", b:["Fent egy panelben a logó, a gombok és a programok, <b>középen</b>","Telefonon csak az ikonok látszanak — a kiválasztottnál a neve is","A 🎁 gomb a ❓ mellett jelzi, ha újdonság van"] },
       { ic:"🔐", c:"#d9ad46", sc:"nwlg", t:"Belépő képernyő", x:"Gyorsabb és szebb belépés.", b:["Beírás közben <b>javasolja a boltot</b> — egy kattintás, és kész","Megjegyzi, melyik bolttal léptél be legutóbb (↺)","Nagy gépen jobb oldalt élő bemutató mutatja, mit tud a Munkaasztal"] },
       { ic:"⬇️", c:"#2ea472", sc:"nwd", t:"Letöltés bármelyik gépről", x:"Ha egy idegen vagy zárolt gépen nem indul el a letöltés, van megoldás.", b:["Minden letöltés után lent megjelenik egy kis sáv","<b>⬇ Letöltés újra</b> · <b>🗂 Megnyitás új lapon</b> · <b>🖨 Nyomtatás</b>","iPhone-on és iPaden a megosztás lap nyílik"] },
-      { ic:"🔄", c:"#4fb3c4", sc:"nwu", t:"Mindig friss", x:"A munkaasztal magától frissül — nem kell semmit nyomni.", b:["Ha új verzió jön, pár másodperc múlva magától frissül (a munkád előtte elmentődik)","A 🎁 gomb mindig ott van — ha új dia került bele, <b>„új”</b> jelzést kap","Az újdonságok és a súgó <b>mindig az elejéről</b> indulnak"] },
+      { ic:"🔄", c:"#4fb3c4", sc:"nwu", t:"Mindig friss", x:"A munkaasztal magától frissül — nem kell semmit nyomni.", b:["Ha új verzió jön, pár másodperc múlva magától frissül (a munkád előtte elmentődik)","Ha új dia van, a 🎁 gomb <b>színes lesz</b> és kiírja, hány új (pl. <b>„3 új”</b>) — bent az új diák <b>✨ ÚJ</b> jelet kapnak, fent egy gomb odaugrik","Az újdonságok és a súgó <b>mindig az elejéről</b> indulnak"] },
       { ic:"❓", c:"#d9ad46", sc:"nwh", t:"Ha elakadsz", x:"Minden oldalnak saját, animált súgója van.", b:["Fent a <b>❓</b> gomb: lépésről lépésre, képekkel","<b>▶ Bemutató</b>: körbevezet az egész munkaasztalon","Kérdés? Írj a <b>💬 Chatben</b> — hiba? Nyomd meg a <b>🐞</b> gombot"] }
     ]}
   ];
@@ -4804,7 +4804,22 @@
     if(document.getElementById("fpNewsCss")) return;
     const st = document.createElement("style"); st.id = "fpNewsCss";
     st.textContent = `
-    .nw-hb{position:relative;font-size:17px;} .nw-hb.new{animation:nwHb 2.6s ease-in-out infinite;box-shadow:0 0 0 2px rgba(217,173,70,.55),0 6px 18px rgba(217,173,70,.3);}
+    .nw-hb{position:relative;font-size:17px;}
+    .nw-hb .nw-i{display:inline-block;line-height:1;}
+    .nw-hb.new{width:auto !important;min-width:40px;padding:0 13px 0 9px !important;display:inline-flex !important;align-items:center;gap:6px;border:0 !important;color:#fff !important;overflow:hidden;
+      background:linear-gradient(120deg,#f6c453,#ff6fa5 45%,#9a6cff 90%) !important;background-size:220% 100% !important;animation:nwPill 5s ease-in-out infinite;box-shadow:0 6px 20px rgba(255,111,165,.38),0 0 0 1px rgba(255,255,255,.18) inset !important;}
+    .nw-hb.new .nw-i{animation:nwGift 2.4s ease-in-out infinite;transform-origin:50% 80%;}
+    .nw-hb.new::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:nwShine 3.2s ease-in-out infinite;pointer-events:none;}
+    .nw-hb.new.calm{animation:none;} .nw-hb.new.calm::after,.nw-hb.new.calm .nw-i{animation:none;}
+    .nw-hb b.nw-t{position:static !important;padding:0 !important;background:none !important;box-shadow:none !important;color:#fff !important;font:800 12.5px/1 'Inter',sans-serif !important;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.25);}
+    @keyframes nwPill{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+    @keyframes nwGift{0%,70%,100%{transform:none;}76%{transform:rotate(-14deg) scale(1.12);}82%{transform:rotate(12deg) scale(1.12);}88%{transform:rotate(-6deg);}}
+    @keyframes nwShine{0%,55%{left:-60%;}85%,100%{left:130%;}}
+    .nw-newtag{position:absolute;top:12px;right:14px;z-index:5;padding:4px 10px;border-radius:99px;font:800 11px 'Inter',sans-serif;letter-spacing:.05em;color:#fff;background:linear-gradient(120deg,#f6c453,#ff6fa5,#9a6cff);box-shadow:0 6px 16px rgba(255,111,165,.35);animation:nwUp .35s ease;}
+    .nw-dots button.nw{background:linear-gradient(135deg,#ff6fa5,#9a6cff) !important;opacity:1;}
+    .nw-jump{margin-left:auto;margin-right:8px;border:0;border-radius:99px;padding:7px 13px;font:800 12px 'Inter',sans-serif;color:#fff;cursor:pointer;background:linear-gradient(120deg,#f6c453,#ff6fa5,#9a6cff);box-shadow:0 6px 16px rgba(255,111,165,.3);white-space:nowrap;}
+    html.fp-lite .nw-hb.new,html.fp-lite .nw-hb.new::after,html.fp-lite .nw-hb.new .nw-i{animation:none;}
+    @media (max-width:640px){ .nw-jump{font-size:11px;padding:6px 10px;} }
     .nw-hb b{position:absolute;top:-6px;right:-8px;padding:1px 5px;border-radius:999px;background:linear-gradient(135deg,#ffe39a,#d9ad46);color:#1a1405;font:800 9.5px/14px 'Inter',sans-serif;box-shadow:0 0 0 2px var(--bg,#0d0d10);}
     @keyframes nwHb{0%,100%{box-shadow:0 0 0 0 rgba(217,173,70,.0)}50%{box-shadow:0 0 0 6px rgba(217,173,70,.18)}}
     .nw-hb.nw-float{position:fixed;right:18px;top:18px;z-index:9990;}
@@ -5301,6 +5316,11 @@
     document.body.appendChild(b);
     const stage = b.querySelector(".nw-stage"), dots = Array.from(b.querySelectorAll(".nw-dots button")), bar = b.querySelector(".nw-bar i"), prevB = b.querySelector('[data-d="-1"]'), nextB = b.querySelector('[data-d="1"]');
     let cur = -1, timer = null, auto = true, maxI = 0;
+    const viewed = new Set(), NK = (opt && opt.newKeys) || null, skey = sl=> String(sl.t || "").replace(/<[^>]+>/g, "").trim();
+    const isNw = i=> !!(NK && NK.has(skey(N.slides[i])));
+    if(NK && NK.size){ dots.forEach((d, i)=>{ if(isNw(i)) d.classList.add("nw"); });
+      const first = N.slides.findIndex((_, i)=> isNw(i));
+      if(first > 0){ const top = b.querySelector(".nw-top > div"); if(top) top.insertAdjacentHTML("afterend", `<button type="button" class="nw-jump" title="Ugrás az első új diára">✨ ${NK.size} új dia — ugrás</button>`); } }
     const RM = window.fpRandSet ? fpRandSet() : null;
     const CUR = `<svg class="nwx-cur" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
     const OWN = {
@@ -5343,7 +5363,7 @@
       dir = dir || (i > cur ? 1 : -1);
       /* a régi dia azonnal eltűnik — nincs átfedés, az új tisztán becsúszik */
       stage.querySelectorAll(".nw-slide").forEach(x=> x.remove());
-      const s = document.createElement("div"); s.className = "nw-slide " + (dir > 0 ? "in-r" : "in-l") + (sceneOf(N.slides[i]) ? " sc" : ""); s.innerHTML = slideHtml(N.slides[i]); stage.appendChild(s);
+      const s = document.createElement("div"); s.className = "nw-slide " + (dir > 0 ? "in-r" : "in-l") + (sceneOf(N.slides[i]) ? " sc" : "") + (isNw(i) ? " is-new" : ""); s.innerHTML = slideHtml(N.slides[i]) + (isNw(i) ? `<span class="nw-newtag">✨ ÚJ</span>` : ""); stage.appendChild(s); viewed.add(i);
       try{ if(window.fpFillEx) fpFillEx(s); if(window.fpRandApply) fpRandApply(s, RM); }catch(e){}
       stage.scrollTop = 0; s.scrollTop = 0; fit(s);
       cur = i; if(i > maxI) maxI = i; dots.forEach((d, k)=> d.classList.toggle("on", k === i)); { const cn = b.querySelector(".nw-cnt b"); if(cn) cn.textContent = i + 1; } bar.style.width = ((i + 1) / N.slides.length * 100) + "%";
@@ -5351,7 +5371,7 @@
       clearTimeout(timer); if(auto) timer = setTimeout(()=>{ if(cur < N.slides.length - 1) go(cur + 1, 1); }, 11000);
     }
     const onRs = ()=> stage.querySelectorAll(".nw-slide").forEach(fit); window.addEventListener("resize", onRs);
-    const close = ()=>{ clearTimeout(timer); b.remove(); document.removeEventListener("keydown", key); window.removeEventListener("resize", onRs); if(opt && opt.onClose) opt.onClose(maxI + 1, N.slides.length); };
+    const close = ()=>{ clearTimeout(timer); b.remove(); document.removeEventListener("keydown", key); window.removeEventListener("resize", onRs); if(opt && opt.onClose) opt.onClose(maxI + 1, N.slides.length, Array.from(viewed).map(i=> skey(N.slides[i]))); };
     const key = e=>{ if(e.key === "ArrowRight") { auto = false; go(cur + 1, 1); } else if(e.key === "ArrowLeft"){ auto = false; go(cur - 1, -1); } else if(e.key === "Escape") close(); };
     document.addEventListener("keydown", key);
     b.addEventListener("click", e=>{
@@ -5362,6 +5382,7 @@
     let sx = null; stage.addEventListener("touchstart", e=>{ sx = e.touches[0].clientX; }, { passive:true });
     stage.addEventListener("touchend", e=>{ if(sx == null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if(Math.abs(dx) > 50){ auto = false; go(cur + (dx < 0 ? 1 : -1)); } });
     go(Math.max(0, Math.min(N.slides.length - 1, (opt && opt.start) || 0)), 1);
+    { const j = b.querySelector(".nw-jump"); if(j) j.onclick = ()=>{ const f = N.slides.findIndex((_, i)=> isNw(i)); if(f >= 0){ auto = false; go(f, f > cur ? 1 : -1); } j.remove(); }; }
   }
   window.fpNewsShow = newsShow;
   /* bolti oldal: ha az admin bekapcsolta, feltűnő gomb (és első alkalommal magától megnyílik) */
@@ -5380,19 +5401,25 @@
     /* már megnézte (bármelyik gépen — a bolt adataival együtt mentődik): nincs gomb — kivéve, ha azóta új dia került bele */
     let seen = null; try{ seen = JSON.parse(lsGet(NSEEN_KEY) || "null"); }catch(e){}
     const same = seen && seen.id === N.id && (seen.rev || 0) === rev;
-    const fresh = same && (seen.of || 0) < N.slides.length ? N.slides.length - (seen.of || 0) : 0;
-    const isNew = hl && (!same || fresh > 0);
+    const keys = N.slides.map(sk);
+    /* melyik diát látta már: címek szerint (régi mentésnél: az első „of” dia) — az admin „mutasd újra” (rev) mindent újnak jelöl */
+    const seenSet = new Set(!seen || (seen.rev || 0) !== rev ? [] : Array.isArray(seen.ks) ? seen.ks : seen.id === N.id ? keys.slice(0, seen.of || 0) : []);
+    const newKeys = new Set(keys.filter(k=> !seenSet.has(k)));
+    const fresh = newKeys.size, isNew = fresh > 0;
     newsCss();
     /* kicsi ✨ gomb a fejlécben, a ❓ mellett (nem ugrik fel magától) */
     if(!old){ const btn = document.createElement("button"); btn.type = "button"; btn.id = "nwBtn"; btn.className = "icon-btn nw-hb";
       const help = document.getElementById("helpBtn"); if(help && help.parentNode) help.parentNode.insertBefore(btn, help); else { btn.classList.add("nw-float"); document.body.appendChild(btn); } }
     const btn = document.getElementById("nwBtn");
-    btn.title = "Újdonságok — " + N.title + (isNew ? (fresh ? ` (+${fresh} új)` : " (új)") : " — bármikor megnézheted");
-    btn.classList.toggle("new", isNew);
-    btn.innerHTML = `🎁${isNew ? `<b>${fresh ? "+" + fresh : "új"}</b>` : ""}`;
-    const done = (k, of)=>{ try{ localStorage.setItem(NSEEN_KEY, JSON.stringify({ id:N.id, rev, at:Date.now(), n:Math.max(k, (same && seen.n) || 0), of })); }catch(e){} const b2 = document.getElementById("nwBtn"); if(b2){ b2.classList.remove("new"); const bb = b2.querySelector("b"); if(bb){ bb.style.transition = "opacity .4s, transform .4s"; bb.style.opacity = "0"; bb.style.transform = "scale(.4)"; setTimeout(()=> newsInit(), 420); } } };
-    const start = 0; /* mindig az elejéről indul */
-    btn.onclick = ()=> newsShow(N, { onClose:done, start });
+    btn.title = isNew ? `Újdonságok — ${fresh} új dia, amit még nem láttál` : "Újdonságok — bármikor újra megnézheted";
+    btn.classList.toggle("new", isNew); btn.classList.toggle("calm", isNew && !hl);
+    btn.innerHTML = `<span class="nw-i">🎁</span>${isNew ? `<b class="nw-t">${fresh === keys.length ? "Új" : fresh + " új"}</b>` : ""}`;
+    const done = (k, of, vk)=>{
+      const ks = Array.from(new Set(Array.from(seenSet).concat(vk || keys.slice(0, k)))).filter(x=> keys.includes(x));
+      try{ localStorage.setItem(NSEEN_KEY, JSON.stringify({ id:N.id, rev, at:Date.now(), n:Math.max(k, (same && seen.n) || 0), of, ks })); }catch(e){}
+      const b2 = document.getElementById("nwBtn"); if(b2){ const bb = b2.querySelector("b"); if(bb){ bb.style.transition = "opacity .4s, transform .4s"; bb.style.opacity = "0"; bb.style.transform = "scale(.4)"; } setTimeout(()=> newsInit(), 420); } };
+    const start = 0; /* mindig az elejéről indul — fent egy gomb visz az újakhoz */
+    btn.onclick = ()=> newsShow(N, { onClose:done, start, newKeys });
   }
 
   /* ===================== 💬 Chat (bolt ↔ központ) ===================== */
@@ -7648,7 +7675,7 @@ service cloud.firestore {
   <div class="modal help-modal" role="dialog" aria-labelledby="thelpTitle">
     <div class="help-top"><h2 id="thelpTitle">📚 Tudástár — így működik</h2><div style="display:flex;gap:8px;align-items:center"><span class="help-count" id="thelpCount">1 / 3</span><button class="help-x" id="thelpX" title="Bezárás">✕</button></div></div>
     <div class="help-bars" id="thelpBars"></div>
-    <div class="help-body" id="thelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">🔍</div><div><h3>Keresés</h3><p>Bármit megtalálsz pár betűvel — ékezet nélkül is.</p></div></div><div class="hc-wrap"><div class="hc-stage th1"><div class="sb">🔍 <span class="ty">sztorno</span></div><div class="mt">3 találat · 3 fejezetben</div><div class="card c1"><b>↩️ Sztornó</b>Csak eredeti nyugta <mark>sztornó</mark>zható! · 1. <mark>sztornó</mark> (külön gomb a kasszán)</div><div class="card c2"><b>📦 14 napos elállás</b>Általában <mark>sztornó</mark>zni és pénzt kell visszafizetni.</div></div></div><ol class="hs-steps"><li><div>Kattints a felső menü végén a <b>📚 Tudástár</b> oldalra, és írd be a keresőbe, mit keresel — pl. <b>sztornó</b>, <b>garancia</b>, <b>GLS</b>. Az ékezet és a nagybetű nem számít. <span>Gyorsan: nyomd meg a <b>/</b> gombot, és már írhatsz is.</span></div></li><li><div>Csak azok a részek maradnak, amelyekben benne van a keresett szó, <b>kiemelve</b>. Az <b>Enter</b> az első találathoz ugrik, az <b>Esc</b> törli a keresést.</div></li><li><div>Ha a másik könyvben is van találat, fent szól: <b>„A kézikönyvben is: 4 →”</b> — egy kattintással átvált, a keresés megmarad.</div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">📑</div><div><h3>Segédlet és Kézikönyv</h3><p>Két könyv, fejezetekre bontva.</p></div></div><div class="hc-wrap"><div class="hc-stage th2"><div class="seg"><i></i><span>📖 Segédlet</span><span>📘 Kézikönyv</span></div><div class="toc"><em>🌅 Napnyitás</em><em>☕ Reggeli ellenőrzés</em><em>🛒 Eladás</em><em>🛡️ Garancia</em></div><div class="doc"><b>🛒 Eladás</b><p><i>1</i>Bizzio</p><p><i>2</i>Eladások</p><p><i>3</i>Tétel kiválasztása</p><p><i>4</i>Promóciós ár ellenőrzése</p></div></div></div><ol class="hs-steps"><li><div>Fent váltasz a <b>📖 Segédlet</b> (bolti teendők lépésről lépésre) és a <b>📘 Kézikönyv</b> (működési szabályok, napi feladatok), valamint a <b>🏬 Üzletek</b> (boltok elérhetősége) között. Megjegyzi, melyiket nézted utoljára.</div></li><li><div>Bal oldalon a <b>fejezetek</b>: kattints egyre, és odaugrik. Görgetés közben mindig kiemeli, melyik fejezetnél jársz. <span>Telefonon a fejezetek egy vízszintesen húzható sávban vannak.</span></div></li><li><div>A lépések számozva, egymás alatt; a <b>⚠️ figyelmeztetések</b> pirossal; a linkek, e-mail címek és telefonszámok <b>kattinthatók</b>. A kézikönyv ellenőrző listáit kipipálhatod (csak emlékeztető, nem menti el).</div></li></ol></section><section class="help-slide" data-i="sh"><div class="hs-head"><div class="hs-icon">🏬</div><div><h3>Üzletek elérhetősége</h3><p>Minden FirstPhone bolt telefonja, gyorshívója, e-mailje és címe.</p></div></div><ol class="hs-steps"><li><div>Fent válts a <b>🏬 Üzletek</b> fülre. A boltok <b>vármegyénként</b> vannak csoportosítva; bal oldalt (telefonon felül) a vármegyékre ugorhatsz. Legfelül a <b>★ Saját bolt</b> kártyája áll, aranyszínű kerettel.</div></li><li><div>Minden kártyán ott a <b>boltkód</b> (pl. KAPV), jobb felül nagy számmal a <b>gyorshívó</b> (belső mellék), alatta a <b>📞 telefonszám</b>, a <b>✉️ e-mail</b> és a <b>📍 cím</b>.</div></li><li><div>Kattints a telefonszámra a <b>hívásért</b>, az e-mailre <b>levélíráshoz</b>, a címre a <b>Google Térkép</b> megnyitásához. A <b>⧉</b> gombbal kimásolod.</div></li><li><div>A kereső itt is működik: írd be a várost, a boltkódot, a gyorshívó számát vagy az e-mail egy részét (pl. <b>tesco</b>, <b>KAPV</b>, <b>30</b>). A Segédletben és a Kézikönyvben keresve fent szól, ha az <b>Üzletek</b> között is van találat.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Apróságok, amik megkönnyítik.</p></div></div><div class="tips"><div class="tip"><div class="ti">⚙️</div><div><b>Beállítás nélkül is</b><span>A Tudástár akkor is megnyílik, ha a bolt még nincs beállítva — az első napon is lehet belőle tanulni.</span></div></div><div class="tip"><div class="ti">⬆️</div><div><b>Vissza a tetejére</b><span>Hosszabb görgetés után jobb alul megjelenik a ⬆ gomb.</span></div></div><div class="tip"><div class="ti">⌨️</div><div><b>Gyorsbillentyűk</b><span><b>/</b> vagy <b>Ctrl+F</b> a keresőbe ugrik, <b>Enter</b> az első találatra, <b>Esc</b> törli a keresést.</span></div></div><div class="tip"><div class="ti">🖨️</div><div><b>Nyomtatás</b><span>A böngésző nyomtatásával (Ctrl+P) csak a tartalom nyomtatódik, a kereső és a fejezetlista nélkül.</span></div></div></div></section></div>
+    <div class="help-body" id="thelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">🔍</div><div><h3>Keresés</h3><p>Bármit megtalálsz pár betűvel — ékezet nélkül is.</p></div></div><div class="hc-wrap"><div class="hc-stage th1"><div class="sb">🔍 <span class="ty">sztorno</span></div><div class="mt">3 találat · 3 fejezetben</div><div class="card c1"><b>↩️ Sztornó</b>Csak eredeti nyugta <mark>sztornó</mark>zható! · 1. <mark>sztornó</mark> (külön gomb a kasszán)</div><div class="card c2"><b>📦 14 napos elállás</b>Általában <mark>sztornó</mark>zni és pénzt kell visszafizetni.</div></div></div><ol class="hs-steps"><li><div>Kattints a felső menü végén a <b>📚 Tudástár</b> oldalra, és írd be a keresőbe, mit keresel — pl. <b>sztornó</b>, <b>garancia</b>, <b>GLS</b>. Az ékezet és a nagybetű nem számít. <span>Gyorsan: nyomd meg a <b>/</b> gombot, és már írhatsz is.</span></div></li><li><div>Csak azok a részek maradnak, amelyekben benne van a keresett szó, <b>kiemelve</b>. Az <b>Enter</b> az első találathoz ugrik, az <b>Esc</b> törli a keresést.</div></li><li><div>Ha a másik könyvben is van találat, fent szól: <b>„A kézikönyvben is: 4 →”</b> — egy kattintással átvált, a keresés megmarad.</div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">📑</div><div><h3>Segédlet és Kézikönyv</h3><p>Két könyv, fejezetekre bontva.</p></div></div><div class="hc-wrap"><div class="hc-stage th2"><div class="seg"><i></i><span>📖 Segédlet</span><span>📘 Kézikönyv</span></div><div class="toc"><em>🌅 Napnyitás</em><em>☕ Reggeli ellenőrzés</em><em>🛒 Eladás</em><em>🛡️ Garancia</em></div><div class="doc"><b>🛒 Eladás</b><p><i>1</i>Bizzio</p><p><i>2</i>Eladások</p><p><i>3</i>Tétel kiválasztása</p><p><i>4</i>Promóciós ár ellenőrzése</p></div></div></div><ol class="hs-steps"><li><div>Fent váltasz a <b>📖 Segédlet</b> (bolti teendők lépésről lépésre) és a <b>📘 Kézikönyv</b> (működési szabályok, napi feladatok), valamint a <b>🏬 Üzletek</b> (boltok elérhetősége) között. Megjegyzi, melyiket nézted utoljára.</div></li><li><div>Legfelül <b>színes fejezet-kártyák</b>: kattints egyre, és odaugrik. A fejezetek listája <b>jobb oldalt</b> van — görgetés közben mindig kiemeli, melyik fejezetnél jársz. Minden fejezet végén <b>← Előző</b> · <b>⬆ Fejezetek</b> · <b>Következő →</b>. <span>Telefonon a fejezetek egy vízszintesen húzható sávban vannak.</span></div></li><li><div>A lépések számozva, egymás alatt; a <b>⚠️ figyelmeztetések</b> pirossal; a linkek, e-mail címek és telefonszámok <b>kattinthatók</b>. A kézikönyv ellenőrző listáit kipipálhatod (csak emlékeztető, nem menti el).</div></li></ol></section><section class="help-slide" data-i="sh"><div class="hs-head"><div class="hs-icon">🏬</div><div><h3>Üzletek elérhetősége</h3><p>Minden FirstPhone bolt telefonja, gyorshívója, e-mailje és címe.</p></div></div><ol class="hs-steps"><li><div>Fent válts a <b>🏬 Üzletek</b> fülre. A boltok <b>vármegyénként</b> vannak csoportosítva; jobb oldalt (telefonon felül) a vármegyékre ugorhatsz. Legfelül a <b>★ Saját bolt</b> kártyája áll, aranyszínű kerettel.</div></li><li><div>Minden kártyán ott a <b>boltkód</b> (pl. KAPV), jobb felül nagy számmal a <b>gyorshívó</b> (belső mellék), alatta a <b>📞 telefonszám</b>, a <b>✉️ e-mail</b> és a <b>📍 cím</b>.</div></li><li><div>Kattints a telefonszámra a <b>hívásért</b>, az e-mailre <b>levélíráshoz</b>, a címre a <b>Google Térkép</b> megnyitásához. A <b>⧉</b> gombbal kimásolod.</div></li><li><div>A kereső itt is működik: írd be a várost, a boltkódot, a gyorshívó számát vagy az e-mail egy részét (pl. <b>tesco</b>, <b>KAPV</b>, <b>30</b>). A Segédletben és a Kézikönyvben keresve fent szól, ha az <b>Üzletek</b> között is van találat.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Apróságok, amik megkönnyítik.</p></div></div><div class="tips"><div class="tip"><div class="ti">⚙️</div><div><b>Beállítás nélkül is</b><span>A Tudástár akkor is megnyílik, ha a bolt még nincs beállítva — az első napon is lehet belőle tanulni.</span></div></div><div class="tip"><div class="ti">⬆️</div><div><b>Vissza a tetejére</b><span>Hosszabb görgetés után jobb alul megjelenik a ⬆ gomb.</span></div></div><div class="tip"><div class="ti">⌨️</div><div><b>Gyorsbillentyűk</b><span><b>/</b> vagy <b>Ctrl+F</b> a keresőbe ugrik, <b>Enter</b> az első találatra, <b>Esc</b> törli a keresést.</span></div></div><div class="tip"><div class="ti">🖨️</div><div><b>Nyomtatás</b><span>A böngésző nyomtatásával (Ctrl+P) csak a tartalom nyomtatódik, a kereső és a fejezetlista nélkül.</span></div></div></div></section></div>
     <div class="help-foot"><button class="action-btn secondary" id="thelpPrev">← Vissza</button><span class="hint">Tipp: lapozz a ← → nyilakkal</span><button class="action-btn primary" id="thelpNext">Tovább →</button></div>
   </div>
 </div>
