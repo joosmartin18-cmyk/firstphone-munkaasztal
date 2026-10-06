@@ -2231,6 +2231,99 @@
   .td-empty{font-size:12.5px;color:var(--text-dim);padding:10px 4px;text-align:center;}
   .td-more{border:none;background:transparent;color:var(--text-dim);font:700 12px 'Inter',sans-serif;cursor:pointer;padding:8px;margin-top:4px;width:100%;border-radius:8px;}
   .td-more:hover{background:var(--bg-panel);color:var(--text);}
+  /* ===== Teendők v2 + 🛒 Rendelés ===== */
+  .td-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;row-gap:14px;}
+  .td-tabs{grid-column:1 / -1;position:relative;display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:16px;background:var(--bg-panel2);border:1px solid var(--border-soft);}
+  .td-tabs button{position:relative;z-index:1;border:0;background:none;color:var(--text-dim);font:800 13.5px 'Inter',sans-serif;padding:10px 12px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:color .3s ease;}
+  .td-tabs button.on{color:#fff;}
+  .td-tabs button small{font:800 11px 'Inter',sans-serif;padding:1px 8px;border-radius:99px;background:rgba(255,255,255,.12);}
+  .td-tabs button small:empty{display:none;}
+  .td-tabs button:not(.on) small{background:var(--bg-cell);color:var(--text);}
+  .td-tab-ind{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:12px;background:linear-gradient(135deg,#d6589a,#a2447a);box-shadow:0 6px 18px rgba(214,88,154,.35);transition:transform .45s var(--spring),background .3s ease;}
+  .td-tabs.rend .td-tab-ind{transform:translateX(100%);background:linear-gradient(135deg,#4fb3c4,#2f8fa0);box-shadow:0 6px 18px rgba(79,179,196,.35);}
+  body.ft-off-rend .td-tabs{display:none;}
+  .td-page.rend .td-ic{background:linear-gradient(150deg,rgba(79,179,196,.32),rgba(79,179,196,.08));border-color:rgba(79,179,196,.45);}
+  .td-page.rend .td-top::before{background:linear-gradient(100deg,rgba(79,179,196,.16),transparent 45%);}
+  @media (max-width:640px){ .td-top{grid-template-columns:auto minmax(0,1fr);} .td-stats{grid-column:1 / -1;} }
+  /* teendők: két oszlop — bal: kinek + új teendő, jobb: lista */
+  .td-lay{display:grid;grid-template-columns:minmax(240px,300px) minmax(0,1fr);gap:16px;align-items:start;}
+  .td-side{display:flex;flex-direction:column;gap:12px;position:sticky;top:12px;}
+  .td-side .td-people{grid-template-columns:1fr;margin:0;gap:6px;}
+  .td-side .td-pc{padding:9px 11px;}
+  .td-side .td-pc em{margin-left:auto;font-style:normal;font:800 11px 'Inter',sans-serif;min-width:22px;text-align:center;padding:2px 7px;border-radius:99px;background:var(--bg-panel);color:var(--text);}
+  .td-side .td-pc.on em{background:var(--pc);color:#fff;}
+  .td-side h4{margin:2px 2px 0;font:800 11px 'Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);}
+  .td-side .td-form{display:flex;flex-direction:column;gap:8px;margin:0;}
+  .td-side .td-form textarea{min-height:64px;resize:vertical;box-sizing:border-box;padding:10px 11px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:600 13px/1.45 'Inter',sans-serif;outline:none;transition:border-color .3s ease;}
+  .td-side .td-form textarea:focus{border-color:#d6589a;}
+  .td-qd{display:flex;gap:5px;flex-wrap:wrap;} .td-qd button{border:1px solid var(--border-soft);background:var(--bg-panel);color:var(--text-dim);font:800 11px 'Inter',sans-serif;padding:5px 9px;border-radius:99px;cursor:pointer;transition:all .25s var(--ease-out);}
+  .td-qd button:hover{color:var(--text);border-color:var(--border);} .td-qd button.on{background:color-mix(in srgb,#d6589a 20%,var(--bg-panel));border-color:#d6589a;color:var(--text);}
+  .td-side .td-form .action-btn{width:100%;justify-content:center;}
+  .td-main{min-width:0;}
+  .td-main .td-head{margin-bottom:4px;}
+  .td-item{border-radius:14px;padding:11px 12px;border-left-width:0;position:relative;overflow:hidden;}
+  .td-item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,var(--gold));}
+  .td-item:hover{border-color:var(--border);}
+  @media (max-width:860px){ .td-lay{grid-template-columns:1fr;} .td-side{position:static;} .td-side .td-people{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));} }
+  /* rendelés */
+  .or-card{padding:16px;animation:fadeInUp .5s var(--ease-out) .05s backwards;}
+  .or-lay{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:16px;align-items:start;}
+  .or-form{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:18px;background:color-mix(in srgb,#4fb3c4 6%,var(--bg-panel));border:1px dashed color-mix(in srgb,#4fb3c4 40%,var(--border));position:sticky;top:12px;}
+  .or-form h4{margin:0;font:800 15px 'Poppins',sans-serif;display:flex;align-items:center;gap:8px;}
+  .or-f > span{display:block;margin:0 2px 6px;font:800 10.5px 'Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);}
+  .or-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;}
+  .or-cats button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:14px;border:1px solid var(--border-soft);background:var(--bg-panel);color:var(--text);font:800 11.5px 'Inter',sans-serif;cursor:pointer;transition:all .3s var(--ease-out);}
+  .or-cats button i{font-style:normal;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:18px;background:color-mix(in srgb,var(--c) 18%,transparent);}
+  .or-cats button:hover{transform:translateY(-1px);border-color:var(--border);}
+  .or-cats button.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 14%,var(--bg-panel));box-shadow:0 0 0 1px var(--c) inset,0 6px 16px rgba(0,0,0,.18);}
+  .or-types{display:flex;flex-wrap:wrap;gap:5px;}
+  .or-types button{border:1px solid var(--border-soft);background:var(--bg-panel);color:var(--text-dim);font:700 12px 'Inter',sans-serif;padding:6px 10px;border-radius:99px;cursor:pointer;transition:all .25s var(--ease-out);}
+  .or-types button:hover{color:var(--text);border-color:var(--border);}
+  .or-types button.on{background:var(--c);border-color:transparent;color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--c) 40%,transparent);}
+  .or-in{width:100%;box-sizing:border-box;padding:10px 11px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:600 13px 'Inter',sans-serif;outline:none;transition:border-color .3s ease;}
+  .or-in:focus{border-color:#4fb3c4;}
+  .or-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;}
+  .or-qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:12px;background:var(--bg-panel);overflow:hidden;}
+  .or-qty button{width:34px;height:38px;border:0;background:none;color:var(--text);font:800 17px 'Inter',sans-serif;cursor:pointer;} .or-qty button:hover{background:var(--bg-cell);}
+  .or-qty input{width:40px;border:0;background:none;color:var(--text);text-align:center;font:800 15px 'Poppins',sans-serif;outline:none;}
+  .or-by{display:flex;flex-wrap:wrap;gap:5px;}
+  .or-by button{display:flex;align-items:center;gap:6px;border:1px solid var(--border-soft);background:var(--bg-panel);color:var(--text);font:700 11.5px 'Inter',sans-serif;padding:4px 10px 4px 4px;border-radius:99px;cursor:pointer;}
+  .or-by button .op-av{width:22px;height:22px;border-radius:50%;font-size:9px;display:grid;place-items:center;}
+  .or-by button.on{border-color:var(--pc,#4fb3c4);box-shadow:0 0 0 1px var(--pc,#4fb3c4) inset;}
+  .or-add{width:100%;justify-content:center;background:linear-gradient(135deg,#5ec7d6,#2f8fa0) !important;color:#fff !important;border:0 !important;box-shadow:0 8px 20px rgba(79,179,196,.3);}
+  .or-main{min-width:0;}
+  .or-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+  .or-flt{display:flex;gap:4px;flex-wrap:wrap;padding:3px;border-radius:12px;background:var(--bg-panel);border:1px solid var(--border-soft);}
+  .or-flt button{border:0;background:none;color:var(--text-dim);font:800 11.5px 'Inter',sans-serif;padding:6px 10px;border-radius:9px;cursor:pointer;display:flex;align-items:center;gap:5px;}
+  .or-flt button.on{background:var(--bg-cell);color:var(--text);box-shadow:inset 0 0 0 1px var(--border);}
+  .or-flt button em{font-style:normal;font-size:10.5px;color:var(--text-faint);}
+  .or-q{flex:1;min-width:150px;}
+  .or-tools{display:flex;gap:6px;margin-left:auto;}
+  .or-tools .action-btn{padding:8px 12px;font-size:12px;}
+  .or-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start;}
+  .or-col{border-radius:18px;background:var(--bg-cell);border:1px solid var(--border-soft);padding:10px;min-width:0;}
+  .or-col > header{display:flex;align-items:center;gap:8px;padding:2px 4px 10px;font:800 12px 'Inter',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);}
+  .or-col > header em{margin-left:auto;font-style:normal;font-size:11px;padding:1px 9px;border-radius:99px;background:var(--bg-panel);color:var(--text);}
+  .or-col.st-need > header{color:#e8a92c;} .or-col.st-ord > header{color:#5b9cf5;} .or-col.st-got > header{color:#30b37a;}
+  .or-list{display:flex;flex-direction:column;gap:7px;}
+  .or-it{position:relative;display:flex;gap:10px;padding:10px;border-radius:14px;background:var(--bg-panel);border:1px solid var(--border-soft);animation:fadeInUp .35s var(--ease-out) backwards;transition:border-color .2s,transform .2s;}
+  .or-it:hover{border-color:var(--border);}
+  .or-it > i{flex:0 0 36px;height:36px;border-radius:11px;display:grid;place-items:center;font-style:normal;font-size:18px;background:color-mix(in srgb,var(--c) 18%,transparent);}
+  .or-tx{flex:1;min-width:0;} .or-tx b{display:block;font-size:13px;line-height:1.3;word-break:break-word;} .or-tx b span{color:var(--text-dim);font-weight:700;}
+  .or-tx small{display:block;margin-top:2px;font-size:11px;color:var(--text-dim);font-weight:600;}
+  .or-tx p{margin:4px 0 0;font-size:11.5px;color:var(--text);opacity:.85;word-break:break-word;}
+  .or-n{flex:none;align-self:flex-start;font:800 13px 'Poppins',sans-serif;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--c) 20%,transparent);}
+  .or-act{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+  .or-act button{border:1px solid var(--border-soft);background:var(--bg-cell);color:var(--text);font:800 11px 'Inter',sans-serif;padding:5px 9px;border-radius:9px;cursor:pointer;transition:all .2s ease;}
+  .or-act button:hover{border-color:var(--border);}
+  .or-act button.go{background:linear-gradient(135deg,#5ec7d6,#2f8fa0);border-color:transparent;color:#fff;}
+  .or-act button.ok{background:linear-gradient(135deg,#3ecf8e,#2aa874);border-color:transparent;color:#fff;}
+  .or-act button.del:hover{background:rgba(226,88,90,.15);color:#e2585a;border-color:transparent;}
+  .or-col.st-got .or-it{opacity:.72;}
+  .or-empty{font-size:12px;color:var(--text-faint);text-align:center;padding:16px 6px;border:1px dashed var(--border-soft);border-radius:12px;}
+  .or-main{container-type:inline-size;container-name:orm;}
+  @container orm (max-width:900px){ .or-cols{grid-template-columns:1fr;} .or-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));} }
+  @media (max-width:860px){ .or-lay{grid-template-columns:1fr;} .or-form{position:static;} .or-tools{margin-left:0;} }
   .day-todo{position:absolute;top:6px;right:7px;font-size:9.5px;font-weight:800;padding:1px 5px;border-radius:99px;background:rgba(217,173,70,.18);color:var(--gold);border:1px solid rgba(217,173,70,.4);pointer-events:none;}
   .day-cell{position:relative;}
   @media (max-width:640px){ .td-item{flex-wrap:wrap;} .td-tx{flex-basis:calc(100% - 40px);} .td-checks{order:3;width:100%;justify-content:flex-start;} .td-head{align-items:flex-start;} }
@@ -3391,7 +3484,29 @@
   .tt-meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--text-dim);font-weight:600;margin-top:-4px;}
   .tt-meta .tt-q{border:1px solid var(--border);background:var(--bg-cell);color:var(--text-dim);border-radius:999px;padding:3px 10px;font:600 11.5px 'Inter',sans-serif;cursor:pointer;}
   .tt-meta .tt-q:hover{border-color:var(--gold);color:var(--text);}
-  .tt-grid{display:grid;grid-template-columns:270px minmax(0,1fr);gap:16px;align-items:start;}
+  .tt-grid{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px;align-items:start;}
+  .tt-toc{order:2;}
+  /* fejezet-áttekintő kártyák */
+  .tt-ov{margin-bottom:16px;scroll-margin-top:calc(var(--tt-top,178px) + 4px);animation:fadeInUp .45s var(--ease-out) backwards;}
+  .tt-ovh{display:flex;align-items:baseline;gap:10px;margin:0 4px 10px;} .tt-ovh b{font:800 16px 'Poppins',sans-serif;} .tt-ovh small{font-size:12px;color:var(--text-dim);font-weight:600;}
+  .tt-ovg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+  .tt-oc{display:flex;align-items:center;gap:11px;padding:12px;border-radius:18px;border:1px solid var(--border-soft);background:linear-gradient(145deg,color-mix(in srgb,var(--h) 10%,var(--bg-panel)),var(--bg-panel) 70%);color:var(--text);font:inherit;text-align:left;cursor:pointer;min-width:0;transition:transform .3s var(--spring),border-color .2s,box-shadow .2s;}
+  .tt-oc:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--h) 55%,var(--border));box-shadow:0 12px 26px rgba(0,0,0,.22);}
+  .tt-oc .ic{flex:0 0 42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;background:color-mix(in srgb,var(--h) 22%,transparent);border:1px solid color-mix(in srgb,var(--h) 40%,transparent);}
+  .tt-oc .tx{min-width:0;} .tt-oc small{display:block;font:800 10px 'Inter',sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--h);}
+  .tt-oc b{display:block;font-size:13px;line-height:1.3;margin-top:1px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .tt-oc em{display:block;font-style:normal;font-size:11px;color:var(--text-faint);font-weight:700;margin-top:2px;}
+  /* fejezetek: saját színnel */
+  .tt-sec[style*="--h"]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--h);opacity:.9;}
+  .tt-sec[style*="--h"] .tt-sh .ix{background:color-mix(in srgb,var(--h) 20%,var(--bg-cell)) !important;border-color:color-mix(in srgb,var(--h) 45%,var(--border)) !important;}
+  .tt-sec[style*="--h"] .tt-sh small{color:color-mix(in srgb,var(--h) 70%,var(--text-dim));}
+  .tt-sec.tt-flash{animation:ttFlash 1.2s ease;} @keyframes ttFlash{0%,100%{box-shadow:none;}25%,60%{box-shadow:0 0 0 2px var(--h),0 12px 30px color-mix(in srgb,var(--h) 30%,transparent);}}
+  .tt-nx{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-top:16px;padding-top:12px;border-top:1px dashed var(--border-soft);}
+  .tt-nx button{border:1px solid var(--border-soft);background:var(--bg-cell);color:var(--text);font:inherit;border-radius:14px;padding:8px 12px;cursor:pointer;text-align:left;min-width:0;transition:border-color .2s,transform .2s;}
+  .tt-nx button:hover{border-color:var(--border);transform:translateY(-1px);}
+  .tt-nx button small{display:block;font:800 10px 'Inter',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);}
+  .tt-nx button b{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tt-nx .nx{text-align:right;} .tt-nx .up{align-self:center;font:800 12px 'Inter',sans-serif;color:var(--text-dim);white-space:nowrap;}
   .tt-toc{position:sticky;top:var(--tt-top,178px);max-height:calc(100vh - var(--tt-top,178px) - 16px);overflow:auto;padding:10px;scrollbar-width:thin;}
   .tt-toc h4{margin:4px 8px 8px;font:800 10.5px 'Inter',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-faint);}
   .tt-toc a{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:10px;color:var(--text-dim);text-decoration:none;font:600 13px 'Inter',sans-serif;line-height:1.3;border:1px solid transparent;transition:background .15s,color .15s,opacity .15s;}
@@ -3457,6 +3572,8 @@
     .tt-hl{display:none;}
     .tt-seg{justify-self:stretch;} .tt-seg button{flex:1;justify-content:center;}
     .tt-grid{grid-template-columns:1fr;gap:10px;}
+    .tt-toc{order:0;} .tt-ovg{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;} .tt-oc{padding:10px;gap:8px;} .tt-oc .ic{flex-basis:34px;height:34px;font-size:17px;}
+    .tt-nx{grid-template-columns:1fr 1fr;} .tt-nx .up{display:none;}
     .tt-toc{position:static;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:8px;scrollbar-width:none;}
     .tt-toc::-webkit-scrollbar{display:none;}
     .tt-toc h4{display:none;}
@@ -3916,7 +4033,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-212403";</script>
+<script>window.FP_BUILD="20261006-213509";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4652,8 +4769,9 @@
       { ic:"🗑️", c:"#e2585a", sc:["xhelpBody","1"], mod:"selejt", t:"Selejt — új elrendezés", x:"Számozott lépések: rögzítés → mai lista → ellenőrzés → letöltés.", b:["Fent egy pillantásra: mai selejt, ShieldUp, <b>ellenőrizetlen</b> tételek","<b>🛡️ ShieldUp</b> és selejt külön lapon, külön cetlin","Excel letöltés és nyomtatható cetli"] },
       { ic:"📥", c:"#d9474a", sc:"nwxi", mod:"selejt", ft:"sximport", t:"Korábbi selejt feltöltése", x:"A régi selejt füzetet egyszerűen betöltheted — bármilyen fájlból.", b:["<b>Excel, CSV, PDF, Word, szöveg</b> — a tételeket magától kiolvassa (dátum, termék, darab)","Fénykép vagy más fájl? <b>Csatolmányként</b> elmenti a naphoz","Ugyanazt a fájlt <b>nem tölti fel kétszer</b>, a meglévő tételeket kihagyja"] },
       { ic:"🔍", c:"#30b37a", sc:"nwxc", mod:"selejt", ft:"sxcheck", t:"Havi selejt ellenőrzés", x:"Havonta egyszer: megvan-e a hónap összes selejtje?", b:["A hónap elején fent megjelenik: <b>📅 Itt a havi ellenőrzés</b> — <b>Ellenőrzés most</b> vagy <b>⏭️ Kihagyom</b>","Hónaponként az <b>összes selejt</b>: <b>✓ Megvan</b> gomb, vonalkód, vagy <b>✓ Mind megvan</b>","Ha egyszer ellenőrizted, a gomb <b>eltűnik</b> — látszik, ki és mikor nézte meg"] },
-      { ic:"✅", c:"#d6589a", sc:"nwt", mod:"teendo", t:"Teendők", x:"Közös to-do lista — most csoportosítva, átláthatóbban.", b:["Feladat az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>mindkettőnek</b> — határidővel is","Csoportok: <b>⚠ Lejárt</b> · <b>📅 Ma</b> · <b>🗓️ Később</b> · <b>Nincs határidő</b>","Mindenki a saját nevénél pipálja ki"] },
-      { ic:"📚", c:"#8a5aa8", sc:["thelpBody","1"], t:"Tudástár", x:"Segédlet, Kézikönyv és az Üzletek elérhetősége — kereshetően.", b:["Írj be pár betűt (pl. <b>sztornó</b>, <b>garancia</b>) — kiemelve mutatja","<b>🏬 Üzletek</b>: minden bolt telefonja, gyorshívója, e-mailje, címe","Új: <b>olvasási csík</b> — fent látod, melyik fejezetnél jársz"] },
+      { ic:"✅", c:"#d6589a", sc:"nwt", mod:"teendo", t:"Teendők — új elrendezés", x:"Bal oldalt: kinek és új teendő · jobb oldalt: a lista, csoportosítva.", b:["Feladat az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>mindkettőnek</b>","Határidő egy kattintással: <b>Ma</b> · <b>Holnap</b> · <b>Péntek</b>","Csoportok: <b>⚠ Lejárt</b> · <b>📅 Ma</b> · <b>🗓️ Később</b> · <b>Nincs határidő</b> — mindenki a saját nevénél pipál"] },
+      { ic:"🛒", c:"#4fb3c4", sc:"nwt", mod:"teendo", ft:"rend", t:"Rendelési lista", x:"A Teendők között új fül: mit kell rendelni?", b:["Fajta: <b>🛡️ ShieldUp</b>, <b>🪟 Üvegfólia</b>, <b>📱 Tok</b>, <b>🔌 Tartozék</b>, <b>📦 Egyéb</b> — és típus (pl. <i>Betekintésvédő</i>, <i>MagSafe</i>, <i>Töltőfej</i>)","Készülék + darab → <b>＋ Listára</b>; ugyanaz kétszer = csak a darabszám nő","<b>🛒 Rendelni kell</b> → <b>📦 Megrendelve</b> → <b>✅ Megjött</b> · <b>📋 Lista másolása</b> e-mailbe / chatbe"] },
+      { ic:"📚", c:"#8a5aa8", sc:["thelpBody","1"], t:"Tudástár", x:"Segédlet, Kézikönyv és az Üzletek elérhetősége — kereshetően.", b:["Írj be pár betűt (pl. <b>sztornó</b>, <b>garancia</b>) — kiemelve mutatja","<b>🏬 Üzletek</b>: minden bolt telefonja, gyorshívója, e-mailje, címe","Új: <b>fejezet-kártyák</b> az elején, és minden fejezet végén <b>← Előző</b> / <b>Következő →</b>"] },
       { ic:"🧩", c:"#4fb3c4", sc:"nwf", t:"Programok és funkciók", x:"A beállításban kiválasztod, mely programok és funkciók kellenek.", b:["Programonként külön <b>funkciók</b> is: pl. a Cetli generátorban minden, kivéve az Óra garanciát","A kikapcsolt rész eltűnik a menüből — az adatok megmaradnak","Üzlet adatai, nyitvatartás, dolgozók egy helyen"] },
       { ic:"💬", c:"#8e7ff5", sc:"nwc", t:"Chat", x:"Közvetlen vonal az adminhoz és a többi bolthoz.", b:["Jobb lent a lila gomb: írj az <b>adminnak</b> vagy egy <b>másik boltnak</b>","Az admin válaszánál látszik, <b>melyik admin</b> írta (pl. Admin · Péter)","Az admin fontos <b>üzenetei</b> a munkaasztal tetején jelennek meg"] },
       { ic:"😊", c:"#9a6cff", sc:"nwg", t:"Emojik, GIF-ek, matricák", x:"Mókásabban is lehet írni.", b:["<b>😊 Emojik</b> kategóriákban, a legutóbbiak elöl","<b>GIF</b> gomb: GIPHY kereső, animált matricák, GIF link vagy saját GIF","A csak emojis üzenet nagyban jelenik meg"] },
@@ -6253,6 +6371,10 @@ service cloud.firestore {
             ${card("📦", "#c98a3a", "Váró csomagok", wait.length ? `<ul class="ax-dl">${wait.slice(0, 8).map(i=> `<li><b>${esc(i.code)}</b><small>${esc(String(i.car || "").toUpperCase())} · ${esc(i.inAt || "")}</small></li>`).join("")}${wait.length > 8 ? `<li class="more">… és még ${wait.length - 8}</li>` : ""}</ul>` : empty("nincs váró csomag"), wait.length ? `<span class="ax-dcnt">${wait.length}</span>` : "")}
             ${card("🗑️", "#e2585a", "Mai selejt", sxT.length ? `<ul class="ax-dl">${sxT.slice(0, 8).map(i=> `<li><span>${esc(i.name || i.code || "?")}</span><small>× ${esc(i.qty)}${i.kind === "su" ? " · 🛡️ ShieldUp" : ""}</small></li>`).join("")}</ul>` : empty("ma még nincs"), sxT.length ? `<span class="ax-dcnt">${sxN} db</span>` : "")}
             ${card("🐞", "#f0953a", "Hibajegyek", T.length ? `<ul class="ax-dl">${T.slice(-5).reverse().map(t=> `<li class="go" data-dt="${esc(x.uid + "|" + t._id)}"><span><span class="ax-tid">${tixId(t)}</span> ${esc(firstLine(t.text).slice(0, 60))}</span>${stBadge(t)}</li>`).join("")}</ul>` : empty("nincs bejelentés"), openT.length ? `<span class="ax-dcnt hot">${openT.length} nyitott</span>` : "")}
+            ${(()=>{ const OR = (Array.isArray(st.orders) ? st.orders : []).filter(o=> o.st !== "got"), IC = { su:"🛡️", glass:"🪟", case:"📱", acc:"🔌", other:"📦" }, NM = { su:"ShieldUp", glass:"Üvegfólia", case:"Tok", acc:"Tartozék", other:"" };
+              const need = OR.filter(o=> o.st === "need"), ord = OR.filter(o=> o.st === "ord");
+              const li = o=> `<li><span>${IC[o.cat] || "📦"} ${esc(o.cat === "other" ? (o.name || "Egyéb") : [NM[o.cat], o.type, o.name].filter(Boolean).join(" · "))}${o.model ? ` <small>— ${esc(o.model)}</small>` : ""}</span><small>${esc(o.qty)} db${o.st === "ord" ? " · 📦 megrendelve" : ""}</small></li>`;
+              return card("🛒", "#4fb3c4", "Rendelés", OR.length ? `<ul class="ax-dl">${need.concat(ord).slice(0, 10).map(li).join("")}${OR.length > 10 ? `<li class="more">… és még ${OR.length - 10}</li>` : ""}</ul>` : empty("nincs nyitott rendelés"), need.length ? `<span class="ax-dcnt hot">${need.reduce((a, o)=> a + (+o.qty || 0), 0)} db rendelni</span>` : ""); })()}
             <div class="ax-dgrid">
               ${card("🎁", "#d6589a", "Újdonságok", `<p class="ax-dp">${x.nseen ? `<b>✓ Megnézte</b><small>${new Date(x.nseen.at).toLocaleDateString("hu-HU")} · ${x.nseen.n || "?"}/${x.nseen.of || "?"} dia</small>` : `<b>Még nem nézte meg</b>`}</p>`)}
               ${card("📢", "#5b95ff", "Közlemény", `<p class="ax-dp">${x.msg ? `<b>Kint van</b><small>„${esc(String(x.msg.text).slice(0, 80))}”</small>` : `<b>Nincs kint</b><small>küldhetsz egyet lent</small>`}</p>`)}
@@ -7290,11 +7412,13 @@ service cloud.firestore {
 
   <div class="td-page" id="tdPage">
     <section class="panel td-top">
-      <div class="td-ic">✅</div>
-      <div class="td-tt"><h2>Teendők</h2><p>Közös feladatlista — az egyik dolgozónak, a másiknak vagy mindkettőnek.</p></div>
+      <div class="td-ic" id="tdIc">✅</div>
+      <div class="td-tt"><h2 id="tdTitle">Teendők</h2><p id="tdSub">Közös feladatlista — az egyik dolgozónak, a másiknak vagy mindkettőnek.</p></div>
       <div class="td-stats" id="tdStats"></div>
+      <div class="td-tabs" id="tdTabs" role="tablist" aria-label="Teendők vagy rendelés"><span class="td-tab-ind"></span><button type="button" role="tab" data-tab="todo" class="on">✅ Teendők <small></small></button><button type="button" role="tab" data-tab="rend">🛒 Rendelés <small></small></button></div>
     </section>
     <section class="panel todo-card" id="todoCard"></section>
+    <section class="panel or-card" id="orderCard" hidden></section>
   </div>
 
   <div class="sx-page" id="sxPage">
@@ -7533,7 +7657,7 @@ service cloud.firestore {
   <div class="modal help-modal" role="dialog" aria-labelledby="dhelpTitle">
     <div class="help-top"><h2 id="dhelpTitle">✅ Teendők — így működik</h2><div style="display:flex;gap:8px;align-items:center"><span class="help-count" id="dhelpCount">1 / 3</span><button class="help-x" id="dhelpX" title="Bezárás">✕</button></div></div>
     <div class="help-bars" id="dhelpBars"></div>
-    <div class="help-body" id="dhelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">✍️</div><div><h3>Új teendő</h3><p>Feladat egy dolgozónak vagy mindkettőnek — pár másodperc.</p></div></div><ol class="hs-steps"><li><div>Fent a programok közül nyisd meg a <b>✅ Teendők</b> oldalt.</div></li><li><div>Írd be a feladatot (pl. <i>kirakat rendezése</i>, <i>ShieldUp feltöltés</i>).</div></li><li><div>Válaszd ki, <b>kinek</b> szól: az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>👥 mindkettőnek</b>. <span>Ha a fenti kártyák közül egy dolgozó ki van jelölve, magától őt ajánlja.</span></div></li><li><div>Ha kell, adj meg <b>határidőt</b>, majd <b>＋ Hozzáadás</b> (vagy Enter). <span>Minden magától mentődik — a felhőbe is.</span></div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">☑️</div><div><h3>Kipipálás és szűrés</h3><p>Mindenki a saját nevénél jelzi, ha kész.</p></div></div><ol class="hs-steps"><li><div>A teendő mellett a dolgozók <b>nevei</b> vannak — kattints a sajátodra, és kész ✓. <span>Mindkettőnek szóló teendő akkor kész, ha mindketten kipipálták.</span></div></li><li><div>Fent a <b>dolgozó kártyáira</b> kattintva csak az ő teendői látszanak; a <b>👥 Mindenki</b> mindent mutat.</div></li><li><div>A nyitott teendők <b>csoportokban</b> látszanak: <b>⚠️ Lejárt</b> (pirossal), <b>📅 Ma</b>, <b>🗓️ Később</b> és <b>📌 Nincs határidő</b> — így mindig a legsürgősebb van felül.</div></li><li><div>A kész teendők alul, összecsukva maradnak (<b>▾ Kész teendők</b>); a ✕ törli a teendőt.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Néhány apróság a teendőkhöz.</p></div></div><div class="tips"><div class="tip"><div class="ti">📊</div><div><b>Számlálók</b><span>Fent jobbra: hány teendő <b>nyitott</b>, hány esedékes <b>ma</b>, és hány <b>lejárt</b> (pirossal).</span></div></div><div class="tip"><div class="ti">⚠️</div><div><b>Lejárt határidő</b><span>Ha a határidő elmúlt, a teendő alatt pirosan „lejárt” felirat jelenik meg.</span></div></div><div class="tip"><div class="ti">☁️</div><div><b>Minden gépen ugyanaz</b><span>Bolti belépéssel a teendők a felhőbe mentődnek — a bolt minden gépén és telefonján ugyanaz a lista látszik.</span></div></div><div class="tip"><div class="ti">🧩</div><div><b>Ki-be kapcsolható</b><span>A bolt beállításánál a <b>Programok</b> között kikapcsolható, ha nem használjátok — a teendők ilyenkor is megmaradnak.</span></div></div></div></section></div>
+    <div class="help-body" id="dhelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">✍️</div><div><h3>Új teendő</h3><p>Feladat egy dolgozónak vagy mindkettőnek — pár másodperc.</p></div></div><ol class="hs-steps"><li><div>Fent a programok közül nyisd meg a <b>✅ Teendők</b> oldalt.</div></li><li><div>Írd be a feladatot (pl. <i>kirakat rendezése</i>, <i>ShieldUp feltöltés</i>).</div></li><li><div>Válaszd ki, <b>kinek</b> szól: az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>👥 mindkettőnek</b>. <span>Ha a fenti kártyák közül egy dolgozó ki van jelölve, magától őt ajánlja.</span></div></li><li><div>Ha kell, adj meg <b>határidőt</b>, majd <b>＋ Hozzáadás</b> (vagy Enter). <span>Minden magától mentődik — a felhőbe is.</span></div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">☑️</div><div><h3>Kipipálás és szűrés</h3><p>Mindenki a saját nevénél jelzi, ha kész.</p></div></div><ol class="hs-steps"><li><div>A teendő mellett a dolgozók <b>nevei</b> vannak — kattints a sajátodra, és kész ✓. <span>Mindkettőnek szóló teendő akkor kész, ha mindketten kipipálták.</span></div></li><li><div>Fent a <b>dolgozó kártyáira</b> kattintva csak az ő teendői látszanak; a <b>👥 Mindenki</b> mindent mutat.</div></li><li><div>A nyitott teendők <b>csoportokban</b> látszanak: <b>⚠️ Lejárt</b> (pirossal), <b>📅 Ma</b>, <b>🗓️ Később</b> és <b>📌 Nincs határidő</b> — így mindig a legsürgősebb van felül.</div></li><li><div>A kész teendők alul, összecsukva maradnak (<b>▾ Kész teendők</b>); a ✕ törli a teendőt.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Néhány apróság a teendőkhöz.</p></div></div><div class="tips"><div class="tip"><div class="ti">📊</div><div><b>Számlálók</b><span>Fent jobbra: hány teendő <b>nyitott</b>, hány esedékes <b>ma</b>, és hány <b>lejárt</b> (pirossal).</span></div></div><div class="tip"><div class="ti">⚠️</div><div><b>Lejárt határidő</b><span>Ha a határidő elmúlt, a teendő alatt pirosan „lejárt” felirat jelenik meg.</span></div></div><div class="tip"><div class="ti">☁️</div><div><b>Minden gépen ugyanaz</b><span>Bolti belépéssel a teendők a felhőbe mentődnek — a bolt minden gépén és telefonján ugyanaz a lista látszik.</span></div></div><div class="tip"><div class="ti">🧩</div><div><b>Ki-be kapcsolható</b><span>A bolt beállításánál a <b>Programok</b> között kikapcsolható, ha nem használjátok — a teendők ilyenkor is megmaradnak.</span></div></div></div></section><section class="help-slide" data-i="4" data-need="ft:rend"><div class="hs-head"><div class="hs-icon">🛒</div><div><h3>Rendelési lista</h3><p>Mit kell rendelni: tartozék, tok, fólia, ShieldUp — egy helyen.</p></div></div><ol class="hs-steps"><li><div>Fent válts a <b>🛒 Rendelés</b> fülre.</div></li><li><div>Válaszd ki a <b>fajtát</b> (🛡️ ShieldUp, 🪟 Üvegfólia, 📱 Tok, 🔌 Tartozék…), majd a <b>típust</b> (pl. <i>Betekintésvédő</i>, <i>MagSafe</i>, <i>Töltőfej</i>).</div></li><li><div>Írd be a <b>készüléket</b> (pl. <i>iPhone 16 Pro</i>) és a <b>darabszámot</b> → <b>＋ Listára</b>. <span>Ha ugyanaz már a listán van, csak a darabszám nő.</span></div></li><li><div>Három oszlop: <b>🛒 Rendelni kell</b> → <b>📦 Megrendelve</b> → <b>✅ Megjött</b> — egy gombbal léptetheted.</div></li><li><div>A <b>📋 Lista másolása</b> gombbal a teljes rendelést kimásolod — beillesztheted e-mailbe vagy a chatbe.</div></li></ol></section></div>
     <div class="help-foot"><button class="action-btn secondary" id="dhelpPrev">← Vissza</button><span class="hint">Tipp: lapozz a ← → nyilakkal</span><button class="action-btn primary" id="dhelpNext">Tovább →</button></div>
   </div>
 </div>
@@ -12822,6 +12946,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     st.targets = Object.assign({}, parsed.targets || {});
     st.schedule = parsed.schedule || {};
     st.todos = Array.isArray(parsed.todos) ? parsed.todos : [];
+    st.orders = Array.isArray(parsed.orders) ? parsed.orders : [];
     st.ratings = (parsed.ratings && typeof parsed.ratings === "object") ? parsed.ratings : {};
     st.subs = (parsed.subs && typeof parsed.subs === "object") ? parsed.subs : {};
     // régi mentés (még nem volt beállítás fül) → a kaposvári adatokkal folytatjuk
@@ -13812,27 +13937,44 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function todoDone(t){ const ps = todoPeople(t); return ps.length > 0 && ps.every(id=> t.done && t.done[id]); }
   function todosForDay(key){ return (state.todos || []).filter(t=> t.due === key && !todoDone(t)); }
   function todayKey(){ const n = new Date(); return dateKey(n.getFullYear(), n.getMonth()+1, n.getDate()); }
+  let tdTab = "todo";
+  try{ if(localStorage.getItem("firstphone_td_tab") === "rend") tdTab = "rend"; }catch(e){}
+  function tdTabsSync(){
+    const pg = document.getElementById("tdPage"), tabs = document.getElementById("tdTabs"); if(!pg || !tabs) return;
+    if(tdTab === "rend" && !ftOn("rend")) tdTab = "todo";
+    pg.classList.toggle("rend", tdTab === "rend"); tabs.classList.toggle("rend", tdTab === "rend");
+    tabs.querySelectorAll("[data-tab]").forEach(b=>{ b.classList.toggle("on", b.dataset.tab === tdTab); b.setAttribute("aria-selected", b.dataset.tab === tdTab ? "true" : "false"); });
+    const oc = document.getElementById("orderCard"), tc = document.getElementById("todoCard");
+    if(oc) oc.hidden = tdTab !== "rend"; if(tc) tc.hidden = tdTab === "rend";
+    const ic = document.getElementById("tdIc"), tt = document.getElementById("tdTitle"), sb = document.getElementById("tdSub");
+    if(ic) ic.textContent = tdTab === "rend" ? "🛒" : "✅";
+    if(tt) tt.textContent = tdTab === "rend" ? "Rendelés" : "Teendők";
+    if(sb) sb.textContent = tdTab === "rend" ? "Mit kell rendelni: tartozék, tok, fólia, ShieldUp — rendelni kell → megrendelve → megjött." : "Közös feladatlista — az egyik dolgozónak, a másiknak vagy mindkettőnek.";
+    const nT = (state.todos || []).filter(t=> !todoDone(t)).length, nO = (state.orders || []).filter(o=> o.st === "need").length;
+    const sm = tabs.querySelectorAll("small"); if(sm[0]) sm[0].textContent = nT || ""; if(sm[1]) sm[1].textContent = nO || "";
+    if(!tabs.dataset.w){ tabs.dataset.w = "1"; tabs.addEventListener("click", e=>{ const b = e.target.closest("[data-tab]"); if(!b || b.dataset.tab === tdTab) return; tdTab = b.dataset.tab; try{ localStorage.setItem("firstphone_td_tab", tdTab); }catch(_){} renderTodos(); }); }
+  }
   function renderTodos(){
+    tdTabsSync();
+    if(tdTab === "rend"){ renderOrders(); return; }
     const card = document.getElementById("todoCard"); if(!card) return;
     if(!Array.isArray(state.todos)) state.todos = [];
     const emps = employees();
     const stats = document.getElementById("tdStats");
     if(!emps.length){ card.innerHTML = `<div class="td-empty">Még nincs dolgozó megadva — a <b>📅 Beosztás</b> oldalon a jobb felső <b>⚙️ Üzlet &amp; dolgozók</b> gombbal adhatsz hozzá.</div>`; if(stats) stats.innerHTML = ""; return; }
     if(todoFilter !== "all" && !personById(todoFilter)) todoFilter = "all";
-    const personTab = null;
     const flt = todoFilter;
-    const list = state.todos.filter(t=> flt === "all" || t.who === "all" || t.who === flt);
-    const visible = list.filter(t=> flt === "all" ? true : true);
+    const visible = state.todos.filter(t=> flt === "all" || t.who === "all" || t.who === flt);
     const isDoneFor = t=> flt === "all" ? todoDone(t) : !!(t.done && t.done[flt]);
     const open = visible.filter(t=> !isDoneFor(t)), done = visible.filter(isDoneFor);
-    const sortF = (a,b)=> (a.due || "9999") .localeCompare(b.due || "9999") || a.t - b.t;
+    const sortF = (a,b)=> (a.due || "9999").localeCompare(b.due || "9999") || a.t - b.t;
     open.sort(sortF); done.sort((a,b)=> b.t - a.t);
     const tk = todayKey();
     const allOpen = state.todos.filter(t=> !todoDone(t));
     if(stats) stats.innerHTML = `<div class="td-stat"><small>Nyitott</small><b>${allOpen.length}</b></div><div class="td-stat today"><small>Ma</small><b>${allOpen.filter(t=> t.due === tk).length}</b></div><div class="td-stat late"><small>Lejárt</small><b>${allOpen.filter(t=> t.due && t.due < tk).length}</b></div>`;
     const openFor = id=> state.todos.filter(t=> (t.who === "all" || t.who === id) && !(t.done && t.done[id])).length;
-    const peopleCards = `<div class="td-people"><button type="button" class="td-pc${flt === "all" ? " on" : ""}" data-f="all" style="--pc:var(--gold)"><span class="op-av" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#171106">👥</span><span><b>Mindenki</b><small>${allOpen.length} nyitott teendő</small></span></button>${emps.map(p=>{ const ini = (p.name || "?").trim().split(/\s+/).map(w=> w[0]).join("").slice(0, 2).toUpperCase(), n = openFor(p.id);
-      return `<button type="button" class="td-pc${flt === p.id ? " on" : ""}" data-f="${p.id}" style="--pc:${p.hex}">${avHtml(p)}<span><b>${esc(p.name)}</b><small>${n ? `${n} teendője van` : "🎉 nincs teendője"}</small></span></button>`; }).join("")}</div>`;
+    const peopleCards = `<div class="td-people"><button type="button" class="td-pc${flt === "all" ? " on" : ""}" data-f="all" style="--pc:var(--gold)"><span class="op-av" style="background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#171106">👥</span><span><b>Mindenki</b><small>összes teendő</small></span><em>${allOpen.length}</em></button>${emps.map(p=>{ const n = openFor(p.id);
+      return `<button type="button" class="td-pc${flt === p.id ? " on" : ""}" data-f="${p.id}" style="--pc:${p.hex}">${avHtml(p)}<span><b>${esc(p.name)}</b><small>${n ? "nyitott teendő" : "🎉 nincs teendője"}</small></span><em>${n}</em></button>`; }).join("")}</div>`;
     const fmtDue = d=>{ if(!d) return ""; const [y,m,dd] = d.split("-").map(Number); const dw = HU_DAYS_SHORT[dowOfKey(d)] || ""; return `${HU_MONTHS[m-1].slice(0,3).toLowerCase()}. ${dd}. (${dw})`; };
     const who = t=> t.who === "all" ? "👥 Mindkettő" + (emps.length > 2 ? " / mindenki" : "") : (personById(t.who) ? personById(t.who).name : "—");
     const item = t=>{
@@ -13845,25 +13987,34 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         <div class="td-checks">${ppl.map(id=>{ const pp = personById(id), on = !!(t.done && t.done[id]); return `<button type="button" class="td-chk${on ? " on" : ""}" data-p="${id}" style="--pc:${pp.hex}" title="${on ? "Visszaállítás" : "Kész"}"><span>✓</span>${esc(shortName(pp))}</button>`; }).join("")}</div>
         <button type="button" class="td-del" data-del="${t.id}" title="Teendő törlése">✕</button></div>`;
     };
-    card.innerHTML = peopleCards + `<div class="td-head"><h3>${flt === "all" ? "📋 Összes teendő" : `📋 ${esc(personById(flt).name)} teendői`} <small>${open.length} nyitott</small></h3></div>
+    const dK = n=>{ const d = new Date(); d.setDate(d.getDate() + n); return dateKey(d.getFullYear(), d.getMonth() + 1, d.getDate()); };
+    const friK = (()=>{ const d = new Date(); const add = (5 - d.getDay() + 7) % 7; d.setDate(d.getDate() + add); return dateKey(d.getFullYear(), d.getMonth() + 1, d.getDate()); })();
+    const side = `<aside class="td-side"><h4>Kinek?</h4>${peopleCards}
+      <h4>＋ Új teendő</h4>
       <div class="td-form">
-        <input type="text" class="td-text" maxlength="160" placeholder="Új teendő — pl. kirakat rendezése, ShieldUp feltöltés…">
-        <select class="td-who"><option value="all">👥 ${emps.length === 2 ? "Mindkettő" : "Mindenki"}</option>${emps.map(p=> `<option value="${p.id}"${(personTab || todoFilter) === p.id ? " selected" : ""}>${esc(p.name)}</option>`).join("")}</select>
+        <textarea class="td-text" maxlength="160" rows="2" placeholder="pl. kirakat rendezése, ShieldUp feltöltés…"></textarea>
+        <select class="td-who"><option value="all">👥 ${emps.length === 2 ? "Mindkettő" : "Mindenki"}</option>${emps.map(p=> `<option value="${p.id}"${todoFilter === p.id ? " selected" : ""}>${esc(p.name)}</option>`).join("")}</select>
+        <div class="td-qd"><button type="button" data-qd="">Nincs határidő</button><button type="button" data-qd="${dK(0)}">Ma</button><button type="button" data-qd="${dK(1)}">Holnap</button><button type="button" data-qd="${friK}">Péntek</button></div>
         <input type="date" class="td-due" title="Határidő (nem kötelező)">
         <button type="button" class="action-btn primary td-add">＋ Hozzáadás</button>
-      </div>
+      </div></aside>`;
+    const main = `<div class="td-main"><div class="td-head"><h3>${flt === "all" ? "📋 Összes teendő" : `📋 ${esc(personById(flt).name)} teendői`} <small>${open.length} nyitott</small></h3></div>
       ${open.length ? (()=>{ const G = [["late","⚠️ Lejárt", t=> t.due && t.due < tk],["today","📅 Ma", t=> t.due === tk],["soon","🗓️ Később", t=> t.due && t.due > tk],["none","📌 Nincs határidő", t=> !t.due]];
         return G.map(([k, lbl, f])=>{ const L = open.filter(f); return L.length ? `<div class="td-grp g-${k}"><div class="td-gh"><b>${lbl}</b><em>${L.length}</em></div><div class="td-list">${L.map(item).join("")}</div></div>` : ""; }).join(""); })()
-        : `<div class="td-list"><div class="td-empty">${done.length ? "🎉 Minden teendő kész!" : "Még nincs teendő — írj be egyet fent."}</div></div>`}
-      ${done.length ? `<button type="button" class="td-more">${todoShowDone ? "▴ Kész teendők elrejtése" : `▾ Kész teendők (${done.length})`}</button>${todoShowDone ? `<div class="td-list">${done.map(item).join("")}</div>` : ""}` : ""}`;
-    const txt = card.querySelector(".td-text"), add = ()=>{
+        : `<div class="td-list"><div class="td-empty">${done.length ? "🎉 Minden teendő kész!" : "Még nincs teendő — írj be egyet bal oldalt."}</div></div>`}
+      ${done.length ? `<button type="button" class="td-more">${todoShowDone ? "▴ Kész teendők elrejtése" : `▾ Kész teendők (${done.length})`}</button>${todoShowDone ? `<div class="td-list">${done.map(item).join("")}</div>` : ""}` : ""}</div>`;
+    card.innerHTML = `<div class="td-lay">${side}${main}</div>`;
+    const txt = card.querySelector(".td-text"), dueI = card.querySelector(".td-due");
+    const syncQd = ()=> card.querySelectorAll("[data-qd]").forEach(b=> b.classList.toggle("on", b.dataset.qd === (dueI.value || "")));
+    card.querySelectorAll("[data-qd]").forEach(b=> b.onclick = ()=>{ dueI.value = b.dataset.qd; syncQd(); txt.focus(); }); dueI.onchange = syncQd; syncQd();
+    const add = ()=>{
       const v = txt.value.trim().replace(/\s+/g, " "); if(!v){ txt.focus(); return; }
-      state.todos.push({ id:"t" + Date.now().toString(36) + Math.random().toString(36).slice(2,5), text:v, who:card.querySelector(".td-who").value, due:card.querySelector(".td-due").value || null, done:{}, t:Date.now() });
+      state.todos.push({ id:"t" + Date.now().toString(36) + Math.random().toString(36).slice(2,5), text:v, who:card.querySelector(".td-who").value, due:dueI.value || null, done:{}, t:Date.now() });
       saveState(); renderTodos(); toast("✅ Teendő hozzáadva.");
       setTimeout(()=>{ const n = document.querySelector("#todoCard .td-text"); if(n) n.focus(); }, 30);
     };
     card.querySelector(".td-add").onclick = add;
-    txt.onkeydown = e=>{ if(e.key === "Enter") add(); };
+    txt.onkeydown = e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); add(); } };
     card.querySelectorAll("[data-f]").forEach(b=> b.onclick = ()=>{ todoFilter = b.dataset.f; renderTodos(); });
     const more = card.querySelector(".td-more"); if(more) more.onclick = ()=>{ todoShowDone = !todoShowDone; renderTodos(); };
     card.querySelectorAll(".td-item").forEach(el=>{
@@ -13874,6 +14025,105 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         if(todoDone(t)) toast("🎉 Teendő kész: " + t.text);
       });
       el.querySelector(".td-del").onclick = ()=>{ state.todos = state.todos.filter(x=> x.id !== t.id); saveState(); renderTodos(); toast("Teendő törölve."); };
+    });
+  }
+
+  /* ===================== 🛒 Rendelés: mit kell rendelni (tartozék, tok, fólia, ShieldUp…) ===================== */
+  /* state.orders = [{ id, cat, type, name, model, qty, note, by, st:"need"|"ord"|"got", t, stAt }] */
+  const OCAT = [
+    { k:"su",    i:"🛡️", n:"ShieldUp",  c:"#4fb3c4", types:["Átlátszó (HD)","Matt","Betekintésvédő","Kékfény-szűrős","Antibakteriális","Kamera fólia","Hátlap fólia","Óra fólia","Tablet fólia"] },
+    { k:"glass", i:"🪟", n:"Üvegfólia", c:"#7b8cff", types:["Edzett üveg","Full cover 3D","Betekintésvédő","Kamera lencsevédő"] },
+    { k:"case",  i:"📱", n:"Tok",       c:"#d6589a", types:["Szilikon","Átlátszó","MagSafe","Könyvtok","Ütésálló","Bőr","Gyerek / mintás"] },
+    { k:"acc",   i:"🔌", n:"Tartozék",  c:"#e2bf55", types:["Töltőfej","USB-C kábel","Lightning kábel","Vezeték nélküli töltő","Powerbank","Fülhallgató","Autós tartó","Autós töltő","Óraszíj","Memóriakártya"] },
+    { k:"other", i:"📦", n:"Egyéb",     c:"#9aa3b5", types:[] }
+  ];
+  const OST = [["need","🛒","Rendelni kell"],["ord","📦","Megrendelve"],["got","✅","Megjött"]];
+  const OMODELS = ["iPhone 17 Pro Max","iPhone 17 Pro","iPhone 17 Air","iPhone 17","iPhone 16 Pro Max","iPhone 16 Pro","iPhone 16 Plus","iPhone 16","iPhone 16e","iPhone 15 Pro Max","iPhone 15 Pro","iPhone 15 Plus","iPhone 15","iPhone 14 Pro Max","iPhone 14 Pro","iPhone 14","iPhone 13","iPhone 12","iPhone 11","iPhone SE (2022)",
+    "Samsung Galaxy S25 Ultra","Samsung Galaxy S25+","Samsung Galaxy S25","Samsung Galaxy S24 Ultra","Samsung Galaxy S24","Samsung Galaxy S24 FE","Samsung Galaxy A56","Samsung Galaxy A55","Samsung Galaxy A36","Samsung Galaxy A35","Samsung Galaxy A26","Samsung Galaxy A25","Samsung Galaxy A16","Samsung Galaxy Z Flip7","Samsung Galaxy Z Fold7",
+    "Xiaomi Redmi Note 14 Pro","Xiaomi Redmi Note 14","Xiaomi Redmi Note 13","Xiaomi 15","Google Pixel 10","Google Pixel 9","Apple Watch 46 mm","Apple Watch 42 mm","Apple Watch Ultra","iPad 11\"","iPad Air 13\""];
+  const OF = { cat:"su", type:"", model:"", qty:1, note:"", by:"" };
+  let orFilter = "all", orQ = "";
+  const ocat = k=> OCAT.find(c=> c.k === k) || OCAT[OCAT.length - 1];
+  const oTitle = o=> { const c = ocat(o.cat); return (c.k === "other" ? (o.name || "Egyéb") : c.n + (o.type ? " · " + o.type : "")) + (c.k !== "other" && o.name ? " · " + o.name : ""); };
+  function ordersText(){
+    const L = (state.orders || []).filter(o=> o.st === "need"); if(!L.length) return "";
+    const loc = (state.settings && state.settings.location) || "";
+    let t = `Rendelés${loc ? " — FirstPhone " + loc : ""} (${new Date().toLocaleDateString("hu-HU")})\n`;
+    OCAT.forEach(c=>{ const G = L.filter(o=> o.cat === c.k); if(!G.length) return; t += `\n${c.i} ${c.n}\n`; G.forEach(o=>{ t += `  • ${o.qty} db  ${c.k === "other" ? (o.name || "Egyéb") : (o.type || c.n)}${c.k !== "other" && o.name ? " (" + o.name + ")" : ""}${o.model ? " — " + o.model : ""}${o.note ? "  [" + o.note + "]" : ""}\n`; }); });
+    return t;
+  }
+  function renderOrders(){
+    const card = document.getElementById("orderCard"); if(!card) return;
+    if(!Array.isArray(state.orders)) state.orders = [];
+    const O = state.orders, emps = employees(), wk = Date.now() - 7 * 864e5;
+    const stats = document.getElementById("tdStats");
+    const sum = st=> O.filter(o=> o.st === st && (st !== "got" || (o.stAt || o.t) > wk)).reduce((a, o)=> a + (+o.qty || 0), 0);
+    if(stats) stats.innerHTML = `<div class="td-stat late"><small>Rendelni</small><b>${sum("need")}</b></div><div class="td-stat"><small>Megrendelve</small><b>${sum("ord")}</b></div><div class="td-stat today"><small>Megjött · 7 nap</small><b>${sum("got")}</b></div>`;
+    const C = ocat(OF.cat);
+    const models = Array.from(new Set(O.map(o=> o.model).filter(Boolean).concat(OMODELS)));
+    const form = `<aside class="or-form" style="--c:${C.c}"><h4>🛒 Mit kell rendelni?</h4>
+      <div class="or-f"><span>Fajta</span><div class="or-cats">${OCAT.map(c=> `<button type="button" data-cat="${c.k}" class="${c.k === OF.cat ? "on" : ""}" style="--c:${c.c}"><i>${c.i}</i>${c.n}</button>`).join("")}</div></div>
+      ${C.types.length ? `<div class="or-f"><span>Típus</span><div class="or-types" style="--c:${C.c}">${C.types.map(t=> `<button type="button" data-type="${esc(t)}" class="${t === OF.type ? "on" : ""}">${esc(t)}</button>`).join("")}</div></div>` : ""}
+      <div class="or-f"><span>${C.k === "other" ? "Megnevezés *" : "Megnevezés / márka (nem kötelező)"}</span><input class="or-in or-name" maxlength="80" placeholder="${C.k === "other" ? "pl. tisztítókendő, SIM-tű" : "pl. Spigen, fekete, 20 W"}" value="${esc(OF.name || "")}"></div>
+      <div class="or-row"><div class="or-f"><span>Készülék / méret</span><input class="or-in or-model" list="orModels" maxlength="60" placeholder="pl. iPhone 16 Pro" value="${esc(OF.model)}"><datalist id="orModels">${models.map(m=> `<option value="${esc(m)}">`).join("")}</datalist></div>
+        <div class="or-f"><span>Darab</span><div class="or-qty"><button type="button" data-q="-1" aria-label="Kevesebb">−</button><input class="or-qn" inputmode="numeric" value="${OF.qty}"><button type="button" data-q="1" aria-label="Több">+</button></div></div></div>
+      <div class="or-f"><span>Megjegyzés (nem kötelező)</span><input class="or-in or-note" maxlength="120" placeholder="pl. vevő kérte, sürgős, 2 fekete + 1 kék" value="${esc(OF.note)}"></div>
+      ${emps.length ? `<div class="or-f"><span>Ki kéri? (nem kötelező)</span><div class="or-by">${emps.map(p=> `<button type="button" data-by="${p.id}" class="${OF.by === p.id ? "on" : ""}" style="--pc:${p.hex}">${avHtml(p)}${esc(shortName(p))}</button>`).join("")}</div></div>` : ""}
+      <button type="button" class="action-btn primary or-add">＋ Listára</button></aside>`;
+    const q = orQ.trim().toLowerCase();
+    const shown = O.filter(o=> (orFilter === "all" || o.cat === orFilter) && (!q || (oTitle(o) + " " + (o.model || "") + " " + (o.note || "")).toLowerCase().includes(q)));
+    const cnt = k=> O.filter(o=> o.st !== "got" && (k === "all" || o.cat === k)).length;
+    const itm = o=>{ const c = ocat(o.cat), P = o.by ? personById(o.by) : null;
+      const d = new Date(o.stAt || o.t), dt = `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, "0")}.`;
+      const acts = o.st === "need" ? `<button type="button" data-oa="dec" title="Egyel kevesebb">−</button><button type="button" data-oa="inc" title="Egyel több">+</button><button type="button" class="go" data-oa="ord">📦 Megrendeltem</button>`
+        : o.st === "ord" ? `<button type="button" data-oa="back" title="Vissza: rendelni kell">↩</button><button type="button" class="ok" data-oa="got">✅ Megjött</button>`
+        : `<button type="button" data-oa="back" title="Vissza: megrendelve">↩</button>`;
+      return `<div class="or-it" style="--c:${c.c}" data-id="${esc(o.id)}"><i>${c.i}</i><div class="or-tx"><b>${esc(c.k === "other" ? (o.name || "Egyéb") : (o.type || c.n))}${c.k !== "other" && o.name ? ` <span>· ${esc(o.name)}</span>` : ""}</b><small>${o.model ? "📱 " + esc(o.model) + " · " : ""}${c.n}${P ? " · " + esc(shortName(P)) : ""} · ${o.st === "need" ? "felírva" : o.st === "ord" ? "megrendelve" : "megjött"} ${dt}</small>${o.note ? `<p>💬 ${esc(o.note)}</p>` : ""}<div class="or-act">${acts}<button type="button" class="del" data-oa="del" title="Törlés">🗑</button></div></div><span class="or-n">${o.qty} db</span></div>`; };
+    const cols = OST.map(([st, ic, lbl])=>{ const L = shown.filter(o=> o.st === st).sort((a, b)=> st === "need" ? a.cat.localeCompare(b.cat) || a.t - b.t : (b.stAt || b.t) - (a.stAt || a.t));
+      return `<section class="or-col st-${st}"><header>${ic} ${lbl}<em>${L.reduce((a, o)=> a + (+o.qty || 0), 0)} db</em></header><div class="or-list">${L.map(itm).join("") || `<div class="or-empty">${st === "need" ? "Nincs mit rendelni 🎉" : st === "ord" ? "Nincs megrendelt tétel" : "Még nem jött meg semmi"}</div>`}</div></section>`; }).join("");
+    const main = `<div class="or-main"><div class="or-bar"><div class="or-flt"><button type="button" data-of="all" class="${orFilter === "all" ? "on" : ""}">Mind <em>${cnt("all")}</em></button>${OCAT.map(c=> `<button type="button" data-of="${c.k}" class="${orFilter === c.k ? "on" : ""}">${c.i} ${c.n} <em>${cnt(c.k)}</em></button>`).join("")}</div>
+      <input class="or-in or-q" type="search" placeholder="🔎 Keresés: modell, típus…" value="${esc(orQ)}">
+      <div class="or-tools"><button type="button" class="action-btn secondary" data-ot="copy" title="A rendelni kell lista kimásolása (e-mailbe, chatbe)">📋 Lista másolása</button><button type="button" class="action-btn secondary" data-ot="clr" title="A megjött tételek törlése">🧹 Megjöttek törlése</button></div></div>
+      <div class="or-cols">${cols}</div></div>`;
+    card.innerHTML = `<div class="or-lay">${form}${main}</div>`;
+    const $o = sel=> card.querySelector(sel);
+    const keep = ()=>{ OF.name = $o(".or-name").value; OF.model = $o(".or-model").value; OF.note = $o(".or-note").value; OF.qty = Math.max(1, Math.min(999, parseInt($o(".or-qn").value, 10) || 1)); };
+    card.querySelectorAll("[data-cat]").forEach(b=> b.onclick = ()=>{ keep(); OF.cat = b.dataset.cat; OF.type = ""; renderOrders(); });
+    card.querySelectorAll("[data-type]").forEach(b=> b.onclick = ()=>{ keep(); OF.type = OF.type === b.dataset.type ? "" : b.dataset.type; renderOrders(); setTimeout(()=>{ const m = document.querySelector("#orderCard .or-model"); if(m && !m.value) m.focus(); }, 20); });
+    card.querySelectorAll("[data-by]").forEach(b=> b.onclick = ()=>{ keep(); OF.by = OF.by === b.dataset.by ? "" : b.dataset.by; renderOrders(); });
+    card.querySelectorAll("[data-q]").forEach(b=> b.onclick = ()=>{ const i = $o(".or-qn"); i.value = Math.max(1, Math.min(999, (parseInt(i.value, 10) || 1) + +b.dataset.q)); OF.qty = +i.value; });
+    card.querySelectorAll("[data-of]").forEach(b=> b.onclick = ()=>{ keep(); orFilter = b.dataset.of; renderOrders(); });
+    const qi = $o(".or-q"); qi.oninput = ()=>{ keep(); orQ = qi.value; const pos = qi.selectionStart; renderOrders(); const n = document.querySelector("#orderCard .or-q"); if(n){ n.focus(); try{ n.setSelectionRange(pos, pos); }catch(_){} } };
+    const add = ()=>{
+      keep(); const c = ocat(OF.cat), name = (OF.name || "").trim().replace(/\s+/g, " "), model = (OF.model || "").trim().replace(/\s+/g, " ");
+      if(c.k === "other" && !name){ $o(".or-name").focus(); toast("Írd be, mit kell rendelni."); return; }
+      if(c.k !== "other" && !OF.type && !name){ toast("Válassz típust (vagy írj megnevezést)."); return; }
+      const same = O.find(o=> o.st === "need" && o.cat === c.k && (o.type || "") === (OF.type || "") && (o.name || "").toLowerCase() === name.toLowerCase() && (o.model || "").toLowerCase() === model.toLowerCase());
+      if(same){ same.qty = (+same.qty || 0) + OF.qty; if(OF.note) same.note = same.note ? same.note + "; " + OF.note : OF.note; toast(`➕ Már a listán volt — most ${same.qty} db.`); }
+      else { O.push({ id:"o" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), cat:c.k, type:OF.type || "", name, model, qty:OF.qty, note:(OF.note || "").trim(), by:OF.by || "", st:"need", t:Date.now(), stAt:Date.now() }); toast("🛒 Felírva a rendelési listára."); }
+      try{ window.fpSound && fpSound("ok", .45); }catch(_){}
+      OF.qty = 1; OF.note = ""; OF.name = ""; saveState(); renderTodos();
+      setTimeout(()=>{ const m = document.querySelector("#orderCard .or-model"); if(m){ m.focus(); m.select(); } }, 30);
+    };
+    $o(".or-add").onclick = add;
+    [".or-model", ".or-note", ".or-name"].forEach(sl=> $o(sl).onkeydown = e=>{ if(e.key === "Enter"){ e.preventDefault(); add(); } });
+    card.querySelectorAll("[data-ot]").forEach(b=> b.onclick = async ()=>{
+      if(b.dataset.ot === "copy"){ const t = ordersText(); if(!t){ toast("A „Rendelni kell” lista üres."); return; } try{ await navigator.clipboard.writeText(t); toast("📋 Kimásolva — beillesztheted e-mailbe vagy a chatbe."); }catch(e){ prompt("Másold ki:", t); } return; }
+      if(b.dataset.ot === "clr"){ const n = O.filter(o=> o.st === "got").length; if(!n){ toast("Nincs megjött tétel."); return; } if(b.dataset.arm !== "1"){ b.dataset.arm = "1"; b.textContent = `Biztos? ${n} tétel`; setTimeout(()=>{ if(b.isConnected){ b.dataset.arm = ""; b.textContent = "🧹 Megjöttek törlése"; } }, 3500); return; }
+        state.orders = O.filter(o=> o.st !== "got"); saveState(); renderTodos(); toast(`🧹 ${n} megjött tétel törölve.`); }
+    });
+    card.querySelectorAll(".or-it").forEach(el=>{
+      const o = O.find(x=> x.id === el.dataset.id); if(!o) return;
+      el.querySelectorAll("[data-oa]").forEach(b=> b.onclick = ()=>{
+        const a = b.dataset.oa;
+        if(a === "inc"){ o.qty = Math.min(999, (+o.qty || 0) + 1); }
+        else if(a === "dec"){ if((+o.qty || 1) <= 1){ toast("Törléshez a 🗑 gombot használd."); return; } o.qty = (+o.qty || 1) - 1; }
+        else if(a === "ord"){ o.st = "ord"; o.stAt = Date.now(); toast("📦 Megrendelve: " + oTitle(o)); try{ window.fpSound && fpSound("send", .4); }catch(_){} }
+        else if(a === "got"){ o.st = "got"; o.stAt = Date.now(); toast("✅ Megjött: " + oTitle(o)); try{ window.fpSound && fpSound("done", .45); }catch(_){} }
+        else if(a === "back"){ o.st = o.st === "got" ? "ord" : "need"; o.stAt = Date.now(); }
+        else if(a === "del"){ if(b.dataset.arm !== "1"){ b.dataset.arm = "1"; b.textContent = "Biztos?"; setTimeout(()=>{ if(b.isConnected){ b.dataset.arm = ""; b.textContent = "🗑"; } }, 3000); return; } state.orders = O.filter(x=> x !== o); }
+        saveState(); renderTodos();
+      });
     });
   }
 
@@ -14119,6 +14369,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     beosztas:[["sub","🔁","Helyettesítés"]],
     cetli:[["szallitas","🚚","Szállítási címke"],["erkezett","📬","Megérkezett rendelés"],["foglalo","🔖","Termék foglaló"],["visszaaru","↩️","Visszaáru"],["szabad","✏️","Szabad cetli"],["ora","⌚","Óra garancia"],["koszonet","💚","Köszönő cetli"],["kikuldes","🚀","Kiküldős (futár)"]],
     kassza:[["koteg","🧾","Köteg cetli"]],
+    teendo:[["rend","🛒","Rendelési lista"]],
     selejt:[["sxcheck","🔍","Selejt ellenőrző"],["sximport","📥","Korábbi selejt feltöltése"],["sxslip","🏷️","Selejt cetli"]]
   };
   const CETLI_FT = FEATS.cetli.map(f=> f[0]);
@@ -17624,6 +17875,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(b.t === "tbl") return `<table class="tt-tbl">${b.rows.map((r, i)=> b.hdr && i === 0 ? `<tr>${r.map(c=> `<th>${rich(c, T)}</th>`).join("")}</tr>` : `<tr>${r.map(c=> `<td>${rich(c, T)}</td>`).join("")}</tr>`).join("")}</table>`;
       return "";
     }
+    const ttHue = i=> `hsl(${(i * 47 + 38) % 360} 62% 58%)`;
+    const ttSteps = sec=> sec.blocks.reduce((a, b)=> a + (b.t === "ol" ? b.items.length : 0), 0);
+    body.addEventListener("click", e=>{ const g = e.target.closest("[data-go]"); if(!g) return; const t = g.dataset.go === "ov" ? document.getElementById("tt-ov") : document.getElementById("tt-" + g.dataset.go); if(t){ t.scrollIntoView({ behavior:"smooth", block:"start" }); if(t.classList.contains("tt-sec")){ t.classList.remove("tt-flash"); void t.offsetWidth; t.classList.add("tt-flash"); } } });
     function placeSeg(){
       const ind = seg.querySelector(".tt-seg-ind"), on = seg.querySelector("button.on"); if(!on) return;
       ind.style.width = on.offsetWidth + "px"; ind.style.transform = `translateX(${on.offsetLeft - 4}px)`;
@@ -17649,8 +17903,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         });
         if(!all && !n) return;
         vis++; hits += all ? 1 : n; cnt[sec.id] = all && T.length ? "✓" : n;
-        html += `<section class="panel tt-sec" id="tt-${sec.id}" data-id="${sec.id}"><div class="tt-sh"><div class="ix">${sec.ic || B.ic}<b>${si + 1}</b></div><div><h3>${hl(cleanTitle(sec.title), T)}</h3><small>${B.title} · ${si + 1}. fejezet</small></div></div>${out}</section>`;
+        const pv = SG[si - 1], nx = SG[si + 1];
+        const nav = T.length ? "" : `<div class="tt-nx">${pv ? `<button type="button" data-go="${pv.id}" class="pv"><small>← Előző</small><b>${E(cleanTitle(pv.title))}</b></button>` : "<span></span>"}<button type="button" data-go="ov" class="up" title="Vissza a fejezetekhez">⬆ Fejezetek</button>${nx ? `<button type="button" data-go="${nx.id}" class="nx"><small>Következő →</small><b>${E(cleanTitle(nx.title))}</b></button>` : "<span></span>"}</div>`;
+        html += `<section class="panel tt-sec" id="tt-${sec.id}" data-id="${sec.id}" style="--h:${ttHue(si)}"><div class="tt-sh"><div class="ix">${sec.ic || B.ic}<b>${si + 1}</b></div><div><h3>${hl(cleanTitle(sec.title), T)}</h3><small>${B.title} · ${si + 1}. fejezet${ttSteps(sec) ? " · " + ttSteps(sec) + " lépés" : ""}</small></div></div>${out}${nav}</section>`;
       });
+      if(!T.length && html) html = `<section class="tt-ov" id="tt-ov"><div class="tt-ovh"><b>📑 Fejezetek</b><small>${SG.length} fejezet — kattints egyre, vagy görgess lejjebb</small></div><div class="tt-ovg">${SG.map((sc, i)=> `<button type="button" class="tt-oc" data-go="${sc.id}" style="--h:${ttHue(i)}"><span class="ic">${sc.ic || B.ic}</span><span class="tx"><small>${i + 1}. fejezet</small><b>${E(cleanTitle(sc.title))}</b>${ttSteps(sc) ? `<em>${ttSteps(sc)} lépés</em>` : ""}</span></button>`).join("")}</div></section>` + html;
       body.innerHTML = (html || `<div class="panel tt-empty"><span class="big">🔎</span>Nincs találat erre: <b>${E(q)}</b><br>Próbáld rövidebben, vagy nézd meg a ${book === "sg" ? "📘 Kézikönyvben" : "📖 Segédletben"}.</div>`) + `<p class="tt-foot">${E(B.foot)}</p>`;
       if(swap){ body.classList.remove("swap"); void body.offsetWidth; body.classList.add("swap"); }
       toc.innerHTML = `<h4>📑 ${SG.length} fejezet</h4>` + SG.map((s, i)=> `<a href="#tt-${s.id}" data-id="${s.id}" class="${T.length && !cnt[s.id] ? "off" : ""}"><span class="n">${s.ic || i + 1}</span><span class="t">${hl(cleanTitle(s.title), T)}</span>${T.length && cnt[s.id] ? `<span class="c">${cnt[s.id]}</span>` : ""}</a>`).join("");
