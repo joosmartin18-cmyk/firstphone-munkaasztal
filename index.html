@@ -1,6 +1,49 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
+<script>/* ===== Egységes letöltés: minden fájl (PDF, Excel, kép, CSV, mentés) ezen megy át =====
+   - weboldalon: normál letöltés (Safari / Chrome / Edge), iPhone-on / iPaden a megosztás lap (Mentés a Fájlokba, Nyomtatás)
+   - a Claude előnézetben: a „downloads” engedéllyel (megerősítést kér) */
+(function(){
+  var nativeClick = HTMLAnchorElement.prototype.click, dl = null, dlTried = false;
+  var MIME = { pdf:"application/pdf", png:"image/png", jpg:"image/jpeg", jpeg:"image/jpeg", csv:"text/csv", json:"application/json", xlsx:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", txt:"text/plain", zip:"application/zip" };
+  function note(t){ try{ if(typeof toast === "function") toast(t); else console.log(t); }catch(e){} }
+  function inClaude(){ return !!(window.claude && typeof window.claude.use === "function"); }
+  async function getDl(){ if(!dlTried){ dlTried = true; try{ dl = await window.claude.use("downloads"); }catch(e){ dl = null; } } return dl; }
+  window.fpSave = async function(blob, name){
+    name = String(name || "letoltes").replace(/[\\/:*?"<>|]+/g, "_");
+    var ext = (name.split(".").pop() || "").toLowerCase();
+    if(!(blob instanceof Blob)) blob = new Blob([blob], { type:MIME[ext] || "application/octet-stream" });
+    if(inClaude()){
+      var d = await getDl();
+      if(!d){ note("⚠ Itt (a Claude előnézetben) nem lehet letölteni — nyisd meg a weboldalt: firstphone-munkaasztal.pages.dev"); return false; }
+      try{ await d.save({ filename:name, data:blob }); return true; }
+      catch(e){ var c = e && e.code; if(c === "declined") return false; if(c === "rate_limited"){ note("Egy letöltés már folyamatban — próbáld újra pár másodperc múlva."); return false; }
+        note("⚠ A letöltés itt nem érhető el (" + (c || (e && e.message) || "hiba") + ") — nyisd meg a weboldalon."); return false; }
+    }
+    var ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if(ios && navigator.canShare && window.File){
+      try{ var f = new File([blob], name, { type:blob.type || MIME[ext] || "application/octet-stream" });
+        if(navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], title:name }); return true; } }
+      catch(e){ if(e && e.name === "AbortError") return false; }
+    }
+    if(window.navigator && navigator.msSaveOrOpenBlob){ navigator.msSaveOrOpenBlob(blob, name); return true; }
+    var url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = name; a.rel = "noopener"; a.style.display = "none"; document.body.appendChild(a);
+    nativeClick.call(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 60000);
+    return true;
+  };
+  /* a régi „<a download>.click()” letöltések is ide futnak */
+  HTMLAnchorElement.prototype.click = function(){
+    if(this.hasAttribute("download") && /^(blob:|data:)/.test(this.href)){
+      var name = this.getAttribute("download") || "letoltes", href = this.href;
+      fetch(href).then(function(r){ return r.blob(); }).then(function(b){ return window.fpSave(b, name); }).catch(function(e){ note("⚠ Nem sikerült letölteni: " + (e && e.message || e)); });
+      return;
+    }
+    return nativeClick.call(this);
+  };
+})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,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">
@@ -3552,7 +3595,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261005-233439";</script>
+<script>window.FP_BUILD="20261006-105207";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -6047,6 +6090,14 @@ service cloud.firestore {
 <script type="text/plain" id="cetliDoc"><!DOCTYPE html>
 <html lang="hu">
 <head>
+<script>/* letöltés: a szülő oldal közös letöltőjén át (Safari / iPhone / Claude előnézet) */
+(function(){ var nc = HTMLAnchorElement.prototype.click;
+  HTMLAnchorElement.prototype.click = function(){
+    var P = null; try{ P = window.parent && window.parent !== window && window.parent.fpSave; }catch(e){}
+    if(P && this.hasAttribute("download") && /^(blob:|data:)/.test(this.href)){ var n = this.getAttribute("download") || "letoltes";
+      fetch(this.href).then(function(r){ return r.blob(); }).then(function(b){ P(b, n); }); return; }
+    return nc.call(this); };
+})();<\/script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FirstPhone Munkaasztal – Cetli generátor</title>
