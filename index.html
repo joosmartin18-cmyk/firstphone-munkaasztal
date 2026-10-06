@@ -3775,7 +3775,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-135258";</script>
+<script>window.FP_BUILD="20261006-154238";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -5029,6 +5029,54 @@
     .v2 .ch-who button.on{border-color:#8e7ff5;background:rgba(124,108,240,.18);box-shadow:0 0 0 3px rgba(124,108,240,.14);}
     .v2 .ch-who button i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:800 9px 'Poppins',sans-serif;color:#fff;background:var(--av,#555) center/cover;}
     .v2 .ch-who input{flex:0 0 120px;min-width:0;}
+    /* ===== Admin v4 — új kinézet: felső menüsor, élő óra, automatikus frissítés ===== */
+    .fc-admin.quiet,.fc-admin.quiet *{animation:none !important;}
+    .fc-admin:has(.ad4){background:radial-gradient(900px 500px at 8% -8%,rgba(124,108,240,.20),transparent 60%),radial-gradient(800px 520px at 100% 0%,rgba(47,163,182,.16),transparent 60%),radial-gradient(700px 500px at 60% 110%,rgba(217,173,70,.10),transparent 60%),#0b0b10 !important;}
+    .fc-admin:has(.ad4)::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:22px 22px;mask-image:linear-gradient(180deg,#000,transparent 70%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 70%);}
+    body.light-theme .fc-admin:has(.ad4){background:radial-gradient(900px 500px at 8% -8%,rgba(124,108,240,.14),transparent 60%),radial-gradient(800px 520px at 100% 0%,rgba(47,163,182,.12),transparent 60%),#f4f3f8 !important;}
+    .ad4 .ad-hr{position:relative;z-index:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+    .ad4 .ad-clock{text-align:right;line-height:1.1;margin-right:4px;} .ad4 .ad-clock b{display:block;font:800 30px 'Poppins',sans-serif;letter-spacing:-.02em;} .ad4 .ad-clock small{font:700 11px 'Inter',sans-serif;opacity:.85;}
+    .ad4 .ad-live{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 12px;border-radius:999px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.22);font:700 11.5px 'Inter',sans-serif;color:#fff;}
+    .ad4 .ad-ldot{width:9px;height:9px;border-radius:50%;background:#43d68e;box-shadow:0 0 0 0 rgba(67,214,142,.7);animation:adPulse 2s ease-out infinite;}
+    .ad4 .ad-live.off .ad-ldot{background:#9aa0ab;animation:none;}
+    @keyframes adPulse{0%{box-shadow:0 0 0 0 rgba(67,214,142,.6)}100%{box-shadow:0 0 0 10px rgba(67,214,142,0)}}
+    .ad4 .ad-auto{border:0;border-radius:999px;padding:5px 10px;font:800 11px 'Inter',sans-serif;cursor:pointer;background:rgba(255,255,255,.14);color:#fff;transition:background .2s;}
+    .ad4 .ad-auto.on{background:#fff;color:#141419;}
+    .ad4 .ad-rl.spin{pointer-events:none;opacity:.8;} .ad4 .ad-rl.spin::first-letter{display:inline-block;}
+    @media (min-width:861px){
+      .ad4.ad-shell{display:block;max-width:1400px;padding:0 24px 50px;}
+      .ad4 .ad-side{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;align-items:center;gap:14px;margin:0 -24px 20px;padding:10px 24px;border-radius:0 0 24px 24px;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:color-mix(in srgb,#0f0f15 78%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);overflow:visible;box-shadow:0 12px 30px rgba(0,0,0,.25);}
+      body.light-theme .ad4 .ad-side{background:rgba(255,255,255,.8);border-bottom-color:rgba(0,0,0,.06);}
+      .ad4 .ad-brand{flex-direction:row;margin:0;gap:10px;flex:0 0 auto;} .ad4 .ad-brand i{width:40px;height:40px;font-size:20px;border-radius:13px;} .ad4 .ad-brand > div{display:block;} .ad4 .ad-brand b{font:800 14.5px 'Poppins',sans-serif;display:block;} .ad4 .ad-brand small{font-size:10.5px;color:var(--text-dim,#9c9ca6);}
+      .ad4 .ad-navs{flex-direction:row;flex:1 1 auto;justify-content:center;gap:4px;flex-wrap:wrap;}
+      .ad4 .ad-nav{flex-direction:row;width:auto;gap:7px;padding:6px 12px 6px 6px;border-radius:999px;font:700 12.5px 'Inter',sans-serif;}
+      .ad4 .ad-nav i{width:30px;height:30px;border-radius:50%;font-size:15px;}
+      .ad4 .ad-nav span{max-width:none;white-space:nowrap;}
+      .ad4 .ad-nav:hover{background:color-mix(in srgb,var(--c) 12%,transparent);}
+      .ad4 .ad-nav.on{background:linear-gradient(135deg,color-mix(in srgb,var(--c) 80%,#fff 20%),var(--c));color:#fff;box-shadow:0 8px 20px color-mix(in srgb,var(--c) 40%,transparent);}
+      .ad4 .ad-nav.on i{background:rgba(255,255,255,.22);box-shadow:none;}
+      .ad4 .ad-nav.on::before{display:none;}
+      .ad4 .ad-nav em{top:-4px;right:-2px;}
+      .ad4 .ad-sfoot{flex-direction:row;margin:0;padding:0;border:0;flex:0 0 auto;} .ad4 .ad-sfoot .fc-btn{width:auto;padding:8px 12px;border-radius:999px;}
+      .ad4 .ad-me{display:none;}
+    }
+    .ad4 .ad-head{border-radius:28px;padding:24px 26px;background:radial-gradient(420px 200px at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(120deg,color-mix(in srgb,var(--tc,#c9971f) 75%,#0b0b10 25%),color-mix(in srgb,var(--tc,#c9971f) 35%,#16131f 65%));box-shadow:0 18px 40px color-mix(in srgb,var(--tc,#c9971f) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.12);}
+    .ad4 .ad-head::after{width:320px;height:320px;right:-90px;bottom:-140px;border-width:44px;border-color:rgba(255,255,255,.06);}
+    .ad4 .ad-kpi{background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015)),color-mix(in srgb,var(--bg-panel,#15151b) 92%,transparent) !important;border:1px solid color-mix(in srgb,var(--k2) 35%,rgba(255,255,255,.06)) !important;box-shadow:0 10px 26px rgba(0,0,0,.22) !important;color:var(--text,#eee) !important;}
+    .ad4 .ad-kpi small{color:var(--text-dim,#9c9ca6) !important;} .ad4 .ad-kpi b{color:var(--text,#f3f2ef) !important;} .ad4 .ad-kpi b span,.ad4 .ad-kpi > span{color:var(--text-dim,#9c9ca6) !important;}
+    .ad4 .ad-kpi i{opacity:1 !important;right:14px;top:14px;bottom:auto;width:42px;height:42px;border-radius:14px;display:grid !important;place-items:center;font-size:21px !important;background:linear-gradient(135deg,color-mix(in srgb,var(--k2) 80%,#fff 20%),var(--k2));box-shadow:0 8px 18px color-mix(in srgb,var(--k2) 45%,transparent);}
+    .ad4 .ad-kpi::after{background:radial-gradient(circle,color-mix(in srgb,var(--k2) 35%,transparent),transparent 70%) !important;}
+    .ad4 .ad-kpi s{background:color-mix(in srgb,var(--k2) 20%,transparent) !important;} .ad4 .ad-kpi s::after{background:linear-gradient(90deg,var(--k2),color-mix(in srgb,var(--k2) 60%,#fff)) !important;}
+    .ad4 .ad-card{border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.01)),color-mix(in srgb,var(--bg-panel,#15151b) 94%,transparent);border-color:rgba(255,255,255,.07);}
+    .ad4 .ad-card::before{left:0;top:18px;bottom:18px;right:auto;width:4px;height:auto;border-radius:0 4px 4px 0;background:linear-gradient(180deg,var(--tc,#c9971f),transparent);}
+    .ad4 .ad-tbl tr:nth-child(even) td{background:rgba(255,255,255,.018);}
+    .ad4 .ad-tbl th{background:color-mix(in srgb,var(--tc,#c9971f) 18%,#14141a) !important;}
+    .ad4 .fc-store{background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01)),var(--bg-panel,#16161c);transition:transform .2s,box-shadow .2s,border-color .2s;}
+    .ad4 .fc-store:not(.none):hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.3);border-color:color-mix(in srgb,#2fa3b6 50%,transparent);}
+    .ad4 .fc-store.none{opacity:.55;}
+    @media (min-width:861px){ .ad4 .ad-navs{flex-wrap:nowrap;min-width:0;} }
+    @media (min-width:861px) and (max-width:1380px){ .ad4 .ad-nav:not(.on) span{display:none;} .ad4 .ad-nav:not(.on){padding:6px;} .ad4 .ad-nav{position:relative;} .ad4 .ad-nav:not(.on):hover span{display:block;position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);padding:4px 9px;border-radius:8px;background:#1d1d25;color:#fff;font-size:11px;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.35);z-index:5;} }
+    @media (max-width:860px){ .ad4 .ad-hr{width:100%;justify-content:space-between;} .ad4 .ad-clock{text-align:left;} .ad4 .ad-clock b{font-size:22px;} .ad4 .ad-head{border-radius:22px;padding:16px;} }
     .ch-zoom{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.8);display:grid;place-items:center;cursor:zoom-out;animation:chIn .2s ease;}
     .ch-zoom img{max-width:92vw;max-height:88vh;border-radius:14px;}
     body.light-theme .ch-panel.v2,html[data-theme="light"] .ch-panel.v2{box-shadow:0 30px 80px rgba(40,30,90,.18);}
@@ -5572,14 +5620,16 @@ service cloud.firestore {
   function adminPicker(){
     return new Promise(async res=>{
       css(); newsCss(); const old = document.getElementById("fcAdmin"); if(old) old.remove();
-      const b = document.createElement("div"); b.className = "fc-full fc-admin"; b.id = "fcAdmin";
+      /* csendes frissítés: az előző nézet addig látszik, amíg az új be nem töltődött */
+      const prevAd = document.getElementById("fcAdminOld");
+      const b = document.createElement("div"); b.className = "fc-full fc-admin" + (prevAd ? " quiet" : ""); b.id = "fcAdmin"; if(prevAd) b.style.visibility = "hidden";
       const NAV = [["dash","📊","Áttekintés"],["shops","🏬","Boltok"],["chat","💬","Chat"],["bugs","🐞","Bejelentések"],["news","✨","Újdonságok"],["msg","📢","Üzenet a boltoknak"],["acc","🔑","Fiókok"],["data","💾","Adatok és mentés"]];
-      b.innerHTML = `<div class="fc-glow"></div><div class="ad-shell ad3">
+      b.innerHTML = `<div class="fc-glow"></div><div class="ad-shell ad3 ad4">
         <header class="ad-side"><div class="ad-brand"><i>👑</i><div><b>Admin központ</b><small>FirstPhone Munkaasztal</small></div></div>
           <nav class="ad-navs">${NAV.map(([k, i, t], n)=> `<button type="button" class="ad-nav${n ? "" : " on"}" data-nav="${k}"><i>${i}</i><span>${t}</span><em data-cnt="${k}" hidden></em></button>`).join("")}</nav>
           <div class="ad-sfoot"><span class="ad-me" title="${esc(S.user.email)}">👤 ${esc(S.user.email)}</span>${S.target ? `<button type="button" class="fc-btn sec" data-x="back" title="Vissza a bolthoz">← Bolt</button>` : ""}<button type="button" class="fc-btn sec" data-x="out" title="Kijelentkezés">⏻ Kilépés</button></div></header>
         <main class="ad-main">
-          <div class="ad-head"><div><span class="ad-hi"></span><h2 class="ad-title">Áttekintés</h2><p class="ad-subt">Minden bolt egy pillantással — kattints egy boltra az adataihoz.</p></div><button type="button" class="fc-btn sec ad-rl" data-x="reload" title="Adatok újratöltése">↻ Frissítés</button></div>
+          <div class="ad-head"><div><span class="ad-hi"></span><h2 class="ad-title">Áttekintés</h2><p class="ad-subt">Minden bolt egy pillantással — kattints egy boltra az adataihoz.</p></div><div class="ad-hr"><div class="ad-clock"><b class="ad-ck">--:--</b><small class="ad-ckd"></small></div><div class="ad-live" title="Az adatok maguktól frissülnek"><span class="ad-ldot"></span><span class="ad-lt">Betöltés…</span><button type="button" class="ad-auto" data-x="auto" title="Automatikus frissítés be/ki">⟳ Auto</button></div><button type="button" class="fc-btn sec ad-rl" data-x="reload" title="Adatok újratöltése most">↻ Frissítés</button></div></div>
           <section class="ad-pane on" data-pane="dash"><div class="ad-kpis"></div><div class="ad-card ad-att"><h3>⚠️ Figyelmet igényel</h3><div class="ad-attl"></div></div>
             <div class="ad-card"><h3>📋 Boltonként</h3><p>Kattints egy oszlopcímre a rendezéshez, egy sorra a bolt adatlapjához — onnan a „🏬 Bolt megnyitása” gombbal léphetsz be a boltba szerkeszteni.</p><div class="ad-tblw"><table class="ad-tbl"></table></div></div></section>
           <section class="ad-pane" data-pane="shops"><input class="fc-adm-q" type="search" placeholder="🔎 Keresés boltra, városra vagy e-mailre" autocomplete="off"><div class="fc-adm-grid"><div class="fc-adm-load">Boltok betöltése…</div></div></section>
@@ -5631,7 +5681,33 @@ service cloud.firestore {
       const $ = s=> b.querySelector(s), $$ = s=> Array.from(b.querySelectorAll(s));
       const grid = $(".fc-adm-grid"), q = $(".fc-adm-q");
       const unsubs = [];
-      const close = v=>{ unsubs.forEach(f=>{ try{ f(); }catch(e){} }); document.documentElement.classList.remove("fc-locked"); b.remove(); res(v); };
+      let liveT = null;
+      const close = v=>{ clearInterval(liveT); unsubs.forEach(f=>{ try{ f(); }catch(e){} }); document.documentElement.classList.remove("fc-locked"); b.remove(); res(v); };
+      /* 🔄 frissítés: új adatok betöltése úgy, hogy a nézet (fül, görgetés, kiválasztott chat) megmarad */
+      let adAuto = lsGet("fp_admin_auto") !== "0", loadedAt = Date.now(), soft = false;
+      const AUTO_MS = 120000;
+      function softReload(){
+        if(soft) return; soft = true;
+        try{ sessionStorage.setItem("fp_admin_scroll", String(b.scrollTop || 0)); const cu = b.querySelector(".ad-ct.on"); sessionStorage.setItem("fp_admin_cu", cu ? cu.dataset.cu : ""); }catch(e){}
+        const rl = b.querySelector(".ad-rl"); if(rl) rl.classList.add("spin");
+        clearInterval(liveT); unsubs.forEach(f=>{ try{ f(); }catch(e){} });
+        b.id = "fcAdminOld"; res(null); setTimeout(()=> adminChoose(), 20);
+      }
+      const busyAd = ()=>{ const a = document.activeElement; if(a && b.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.value) return true;
+        if(b.querySelector(".ad-chat-r textarea") && b.querySelector(".ad-chat-r textarea").value.trim()) return true;
+        if(b.querySelector(".ad-mtxt") && b.querySelector(".ad-mtxt").value.trim()) return true;
+        return !!document.querySelector(".ad-det, .nw-back, .fc-back, .ch-pop, .ch-zoom"); };
+      function drawLive(){
+        const n = new Date(), ck = b.querySelector(".ad-ck"), cd = b.querySelector(".ad-ckd"), lt = b.querySelector(".ad-lt"), au = b.querySelector(".ad-auto");
+        if(ck) ck.textContent = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+        if(cd) cd.textContent = n.toLocaleDateString("hu-HU", { month:"long", day:"numeric", weekday:"long" });
+        const ago = Math.round((Date.now() - loadedAt) / 60000), left = Math.max(0, Math.ceil((loadedAt + AUTO_MS - Date.now()) / 60000));
+        if(lt) lt.textContent = (ago < 1 ? "Frissítve most" : `Frissítve ${ago} perce`) + (adAuto ? ` · újra ${left < 1 ? "hamarosan" : left + " perc múlva"}` : " · kézi");
+        if(au){ au.classList.toggle("on", adAuto); }
+        const ld = b.querySelector(".ad-live"); if(ld) ld.classList.toggle("off", !adAuto);
+        if(adAuto && Date.now() - loadedAt >= AUTO_MS && !document.hidden && !busyAd()) softReload();
+      }
+      liveT = setInterval(drawLive, 15000);
       const TITLES = { bugs:["Bejelentések","Hibák, ötletek, kérdések a boltoktól — itt állítod az állapotukat."], chat:["Chat","Beszélgetés a boltokkal — itt kapcsolod ki-be a chatet és a hibabejelentést is."], news:["Újdonságok","Havi újdonságok diás bemutatóval minden boltnak — te kapcsolod be és ki."], dash:["Áttekintés","Minden bolt egy pillantással — kattints egy boltra az adataihoz."], shops:["Boltok","Kattints egy boltra az adataihoz — szerkeszteni a „🏬 Bolt megnyitása” gombbal lehet."], acc:["Fiókok","Belépések, jelszavak, letiltás — csak az admin látja."], msg:["Üzenet a boltoknak","Közlemény a munkaasztal tetején, egy vagy több boltnak."], data:["Adatok és mentés","Biztonsági mentés minden boltról."] };
       let pwLoaded = false;
       const nav = k=>{ $$(".ad-nav").forEach(x=> x.classList.toggle("on", x.dataset.nav === k)); $$(".ad-pane").forEach(x=> x.classList.toggle("on", x.dataset.pane === k));
@@ -5653,7 +5729,8 @@ service cloud.firestore {
           if(a === "accgo"){ accCreate(b, x); return; }
           if(a === "back"){ close(null); return; }
           if(a === "out"){ await firebase.auth().signOut(); lsDel(ADMIN_KEY); SYNC.forEach(lsDel); location.reload(); return; }
-          if(a === "reload"){ close(null); setTimeout(()=> adminChoose(), 50); return; }
+          if(a === "reload"){ softReload(); return; }
+          if(a === "auto"){ adAuto = !adAuto; lsSet("fp_admin_auto", adAuto ? "1" : "0"); drawLive(); return; }
           if(a === "bak"){ backup(); return; }
           if(a === "nonet"){ noneOpen = !noneOpen; drawTbl(); return; }
           if(a === "msgsend" || a === "msgdel"){ sendMsg(a === "msgdel", x); return; }
@@ -5959,6 +6036,10 @@ service cloud.firestore {
         if(newsCfg.on){ const nn = list.filter(x=> !seenOf(x)).length; if(nn) ex.push({ ic:"🎁", c:"g", t:`${nn} bolt még nem nézte meg az újdonságokat`, nav:"news" }); }
         drawAtt(ex); }, 1500);
       let t0 = "dash"; try{ const t = sessionStorage.getItem("fp_admin_tab"); if(TITLES[t]) t0 = t; }catch(e){} nav(t0);
+      loadedAt = Date.now(); drawLive();
+      if(prevAd){ let sc = 0, cu = ""; try{ sc = +(sessionStorage.getItem("fp_admin_scroll") || 0); cu = sessionStorage.getItem("fp_admin_cu") || ""; }catch(e){}
+        if(cu){ const c = b.querySelector(`.ad-ct[data-cu="${cu}"]`); if(c) c.click(); }
+        b.style.visibility = ""; b.scrollTop = sc; prevAd.remove(); setTimeout(()=> b.classList.remove("quiet"), 600); }
     });
   }
   async function adminChoose(){
