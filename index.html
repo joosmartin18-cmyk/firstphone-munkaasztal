@@ -3619,6 +3619,12 @@
   @keyframes sPs7{0%,11%{left:3px}14%,25%{left:49px}29%,40%{left:95px}43%,54%{left:141px}57%,68%{left:187px}71%,82%{left:233px}86%,97%{left:279px}100%{left:3px}}
   .s-ps.s7 ~ .s-ps-cur{animation-name:sPsC7 !important;animation-duration:14s !important;}
   @keyframes sPsC7{0%,11%{left:calc(50% - 141px)}14%,25%{left:calc(50% - 95px)}29%,40%{left:calc(50% - 49px)}43%,54%{left:calc(50% - 3px)}57%,68%{left:calc(50% + 43px)}71%,82%{left:calc(50% + 89px)}86%,97%{left:calc(50% + 135px)}100%{left:calc(50% - 141px)}}
+  .s-ps.s8 .ind{width:38px !important;animation-name:sPs8 !important;animation-duration:16s !important;}
+  .s-ps.s8 span{width:40px !important;font-size:13px !important;}
+  .s-ps.s8 span:nth-of-type(1){left:2px !important}.s-ps.s8 span:nth-of-type(2){left:42px !important}.s-ps.s8 span:nth-of-type(3){left:82px !important}.s-ps.s8 span:nth-of-type(4){left:122px !important}.s-ps.s8 span:nth-of-type(5){left:162px !important}.s-ps.s8 span:nth-of-type(6){left:202px !important}.s-ps.s8 span:nth-of-type(7){left:242px !important}.s-ps.s8 span:nth-of-type(8){left:282px !important}
+  @keyframes sPs8{0%,9.5%{left:3px}12.5%,22%{left:43px}25%,34.5%{left:83px}37.5%,47%{left:123px}50%,59.5%{left:163px}62.5%,72%{left:203px}75%,84.5%{left:243px}87.5%,97%{left:283px}100%{left:3px}}
+  .s-ps.s8 ~ .s-ps-cur{animation-name:sPsC8 !important;animation-duration:16s !important;}
+  @keyframes sPsC8{0%,9.5%{left:calc(50% - 144px)}12.5%,22%{left:calc(50% - 104px)}25%,34.5%{left:calc(50% - 64px)}37.5%,47%{left:calc(50% - 24px)}50%,59.5%{left:calc(50% + 16px)}62.5%,72%{left:calc(50% + 56px)}75%,84.5%{left:calc(50% + 96px)}87.5%,97%{left:calc(50% + 136px)}100%{left:calc(50% - 144px)}}
   @keyframes sPsC6{0%,13%{left:calc(50% - 138px)}17%,30%{left:calc(50% - 85px)}34%,47%{left:calc(50% - 32px)}51%,63%{left:calc(50% + 21px)}67%,80%{left:calc(50% + 74px)}84%,96%{left:calc(50% + 127px)}100%{left:calc(50% - 138px)}}
   @media (max-width:640px){ #pageSwitch .ps-btn{padding:9px 4px;font-size:11px;} }
   @media (max-width:430px){ #pageSwitch .ps-btn{font-size:10px;padding:8px 2px;letter-spacing:-.01em;} }
@@ -3714,7 +3720,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-124321";</script>
+<script>window.FP_BUILD="20261006-125220";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4099,7 +4105,7 @@
     if(document.getElementById("fcLogin")) return;
     const b = document.createElement("div"); b.className = "fc-full"; b.id = "fcLogin";
     const lg = document.querySelector("#logoInner img"), logo = lg && lg.getAttribute("src");
-    const feats = [["📅","Beosztás"],["🏷️","Cetli generátor"],["📋","Leltár"],["💰","Kassza"],["📦","Csomag"],["🗑️","Selejt"],["📚","Tudástár"]];
+    const feats = [["📅","Beosztás"],["🏷️","Cetli generátor"],["📋","Leltár"],["💰","Kassza"],["📦","Csomag"],["🗑️","Selejt"],["✅","Teendők"],["📚","Tudástár"]];
     b.classList.add("fc-login");
     const SHOW = [["helpBody","1","📅","Beosztás","A havi munkarend pár kattintással — PDF és jelenléti ív.","#7b8cff"],["lhelpBody","4","📋","Leltár","Vonalkódolvasóval, hangos visszajelzéssel.","#30b37a"],["khelpBody","3","💰","Kassza","Címletek, pénz hátul, kasszajelentés — azonnal.","#e2bf55"],["phelpBody","1","📦","Csomag","GLS és Posta csomagok beolvasása, kiadása.","#c98a3a"],["xhelpBody","1","🗑️","Selejt","A mai selejt egy helyen, ShieldUp külön.","#e2585a"],["thelpBody","1","📚","Tudástár","Segédlet, Kézikönyv, minden bolt elérhetősége.","#8a5aa8"]]
       .map(s=>{ const src = document.getElementById(s[0]); const w = src && src.querySelector(`.help-slide[data-i="${s[1]}"] .hc-wrap`); return w ? { html:w.outerHTML, ic:s[2], t:s[3], x:s[4], c:s[5] } : null; }).filter(Boolean);
@@ -4374,13 +4380,13 @@
       { ic:"💬", c:"#30b37a", sc:"nwc", t:"Új: Chat", x:"Közvetlen vonal az adminhoz és a többi bolthoz.", b:["Jobb lent a <b>💬 Chat</b> gomb: írj az <b>adminnak</b> vagy <b>bármelyik boltnak</b> (pl. Kaposvár → Duna Plaza)","Új üzenetnél <b>hang</b> szól, a gomb megrázkódik és piros számot kap","Az admin fontos <b>üzenetei</b> a munkaasztal tetején jelennek meg"] },
       { ic:"🐞", c:"#f0a030", sc:"nwb", t:"Új: Hiba bejelentése", x:"Valami nem működik? Szólj az adminnak pár kattintással.", b:["A chatben az <b>Admin</b> beszélgetésnél: <b>🐞 Hiba bejelentése</b>","Kiválasztod, melyik résznél (Leltár, Kassza…) és leírod, mi történt","A gép adatai maguktól mellé kerülnek — és látod, ha az admin <b>megoldotta</b> ✅"] },
       { ic:"🗓️", c:"#6f7ff5", sc:["helpBody","5"], t:"Közös beosztás egy lapon", x:"Mindenki beosztása egyetlen papírlapon — teljes névvel.", b:["A letöltésnél válaszd a <b>„Mindenki egyben”</b> kártyát","Minden napnál ott a dolgozók <b>teljes neve</b> és ideje (DE / DU / egész nap)","Alul: ki hány napot dolgozik — a jelenléti ívek utána jönnek"] },
-      { ic:"✅", c:"#d6589a", t:"Új program: Teendők", x:"Külön oldal a közös to-do listának — fent a programok között.", b:["Feladat az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>mindkettőnek</b> — határidővel is","Mindenki a saját nevénél pipálja ki; fent látszik, mi <b>nyitott</b>, mi esedékes <b>ma</b> és mi <b>lejárt</b>","A dolgozó kártyájára kattintva csak az ő teendői látszanak"] },
-      { ic:"🔁", c:"#9aa3b5", sc:["helpBody","1"], t:"Új: Helyettesítés", x:"Ha valaki beugrik helyettesíteni, egy gombbal beírható.", b:["Kattints a napra → <b>🔁 Helyettesítés</b>: név, egész nap / DE / DU, és <b>kit helyettesít</b>","A helyettesített dolgozó napja magától lekerül — törléskor visszakerül","A <b>közös beosztás PDF-be</b> is bekerül, és <b>saját jelenléti ívet</b> kap"] },
       { ic:"⬇️", c:"#2ea472", t:"Letöltés bármelyik gépről", x:"Ha egy idegen vagy zárolt gépen nem indul el a letöltés, van megoldás.", b:["Minden letöltés után lent megjelenik egy kis sáv","<b>⬇ Letöltés újra</b> · <b>🗂 Megnyitás új lapon</b> · <b>🖨 Nyomtatás</b> — a cetliknél <b>📋 Kép másolása</b> is","iPhone-on és iPaden a megosztás lap nyílik (Mentés a Fájlokba, Nyomtatás)"] },
       { ic:"🎨", c:"#6f7ff5", sc:"nwm", t:"Új, színes fejléc", x:"Minden program saját színt kapott — egy pillantásra látod, hol vagy.", b:["Fent egy panelben a logó, a gombok és a programok, <b>középen</b>","Beosztás kék, Cetli türkiz, Leltár zöld, Kassza arany, Csomag narancs, Selejt piros, Tudástár lila","A 🎁 gomb a ❓ mellett jelzi, ha újdonság van"] },
       { ic:"🔐", c:"#d9ad46", t:"Új belépő képernyő", x:"Gyorsabb és szebb belépés.", b:["Beírás közben <b>javasolja a boltot</b> — egy kattintás, és kész","Megjegyzi, melyik bolttal léptél be legutóbb (↺)","Nagy gépen jobb oldalt élő bemutató mutatja, mit tud a Munkaasztal"] },
       { ic:"🔄", c:"#4fb3c4", sc:"nwu", t:"Mindig friss", x:"A munkaasztal magától frissül — nem kell semmit nyomni.", b:["Ha új verzió jön, pár másodperc múlva magától frissül (a munkád előtte elmentődik)","A <b>súgó</b> és az <b>újdonságok</b> is mindig a legfrissebbek","Ha új dolog kerül ide, fent a 🎁 gomb újra megjelenik — csak az újakat mutatja"] },
-      { ic:"❓", c:"#d9ad46", sc:"nwh", t:"Ha elakadsz", x:"Minden oldalnak saját, animált súgója van.", b:["Fent a <b>❓</b> gomb: lépésről lépésre, képekkel","<b>▶ Bemutató</b>: körbevezet az egész munkaasztalon","Kérdés? Írj a <b>💬 Chatben</b>!"] }
+      { ic:"❓", c:"#d9ad46", sc:"nwh", t:"Ha elakadsz", x:"Minden oldalnak saját, animált súgója van.", b:["Fent a <b>❓</b> gomb: lépésről lépésre, képekkel","<b>▶ Bemutató</b>: körbevezet az egész munkaasztalon","Kérdés? Írj a <b>💬 Chatben</b>!"] },
+      { ic:"🔁", c:"#9aa3b5", sc:"nws", t:"Új: Helyettesítés", x:"Ha valaki beugrik helyettesíteni, egy gombbal beírható.", b:["Kattints a napra → <b>🔁 Helyettesítés</b>: név, egész nap / DE / DU, és <b>kit helyettesít</b>","A helyettesített dolgozó napja magától lekerül — törléskor visszakerül","A <b>közös beosztás PDF-be</b> is bekerül, és <b>saját jelenléti ívet</b> kap"] },
+      { ic:"✅", c:"#d6589a", sc:"nwt", t:"Új program: Teendők", x:"Külön oldal a közös to-do listának — fent a programok között.", b:["Feladat az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>mindkettőnek</b> — határidővel is","Mindenki a saját nevénél pipálja ki; fent látszik, mi <b>nyitott</b>, mi esedékes <b>ma</b> és mi <b>lejárt</b>","A dolgozó kártyájára kattintva csak az ő teendői látszanak"] }
     ]}
   ];
   /* ===================== ✨ Újdonságok (diák) ===================== */
@@ -4483,6 +4489,29 @@
     @keyframes nwuB{0%{width:0}60%,100%{width:100%}}
     .nwu .v{position:absolute;left:160px;top:56px;font:800 15px 'Poppins',sans-serif;} .nwu .v1{animation:nwuV1 6s infinite;} .nwu .v2{opacity:0;color:#d9ad46;animation:nwuV2 6s infinite;}
     @keyframes nwuV1{0%,55%{opacity:1;transform:none}62%,100%{opacity:0;transform:translateY(-10px)}} @keyframes nwuV2{0%,58%{opacity:0;transform:translateY(10px)}66%,95%{opacity:1;transform:none}100%{opacity:0}}
+    .nwm .p{white-space:nowrap !important;overflow:hidden;font-size:8.5px !important;letter-spacing:-.02em;padding-left:2px !important;padding-right:2px !important;text-align:center;}
+    .nwt > *{position:absolute;} .nwt .hd{left:20px;top:12px;display:flex;align-items:center;gap:8px;font:800 14px 'Poppins',sans-serif;} .nwt .hd i{font-style:normal;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(214,88,154,.22);border:1px solid rgba(214,88,154,.5);font-size:14px;} .nwt .hd em{font:700 10px 'Inter',sans-serif;font-style:normal;color:var(--text-dim,#9c9ca6);padding:2px 7px;border-radius:99px;border:1px solid var(--border,#2b2b33);}
+    .nwt .pc{left:250px;top:14px;display:flex;gap:5px;} .nwt .pc span{font:800 10px 'Inter',sans-serif;padding:5px 8px;border-radius:8px;border:1px solid var(--border,#2b2b33);background:var(--bg-cell,#1c1c23);color:var(--text,#eee);} .nwt .pc span[style]{background:var(--pc);color:#fff;border-color:transparent;} .nwt .pc .on{border-color:#d9ad46;box-shadow:inset 0 0 0 1px #d9ad46;}
+    .nwt .it{left:20px;width:440px;height:40px;border-radius:10px;background:var(--bg-cell,#1c1c23);border:1px solid var(--border,#2b2b33);border-left:4px solid var(--c);box-sizing:border-box;padding:5px 10px;opacity:0;animation:nwtIn 7s ease infinite;}
+    .nwt .i1{top:54px;} .nwt .i2{top:100px;animation-delay:.25s;} .nwt .i3{top:146px;animation-delay:.5s;}
+    .nwt .it b{display:block;font:700 12px 'Inter',sans-serif;} .nwt .it small{font:600 10px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);} .nwt .it small.late{color:#e2585a;}
+    .nwt .it u{position:absolute;top:10px;right:12px;width:20px;height:20px;border-radius:50%;border:2px solid var(--pc);text-decoration:none;display:grid;place-items:center;font-size:11px;color:transparent;} .nwt .it u.k1{right:40px;}
+    .nwt .k1{animation:nwtK 7s ease infinite;} .nwt .k3{animation:nwtK 7s ease 1.2s infinite;}
+    .nwt .nwx-cur{position:absolute;width:20px;left:420px;top:66px;animation:nwtC 7s ease infinite;}
+    @keyframes nwtIn{0%{opacity:0;transform:translateY(6px)}8%,92%{opacity:1;transform:none}100%{opacity:0}}
+    @keyframes nwtK{0%,30%{background:transparent;color:transparent}36%,90%{background:var(--pc);color:#fff}100%{background:transparent}}
+    @keyframes nwtC{0%,18%{left:440px;top:120px}30%,40%{left:400px;top:68px}55%,70%{left:428px;top:160px}100%{left:440px;top:120px}}
+    .nws > *{position:absolute;} .nws .cell{left:18px;top:30px;width:110px;height:120px;border-radius:12px;background:var(--bg-cell,#1c1c23);border:1px solid var(--border,#2b2b33);} .nws .cell .n{position:absolute;left:9px;top:6px;font:800 12px 'Inter',sans-serif;} .nws .cell .bd{position:absolute;left:8px;right:8px;top:44px;padding:6px 0;text-align:center;border-radius:7px;background:#5d9cf5;color:#fff;font:800 9px 'Inter',sans-serif;animation:nwsB 7s ease infinite;}
+    .nws .cell .sb{position:absolute;left:8px;right:8px;top:84px;padding:3px 4px;border-radius:6px;border:1px dashed rgba(154,163,181,.8);background:rgba(154,163,181,.18);font:800 9px 'Inter',sans-serif;text-align:center;opacity:0;animation:nwsS 7s ease infinite;}
+    .nws .pop{left:146px;top:14px;width:190px;padding:9px;border-radius:12px;background:var(--bg-panel,#16161b);border:1px solid rgba(154,163,181,.5);box-shadow:0 10px 26px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:6px;animation:nwsP 7s ease infinite;}
+    .nws .pop .t{font:800 10.5px 'Inter',sans-serif;} .nws .pop .in{height:24px;border-radius:7px;border:1px solid #d9ad46;padding:0 8px;display:flex;align-items:center;font:700 10.5px 'Inter',sans-serif;overflow:hidden;} .nws .pop .ty{display:inline-block;overflow:hidden;white-space:nowrap;width:0;animation:nwsT 7s steps(9) infinite;}
+    .nws .pop .seg{display:flex;gap:3px;} .nws .pop .seg span{flex:1;text-align:center;font:800 9.5px 'Inter',sans-serif;padding:4px 0;border-radius:6px;background:var(--bg-cell,#1c1c23);} .nws .pop .seg .on{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#171106;}
+    .nws .pop .sel{font:600 9.5px 'Inter',sans-serif;padding:5px 7px;border-radius:7px;background:var(--bg-cell,#1c1c23);border:1px solid var(--border,#2b2b33);} .nws .pop .sv{text-align:center;font:800 10px 'Inter',sans-serif;padding:6px;border-radius:8px;background:linear-gradient(135deg,#f0c766,#d9ad46);color:#171106;}
+    .nws .pdf{left:350px;top:26px;width:116px;display:flex;flex-direction:column;gap:5px;} .nws .pdf b{font:800 10px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);letter-spacing:.08em;} .nws .pdf span{font:700 9px 'Inter',sans-serif;padding:6px 7px;border-radius:7px;background:#fff;color:#111;box-shadow:0 3px 8px rgba(0,0,0,.25);} .nws .pdf .nw{background:#e9ecf2;border:1px dashed #9aa3b5;opacity:0;animation:nwsS 7s ease .3s infinite;}
+    .nws .nwx-cur{position:absolute;width:20px;left:300px;top:150px;animation:nwsC 7s ease infinite;}
+    @keyframes nwsT{0%,10%{width:0}35%,100%{width:62px}} @keyframes nwsP{0%,4%{opacity:0;transform:scale(.94)}10%,62%{opacity:1;transform:none}70%,100%{opacity:.35}}
+    @keyframes nwsB{0%,52%{opacity:1}60%,100%{opacity:.25}} @keyframes nwsS{0%,58%{opacity:0;transform:translateY(4px)}66%,96%{opacity:1;transform:none}100%{opacity:0}}
+    @keyframes nwsC{0%,40%{left:300px;top:180px}52%,58%{left:250px;top:156px}100%{left:300px;top:180px}}
     .nwu .nt{position:absolute;left:160px;top:124px;font:700 11px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);}
     .nwl .pr{position:absolute;left:40px;top:20px;width:170px;height:62px;border-radius:14px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);display:flex;align-items:center;justify-content:center;font-size:24px;z-index:2;}
     .nwl .pr i{position:absolute;left:20px;right:20px;bottom:10px;height:5px;border-radius:3px;background:#111;}
@@ -4803,10 +4832,12 @@
     let cur = -1, timer = null, auto = true, maxI = 0;
     const CUR = `<svg class="nwx-cur" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
     const OWN = {
-      nwm:`<div class="hc-wrap"><div class="hc-stage nwm"><div class="lg">FirstPhone<small>Munkaasztal</small></div><div class="cl">☁️ Mentve</div>${[["📅 Beosztás","#6f7ff5"],["🏷️ Cetli","#2fa3b6"],["📋 Leltár","#2ea472"],["💰 Kassza","#d4a52c"],["📦 Csomag","#c47f2c"],["🗑️ Selejt","#d9474a"],["📚 Tudás","#8a5aa8"]].map(([t, col], i)=> `<div class="p" style="left:${12 + i * 66}px;width:62px;animation-delay:${i}s;--pc:${col}">${t}</div>`).join("")}<div class="cards"><div><b></b><s></s><s style="width:70%"></s></div><div style="animation-delay:.4s"><b></b><s></s><s style="width:50%"></s></div><div style="animation-delay:.8s"><b></b><s></s><s style="width:80%"></s></div></div></div></div>`,
+      nwm:`<div class="hc-wrap"><div class="hc-stage nwm"><div class="lg">FirstPhone<small>Munkaasztal</small></div><div class="cl">☁️ Mentve</div>${[["📅 Beosztás","#6f7ff5"],["🏷️ Cetli","#2fa3b6"],["📋 Leltár","#2ea472"],["💰 Kassza","#d4a52c"],["📦 Csomag","#c47f2c"],["🗑️ Selejt","#d9474a"],["✅ Teendő","#d6589a"],["📚 Tudás","#8a5aa8"]].map(([t, col], i)=> `<div class="p" style="left:${8 + i * 58}px;width:56px;animation-delay:${i}s;--pc:${col}">${t}</div>`).join("")}<div class="cards"><div><b></b><s></s><s style="width:70%"></s></div><div style="animation-delay:.4s"><b></b><s></s><s style="width:50%"></s></div><div style="animation-delay:.8s"><b></b><s></s><s style="width:80%"></s></div></div></div></div>`,
       nwc:`<div class="hc-wrap"><div class="hc-stage nwc"><div class="lbl"><b>💬 Chat</b>jobb lent, minden oldalon</div><div class="wave"></div><div class="btn">💬<em>1</em></div><div class="win"><div class="hd"><i>👑</i>Chat — admin és boltok</div><div class="b me b1">Elfogyott a ShieldUp 13-as 🙈</div><div class="b th b2">Holnap küldünk 5 dobozzal!</div><div class="b me b3">Köszi! 👍</div></div></div></div>`,
       nwl:`<div class="hc-wrap"><div class="hc-stage nwl"><div class="pr"><i></i><b>🖨️</b></div><div class="pi"><div class="lg">FirstPhone<small>Kaposvár</small></div><div class="ln l1"></div><div class="ln l2"></div><div class="ln l3"></div><div class="ph">📞 +36 21 200 3930</div></div><div class="tags"><span>📦 Szállítási</span><span>🏷️ Ár</span><span>✉️ Átjel</span></div></div></div>`,
       nwb:`<div class="hc-wrap"><div class="hc-stage nwb"><div class="frm"><div class="hd">🐞 Bejelentés az adminnak</div><div class="cats"><span class="on">🐞 Hiba</span><span>💡 Ötlet</span><span>❓ Kérdés</span></div><div class="sel">📋 Leltár ▾</div><div class="tx"><i></i></div><div class="snd">Küldés ➤</div></div><div class="ok">✅ Megoldva</div></div></div>`,
+      nwt:`<div class="hc-wrap"><div class="hc-stage nwt"><div class="hd"><i>✅</i><b>Teendők</b><em>3 nyitott</em></div><div class="pc"><span class="on">👥 Mindenki</span><span style="--pc:#a98bf5">TE</span><span style="--pc:#5d9cf5">JM</span></div><div class="it i1" style="--c:#d9ad46"><b>Kirakat rendezése</b><small>👥 Mindkettő · 📅 okt. 8.</small><u style="--pc:#a98bf5" class="k1">✓</u><u style="--pc:#5d9cf5" class="k2">✓</u></div><div class="it i2" style="--c:#5d9cf5"><b>GLS csomagok vissza</b><small class="late">⚠️ lejárt: okt. 2.</small><u style="--pc:#5d9cf5">✓</u></div><div class="it i3" style="--c:#a98bf5"><b>ShieldUp feltöltés</b><small>Tóth Evelin</small><u style="--pc:#a98bf5" class="k3">✓</u></div>${CUR}</div></div>`,
+      nws:`<div class="hc-wrap"><div class="hc-stage nws"><div class="cell"><div class="n">5</div><div class="bd">JOÓS MARTIN</div><div class="sb">🔁 Kiss Anna</div></div><div class="pop"><div class="t">🔁 Helyettesítő erre a napra</div><div class="in"><span class="ty">Kiss Anna</span></div><div class="seg"><span class="on">Egész</span><span>DE</span><span>DU</span></div><div class="sel">Kit helyettesít? <b>Joós Martin</b> ▾</div><div class="sv">Helyettesítés mentése</div></div><div class="pdf"><b>PDF</b><span>🗓️ Közös beosztás</span><span>🖨️ Jelenléti ív ×2</span><span class="nw">🖨️ Kiss Anna — helyettesítő</span></div>${CUR}</div></div>`,
       nwu:`<div class="hc-wrap"><div class="hc-stage nwu"><div class="sp">🔄</div><div class="bar"><i></i></div><div class="v v1">v. 10.05.</div><div class="v v2">v. 10.06. ✨</div><div class="nt">Új verzió — frissítés…</div></div></div>`,
       nwh:`<div class="hc-wrap"><div class="hc-stage nwh"><div class="q">❓</div>${CUR}<div class="card"><b>📅 Beosztás — így működik</b><div class="st s1"><i>1</i>Kattints egy napra</div><div class="st s2"><i>2</i>Válaszd ki, ki dolgozik</div><div class="st s3"><i>3</i>Kész — PDF-ben letölthető</div></div><div class="dots"><span></span><span></span><span></span><span></span></div></div></div>`
     };
@@ -4850,7 +4881,12 @@
     const old = document.getElementById("nwBtn");
     if(!n || !n.on){ if(old) old.remove(); return; }
     /* az admin által szerkesztett kiadás — ha nincs, a beépített legfrissebb */
-    const N = n.ed && Array.isArray(n.ed.slides) && n.ed.slides.length ? n.ed : NEWS[0], rev = n.id === N.id ? (n.rev || 0) : 0;
+    /* mindig a beépített, legfrissebb diák — az admin által elrejtett / törölt diák nélkül (így az új diák maguktól megjelennek) */
+    const sk = s=> String(s.t || "").replace(/<[^>]+>/g, "").trim();
+    let N = NEWS[0];
+    if(n.id === NEWS[0].id && (Array.isArray(n.hide) || Array.isArray(n.del))){ const off = (n.hide || []).concat(n.del || []); N = { id:NEWS[0].id, title:NEWS[0].title, sub:NEWS[0].sub || "", slides:NEWS[0].slides.filter(s=> !off.includes(sk(s))) }; }
+    else if(n.ed && Array.isArray(n.ed.slides) && n.ed.slides.length) N = n.ed; /* régi formátum — az admin következő megnyitásakor magától frissül */
+    const rev = n.id === N.id ? (n.rev || 0) : 0;
     /* már megnézte (bármelyik gépen — a bolt adataival együtt mentődik): nincs gomb — kivéve, ha azóta új dia került bele */
     let seen = null; try{ seen = JSON.parse(lsGet(NSEEN_KEY) || "null"); }catch(e){}
     const same = seen && seen.id === N.id && (seen.rev || 0) === rev;
@@ -5368,6 +5404,8 @@ service cloud.firestore {
       try{ const d = await cfgRef.get(); if(d.exists && d.data().v) newsCfg = Object.assign(newsCfg, JSON.parse(d.data().v)); }catch(e){}
       const sel = $(".ad-nwsel");
       /* ha van újabb kiadás (a munkaasztal frissült), bekapcsolt állapotban magától arra vált (ha nem szerkesztett saját változatot) */
+      /* új verziónál egyszer csendben újraküldi a beállítást, hogy a boltok az élő (mindig friss) diákat kapják */
+      try{ if(newsCfg.on && newsCfg.id === NEWS[0].id && localStorage.getItem("fp_news_push") !== String(window.FP_BUILD || "")){ localStorage.setItem("fp_news_push", String(window.FP_BUILD || "")); setTimeout(()=> newsSet(true, null, true), 1500); } }catch(e){}
       if(newsCfg.on && newsCfg.id !== NEWS[0].id){ newsCfg.id = NEWS[0].id; newsCfg.rev = 0; setTimeout(()=> newsSet(true, null, true), 400); }
       sel.value = newsCfg.id;
       const drawNews = ()=>{ $('[data-x="nwsw"]').classList.toggle("on", !!newsCfg.on); $(".ad-nwt").textContent = newsCfg.on ? "Bekapcsolva" : "Kikapcsolva";
@@ -5400,7 +5438,7 @@ service cloud.firestore {
           drawEd(); edSave(); return; }
         const x = e.target.closest('[data-x="nedprev"]'); if(x){ newsShow(curEd()); }
       });
-      const newsBody = on=> ({ v:JSON.stringify(Object.assign({ on, id:NEWS[0].id, rev:newsCfg.rev || 0, at:Date.now() }, filtered() ? { ed:curEd() } : {})), parts:0, by:"admin", t:firebase.firestore.FieldValue.serverTimestamp(), n:Date.now() });
+      const newsBody = on=> ({ v:JSON.stringify(Object.assign({ on, id:NEWS[0].id, rev:newsCfg.rev || 0, at:Date.now(), hide:(newsCfg.hide || []).slice(), del:(newsCfg.del || []).slice() }, filtered() ? { ed:curEd() } : {})), parts:0, by:"admin", t:firebase.firestore.FieldValue.serverTimestamp(), n:Date.now() });
       async function newsSet(on, btn, quiet){
         const out = $(".ad-nwout"); if(btn) btn.disabled = true; out.className = "ad-out ad-nwout"; out.textContent = "Mentés…";
         const nid = NEWS[0].id;
@@ -16174,7 +16212,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const TOUR_ALL = [
     { sel:"#pageSwitch", icon:"🧭", title:"Nyolc oldal egy helyen",
       text:"Itt váltasz a <b>Beosztás</b>, a <b>Cetli generátor</b>, a <b>Leltár</b>, a <b>Kassza</b>, a <b>Csomag</b>, a <b>Selejt</b>, a <b>Teendők</b> és a <b>Tudástár</b> között (telefonon a többi oldalnak csak az ikonja látszik). Az oldal megjegyzi, hol jártál utoljára.",
-      scene:`<div class="s-ps s6 s7"><div class="ind"></div><span>📅</span><span>🏷️</span><span>📋</span><span>💰</span><span>📦</span><span>🗑️</span><span>📚</span></div><i class="ts-cur s-ps-cur"></i>` },
+      scene:`<div class="s-ps s6 s7 s8"><div class="ind"></div><span>📅</span><span>🏷️</span><span>📋</span><span>💰</span><span>📦</span><span>🗑️</span><span>✅</span><span>📚</span></div><i class="ts-cur s-ps-cur"></i>` },
     { sel:"#calGrid", alt:"#tabs", altNote:"A naptár a <b>📋 Beosztás tervező</b> fülön lesz — a beállítás mentése után jelenik meg.", icon:"📅", title:"Beosztás a naptárban",
       text:"Kattints egy napra, és válaszd ki, ki dolgozik — egész nap, félnap, együtt, vagy szabadnap. Az ünnepek és a zárva tartó napok automatikusan jelölve vannak.",
       scene:`<div class="s-cal">${Array.from({length:14},(_,i)=>`<i class="${i===1?"f1":i===3?"f2":i===12?"f3":""}"></i>`).join("")}</div><i class="ts-cur s-cal-cur"></i>` },
@@ -16196,6 +16234,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     { sel:'#pageSwitch [data-page="selejt"]', icon:"🗑️", title:"Selejt",
       text:"Rögzíted, mi lett <b>selejt</b> (a <b>ShieldUp fóliákat külön</b> válogatja), hány darab és miért — mindig a <b>mai nap</b> látszik, minden nap magától elmentve. <b>Excelben</b> letöltheted, és kérésre <b>cetli</b> is készül fekete logóval.",
       scene:`<div class="s-cs"><div class="r p"><b>2 db</b><em>iPhone 15 tok — sérült</em><span>14:32</span></div><div class="r p"><b>1 db</b><em>USB-C kábel — hibás</em><span>15:10</span></div><div class="t">🗑️ Ma · 3 db selejt</div></div>` },
+    { sel:'#pageSwitch [data-page="teendo"]', icon:"✅", title:"Teendők",
+      text:"Közös <b>to-do lista</b>: feladat az <b>egyik</b> dolgozónak, a <b>másiknak</b> vagy <b>mindkettőnek</b>, akár határidővel. Mindenki a saját nevénél pipálja ki, fent látszik, mi <b>nyitott</b>, mi esedékes <b>ma</b> és mi <b>lejárt</b>.",
+      scene:`<div class="s-cs"><div class="r p"><b>👥</b><em>Kirakat rendezése — okt. 8.</em><span>✓ TE</span></div><div class="r p"><b>JM</b><em>GLS csomagok vissza</em><span>⚠️</span></div><div class="t">✅ 3 nyitott teendő</div></div>` },
     { sel:'#pageSwitch [data-page="tudastar"]', icon:"📚", title:"Tudástár",
       text:"A <b>📖 Segédlet</b> (bolti teendők lépésről lépésre — sztornó, garancia, GLS, napzárás…) a <b>📘 Kézikönyv</b> (működési szabályok) és a <b>🏬 Üzletek</b> (minden bolt telefonja, gyorshívója, e-mailje, címe) egy helyen, <b>kereshetően</b>: pár betű, és kiemelve mutatja, hol van. Beállítás nélkül is megnyílik.",
       scene:`<div class="s-cs"><div class="r g"><b>🔍</b><em>sztorno</em><span>3 találat</span></div><div class="r p"><b>↩️</b><em>Sztornó — 1. sztornó gomb a kasszán</em><span>📖</span></div><div class="t">📚 Segédlet · Kézikönyv</div></div>` },
