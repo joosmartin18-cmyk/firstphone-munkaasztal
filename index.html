@@ -3916,7 +3916,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-200403";</script>
+<script>window.FP_BUILD="20261006-212403";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4657,7 +4657,7 @@
       { ic:"🧩", c:"#4fb3c4", sc:"nwf", t:"Programok és funkciók", x:"A beállításban kiválasztod, mely programok és funkciók kellenek.", b:["Programonként külön <b>funkciók</b> is: pl. a Cetli generátorban minden, kivéve az Óra garanciát","A kikapcsolt rész eltűnik a menüből — az adatok megmaradnak","Üzlet adatai, nyitvatartás, dolgozók egy helyen"] },
       { ic:"💬", c:"#8e7ff5", sc:"nwc", t:"Chat", x:"Közvetlen vonal az adminhoz és a többi bolthoz.", b:["Jobb lent a lila gomb: írj az <b>adminnak</b> vagy egy <b>másik boltnak</b>","Az admin válaszánál látszik, <b>melyik admin</b> írta (pl. Admin · Péter)","Az admin fontos <b>üzenetei</b> a munkaasztal tetején jelennek meg"] },
       { ic:"😊", c:"#9a6cff", sc:"nwg", t:"Emojik, GIF-ek, matricák", x:"Mókásabban is lehet írni.", b:["<b>😊 Emojik</b> kategóriákban, a legutóbbiak elöl","<b>GIF</b> gomb: GIPHY kereső, animált matricák, GIF link vagy saját GIF","A csak emojis üzenet nagyban jelenik meg"] },
-      { ic:"↩️", c:"#a78bfa", sc:"nwc", t:"Válasz, reakció, „… ír”", x:"A chat most már olyan, mint a telefonos üzenetküldők.", b:["Vidd az egeret egy üzenetre (telefonon koppints rá): <b>↩ Válasz</b> — az idézet ott lesz az új üzenet fölött, rákattintva odaugrik","<b>☺ Reakció</b>: 👍 ❤️ 😂 😮 😢 🙏 🔥 ✅ — <b>dupla kattintás</b> = ❤️, újra rányomva visszavonod","Látod, ha a másik <b>éppen ír</b> — az adminnál és a boltok közti chatben is"] },
+      { ic:"↩️", c:"#a78bfa", sc:"nwc", t:"Válasz, reakció, „… ír”, elérhető", x:"A chat most már olyan, mint a telefonos üzenetküldők.", b:["<b>🟢 Zöld pötty</b>: az admin vagy a bolt épp bent van — <b>🟡</b> nem aktív, a fejlécben: mikor volt bent utoljára","Vidd az egeret egy üzenetre (telefonon koppints rá): <b>↩ Válasz</b> — az idézet ott lesz az új üzenet fölött, rákattintva odaugrik","<b>☺ Reakció</b>: 👍 ❤️ 😂 😮 😢 🙏 🔥 ✅ — <b>dupla kattintás</b> = ❤️, újra rányomva visszavonod","Látod, ha a másik <b>éppen ír</b> — az adminnál és a boltok közti chatben is"] },
       { ic:"✍️", c:"#8e7ff5", sc:"nww", t:"Ki írja? · Kézbesítve / Látta", x:"Kiválaszthatod a feladót, és látod, ha elolvasták.", b:["Az üzenetsor fölött: <b>Bolt</b>, egy <b>dolgozó</b> vagy <b>✏️ Más</b> név","<b>✓ Kézbesítve</b> · <b>✓✓ Látta</b> (lilán), időponttal","A dolgozó <b>profilképe</b> és neve látszik az üzenet mellett"] },
       { ic:"🐞", c:"#f0a030", sc:"nwb", t:"Hibabejelentés — az admin válaszol", x:"Saját gombja van fent a ❓ mellett — és most már választ is kapsz rá.", b:["Fent a <b>🐞</b> gomb: kiválasztod, melyik résznél (Leltár, Kassza…) és leírod, mi történt","Minden bejelentés kap egy <b>azonosítót</b> (pl. #V3AAC) — így könnyű hivatkozni rá","Ha az admin <b>válaszolt</b>, piros szám jelenik meg a 🐞 gombon, a válasz a bejelentés alatt olvasható","Látod az állapotát is: új, folyamatban vagy megoldva ✅"] },
       { ic:"📢", c:"#5b95ff", sc:"nwan", t:"Közlemények az admintól", x:"Fontos hírek a munkaasztal tetején.", b:["Három fajta: 💬 tájékoztatás, ⚠️ fontos, ✅ jó hír","Lehet <b>lejárata</b> is — utána magától eltűnik","Az „✓ Elolvastam” gombbal bezárod"] },
@@ -5048,6 +5048,12 @@
     .v2 .ch-m small{padding:3px 10px 0;font-size:10px;opacity:0;max-height:0;transition:opacity .2s,max-height .2s;}
     .v2 .ch-m.last small,.v2 .ch-m:hover small{opacity:1;max-height:20px;}
     .v2 .ch-m.last{margin-bottom:10px;}
+    /* jelenlét pötty a chatben */
+    s.pd{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;border:2.5px solid var(--bg-panel,#17171c);background:#8a8a94;text-decoration:none;}
+    s.pd.live{background:#3ecf8e;animation:pdPulse 2s infinite;} s.pd.away{background:#f0b23a;}
+    .chs-hd > i{position:relative;} .chs-new button i{position:relative;}
+    .chs-hd small.ch-pres{color:var(--text-dim,#9c9ca6);}
+    @keyframes pdPulse{0%{box-shadow:0 0 0 0 rgba(62,207,142,.55);}70%{box-shadow:0 0 0 7px rgba(62,207,142,0);}100%{box-shadow:0 0 0 0 rgba(62,207,142,0);}}
     /* válasz, reakciók, „ír” */
     .ch-m{position:relative;}
     .ch-act{display:flex;gap:2px;align-self:center;margin:0 6px;opacity:0;pointer-events:none;transition:opacity .15s;}
@@ -5527,6 +5533,37 @@
     const os = /iPhone|iPad/.test(ua) ? "iOS" : /Android/.test(ua) ? "Android" : /Mac OS X/.test(ua) ? "macOS" : /Windows/.test(ua) ? "Windows" : "";
     return `${br}${os ? " · " + os : ""} · ${window.innerWidth}×${window.innerHeight} · verzió ${window.FP_BUILD || "?"}`;
   }
+  /* ---------- 🟢 jelenlét: ki van épp bent? 40 mp-enként „itt vagyok”, lap elrejtésekor / bezárásakor „nem aktív” ---------- */
+  const PRES = {}, presSubs = new Set(); let presUnsub = null, presOn = false; window.__fpPres = PRES;
+  function presWrite(on){
+    if(!S.db || !S.user) return;
+    const id = S.admin ? "admin" : String(S.user.email || "").toLowerCase(); let nm = "";
+    try{ nm = S.admin ? (S.adminLbl || "Admin") : shopName(); }catch(e){}
+    try{ S.db.collection("presence").doc(id).set({ e:id, n:nm, t:Date.now(), on:!!on }, { merge:true }).catch(()=>{}); }catch(e){}
+  }
+  function presStart(){
+    if(presOn) return; presOn = true;
+    const beat = ()=> presWrite(!document.hidden); beat();
+    setInterval(()=>{ if(!document.hidden) beat(); }, 40000);
+    document.addEventListener("visibilitychange", beat); window.addEventListener("pagehide", ()=> presWrite(false));
+  }
+  function presWatch(fn){
+    presSubs.add(fn);
+    if(presUnsub || !S.db) return;
+    const run = ()=> presSubs.forEach(f=>{ try{ f(); }catch(e){} });
+    try{ S.db.collection("presence").get().then(sn=>{ sn.docs.forEach(d=>{ if(!PRES[d.id]) PRES[d.id] = d.data() || {}; }); run(); }).catch(()=>{}); }catch(e){}
+    try{ presUnsub = S.db.collection("presence").onSnapshot(sn=>{ sn.docChanges().forEach(c=>{ if(c.type === "removed") delete PRES[c.doc.id]; else PRES[c.doc.id] = c.doc.data() || {}; }); run(); }, ()=>{}); }catch(e){ presUnsub = ()=>{}; }
+    setInterval(run, 30000);
+  }
+  function presAgo(t){ const m = Math.round((Date.now() - t) / 60000); if(m < 1) return "épp most"; if(m < 60) return m + " perce"; const h = Math.round(m / 60); if(h < 24) return h + " órája"; const d = new Date(t); return `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, "0")}. ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`; }
+  function presInfo(id){
+    const p = PRES[String(id || "").toLowerCase()]; if(!p || !p.t) return { k:"", t:"", s:"" };
+    const a = Date.now() - p.t;
+    if(p.on && a < 95000) return { k:"live", t:"elérhető most", s:"🟢 Elérhető" };
+    if(a < 15 * 60000) return { k:"away", t:"nem aktív · " + presAgo(p.t), s:"🟡 Nem aktív" };
+    return { k:"", t:"utoljára bent: " + presAgo(p.t), s:"⚪ Nincs bent" };
+  }
+  const pdot = id=>{ const i = presInfo(id); return i.k ? `<s class="pd ${i.k}" title="${esc(i.t)}"></s>` : ""; };
   /* bolti oldal: lebegő 💬 gomb + panel */
   /* ---------- bolti chat: 👑 Központ + bármelyik másik bolt (dm/{szoba}) ---------- */
   const DM_RULES = `rules_version = '2';
@@ -5543,6 +5580,11 @@ service cloud.firestore {
     }
     match /{path=**}/kv/{doc} { allow read: if isAdmin(); }
     match /{path=**}/chat/{doc} { allow read: if isAdmin(); }
+    // jelenlét: ki van épp bent a Munkaasztalban (bolt / admin) — mindenki a sajátját írja
+    match /presence/{id} {
+      allow read: if isShop() || isAdmin();
+      allow write: if (isShop() && id == me()) || (isAdmin() && id == 'admin');
+    }
     match /dm/{room} {
       allow read: if (isShop() && me() in resource.data.members) || isAdmin();
       allow create: if isShop() && me() in request.resource.data.members && request.resource.data.members.size() == 2;
@@ -5638,11 +5680,11 @@ service cloud.firestore {
       const have = new Set(R.map(r=> r.other));
       const prev = m=> m ? esc((m.from === ME || m.from === "s" ? "Te: " : "") + String(m.text).slice(0, 50)) : "";
       const tmOf = m=> m ? (dayLbl(m.ms) === "Ma" ? hhmm(m.ms) : dayLbl(m.ms).replace(/^(\d{4})\. /, "")) : "";
-      let h = `<button type="button" class="chs-it${cur === "hq" ? " on" : ""}" data-r="hq"><i class="hq">👑</i><span><b>Admin</b><small>${hqLast ? prev(hqLast) : "üzenetek az adminnal"}</small></span>${hqUnread() ? `<em>${hqUnread()}</em>` : `<span class="tm">${tmOf(hqLast)}</span>`}</button>`;
+      let h = `<button type="button" class="chs-it${cur === "hq" ? " on" : ""}" data-r="hq"><i class="hq">👑${pdot("admin")}</i><span><b>Admin</b><small>${hqLast ? prev(hqLast) : "üzenetek az adminnal"}</small></span>${hqUnread() ? `<em>${hqUnread()}</em>` : `<span class="tm">${tmOf(hqLast)}</span>`}</button>`;
       const showR = CF.dm === false ? [] : R.filter(r=> (r.last || (KNOWN && KNOWN.has(r.other))) && (!f || (r.nm + " " + r.other).toLowerCase().includes(f)));
-      h += showR.map(r=> `<button type="button" class="chs-it${cur === r.id ? " on" : ""}" data-r="${esc(r.id)}">${phOk(r[phKey(r.other)]) ? `<i class="ph" style="background-image:url('${phOk(r[phKey(r.other)])}')"></i>` : `<i style="--av:${avCol(r.nm)}">${esc(avIni(r.nm))}</i>`}<span><b>${esc(r.nm)}</b><small>${r.last ? prev(r.last) : "új beszélgetés"}</small></span>${roomUnread(r) ? "<em>1</em>" : `<span class="tm">${tmOf(r.last)}</span>`}</button>`).join("");
+      h += showR.map(r=> `<button type="button" class="chs-it${cur === r.id ? " on" : ""}" data-r="${esc(r.id)}">${phOk(r[phKey(r.other)]) ? `<i class="ph" style="background-image:url('${phOk(r[phKey(r.other)])}')">${pdot(r.other)}</i>` : `<i style="--av:${avCol(r.nm)}">${esc(avIni(r.nm))}${pdot(r.other)}</i>`}<span><b>${esc(r.nm)}</b><small>${r.last ? prev(r.last) : "új beszélgetés"}</small></span>${roomUnread(r) ? "<em>1</em>" : `<span class="tm">${tmOf(r.last)}</span>`}</button>`).join("");
       const NEWL = CF.dm === false ? [] : DIR.filter(d=> !have.has(d.e) && KNOWN && KNOWN.has(d.e) && (!f || (d.n + " " + d.c + " " + d.e).toLowerCase().includes(f)));
-      if(CF.dm === false) h += `<div class="chs-hint">🔒 A boltok közti chatet az admin kikapcsolta — az adminnak továbbra is írhatsz.</div>`; else h += `<div class="chs-sep">✏️ Új beszélgetés</div>` + (NEWL.length ? `<div class="chs-new">${NEWL.map(d=> `<button type="button" data-new="${esc(d.e)}" title="${esc(d.n)} — új beszélgetés"><i style="--av:${avCol(d.n)}">${esc(avIni(d.n))}</i>${esc(d.n.replace(/^FirstPhone\s+/i, ""))}</button>`).join("")}</div>`
+      if(CF.dm === false) h += `<div class="chs-hint">🔒 A boltok közti chatet az admin kikapcsolta — az adminnak továbbra is írhatsz.</div>`; else h += `<div class="chs-sep">✏️ Új beszélgetés</div>` + (NEWL.length ? `<div class="chs-new">${NEWL.map(d=> `<button type="button" data-new="${esc(d.e)}" title="${esc(d.n)} — új beszélgetés${presInfo(d.e).t ? " · " + esc(presInfo(d.e).t) : ""}"><i style="--av:${avCol(d.n)}">${esc(avIni(d.n))}${pdot(d.e)}</i>${esc(d.n.replace(/^FirstPhone\s+/i, ""))}</button>`).join("")}</div>`
         : `<div class="chs-hint">${KNOWN ? (f ? "Nincs ilyen nevű, már belépett bolt." : "Még nincs másik bolt, amelyik belépett volna — amint belépnek, itt megjelennek.") : "A belépett boltok listája az admin következő belépésekor töltődik be. Addig az adminnak és a már meglévő beszélgetésekben tudsz írni."}</div>`);
       if(dmErr && CF.dm !== false) h += `<div class="chs-err">⚠ A boltok közti chat még nincs bekapcsolva — az adminnak egyszer frissítenie kell a beállítást (Admin → Beállítások). Az adminnak addig is tudsz írni.</div>`;
       L.innerHTML = h;
@@ -5650,13 +5692,13 @@ service cloud.firestore {
     function drawMsgs(){
       if(!panel) return;
       const box = panel.querySelector(".ch-list"), hd = panel.querySelector(".chs-hd");
-      if(cur === "hq"){ hd.innerHTML = `<button type="button" class="chs-back" title="Vissza">←</button><i class="hq">👑</i><div><b>Admin</b><small>üzenetek az adminnal</small></div>`;
+      if(cur === "hq"){ hd.innerHTML = `<button type="button" class="chs-back" title="Vissza">←</button><i class="hq">👑${pdot("admin")}</i><div><b>Admin</b><small class="ch-pres">${esc(presInfo("admin").t || "üzenetek az adminnal")}</small></div>`;
         keepScroll(box, forceBot, ()=>{ box.innerHTML = chatHtml(hq.filter(m=> m.type !== "bug"), "s", hqMeta._seen_a, m=> msgPh(m, myEmps(), myPhoto()), IXS) || `<div class="ch-empty"><span>👑</span>Írj az adminnak — kérdés, ötlet, bármi.${CF.bug ? "<br>Ha valami nem működik, fent a <b>🐞</b> gombbal jelezheted." : ""}</div>`; });
         if(hq.length) lsSet(SEEN, String(hq[hq.length - 1].ms));
         { const la = hq.filter(x=> x.from === "a").slice(-1)[0]; if(la) chatSeenHq(S.user.uid, "s", la.ms); } }
       else { const r = rooms[cur] || {}; const other = (r.members || cur.split("__")).find(x=> x !== ME) || "";
         const lastM = curMsgs[curMsgs.length - 1];
-        hd.innerHTML = `<button type="button" class="chs-back" title="Vissza">←</button>${phOk(r[phKey(other)]) ? `<i class="ph" style="background-image:url('${phOk(r[phKey(other)])}')"></i>` : `<i style="--av:${avCol(nameOfE(other))}">${esc(avIni(nameOfE(other)))}</i>`}<div><b>${esc(nameOfE(other))}</b><small>${lastM ? "utolsó üzenet: " + dayLbl(lastM.ms).toLowerCase() + " " + hhmm(lastM.ms) : "még nincs üzenet"}</small></div>`;
+        hd.innerHTML = `<button type="button" class="chs-back" title="Vissza">←</button>${phOk(r[phKey(other)]) ? `<i class="ph" style="background-image:url('${phOk(r[phKey(other)])}')"></i>` : `<i style="--av:${avCol(nameOfE(other))}">${esc(avIni(nameOfE(other)))}</i>`}<div><b>${esc(nameOfE(other))}</b><small class="ch-pres">${esc(presInfo(other).t || (lastM ? "utolsó üzenet: " + dayLbl(lastM.ms).toLowerCase() + " " + hhmm(lastM.ms) : "még nincs üzenet"))}</small></div>`;
         const M = dmView(r);
         keepScroll(box, forceBot, ()=>{ box.innerHTML = chatHtml(M, "me", r[snKey(other)], m=> m.from === "me" ? msgPh(m, myEmps(), myPhoto()) : msgPh(m, r[ppKey(other)] || {}, r[phKey(other)]), IXD) || `<div class="ch-empty"><span>👋</span>Írj elsőként a(z) <b>${esc(nameOfE(other))}</b> boltnak!</div>`; });
         if(r.last) lsSet(DSEEN + cur, String(r.last.ms));
@@ -5681,6 +5723,12 @@ service cloud.firestore {
       const hs = panel.querySelector(".chs-hd small"); if(hs){ if(nm){ if(!hs.dataset.o) hs.dataset.o = hs.textContent; hs.textContent = "✍️ éppen ír…"; hs.classList.add("typ"); } else if(hs.dataset.o){ hs.textContent = hs.dataset.o; delete hs.dataset.o; hs.classList.remove("typ"); } }
     }
     setInterval(()=>{ if(panel && !document.hidden) drawTyping(); }, 1500);
+    /* jelenlét változott: lista és fejléc frissítése (gépelés jelzését nem írja felül) */
+    presWatch(()=>{ if(!panel) return; drawList();
+      const hd = panel.querySelector(".chs-hd"), sm = hd && hd.querySelector("small.ch-pres"); if(!hd) return;
+      const id = cur === "hq" ? "admin" : ((rooms[cur] || {}).members || cur.split("__")).find(x=> x !== ME) || "";
+      const ic = hd.querySelector(":scope > i"); if(ic){ const o = ic.querySelector("s.pd"); if(o) o.remove(); ic.insertAdjacentHTML("beforeend", pdot(id)); }
+      if(sm && !sm.dataset.o){ const t = presInfo(id).t; if(t) sm.textContent = t; } });
     async function chatReact(m, emo){
       try{
         if(cur === "hq"){ const o = hq.find(x=> x._id === m._id) || m; const rx = rxToggle(o.rx, emo, "s"); o.rx = rx; drawMsgs(); await chatCol(S.user.uid).doc(m._id).set({ rx }, { merge:true }); }
@@ -6006,7 +6054,9 @@ service cloud.firestore {
       const shortN = x=> nameOf(x).replace(/^FirstPhone\s+/i, "");
       const stDot = x=>{ const a = x.ms ? Date.now() - x.ms : Infinity; return a < 864e5 ? "on" : a < 7 * 864e5 ? "mid" : "off"; };
       const stDotT = x=>{ const d = stDot(x); return d === "on" ? "aktív ma" : d === "mid" ? "a héten aktív" : "régóta nem aktív"; };
-      const axAv = (x, big)=>{ const ph = phOfState((x.raw || {}).firstphone_beosztas_tervezo_v2), n = shortN(x); return `<span class="ax-av${big ? " big" : ""}${ph ? " ph" : ""}" style="--av:${avCol(n)}${ph ? `;background-image:url('${ph}')` : ""}" title="${stDotT(x)}">${ph ? "" : esc(avIni(n))}<s class="${stDot(x)}"></s></span>`; };
+      const axAv = (x, big)=>{ const ph = phOfState((x.raw || {}).firstphone_beosztas_tervezo_v2), n = shortN(x), pi = presInfo(x.email); return `<span class="ax-av${big ? " big" : ""}${ph ? " ph" : ""}" style="--av:${avCol(n)}${ph ? `;background-image:url('${ph}')` : ""}" title="${esc(pi.t || stDotT(x))}">${ph ? "" : esc(avIni(n))}${pi.k ? `<s class="${pi.k}"></s>` : ""}</span>`; };
+      const presT = x=> presInfo(x.email).t || stDotT(x);
+      presWatch(()=>{ if(!b.isConnected) return; later(); try{ drawShops(); }catch(e){} if(curU && curU !== "*"){ const x = list.find(y=> y.uid === curU); const ce = $(".ax-ce"); if(x && ce && !ce.dataset.o){ ce.textContent = [x.email, presT(x)].filter(Boolean).join(" · "); $(".ax-cav").innerHTML = axAv(x); } } const dh = document.querySelector("#adDet .ax-dpres"); if(dh){ const x = list.find(y=> y.uid === dh.dataset.u); if(x){ const pi = presInfo(x.email); dh.className = "ax-dpres " + (pi.k || "off"); dh.textContent = pi.s ? pi.s + (pi.k === "live" ? "" : " · " + pi.t.replace(/^utoljára bent: |^nem aktív · /, "")) : "⚪ Még nem volt bent"; } } });
       const fmtFt = n=> (n < 0 ? "−" : "+") + Math.abs(Math.round(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " Ft";
       const ft = n=> (n < 0 ? "−" : "") + Math.abs(Math.round(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " Ft";
       const rel = ms=>{ if(!ms) return "—"; const m = Math.round((Date.now() - ms) / 60000); return m < 1 ? "most" : m < 60 ? m + " perce" : m < 1440 ? Math.round(m / 60) + " órája" : Math.round(m / 1440) + " napja"; };
@@ -6184,16 +6234,29 @@ service cloud.firestore {
         const ns = x.nseen ? `✓ megnézte (${new Date(x.nseen.at).toLocaleDateString("hu-HU")}, ${x.nseen.n || "?"}/${x.nseen.of || "?"} dia)` : "még nem nézte meg";
         const old = document.getElementById("adDet"); if(old) old.remove();
         const m = document.createElement("div"); m.className = "ax-drw " + b.className.replace(/\b(ax|quiet|menu)\b/g, "").trim(); m.id = "adDet";
+        const pi = presInfo(x.email), sxN = sxT.reduce((a, i)=> a + (+i.qty || 0), 0);
+        const ksOk = x.ks && x.ks.rep ? x.ks.diff === 0 : null;
+        const tile = (ic, c, lbl, val, sub)=> `<div class="ax-dtl" style="--c:${c}"><span class="ic">${ic}</span><div><small>${lbl}</small><b>${val}</b>${sub ? `<em>${sub}</em>` : ""}</div></div>`;
+        const card = (ic, c, ttl, body, extra)=> `<section class="ax-dc" style="--c:${c}"><header><span class="ic">${ic}</span><h4>${ttl}</h4>${extra || ""}</header>${body}</section>`;
+        const empty = t=> `<p class="ax-dempty">${t}</p>`;
         m.innerHTML = `<div class="ax-drwb" role="dialog" aria-label="Bolt adatai">
-          <div class="ax-drwh">${axAv(x, true)}<div><b>${esc(nameOf(x))}</b><small>${esc([se.address || x.addr, x.email].filter(Boolean).join(" · "))}</small></div><button type="button" class="ax-ib ax-detx" title="Bezárás (Esc)">${axI("x")}</button></div>
-          <div class="ax-drwc"><div class="ax-dstat"><div><small>Utolsó mentés</small><b>${x.ms ? rel(x.ms) : "—"}</b></div><div><small>Csomag vár</small><b>${wait.length}</b></div><div><small>Selejt ma</small><b>${sxT.reduce((a, i)=> a + (+i.qty || 0), 0)} db</b></div><div><small>Nyitott jegy</small><b>${openT.length}</b></div></div>
-            <div class="ax-dsec"><h4>Kassza</h4><p>${!x.ks ? "<small>nincs adat</small>" : `Megszámolva: <b>${ft(x.ks.cnt)}</b>${x.ks.rep ? ` · jelentés: <b>${ft(x.ks.rep)}</b> · ${ksH(x)}` : ""}`}</p></div>
-            <div class="ax-dsec"><h4>Utolsó leltár</h4><p>${x.lt && x.lt.at ? `${esc(String(x.lt.at).slice(0, 10).replace(/-/g, "."))}. · ${x.lt.type === "P" ? "pénteki" : x.lt.type === "H" ? "hétfői" : ""} · ${x.lt.n} tétel` : "<small>nincs adat</small>"}</p></div>
-            <div class="ax-dsec"><h4>Dolgozók (${emps.length})</h4><p>${emps.length ? emps.map(n=> `<span class="ax-b">${esc(n)}</span>`).join(" ") : "<small>nincs megadva</small>"}</p></div>
-            <div class="ax-dsec"><h4>Váró csomagok</h4>${wait.length ? `<ul>${wait.slice(0, 8).map(i=> `<li><b>${esc(i.code)}</b><small>${esc(String(i.car || "").toUpperCase())} · ${esc(i.inAt || "")}</small></li>`).join("")}${wait.length > 8 ? `<li><small>… és még ${wait.length - 8}</small></li>` : ""}</ul>` : "<p><small>nincs váró csomag</small></p>"}</div>
-            <div class="ax-dsec"><h4>Mai selejt</h4>${sxT.length ? `<ul>${sxT.slice(0, 8).map(i=> `<li><span>${esc(i.name || i.code || "?")}</span><small>× ${esc(i.qty)}${i.kind === "su" ? " · 🛡️ ShieldUp" : ""}</small></li>`).join("")}</ul>` : "<p><small>ma még nincs</small></p>"}</div>
-            <div class="ax-dsec"><h4>Hibajegyek</h4>${T.length ? `<ul>${T.slice(-5).reverse().map(t=> `<li class="go" data-dt="${esc(x.uid + "|" + t._id)}"><span><span class="ax-tid">${tixId(t)}</span> ${esc(firstLine(t.text).slice(0, 60))}</span>${stBadge(t)}</li>`).join("")}</ul>` : "<p><small>nincs bejelentés</small></p>"}</div>
-            <div class="ax-dsec"><h4>Újdonságok · Közlemény</h4><p>${ns}<br>${x.msg ? `📢 kint van: „${esc(String(x.msg.text).slice(0, 80))}”` : "<small>nincs kint közlemény</small>"}</p></div></div>
+          <div class="ax-dhero" style="--av:${avCol(shortN(x))}"><button type="button" class="ax-ib ax-detx" title="Bezárás (Esc)">${axI("x")}</button>
+            <div class="ax-dhrow">${axAv(x, true)}<div class="ax-dhtx"><b>${esc(nameOf(x))}</b><small>${esc(se.address || x.addr || "")}</small></div></div>
+            <div class="ax-dchips"><span class="ax-dpres ${pi.k || "off"}" data-u="${esc(x.uid)}">${pi.s ? pi.s + (pi.k === "live" ? "" : " · " + pi.t.replace(/^utoljára bent: |^nem aktív · /, "")) : "⚪ Még nem volt bent"}</span><span class="ax-dchip">✉️ ${esc(x.email || "—")}</span>${se.phone ? `<span class="ax-dchip">📞 ${esc(se.phone)}</span>` : ""}<span class="ax-dchip">💾 ${x.ms ? "mentve " + rel(x.ms) : "még nem mentett"}</span></div></div>
+          <div class="ax-drwc">
+            <div class="ax-dtiles">${tile("📦", "#c98a3a", "Csomag vár", wait.length, wait.length ? "átvételre" : "nincs")}${tile("🗑️", "#e2585a", "Selejt ma", sxN + " db", sxT.length ? sxT.length + " tétel" : "")}${tile("🐞", "#f0953a", "Nyitott jegy", openT.length, T.length ? "összesen " + T.length : "")}${tile("👥", "#7b8cff", "Dolgozó", emps.length, "")}</div>
+            <div class="ax-dgrid">
+              ${card("💰", "#e2bf55", "Kassza", !x.ks ? empty("nincs adat") : `<div class="ax-dks"><div><small>Megszámolva</small><b>${ft(x.ks.cnt)}</b></div>${x.ks.rep ? `<div><small>Jelentés</small><b>${ft(x.ks.rep)}</b></div>` : ""}</div>`, x.ks && x.ks.rep ? `<span class="ax-dst ${ksOk ? "ok" : "bad"}">${ksOk ? "✓ egyezik" : "⚠ eltérés"}</span>` : "")}
+              ${card("📋", "#30b37a", "Utolsó leltár", x.lt && x.lt.at ? `<div class="ax-dks"><div><small>${x.lt.type === "P" ? "Pénteki" : x.lt.type === "H" ? "Hétfői" : "Leltár"}</small><b>${esc(String(x.lt.at).slice(0, 10).replace(/-/g, "."))}.</b></div><div><small>Tétel</small><b>${esc(x.lt.n)}</b></div></div>` : empty("nincs adat"))}
+            </div>
+            ${card("👥", "#7b8cff", "Dolgozók", emps.length ? `<div class="ax-demps">${emps.map(n=> `<span><i style="--av:${avCol(n)}">${esc(avIni(n))}</i>${esc(n)}</span>`).join("")}</div>` : empty("nincs megadva"), `<span class="ax-dcnt">${emps.length}</span>`)}
+            ${card("📦", "#c98a3a", "Váró csomagok", wait.length ? `<ul class="ax-dl">${wait.slice(0, 8).map(i=> `<li><b>${esc(i.code)}</b><small>${esc(String(i.car || "").toUpperCase())} · ${esc(i.inAt || "")}</small></li>`).join("")}${wait.length > 8 ? `<li class="more">… és még ${wait.length - 8}</li>` : ""}</ul>` : empty("nincs váró csomag"), wait.length ? `<span class="ax-dcnt">${wait.length}</span>` : "")}
+            ${card("🗑️", "#e2585a", "Mai selejt", sxT.length ? `<ul class="ax-dl">${sxT.slice(0, 8).map(i=> `<li><span>${esc(i.name || i.code || "?")}</span><small>× ${esc(i.qty)}${i.kind === "su" ? " · 🛡️ ShieldUp" : ""}</small></li>`).join("")}</ul>` : empty("ma még nincs"), sxT.length ? `<span class="ax-dcnt">${sxN} db</span>` : "")}
+            ${card("🐞", "#f0953a", "Hibajegyek", T.length ? `<ul class="ax-dl">${T.slice(-5).reverse().map(t=> `<li class="go" data-dt="${esc(x.uid + "|" + t._id)}"><span><span class="ax-tid">${tixId(t)}</span> ${esc(firstLine(t.text).slice(0, 60))}</span>${stBadge(t)}</li>`).join("")}</ul>` : empty("nincs bejelentés"), openT.length ? `<span class="ax-dcnt hot">${openT.length} nyitott</span>` : "")}
+            <div class="ax-dgrid">
+              ${card("🎁", "#d6589a", "Újdonságok", `<p class="ax-dp">${x.nseen ? `<b>✓ Megnézte</b><small>${new Date(x.nseen.at).toLocaleDateString("hu-HU")} · ${x.nseen.n || "?"}/${x.nseen.of || "?"} dia</small>` : `<b>Még nem nézte meg</b>`}</p>`)}
+              ${card("📢", "#5b95ff", "Közlemény", `<p class="ax-dp">${x.msg ? `<b>Kint van</b><small>„${esc(String(x.msg.text).slice(0, 80))}”</small>` : `<b>Nincs kint</b><small>küldhetsz egyet lent</small>`}</p>`)}
+            </div></div>
           <div class="ax-drwf"><button type="button" class="ax-btn" data-dx="chat">💬 Chat</button><button type="button" class="ax-btn" data-dx="ann">📢 Közlemény</button><button type="button" class="ax-btn" data-dx="dl">⬇ Adatok</button><span class="ax-sp"></span><button type="button" class="ax-btn pri" data-dx="open">Bolt megnyitása →</button></div></div>`;
         document.body.appendChild(m);
         const shut = ()=>{ m.classList.add("out"); setTimeout(()=> m.remove(), 180); document.removeEventListener("keydown", esck); };
@@ -6359,7 +6422,7 @@ service cloud.firestore {
       }
       function drawThread(){
         if(!curU || curU === "*") return; const x = list.find(y=> y.uid === curU); if(!x) return;
-        $(".ax-cn").textContent = shortN(x); $(".ax-ce").textContent = [x.email, stDotT(x)].filter(Boolean).join(" · "); $(".ax-cav").innerHTML = axAv(x);
+        $(".ax-cn").textContent = shortN(x); $(".ax-ce").textContent = [x.email, presT(x)].filter(Boolean).join(" · "); $(".ax-cav").innerHTML = axAv(x);
         const T = (threads[curU] || []).filter(m=> m.type !== "bug");
         const IXA = { key:"a", nameOf:k=> k === "a" ? "Admin" : shortN(x) };
         keepScroll(cl, aForce, ()=>{ cl.innerHTML = chatHtml(T, "a", (metas[curU] || {})._seen_s, m=> msgPh(m, empsOfState((x.raw || {}).firstphone_beosztas_tervezo_v2), phOfState((x.raw || {}).firstphone_beosztas_tervezo_v2)), IXA) || `<div class="ch-empty"><span>👋</span>Még nem írtatok egymásnak. Írj elsőként!</div>`; });
@@ -6613,7 +6676,9 @@ service cloud.firestore {
     .ax-leg s{width:9px;height:9px;border-radius:3px;flex:none;} .ax-leg b{margin-left:auto;color:var(--ax-tx);font-variant-numeric:tabular-nums;}
     .ax-av{width:30px;height:30px;border-radius:8px;flex:none;position:relative;display:inline-grid;place-items:center;font:700 11.5px 'Poppins',sans-serif;color:#fff;background:var(--av);background-size:cover;background-position:center;}
     .ax-av.big{width:44px;height:44px;border-radius:11px;font-size:15px;}
-    .ax-av s{position:absolute;right:-3px;bottom:-3px;width:10px;height:10px;border-radius:50%;border:2px solid var(--ax-panel);background:var(--ax-faint);} .ax-av s.on{background:var(--ax-green);} .ax-av s.mid{background:var(--ax-orange);}
+    .ax-av s{position:absolute;right:-3px;bottom:-3px;width:11px;height:11px;border-radius:50%;border:2px solid var(--ax-panel);background:var(--ax-faint);} .ax-av s.live{background:#3ecf8e;box-shadow:0 0 0 0 rgba(62,207,142,.6);animation:pdPulse 2s infinite;} .ax-av s.away{background:#f0b23a;}
+    .ax-av.big s{width:14px;height:14px;}
+    @keyframes pdPulse{0%{box-shadow:0 0 0 0 rgba(62,207,142,.55);}70%{box-shadow:0 0 0 7px rgba(62,207,142,0);}100%{box-shadow:0 0 0 0 rgba(62,207,142,0);}}
     .ax-dt{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--ax-faint);vertical-align:1px;} .ax-dt.on{background:var(--ax-green);} .ax-dt.mid{background:var(--ax-orange);}
     .ax-tblw{overflow:auto;max-height:calc(100vh - 240px);} .ax-tblw.sm{max-height:520px;}
     .ax-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;}
@@ -6709,7 +6774,38 @@ service cloud.firestore {
     .ax-drw{position:fixed;inset:0;z-index:2300;background:rgba(5,8,14,.55);display:flex;justify-content:flex-end;animation:axFade .18s ease-out;color:var(--ax-tx);font:14px/1.45 'Inter',system-ui,sans-serif;}
     .ax-drw.th-light{background:rgba(20,30,50,.28);}
     .ax-drw.out{opacity:0;transition:opacity .18s;}
-    .ax-drwb{width:min(540px,100%);height:100%;background:var(--ax-panel);border-left:1px solid var(--ax-line2);display:flex;flex-direction:column;animation:axSlide .26s cubic-bezier(.2,.8,.2,1);box-shadow:var(--ax-shadow);}
+    .ax-drwb{width:min(560px,100%);height:100%;background:var(--ax-bg);border-left:1px solid var(--ax-line2);display:flex;flex-direction:column;animation:axSlide .3s cubic-bezier(.2,.9,.25,1);box-shadow:var(--ax-shadow);}
+    .ax-dhero{position:relative;padding:22px 22px 16px;background:radial-gradient(420px 220px at 0% 0%,color-mix(in srgb,var(--av) 38%,transparent),transparent 70%),linear-gradient(180deg,color-mix(in srgb,var(--av) 12%,var(--ax-panel)),var(--ax-panel));border-bottom:1px solid var(--ax-line);}
+    .ax-dhero .ax-detx{position:absolute;top:14px;right:14px;background:color-mix(in srgb,var(--ax-panel) 60%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+    .ax-dhrow{display:flex;gap:14px;align-items:center;padding-right:44px;} .ax-dhrow .ax-av.big{width:62px;height:62px;border-radius:18px;font-size:21px;box-shadow:0 10px 26px rgba(0,0,0,.3);}
+    .ax-dhtx{min-width:0;} .ax-dhtx b{display:block;font:800 20px/1.2 'Poppins',sans-serif;letter-spacing:-.01em;} .ax-dhtx small{display:block;margin-top:3px;color:var(--ax-dim);font-size:13px;}
+    .ax-dchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+    .ax-dchip,.ax-dpres{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;font-size:12px;font-weight:600;background:color-mix(in srgb,var(--ax-panel2) 80%,transparent);border:1px solid var(--ax-line);color:var(--ax-dim);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ax-dpres{font-weight:800;color:var(--ax-tx);} .ax-dpres.live{background:rgba(62,207,142,.14);border-color:rgba(62,207,142,.4);color:#3ecf8e;} .ax-dpres.away{background:rgba(240,178,58,.13);border-color:rgba(240,178,58,.4);color:#e8a92c;}
+    .ax-drwc{background:transparent;}
+    .ax-dtiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px;}
+    .ax-dtl{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:var(--ax-panel);border:1px solid var(--ax-line);min-width:0;}
+    .ax-dtl .ic{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:16px;background:color-mix(in srgb,var(--c) 18%,transparent);}
+    .ax-dtl small{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ax-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ax-dtl b{display:block;font:800 20px/1.15 'Poppins',sans-serif;margin-top:2px;} .ax-dtl em{display:block;font-style:normal;font-size:11px;color:var(--ax-faint);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ax-dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;} .ax-dgrid .ax-dc{margin-bottom:10px;}
+    .ax-dc{padding:13px 14px;border-radius:16px;background:var(--ax-panel);border:1px solid var(--ax-line);margin-bottom:10px;min-width:0;}
+    .ax-dc header{display:flex;align-items:center;gap:9px;margin-bottom:9px;} .ax-dc header .ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:14px;background:color-mix(in srgb,var(--c) 18%,transparent);flex:none;}
+    .ax-dc h4{margin:0;flex:1;font:700 13.5px 'Poppins',sans-serif;}
+    .ax-dcnt{font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ax-tx);} .ax-dcnt.hot{background:rgba(240,149,58,.2);color:#f0953a;}
+    .ax-dst{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px;} .ax-dst.ok{background:rgba(62,207,142,.14);color:#3ecf8e;} .ax-dst.bad{background:rgba(239,90,90,.14);color:#ef5a5a;}
+    .ax-dks{display:flex;gap:16px;flex-wrap:wrap;} .ax-dks small{display:block;font-size:11px;color:var(--ax-dim);} .ax-dks b{font:800 16px 'Poppins',sans-serif;}
+    .ax-dempty{margin:0;font-size:12.5px;color:var(--ax-faint);}
+    .ax-dp{margin:0;} .ax-dp b{display:block;font-size:13.5px;} .ax-dp small{display:block;font-size:12px;color:var(--ax-dim);margin-top:2px;overflow-wrap:anywhere;}
+    .ax-demps{display:flex;flex-wrap:wrap;gap:6px;} .ax-demps span{display:inline-flex;align-items:center;gap:7px;padding:4px 11px 4px 4px;border-radius:99px;background:var(--ax-panel2);font-size:12.5px;font-weight:700;}
+    .ax-demps i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:800 9.5px 'Poppins',sans-serif;font-style:normal;color:#fff;background:var(--av);}
+    .ax-dl{margin:0;padding:0;list-style:none;display:grid;gap:4px;} .ax-dl li{font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--ax-panel2);min-width:0;} .ax-dl li > span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ax-dl li small{color:var(--ax-dim);white-space:nowrap;} .ax-dl li.go{cursor:pointer;transition:background .15s;} .ax-dl li.go:hover{background:color-mix(in srgb,var(--c) 12%,var(--ax-panel2));} .ax-dl li.more{justify-content:center;color:var(--ax-dim);font-size:12px;}
+    .ax-drwf{background:var(--ax-panel);}
+    .ax-drw.th-light .ax-dtl,.ax-drw.th-light .ax-dc{box-shadow:0 6px 18px rgba(60,45,10,.06);}
+    @media (max-width:560px){ .ax-dtiles{grid-template-columns:repeat(2,minmax(0,1fr));} .ax-dgrid{grid-template-columns:1fr;} .ax-dgrid .ax-dc{margin-bottom:0;} .ax-dgrid{gap:10px;margin-bottom:10px;} }
+    /* a lebegő chat gomb ne takarja a bolt adatlapját és az admin konzolt */
+    body:has(.ax-drw) .ch-btn,body:has(#fcAdmin) .ch-btn{display:none !important;}
     .ax-drwh{display:flex;gap:12px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--ax-line);} .ax-drwh > div{flex:1;min-width:0;} .ax-drwh b{display:block;font:600 16px 'Poppins',sans-serif;} .ax-drwh small{display:block;color:var(--ax-dim);font-size:12px;}
     .ax-drwc{flex:1;overflow:auto;padding:16px 20px;}
     .ax-drwf{padding:14px 20px;border-top:1px solid var(--ax-line);display:flex;gap:8px;flex-wrap:wrap;}
@@ -6877,13 +6973,14 @@ service cloud.firestore {
       if(S.admin && !S.sup && CL.mustChange){ status(); pwModal(true); return; }
       if(S.admin){
         S.target = lsGet(ADMIN_KEY) || null;
+        try{ presStart(); }catch(e){}
         if(!S.target){ status(); await adminChoose(); return; }
         try{ const m = await S.db.collection("boltok").doc(S.target).get(); const d = m.exists ? m.data() : {}; S.targetName = d.loc ? "FirstPhone " + d.loc : (d.email || "bolt"); }catch(e){ S.targetName = "bolt"; }
       } else { S.target = u.uid; }
       try{
         const changed = await pull();
         if(S.admin){ try{ const st = JSON.parse(lsGet("firstphone_beosztas_tervezo_v2") || "null"); const loc = st && st.settings && st.settings.location; if(loc) S.targetName = "FirstPhone " + loc; else if(!S.targetName || S.targetName === "bolt") S.targetName = lsGet(ADMIN_KEY + "_name") || "bolt"; }catch(e){} }
-        S.on = true; listen(); status(); writeMeta(true);
+        S.on = true; listen(); status(); writeMeta(true); try{ presStart(); }catch(e){}
         if(changed && !sessionStorage.getItem("fp_cloud_reloaded")){ sessionStorage.setItem("fp_cloud_reloaded", "1"); location.reload(); return; }
         sessionStorage.removeItem("fp_cloud_reloaded");
         if(!S.admin && window.fpLockStore){ try{ fpLockStore(u.email); }catch(e){} }
