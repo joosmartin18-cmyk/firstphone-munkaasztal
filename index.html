@@ -3916,7 +3916,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-185125";</script>
+<script>window.FP_BUILD="20261006-185529";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4552,7 +4552,7 @@
       if(a === "copy"){ try{ await navigator.clipboard.writeText(b.dataset.v); b.textContent = "✓ Kimásolva"; }catch(_){} return; }
       if(a === "new"){
         const name = iN.value.trim(), mail = iM.value.trim().toLowerCase(), pw = iP.value.trim();
-        const bad = name.length < 2 ? "Add meg a nevét." : !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(mail) ? "Hibás e-mail cím." : /@firstphone\.hu$/.test(mail) ? "Ez bolti cím — adminnak saját e-mail címet adj meg." : pw.length < 8 ? "Az ideiglenes jelszó legalább 8 karakter legyen." : "";
+        const bad = name.length < 2 ? "Add meg a nevét." : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) ? "Hibás e-mail cím." : pw.length < 8 ? "Az ideiglenes jelszó legalább 8 karakter legyen." : "";
         if(bad){ out.className = "fc-an-out err"; out.innerHTML = "✗ " + esc(bad); return; }
         b.disabled = true; const o = b.textContent; b.textContent = "Létrehozás…";
         const r = await api({ action:"createAdmin", name, email:mail, password:pw });

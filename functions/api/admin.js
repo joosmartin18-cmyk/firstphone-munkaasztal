@@ -76,7 +76,7 @@ export async function onRequest({ request, env }) {
         page = j.nextPageToken || ""; } while (page && users.length < 5000);
       return json({ ok: true, users, me: meEmail });
     }
-    if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(email)) return json({ ok: false, error: "hibás e-mail" }, 400);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ ok: false, error: "hibás e-mail" }, 400);
     if (email === ADMIN && (q.action !== "password" || meEmail !== ADMIN)) return json({ ok: false, error: "a fő admin fiókot csak saját maga módosíthatja" }, 403);
     if (email === meEmail && q.action !== "password") return json({ ok: false, error: "a saját fiókodat így nem módosíthatod" }, 400);
 
@@ -85,7 +85,6 @@ export async function onRequest({ request, env }) {
       const name = String(q.name || "").trim().slice(0, 60), pw = String(q.password || "");
       if (name.length < 2) return json({ ok: false, error: "add meg a nevét" }, 400);
       if (pw.length < 8) return json({ ok: false, error: "az ideiglenes jelszó legalább 8 karakter legyen" }, 400);
-      if (/@firstphone\.hu$/.test(email)) return json({ ok: false, error: "ez bolti cím — adminnak adj meg egy saját e-mail címet" }, 400);
       const ca = JSON.stringify({ admin: true, mustChange: true, by: meEmail });
       const u = await byEmail(sa, email);
       if (u) {
