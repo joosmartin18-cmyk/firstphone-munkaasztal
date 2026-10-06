@@ -3775,7 +3775,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261006-154238";</script>
+<script>window.FP_BUILD="20261006-154407";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -5388,18 +5388,20 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function me() { return request.auth.token.email; }
     function isAdmin() { return signedIn() && me() == 'admin@admin.com'; }
+    // csak a FirstPhone boltfiókok (…@firstphone.hu) — egy idegen, saját maga regisztrált fiók semmit nem ér el
+    function isShop() { return signedIn() && me().matches('.*@firstphone[.]hu$'); }
     match /boltok/{uid}/{document=**} {
-      allow read, write: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow read, write: if (isShop() && request.auth.uid == uid) || isAdmin();
     }
     match /{path=**}/kv/{doc} { allow read: if isAdmin(); }
     match /{path=**}/chat/{doc} { allow read: if isAdmin(); }
     match /dm/{room} {
-      allow read: if signedIn() && (me() in resource.data.members || isAdmin());
-      allow create: if signedIn() && me() in request.resource.data.members && request.resource.data.members.size() == 2;
-      allow update: if signedIn() && me() in resource.data.members && request.resource.data.members == resource.data.members;
+      allow read: if (isShop() && me() in resource.data.members) || isAdmin();
+      allow create: if isShop() && me() in request.resource.data.members && request.resource.data.members.size() == 2;
+      allow update: if isShop() && me() in resource.data.members && request.resource.data.members == resource.data.members;
       match /m/{msg} {
-        allow read: if signedIn() && (isAdmin() || me() in get(/databases/$(database)/documents/dm/$(room)).data.members);
-        allow create: if signedIn() && request.resource.data.from == me() && me() in get(/databases/$(database)/documents/dm/$(room)).data.members;
+        allow read: if isAdmin() || (isShop() && me() in get(/databases/$(database)/documents/dm/$(room)).data.members);
+        allow create: if isShop() && request.resource.data.from == me() && me() in get(/databases/$(database)/documents/dm/$(room)).data.members;
       }
     }
   }
