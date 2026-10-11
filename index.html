@@ -924,6 +924,12 @@
   .lf-st:hover{transform:translateY(-1px);}
   .lf-ln{flex:0 0 22px;height:3px;border-radius:3px;background:var(--border);} .lf-ln.on{background:#30b37a;}
   .lf-hint{margin-top:10px;font-size:13px;color:var(--text-dim);} .lf-hint b{color:var(--text);}
+  /* a lépések mindig kiférnek: összehúzódnak, nem csúsznak ki a dobozból */
+  .lf-steps{overflow:visible;padding:3px 3px 2px;}
+  .lf-st{flex:1 1 auto;min-width:0;position:relative;overflow:hidden;}
+  .lf-st span{min-width:0;} .lf-st b,.lf-st small{overflow:hidden;text-overflow:ellipsis;}
+  .lf-ln{flex:0 1 22px;min-width:6px;}
+  @media (max-width:1180px){ .lf-steps{flex-wrap:wrap;gap:6px;} .lf-ln{display:none;} .lf-st{flex:1 1 calc(50% - 6px);} }
   .lt-hero{min-height:230px;}
   .lt-hero::before{background:radial-gradient(520px 260px at 0% 0%,rgba(217,173,70,.18),transparent 70%),radial-gradient(360px 220px at 100% 100%,rgba(79,179,196,.10),transparent 70%);}
   .lt-hero:has(.lt-badge.P)::before{background:radial-gradient(520px 260px at 0% 0%,rgba(139,92,246,.22),transparent 70%),radial-gradient(360px 220px at 100% 100%,rgba(79,179,196,.10),transparent 70%);}
@@ -983,7 +989,7 @@
   @keyframes ltPop{0%{transform:scale(.96);opacity:.4}60%{transform:scale(1.015);opacity:1}100%{transform:none}}
   .lt-st.idle .dot{background:var(--text-faint,#6b6b75);box-shadow:none;animation:none;}
   .lt-adhoc-btn{background:linear-gradient(135deg,#a78bfa,#8b5cf6) !important;color:#fff !important;border:0 !important;}
-  .lt-now{position:relative;} .lt-now .lt-now-x{margin-left:auto;flex:0 0 auto;width:auto !important;padding:8px 12px !important;}
+  .lt2 .lt-now:has(.lt-now-x){flex-wrap:wrap;row-gap:12px;} .lt2 .lt-now .lt-now-t{flex:1 1 0;} .lt-now .lt-now-x{position:relative;flex:1 1 100%;width:100% !important;margin:0;padding:9px 12px !important;justify-content:center;}
   .lt2 .lt-steps{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
   .lt2 .lt-steps li{display:flex;gap:9px;align-items:flex-start;padding:10px 11px;border-radius:14px;background:var(--bg-panel2);border:1px solid var(--border-soft);font-size:12px;line-height:1.4;color:var(--text-dim);}
   .lt2 .lt-steps li b{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#171106;}
@@ -4230,7 +4236,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261011-215212";</script>
+<script>window.FP_BUILD="20261011-215658";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -17150,7 +17156,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const now = document.getElementById("ltNow");
       if(now){ const T = ltType || first.type;
         if(ltData && ltViewOld) now.innerHTML = `<div class="lt-badge ${T}"><b>${T}</b><small>${LT_TYPES[T].day}</small></div>
-          <div class="lt-now-t"><small>📂 Legutóbbi leltár — visszanézés</small><b>${LT_TYPES[T].name}</b><span>${ltData.day ? ltEsc(ltDayLbl(ltData.day)) : "korábbi nap"}</span></div><button type="button" class="action-btn secondary lt-now-x" id="ltOldBack">← Vissza</button>`;
+          <div class="lt-now-t"><small>📂 Legutóbbi leltár</small><b>${LT_TYPES[T].name}</b><span>${ltData.day ? ltEsc(ltDayLbl(ltData.day)) : "korábbi nap"} · visszanézés</span></div><button type="button" class="action-btn secondary lt-now-x" id="ltOldBack">← Vissza a mai Leltár oldalra</button>`;
         else if(ltData && ltData.adhoc && !isToday) now.innerHTML = `<div class="lt-badge ${T}"><b>${T}</b><small>${LT_TYPES[T].day}</small></div>
           <div class="lt-now-t"><small>⚡ Soron kívüli leltár · ma</small><b>${LT_TYPES[T].name}</b><span>${ltFmt(today)} · ${ltWd(today).toLowerCase()} · a rendes: <em>${ltFmt(first.date)} ${dd === 1 ? "(holnap)" : "(" + dd + " nap múlva)"}</em></span></div>`;
         else now.innerHTML = `<div class="lt-badge ${first.type}"><b>${first.type}</b><small>${LT_TYPES[first.type].day}</small></div>
@@ -17259,7 +17265,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         st.forEach((x, i)=>{ const d = x.st.done === x.st.total, cur = i === nextI, pc = x.st.total ? Math.round(x.st.done / x.st.total * 100) : 0;
           h += `<span class="lf-ln${d || cur ? " on" : ""}"></span>` + step(i + 2, d ? "done" : cur ? "cur" : "", LT_CAT[x.s.cat].icon, x.s.cat, `${x.st.done} / ${x.st.total}${x.s.mode === "serial" ? " megvan" : " számolva"} · ${pc}%`, ` data-jump="${ltEsc(x.s.cat)}" style="--pc:${pc}%"`); });
         const allDone = nextI < 0;
-        h += `<span class="lf-ln${allDone ? " on" : ""}"></span>` + step(st.length + 2, allDone ? "cur go" : "", "⬇️", "Leltárív PDF", allDone ? "minden kész — kattints" : "a végén", ` data-pdf="1"`);
+        h += `<span class="lf-ln${allDone ? " on" : ""}"></span>` + step(st.length + 2, allDone ? "cur go" : "", "⬇️", "Leltárív PDF", allDone ? "kész — kattints ide" : "a végén", ` data-pdf="1"`);
         const nx = st[nextI];
         const hint = allDone ? `🎉 <b>Minden kész!</b> Töltsd le a leltárívet (és írd alá).` : nx.s.mode === "serial" ? `👉 <b>Most:</b> olvasd be a <b>${ltEsc(nx.s.cat)}</b> dobozokat — még <b>${nx.st.total - nx.st.done}</b> hiányzik.` : `👉 <b>Most:</b> számold meg a <b>${ltEsc(nx.s.cat)}</b> tételeket — még <b>${nx.st.total - nx.st.done}</b> sor van hátra.`;
         fl.innerHTML = `<div class="lf-top"><div class="lf-bar"><i style="width:${all}%"></i></div><b class="lf-pc">${all}%</b></div><div class="lf-steps">${h}</div><div class="lf-hint">${hint}</div>`; } }
