@@ -4104,7 +4104,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261011-103218";</script>
+<script>window.FP_BUILD="20261011-160411";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4126,6 +4126,10 @@
     /* a beírt boltnévből a bolt pontos belépő címe (pl. „Debrecen Fórum” → debrecen.forum@…) */
     try{ const L = window.fpLoginFor && fpLoginFor(n); if(L) return L + "@" + FP_DOMAIN; }catch(e){}
     return n + "@" + FP_DOMAIN; };
+  /* ugyanannak a boltnak több belépő címe is lehet (pl. régi elírás) — sorban kipróbáljuk mindet */
+  const loginCands = v=>{ const e = toEmail(v), out = [e];
+    try{ if(/@firstphone\.hu$/.test(e) && window.fpStoreFromEmail){ const st = fpStoreFromEmail(e); if(st) Object.entries(window.FP_LOGIN || {}).forEach(([k, id])=>{ if(id === st.id) out.push(k + "@" + FP_DOMAIN); }); } }catch(x){}
+    return Array.from(new Set(out.filter(Boolean))).slice(0, 3); };
   const shopName = ()=>{ const u = S.user; if(!u) return ""; try{ const st = window.fpStoreFromEmail && fpStoreFromEmail(u.email); if(st) return st.label || ("FirstPhone " + st.location); }catch(e){}
     try{ const s = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"); const l = s && s.settings && s.settings.location; if(l) return l + (s.settings.placeDetail ? " " + s.settings.placeDetail : ""); }catch(e){} return u.email.split("@")[0]; };
   const OFF_KEY = "firstphone_cloud_off", DEV_KEY = "firstphone_device_id", CHUNK = 700000;
@@ -4513,7 +4517,9 @@
     b.querySelector("#fcEye").onclick = ()=>{ pw.type = pw.type === "password" ? "text" : "password"; pw.focus(); };
     const done = ()=>{ document.documentElement.classList.remove("fc-locked"); };
     f.onsubmit = async e=>{ e.preventDefault(); go.disabled = true; go.textContent = "Belépés…"; err.textContent = ""; f.classList.remove("shake");
-      try{ await firebase.auth().signInWithEmailAndPassword(toEmail(em.value), pw.value); lsDel(OFF_KEY); if(em.value.trim().toLowerCase() !== "admin") lsSet("firstphone_last_login", em.value.trim()); done(); }
+      try{ let okL = false, lastEx = null;
+        for(const c of loginCands(em.value)){ try{ await firebase.auth().signInWithEmailAndPassword(c, pw.value); okL = true; break; }catch(x1){ lastEx = x1; if(!/wrong-password|invalid-credential|user-not-found|invalid-login/.test(x1 && x1.code || "")) break; } }
+        if(!okL) throw lastEx || new Error("login"); lsDel(OFF_KEY); if(em.value.trim().toLowerCase() !== "admin") lsSet("firstphone_last_login", em.value.trim()); done(); }
       catch(ex){ const c = ex && ex.code || ""; err.textContent = /wrong-password|invalid-credential|user-not-found|invalid-email|invalid-login/.test(c) ? "Hibás boltnév vagy jelszó." : /too-many/.test(c) ? "Túl sok próbálkozás — várj pár percet." : /network/.test(c) ? "Nincs internet — próbáld újra." : "Nem sikerült belépni: " + (ex.message || c);
         void f.offsetWidth; f.classList.add("shake"); go.disabled = false; go.textContent = "Belépés →"; } };
     b.querySelector("#fcOff").onclick = ()=>{ lsSet(OFF_KEY, "1"); b.classList.add("out"); done(); setTimeout(()=> b.remove(), 260); S.state = "offl"; status(); };
@@ -4623,7 +4629,7 @@
     let r; try{ r = await fetch("/api/admin", { method:"POST", headers:{ "content-type":"application/json", authorization:"Bearer " + t }, body:JSON.stringify(body) }); }
     catch(e){ return { ok:false, error:"net" }; }
     const j = await r.json().catch(()=> null);
-    if(!j) return { ok:false, error: r.status === 404 || r.status === 405 ? "noapi" : "HTTP " + r.status };
+    if(!j) return { ok:false, error: r.status === 404 || r.status === 405 || r.status === 501 ? "noapi" : "HTTP " + r.status };
     return j;
   }
   function genPw(){
@@ -4631,17 +4637,33 @@
     const pick = s=> s[R(s.length)];
     let p = pick(U); for(let i = 0; i < 5; i++) p += pick(A); p += "-"; for(let i = 0; i < 4; i++) p += pick(D); return p;
   }
+  /* a bolt lehetséges belépő címei — az első a helyes, a többi régi / elírt változat */
+  function shopMails(s){ const out = [];
+    try{ Object.entries(window.FP_LOGIN || {}).forEach(([loc, id])=>{ if(id === s.id) out.push(loc + "@" + FP_DOMAIN); }); }catch(e){}
+    if(s.e) out.push(String(s.e).toLowerCase()); return Array.from(new Set(out)); }
   function shopRows(users){
-    const map = accCodeMap(), seen = new Set(), rows = [];
+    const seen = new Set(), rows = [];
     (window.FP_SHOPS || []).slice().sort((a, b)=> a.n.localeCompare(b.n, "hu")).forEach(s=>{
-      const e = (map[String(s.c).toUpperCase()] || s.e).toLowerCase(); if(seen.has(e)) return; seen.add(e);
-      rows.push({ name:s.n, code:s.c, email:e, u:users[e] || null });
+      const M = shopMails(s); if(!M.length) return; const ex = M.find(e=> users[e]), e = ex || M[0]; if(seen.has(e)) return; M.forEach(m=> seen.add(m));
+      rows.push({ name:s.n, code:s.c, email:e, good:M[0], alias:!!(ex && ex !== M[0]), u:users[e] || null });
     });
-    Object.keys(users).sort().forEach(e=>{ if(seen.has(e) || e === ADMIN || users[e].admin) return; rows.push({ name:"Egyéb fiók", code:"", email:e, u:users[e] }); });
-    if(S.sup) rows.push({ name:"👑 Fő admin (te)", code:"", email:ADMIN, u:users[ADMIN] || null, admin:true });
+    Object.keys(users).sort().forEach(e=>{ if(seen.has(e) || e === ADMIN || users[e].admin) return; rows.push({ name:"Egyéb fiók", code:"", email:e, good:e, u:users[e] }); });
+    if(S.sup) rows.push({ name:"👑 Fő admin (te)", code:"", email:ADMIN, good:ADMIN, u:users[ADMIN] || null, admin:true });
     return rows;
   }
   const dt = ms=> { if(!ms) return "—"; const d = new Date(ms); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}. ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
+  const FP_SITE = "https://firstphone-munkaasztal.pages.dev";
+  /* belépési adatlap a boltnak: másolható szöveg és nyomtatható lap */
+  const loginTxt = (x, pw)=> `FirstPhone Munkaasztal — belépés\n\nBolt: ${x.name}\nWeboldal: ${FP_SITE}\nBelépés: ${x.name}  (vagy: ${x.email})\nJelszó: ${pw}\n\nBelépéskor elég a bolt nevét beírni. Ha nem megy, írj az adminnak.`;
+  function loginPrint(x, pw){
+    const f = document.createElement("iframe"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden"; document.body.appendChild(f);
+    const d = f.contentDocument; d.open(); d.write(`<!doctype html><html><head><meta charset="utf-8"><title>Belépés — ${esc(x.name)}</title><style>
+      body{font:15px/1.5 Arial,sans-serif;color:#111;margin:40px;} .c{max-width:520px;border:2px solid #111;border-radius:18px;padding:26px 30px;} h1{margin:0 0 4px;font-size:22px;} p.s{margin:0 0 18px;color:#555;}
+      dl{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin:0;} dt{color:#555;} dd{margin:0;font-weight:700;} dd.pw{font:700 20px ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px;} small{display:block;margin-top:18px;color:#555;}</style></head>
+      <body><div class="c"><h1>FirstPhone Munkaasztal</h1><p class="s">Belépési adatok — ${esc(x.name)}</p><dl><dt>Weboldal</dt><dd>${esc(FP_SITE.replace(/^https:\/\//, ""))}</dd><dt>Belépés</dt><dd>${esc(x.name)}<br><span style="font-weight:400;color:#555">vagy: ${esc(x.email)}</span></dd><dt>Jelszó</dt><dd class="pw">${esc(pw)}</dd></dl>
+      <small>Belépéskor elég a bolt nevét beírni. A lapot tedd el biztonságos helyre — ne tűzd ki a pultra.</small></div></body></html>`); d.close();
+    setTimeout(()=>{ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){} setTimeout(()=> f.remove(), 60000); }, 250);
+  }
   async function pwPanel(root){
     const box = root.querySelector(".fc-pw"), list = box.querySelector(".fc-pw-list"), sum = box.querySelector(".fc-pw-sum"), q = box.querySelector(".fc-pw-q");
     list.innerHTML = `<div class="fc-adm-load">Fiókok betöltése…</div>`;
@@ -4653,48 +4675,70 @@
           <li>Cloudflare → <b>Workers &amp; Pages</b> → <b>firstphone-munkaasztal</b> (Pages) → <b>Settings</b> → <b>Variables and Secrets</b> → <b>Add</b>: típus <b>Secret</b>, név <code>FIREBASE_SA</code>, érték: a .json fájl <b>teljes tartalma</b> → <b>Save</b>.</li>
           <li>Cloudflare → <b>Deployments</b> → a legutóbbi → <b>Retry deployment</b>, majd itt frissítsd az oldalt.</li></ol>
           <small>A kulcsot csak a Cloudflare tárolja titkosítva; a böngészőbe sosem kerül le. A .json fájlt utána töröld a gépedről.</small></div>`
-        : r.error === "noapi" || r.error === "net" ? `<div class="fc-pw-setup">Ez csak a weboldalon működik (<b>firstphone-munkaasztal.pages.dev</b>), és csak ha a legújabb verzió már feltöltődött. Frissítsd az oldalt pár perc múlva.</div>`
+        : r.error === "noapi" || r.error === "net" ? `<div class="fc-pw-setup">A fiókok kezelése csak a weboldalon működik (<b>firstphone-munkaasztal.pages.dev</b>), és csak ha a legújabb verzió már feltöltődött. Frissítsd az oldalt pár perc múlva.</div>`
         : `<div class="fc-adm-load err">⚠ ${esc(r.error || "Hiba")}</div>`;
       sum.textContent = ""; return;
     }
     root.dataset.api = "1";
     const users = {}; (r.users || []).forEach(u=> users[String(u.email).toLowerCase()] = u);
-    let rows = shopRows(users), open = null;
+    let rows = shopRows(users), open = null, flt = "all";
+    const top = box.querySelector(".fc-pw-top");
+    if(top && !top.querySelector(".fc-pw-f")) top.insertAdjacentHTML("beforeend", `<div class="ax-seg fc-pw-f">${[["all","Mind"],["never","⏳ Nem lépett be"],["noacc","Nincs fiók"],["dis","⛔ Letiltva"]].map(([k, t])=> `<button type="button" data-pf2="${k}" class="${k === "all" ? "on" : ""}">${t}</button>`).join("")}</div>`);
+    const kindOf = x=> x.admin ? "adm" : !x.u ? "noacc" : x.u.disabled ? "dis" : !x.u.last ? "never" : "ok";
     const draw = ()=>{
       const f = q.value.trim().toLowerCase();
-      const L = rows.filter(x=> !f || (x.name + " " + x.code + " " + x.email).toLowerCase().includes(f));
-      const has = rows.filter(x=> x.u && !x.admin).length, noacc = rows.filter(x=> !x.u && !x.admin).length;
+      const L = rows.filter(x=> (!f || (x.name + " " + x.code + " " + x.email + " " + x.good).toLowerCase().includes(f)) && (flt === "all" || kindOf(x) === flt));
+      const shopR = rows.filter(x=> !x.admin), has = shopR.filter(x=> x.u).length, noacc = shopR.filter(x=> !x.u).length, never = shopR.filter(x=> kindOf(x) === "never").length, dis = shopR.filter(x=> kindOf(x) === "dis").length;
       sum.textContent = `${has} bolti fiók · ${noacc} bolt fiók nélkül`;
+      try{ root.dispatchEvent(new CustomEvent("axacc", { detail:{ has, noacc, never, dis } })); }catch(e){}
       list.innerHTML = L.map(x=>{
-        const st = !x.u ? `<span class="fc-pw-st no">— nincs fiók</span>` : x.u.disabled ? `<span class="fc-pw-st dis">⛔ letiltva</span>` : `<span class="fc-pw-st ok">✓ aktív</span>`;
-        const meta = x.u ? `utolsó belépés: ${dt(x.u.last)} · jelszó módosítva: ${dt(x.u.pwAt || x.u.created)}` : "még nincs létrehozva";
+        const k = kindOf(x);
+        const st = k === "noacc" ? `<span class="fc-pw-st no">— nincs fiók</span>` : k === "dis" ? `<span class="fc-pw-st dis">⛔ letiltva</span>` : k === "never" ? `<span class="fc-pw-st wait">⏳ még nem lépett be</span>` : `<span class="fc-pw-st ok">✓ aktív</span>`;
+        const meta = x.u ? `utolsó belépés: ${x.u.last ? dt(x.u.last) : "még soha"} · jelszó: ${dt(x.u.pwAt || x.u.created)}` : "még nincs létrehozva";
         const act = !x.u ? `<button type="button" data-a="new">＋ Fiók létrehozása</button>`
-          : `<button type="button" data-a="pw">🔑 Új jelszó</button>${x.admin ? "" : `<button type="button" class="warn" data-a="dis">${x.u.disabled ? "✅ Engedélyezés" : "⛔ Letiltás"}</button>`}`;
-        const ed = open && open.email === x.email ? `<div class="fc-pw-ed"><input type="text" value="${esc(open.pw)}" spellcheck="false" autocomplete="new-password" aria-label="Új jelszó"><button type="button" data-a="gen" title="Új véletlen jelszó">🎲</button><button type="button" class="go" data-a="save">${open.kind === "new" ? "Létrehozás" : "Jelszó mentése"}</button><button type="button" data-a="cancel">Mégse</button></div>` : "";
+          : `<button type="button" data-a="pw">🔑 Új jelszó</button>${x.admin ? "" : `<button type="button" data-a="reset" title="Új jelszó, letiltás feloldása, belépési cím javítása">↺ Újrakezdés</button><button type="button" class="warn" data-a="dis">${x.u.disabled ? "✅ Engedélyezés" : "⛔ Letiltás"}</button>`}`;
+        const warn = x.alias ? `<div class="fc-pw-warn">⚠ A belépési cím el van írva: <b>${esc(x.email)}</b> → helyesen <b>${esc(x.good)}</b>. Az <b>↺ Újrakezdés</b> kijavítja (a bolt adatai megmaradnak).</div>` : "";
+        let ed = "";
+        if(open && open.email === x.email){
+          ed = open.kind === "reset"
+            ? `<div class="fc-pw-ed rs"><p>↺ <b>Újrakezdés:</b> a bolt új jelszót kap, a letiltás feloldódik, és ha kell, a belépési cím is kijavul. A bolt adatai (beosztás, leltár…) megmaradnak.</p>
+                <label><span>Belépési cím</span><input class="to" type="text" value="${esc(open.to)}" spellcheck="false" autocomplete="off" aria-label="Belépési cím"></label>
+                <label><span>Új jelszó</span><input class="pw" type="text" value="${esc(open.pw)}" spellcheck="false" autocomplete="new-password" aria-label="Új jelszó"></label>
+                <div class="fc-pw-eb"><button type="button" data-a="gen" title="Új véletlen jelszó">🎲</button><button type="button" class="go" data-a="save">↺ Újrakezdés</button><button type="button" data-a="cancel">Mégse</button></div></div>`
+            : `<div class="fc-pw-ed"><input class="pw" type="text" value="${esc(open.pw)}" spellcheck="false" autocomplete="new-password" aria-label="Új jelszó"><button type="button" data-a="gen" title="Új véletlen jelszó">🎲</button><button type="button" class="go" data-a="save">${open.kind === "new" ? "Létrehozás" : "Jelszó mentése"}</button><button type="button" data-a="cancel">Mégse</button></div>`;
+        }
         const msg = x.msg ? `<div class="fc-pw-msg ${x.msg.c}">${x.msg.h}</div>` : "";
-        return `<div class="fc-pw-r${x.u && x.u.disabled ? " off" : ""}${ed ? " open" : ""}" data-e="${esc(x.email)}"><div><b>${esc(x.name)}${x.code ? ` <small style="display:inline;font-weight:800;letter-spacing:.5px">· ${esc(x.code)}</small>` : ""}</b><small>${esc(x.email)}</small></div><div>${st}<small>${esc(meta)}</small></div><div class="fc-pw-a">${act}</div>${ed}${msg}</div>`;
+        return `<div class="fc-pw-r k-${k}${ed ? " open" : ""}" data-e="${esc(x.email)}"><div><b>${esc(x.name)}${x.code ? ` <small style="display:inline;font-weight:800;letter-spacing:.5px">· ${esc(x.code)}</small>` : ""}</b><small>${esc(x.email)}</small></div><div>${st}<small>${esc(meta)}</small></div><div class="fc-pw-a">${act}</div>${warn}${ed}${msg}</div>`;
       }).join("") || `<div class="fc-adm-load">Nincs találat.</div>`;
-      const inp = list.querySelector(".fc-pw-ed input"); if(inp) inp.oninput = ()=>{ open.pw = inp.value; };
+      list.querySelectorAll(".fc-pw-ed input").forEach(inp=>{ inp.oninput = ()=>{ if(inp.classList.contains("to")) open.to = inp.value; else open.pw = inp.value; }; });
     };
     q.oninput = draw; draw();
+    box.onclick = e=>{ const fb = e.target.closest("[data-pf2]"); if(!fb) return; flt = fb.dataset.pf2; box.querySelectorAll("[data-pf2]").forEach(z=> z.classList.toggle("on", z === fb)); draw(); };
     list.onclick = async e=>{
       const b = e.target.closest("[data-a]"); if(!b) return;
       const row = b.closest("[data-e]"), x = rows.find(r=> r.email === row.dataset.e); if(!x) return;
       const a = b.dataset.a;
-      if(a === "pw" || a === "new"){ rows.forEach(r=> r.msg = null); open = { email:x.email, pw:genPw(), kind:a }; draw(); const i = list.querySelector(".fc-pw-ed input"); if(i){ i.focus(); i.select(); } return; }
+      if(a === "pw" || a === "new" || a === "reset"){ rows.forEach(r=> r.msg = null); open = { email:x.email, pw:genPw(), kind:a, to:x.good || x.email }; draw(); const i = list.querySelector(".fc-pw-ed input.pw"); if(i){ i.focus(); i.select(); } return; }
       if(a === "gen"){ open.pw = genPw(); draw(); return; }
       if(a === "cancel"){ open = null; draw(); return; }
       if(a === "save"){
-        const pw = (open.pw || "").trim(); if(pw.length < 6){ x.msg = { c:"err", h:"A jelszó legalább 6 karakter legyen." }; draw(); return; }
+        const pw = (open.pw || "").trim(), to = String(open.to || x.email).trim().toLowerCase();
+        if(pw.length < 6){ x.msg = { c:"err", h:"A jelszó legalább 6 karakter legyen." }; draw(); return; }
+        if(open.kind === "reset" && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)){ x.msg = { c:"err", h:"Hibás belépési cím." }; draw(); return; }
         b.disabled = true; b.textContent = "…";
-        const res = await api({ action: open.kind === "new" ? "create" : "password", email:x.email, password:pw });
+        const kind = open.kind;
+        const res = await api(kind === "reset" ? { action:"reset", email:x.email, to, password:pw } : { action: kind === "new" ? "create" : "password", email:x.email, password:pw });
         if(res.ok){
-          x.msg = { c:"ok", h:`✓ ${open.kind === "new" ? "Fiók létrehozva" : "Új jelszó beállítva"}: <code>${esc(pw)}</code> <button type="button" data-a="copy" data-v="${esc(pw)}">⧉ Másolás</button> — írd fel / add át most, később nem látszik (a Firebase sem tárolja olvashatóan).` };
-          if(open.kind === "new") x.u = { email:x.email, disabled:false, created:Date.now(), last:0, pwAt:Date.now() }; else if(x.u) x.u.pwAt = Date.now();
+          if(kind === "reset" && to !== x.email){ x.email = to; x.alias = false; }
+          if(kind === "new" || (kind === "reset" && res.created)) x.u = { email:x.email, disabled:false, created:Date.now(), last:0, pwAt:Date.now() };
+          else if(x.u){ x.u.pwAt = Date.now(); if(kind === "reset") x.u.disabled = false; }
+          const head = kind === "new" ? "Fiók létrehozva" : kind === "reset" ? (res.moved ? "Újrakezdve — a belépési cím kijavítva" : "Újrakezdve") : "Új jelszó beállítva";
+          x.msg = { c:"ok", h:`✓ ${head}. Jelszó: <code>${esc(pw)}</code> <span class="fc-pw-card"><button type="button" data-a="copy" data-v="${esc(loginTxt(x, pw))}">⧉ Belépési adatok másolása</button><button type="button" data-a="print" data-v="${esc(pw)}">🖨 Belépési lap</button></span><small>Add át most a boltnak — később nem látszik (a Firebase sem tárolja olvashatóan).</small>` };
         } else x.msg = { c:"err", h:"✗ " + esc(res.error || "Hiba") };
         open = null; draw(); return;
       }
       if(a === "copy"){ try{ await navigator.clipboard.writeText(b.dataset.v); b.textContent = "✓ Kimásolva"; }catch(_){ } return; }
+      if(a === "print"){ loginPrint(x, b.dataset.v); return; }
       if(a === "dis"){
         const to = !x.u.disabled; b.disabled = true;
         const res = await api({ action:"disable", email:x.email, disabled:to });
@@ -4855,7 +4899,7 @@
       { ic:"📢", c:"#5b95ff", sc:"nwan", t:"Közlemények az admintól", x:"Fontos hírek a munkaasztal tetején.", b:["Három fajta: 💬 tájékoztatás, ⚠️ fontos, ✅ jó hír","Lehet <b>lejárata</b> is — utána magától eltűnik","Az „✓ Elolvastam” gombbal bezárod"] },
       { ic:"🔔", c:"#4fb3c4", sc:"nwsnd", t:"Új hangok", x:"Modernebb, iPhone-szerű hangjelzések mindenhol.", b:["<b>Leltár</b>: lágy „pling” ha megvan, mély „tom-tom” ha nincs a listán","<b>Chat</b>: háromhangú értesítő új üzenetnél","<b>Csomag / Selejt</b>: rövid megerősítő hang"] },
       { ic:"🎨", c:"#6f7ff5", sc:"nwhd", t:"Színes fejléc", x:"Minden program saját színt kapott — egy pillantásra látod, hol vagy.", b:["Fent egy panelben a logó, a gombok és a programok, <b>középen</b>","Telefonon csak az ikonok látszanak — a kiválasztottnál a neve is","A 🎁 gomb a ❓ mellett jelzi, ha újdonság van"] },
-      { ic:"🔐", c:"#d9ad46", sc:"nwlg", t:"Belépő képernyő", x:"Gyorsabb és szebb belépés.", b:["Beírás közben <b>javasolja a boltot</b> — egy kattintás, és kész","Megjegyzi, melyik bolttal léptél be legutóbb (↺)","Nagy gépen jobb oldalt élő bemutató mutatja, mit tud a Munkaasztal"] },
+      { ic:"🔐", c:"#d9ad46", sc:"nwlg", t:"Belépő képernyő", x:"Gyorsabb és szebb belépés.", b:["Beírás közben <b>javasolja a boltot</b> — egy kattintás, és kész","Megjegyzi, melyik bolttal léptél be legutóbb (↺)","Nagy gépen jobb oldalt élő bemutató mutatja, mit tud a Munkaasztal","Ha a bolt belépési címe régen el volt írva, a régi és a helyes is működik (pl. <b>Vásárosnamény</b>)"] },
       { ic:"⬇️", c:"#2ea472", sc:"nwd", t:"Letöltés bármelyik gépről", x:"Ha egy idegen vagy zárolt gépen nem indul el a letöltés, van megoldás.", b:["Minden letöltés után lent megjelenik egy kis sáv","<b>⬇ Letöltés újra</b> · <b>🗂 Megnyitás új lapon</b> · <b>🖨 Nyomtatás</b>","iPhone-on és iPaden a megosztás lap nyílik"] },
       { ic:"🔄", c:"#4fb3c4", sc:"nwu", t:"Mindig friss", x:"A munkaasztal magától frissül — nem kell semmit nyomni.", b:["Ha új verzió jön, pár másodperc múlva magától frissül (a munkád előtte elmentődik)","Ha új dia van, a 🎁 gomb <b>színes lesz</b> és kiírja, hány új (pl. <b>„3 új”</b>) — bent az új diák <b>✨ ÚJ</b> jelet kapnak, fent egy gomb odaugrik","Az újdonságok és a súgó <b>mindig az elejéről</b> indulnak"] },
       { ic:"❓", c:"#d9ad46", sc:"nwh", t:"Ha elakadsz", x:"Minden oldalnak saját, animált súgója van.", b:["Fent a <b>❓</b> gomb: lépésről lépésre, képekkel","<b>▶ Bemutató</b>: körbevezet az egész munkaasztalon","Kérdés? Írj a <b>💬 Chatben</b> — hiba? Nyomd meg a <b>🐞</b> gombot"] }
@@ -6219,6 +6263,8 @@ service cloud.firestore {
       setCls(); if(prevAd){ b.classList.add("quiet"); b.style.visibility = "hidden"; }
       const NAV = [["Áttekintés", [["dash","Irányítópult"]]], ["Boltok", [["shops","Boltok"], ["acc","Fiókok"]]],
         ["Kommunikáció", [["inbox","Üzenetek"], ["tix","Hibajegyek"], ["ann","Közlemények"], ["news","Újdonságok"]]], ["Rendszer", [["set","Beállítások"], ["data","Adatok és napló"]]]];
+      const NAVE = { dash:"📊", shops:"🏬", acc:"🔑", inbox:"💬", tix:"🐞", ann:"📢", news:"🎁", set:"⚙️", data:"🗄️" };
+      const NCOL = { dash:"#7b8cff", shops:"#4fb3c4", acc:"#d9ad46", inbox:"#8e7ff5", tix:"#f0953a", ann:"#5b95ff", news:"#d6589a", set:"#30b37a", data:"#9aa3b5" };
       const TITLES = { dash:["Irányítópult","Minden bolt egy pillantással — ami figyelmet kér, az van legfelül."], shops:["Boltok","Szűrd, rendezd, kattints egy boltra az adatlapjához."],
         acc:["Fiókok","Belépések, jelszavak, letiltás — csak az admin látja."], inbox:["Üzenetek","Beszélgetések a boltokkal, egy helyen."],
         tix:["Hibajegyek","A boltok bejelentései — állapot, prioritás, válasz a bejelentőnek."], ann:["Közlemények","Üzenet a munkaasztal tetejére, egy vagy több boltnak, lejárattal."],
@@ -6229,20 +6275,18 @@ service cloud.firestore {
       const seg = (cls, attr, items, on)=> `<div class="ax-seg ${cls}">${items.map(([k, t])=> `<button type="button" data-${attr}="${k}" class="${String(k) === String(on) ? "on" : ""}">${t}</button>`).join("")}</div>`;
       const sw = (attr, k, on, lbl)=> `<button type="button" class="ax-sw${on ? " on" : ""}" data-${attr}="${k}" role="switch" aria-checked="${on ? "true" : "false"}" aria-label="${esc(lbl || k)}"></button>`;
       const srow = (t, s, ctl)=> `<div class="ax-srow"><div><b>${t}</b><small>${s}</small></div><div class="ax-sctl">${ctl}</div></div>`;
-      b.innerHTML = `<div class="ax-scrim"></div><div class="ax-app">
-        <aside class="ax-side"><div class="ax-brand"><span class="ax-logo">FP</span><div><b>FirstPhone</b><small>Admin konzol</small></div></div>
-          <nav class="ax-nav">${NAV.map(([g, L])=> `<div class="ax-ng">${g}</div>` + L.map(([k, t])=> `<button type="button" data-nav="${k}">${axI(k)}<span>${t}</span><em data-cnt="${k}" hidden></em></button>`).join("")).join("")}</nav>
-          <div class="ax-sfoot"><div class="ax-me"><span class="ax-meav">${esc((S.adminName || "A").trim().charAt(0).toUpperCase() || "A")}</span><div><b>${esc(S.adminName || "Admin")}${S.sup ? ` <i class="ax-mesup" title="Fő admin">👑</i>` : ""}</b><small title="${esc(S.user.email)}">${esc(S.user.email)}</small></div></div>
-            <button type="button" class="ax-sbtn" data-x="mypw" title="Jelszó módosítása">${axI("key")}<span>Jelszó módosítása</span></button>
-            ${S.target ? `<button type="button" class="ax-sbtn" data-x="back" title="Vissza a bolthoz">${axI("back")}<span>Vissza a bolthoz</span></button>` : ""}<button type="button" class="ax-sbtn" data-x="out" title="Kijelentkezés">${axI("out")}<span>Kijelentkezés</span></button></div></aside>
-        <div class="ax-main">
-          <header class="ax-top"><button type="button" class="ax-ib ax-burg" data-x="menu" title="Menü">${axI("menu")}</button>
-            <div class="ax-crumb"><small>Admin</small><span>/</span><b class="ax-title">Irányítópult</b></div>
+      b.innerHTML = `<div class="ax-scrim"></div><div class="ax-app"><div class="ax-main"><div class="ax-body">
+          <header class="ax-hdr"><div class="ax-hrow">
+            <div class="ax-brand"><span class="ax-lg"><img class="ax-lgi" alt="FirstPhone Admin" hidden><span class="ax-logo">FP</span></span><div class="ax-bt"><b>Admin konzol</b><small class="ax-bsub">FirstPhone · minden bolt egy helyen</small></div></div>
+            <span class="ax-title" hidden>Irányítópult</span>
             <div class="ax-search">${axI("srch")}<input class="ax-gq" type="search" placeholder="Bolt vagy jegy keresése…" autocomplete="off" spellcheck="false"><kbd>Ctrl K</kbd><div class="ax-gres" hidden></div></div>
-            <div class="ax-status"><span class="ax-ldot"></span><span class="ax-lt">Betöltés…</span></div>
-            <button type="button" class="ax-ib ax-rl" data-x="reload" title="Adatok frissítése most">${axI("rl")}</button><button type="button" class="ax-ib ax-thb" data-x="theme" title="Világos / sötét mód"><span class="ax-thi-d">${axI("moon")}</span><span class="ax-thi-l">${axI("sun")}</span></button><button type="button" class="ax-ib ax-tout" data-x="out" title="Kijelentkezés">${axI("out")}</button></header>
-          <div class="ax-body">
-            <div class="ax-ph"><div><h1 class="ax-h1">Irányítópult</h1><p class="ax-sub"></p></div><div class="ax-pha"></div></div>
+            <div class="ax-hbtns"><div class="ax-status"><span class="ax-ldot"></span><span class="ax-lt">Betöltés…</span></div>
+              <button type="button" class="ax-ib ax-rl" data-x="reload" title="Adatok frissítése most">${axI("rl")}</button><button type="button" class="ax-ib ax-thb" data-x="theme" title="Világos / sötét mód"><span class="ax-thi-d">${axI("moon")}</span><span class="ax-thi-l">${axI("sun")}</span></button>
+              <button type="button" class="ax-ib" data-x="mypw" title="Jelszavam módosítása">${axI("key")}</button>${S.target ? `<button type="button" class="ax-ib" data-x="back" title="Vissza a bolthoz">${axI("back")}</button>` : ""}
+              <span class="ax-me" title="${esc(S.user.email)}"><span class="ax-meav">${esc((S.adminName || "A").trim().charAt(0).toUpperCase() || "A")}</span><span class="ax-men"><b>${esc(S.adminName || "Admin")}${S.sup ? ` <i class="ax-mesup" title="Fő admin">👑</i>` : ""}</b><small>${S.sup ? "fő admin" : "admin"}</small></span></span>
+              <button type="button" class="ax-ib ax-tout" data-x="out" title="Kijelentkezés">${axI("out")}</button></div></div>
+            <nav class="ax-nav">${NAV.flatMap(([g, L])=> L).map(([k, t], i)=> `<button type="button" data-nav="${k}" title="${t} (Alt+${i + 1})"><i class="ps-i">${NAVE[k]}</i><span class="ps-t">${k === "data" ? "Adatok" : t}</span><em data-cnt="${k}" hidden></em></button>`).join("")}</nav></header>
+            <div class="ax-ph"><span class="ax-phi">📊</span><div class="ax-pht"><h1 class="ax-h1">Irányítópult</h1><p class="ax-sub"></p></div><div class="ax-phs"></div><div class="ax-pha"></div></div>
             <section class="ax-pane" data-pane="dash"><div class="ax-kpis"><div class="ax-empty">Adatok betöltése…</div></div>
               <div class="ax-g2"><div class="ax-card"><div class="ax-ch"><h3>Figyelmet igényel</h3><span class="ax-b ax-attn">0</span></div><div class="ax-attl"></div></div>
                 <div class="ax-card"><div class="ax-ch"><h3>Bolt aktivitás</h3><small>utolsó mentés alapján</small></div><div class="ax-act"></div></div></div>
@@ -6317,6 +6361,7 @@ service cloud.firestore {
       document.body.appendChild(b); document.documentElement.classList.add("fc-locked");
       const $ = s=> b.querySelector(s), $$ = s=> Array.from(b.querySelectorAll(s));
       const body = $(".ax-body"), gq = $(".ax-gq"), gres = $(".ax-gres");
+      try{ if(window.fpLogoFor) Promise.resolve(fpLogoFor("Admin")).then(u=>{ const i = $(".ax-lgi"); if(i && u){ i.src = u; i.hidden = false; const l = $(".ax-logo"); if(l) l.hidden = true; } }).catch(()=>{}); }catch(e){}
       /* --- állapot (minden itt, a betöltés előtt — így egy korai kattintás sem dob hibát) --- */
       let list = [], orph = [], none = [], loadErr = null, loadedAt = Date.now(), soft = false, liveT = null, pwLoaded = false;
       const unsubs = [], threads = {}, metas = {}, seenAt = {};
@@ -6352,12 +6397,32 @@ service cloud.firestore {
       function nav(k){ if(!TITLES[k]) k = "dash";
         $$(".ax-nav [data-nav]").forEach(x=> x.classList.toggle("on", x.dataset.nav === k)); $$(".ax-pane").forEach(x=> x.classList.toggle("on", x.dataset.pane === k));
         $(".ax-title").textContent = TITLES[k][0]; $(".ax-h1").textContent = TITLES[k][0]; $(".ax-sub").textContent = TITLES[k][1];
+        $(".ax-ph").style.setProperty("--nc", NCOL[k]); $(".ax-phi").textContent = NAVE[k]; const ph = $(".ax-ph"); ph.classList.remove("in"); void ph.offsetWidth; ph.classList.add("in"); drawHero(k);
+        { const nb = $(`.ax-nav [data-nav="${k}"]`); if(nb && nb.scrollIntoView && window.innerWidth < 900) try{ nb.scrollIntoView({ block:"nearest", inline:"center", behavior:"smooth" }); }catch(e){} }
         $(".ax-pha").innerHTML = PHA[k] ? PHA[k]() : ""; b.classList.remove("menu");
         try{ sessionStorage.setItem("fp_admin_tab", k); }catch(e){} body.scrollTop = 0;
         if(k === "acc" && !pwLoaded){ pwLoaded = true; pwPanel(b); }
         if(k === "inbox"){ drawCts(); if(curU && curU !== "*") drawThread(); }
         if(k === "tix") drawTix();
       }
+      /* --- a lap tetején lévő kártya számai (mint a bolti oldalak „NYITOTT / MA / LEJÁRT” jelzői) --- */
+      let accSt = null; b.addEventListener("axacc", e=>{ accSt = e.detail; drawHero(); });
+      function drawHero(k){ try{
+        if(!k){ const on = b.querySelector(".ax-nav [data-nav].on"); k = on ? on.dataset.nav : "dash"; }
+        const tot = list.length + none.length, live = list.filter(x=> presInfo(x.email).k === "live").length, T = tixAll(), op = T.filter(m=> m.st !== "done");
+        const un = list.reduce((a, x)=> a + unreadOf(x.uid), 0), nOn = ["chat","dm","gif","bug"].filter(z=> appC[z] !== false).length;
+        const C = { dash:[["Belépett", `${list.length}/${tot}`], ["Most bent", live, live ? "#3ecf8e" : ""], ["Nyitott jegy", op.length, op.length ? "#f0953a" : ""]],
+          shops:[["Belépett", list.length], ["Ma aktív", list.filter(x=> x.ms >= day0()).length, "#3ecf8e"], ["Nem lépett be", none.length, none.length ? "#f0953a" : ""]],
+          acc: accSt ? [["Fiók", accSt.has], ["Nem lépett be", accSt.never, accSt.never ? "#f0953a" : ""], ["Letiltva", accSt.dis, accSt.dis ? "#ef5a5a" : ""]] : [["Belépett", list.length], ["Nem lépett be", none.length, none.length ? "#f0953a" : ""]],
+          inbox:[["Olvasatlan", un, un ? "#9b7cf0" : ""], ["Beszélgetés", list.filter(x=> (threads[x.uid] || []).some(m=> m.type !== "bug")).length]],
+          tix:[["Új", T.filter(m=> (m.st || "new") === "new").length, "#f0953a"], ["Folyamatban", T.filter(m=> m.st === "wip").length, "#5b95ff"], ["Sürgős", op.filter(m=> m.prio === "hi").length, "#ef5a5a"]],
+          ann:[["Kint lévő", list.filter(x=> x.msg).length, "#5b95ff"]],
+          news:[["Állapot", newsCfg.on ? "BE" : "KI", newsCfg.on ? "#3ecf8e" : ""], ["Megnézte", `${list.filter(seenOf).length}/${tot}`]],
+          set:[["Funkció", `${nOn}/4`, nOn === 4 ? "#3ecf8e" : "#f0953a"]],
+          data:[["Boltadat", list.length], ["Gazdátlan", orph.length, orph.length ? "#f0953a" : ""], ["Napló", LOG.length]] };
+        $(".ax-phs").innerHTML = (C[k] || []).map(([l, v, c])=> `<span class="ax-stc"${c ? ` style="--sc:${c}"` : ""}><small>${l}</small><b>${v}</b></span>`).join("");
+        const bs = $(".ax-bsub"); if(bs && (list.length || none.length)) bs.textContent = `${list.length} / ${tot} bolt belépett${live ? ` · ${live} most bent` : ""}`;
+      }catch(e){} }
       /* --- segédek --- */
       const nameOf = x=> x.loc ? "FirstPhone " + x.loc + (x.place && !/tesco/i.test(x.loc) ? " " + x.place : "") : (x.email || "Névtelen bolt");
       const shortN = x=> nameOf(x).replace(/^FirstPhone\s+/i, "");
@@ -6397,6 +6462,7 @@ service cloud.firestore {
         const g = t.closest("[data-go]"); if(g){ const [k, f] = g.dataset.go.split(":"); if(k === "shops"){ sFilt = f || "all"; segOn("ax-sf", "sf", sFilt); drawShops(); } nav(k); return; }
         const tx = t.closest("[data-tix]"); if(tx){ gq.value = ""; gres.hidden = true; openTix(tx.dataset.tix); return; }
         const cu = t.closest("[data-cu]"); if(cu){ gq.value = ""; gres.hidden = true; if(!paneOn("inbox")) nav("inbox"); pick(cu.dataset.cu); return; }
+        const ac = t.closest("[data-acc]"); if(ac){ nav("acc"); segOn("ax-accs", "sub", "pw"); $$("[data-subp]").forEach(p=> p.hidden = p.dataset.subp !== "pw"); const pq = $(".fc-pw-q"); if(pq){ pq.value = ac.dataset.acc; pq.dispatchEvent(new Event("input")); } return; }
         const ux = t.closest("[data-uid]"); if(ux){ gq.value = ""; gres.hidden = true; detail(ux.dataset.uid); return; }
         const sb = t.closest("[data-sub]"); if(sb){ segOn("ax-accs", "sub", sb.dataset.sub); $$("[data-subp]").forEach(p=> p.hidden = p.dataset.subp !== sb.dataset.sub); if(sb.dataset.sub === "adm" && !b.dataset.admL){ b.dataset.admL = "1"; admPanel(b); } return; }
         if(t.closest("[data-x='mypw']")){ pwModal(false); return; }
@@ -6454,7 +6520,8 @@ service cloud.firestore {
         if(a === "logclr"){ if(!arm(x, "Biztosan törlöd a naplót?")) return; LOG = []; logRef.set({ v:"[]", parts:0, by:"admin", n:Date.now() }).catch(()=>{}); drawLog(); return; }
         if(a === "nonet"){ noneOpen = !noneOpen; drawShops(); return; }
       }
-      function keyH(e){ if((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === "k" && b.isConnected){ e.preventDefault(); gq.focus(); gq.select(); } }
+      function keyH(e){ if((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === "k" && b.isConnected){ e.preventDefault(); gq.focus(); gq.select(); }
+        if(e.altKey && !e.ctrlKey && !e.metaKey && /^[1-9]$/.test(e.key) && b.isConnected && !document.querySelector(".ax-drw")){ const L = NAV.flatMap(([g, l])=> l), it = L[+e.key - 1]; if(it){ e.preventDefault(); nav(it[0]); } } }
       document.addEventListener("keydown", keyH);
       /* --- globális kereső --- */
       gq.oninput = ()=>{ const f = gq.value.trim().toLowerCase(); if(!f){ gres.hidden = true; return; }
@@ -6470,7 +6537,8 @@ service cloud.firestore {
       /* --- adatok betöltése --- */
       try{ const all = await storeList(); list = all.filter(x=> !x.orph); orph = all.filter(x=> x.orph); }catch(e){ loadErr = e; }
       const have = new Set(list.map(x=> String(x.email || "").toLowerCase())), cm = accCodeMap();
-      none = (window.FP_SHOPS || []).map(s=> ({ n:s.n, a:s.a, c:s.c, e:(cm[String(s.c).toUpperCase()] || s.e).toLowerCase() })).filter(s=> !have.has(s.e)).sort((a, c)=> a.n.localeCompare(c.n, "hu"));
+      const sidOf = e=>{ try{ const st = window.fpStoreFromEmail && fpStoreFromEmail(e); return st ? st.id : ""; }catch(_){ return ""; } }, haveId = new Set(list.map(x=> sidOf(x.email)).filter(Boolean));
+      none = (window.FP_SHOPS || []).map(s=> ({ n:s.n, a:s.a, c:s.c, id:s.id, e:(cm[String(s.c).toUpperCase()] || s.e).toLowerCase() })).filter(s=> !have.has(s.e) && !haveId.has(s.id)).sort((a, c)=> a.n.localeCompare(c.n, "hu"));
       const cfgRef = colFor(S.user.uid).doc("news_cfg"), appRef = colFor(S.user.uid).doc("app_cfg");
       const rd = async r=>{ try{ const d = await r.get(); return d.exists && d.data() && d.data().v ? JSON.parse(d.data().v) : null; }catch(e){ return null; } };
       const [nc, ac, lg] = await Promise.all([rd(cfgRef), rd(appRef), rd(logRef)]);
@@ -6508,7 +6576,7 @@ service cloud.firestore {
         $(".ax-dtix").innerHTML = T.slice(0, 5).map(m=> `<div class="ax-li" data-tix="${esc(m.key)}"><span class="ax-tid">${tixId(m)}</span><span class="tx"><span>${esc(firstLine(m.text))}</span><small>${esc(m.shop)} · ${rel(m.ms)}</small></span>${stBadge(m)}</div>`).join("") || `<div class="ax-empty">Még nincs hibajegy.</div>`;
         const M = []; list.forEach(x=> (threads[x.uid] || []).forEach(m=>{ if(m.from === "s" && m.type !== "bug") M.push({ x, m }); })); M.sort((a, c)=> c.m.ms - a.m.ms);
         $(".ax-dmsg").innerHTML = M.slice(0, 5).map(({ x, m })=> `<div class="ax-li${m.ms > +(lsGet(adSeenK(x.uid)) || 0) ? " un" : ""}" data-cu="${esc(x.uid)}">${axAv(x)}<span class="tx"><span><b>${esc(shortN(x))}</b></span><small>${esc(msgTxt(m))}</small></span><time>${when(m.ms)}</time></div>`).join("") || `<div class="ax-empty">Még nem írt egy bolt sem.</div>`;
-        cnt("shops", tot || null); cnt("tix", newT.length || null, true); cnt("inbox", un || null, true); cnt("data", orph.length || null); cnt("news", newsCfg.on ? `${list.filter(seenOf).length}/${tot}` : null);
+        cnt("shops", tot || null); cnt("tix", newT.length || null, true); cnt("inbox", un || null, true); cnt("data", orph.length || null); cnt("news", newsCfg.on ? `${list.filter(seenOf).length}/${tot}` : null); drawHero();
       }
       let rT = null; function later(){ clearTimeout(rT); rT = setTimeout(()=>{ drawCts(); drawTix(); drawDash(); drawShopsIfOn(); }, 120); }
       /* --- 🏬 boltok --- */
@@ -6530,7 +6598,7 @@ service cloud.firestore {
             <span class="k"><span><small>Csomag</small><b>${x.wait == null ? "—" : x.wait}</b></span><span title="Selejt ma"><small>Selejt</small><b>${x.sx == null ? "—" : x.sx}</b></span><span><small>Dolgozó</small><b>${x.emp == null ? "—" : x.emp}</b></span><span><small>Kassza</small><b>${!x.ks || x.ks.diff == null ? "—" : x.ks.diff === 0 ? "✓" : "⚠"}</b></span></span>
             <span class="f"><span><span class="ax-dt ${stDot(x)}"></span>${stDotT(x)}</span><span>💾 ${ago(x.ms)}</span></span></button>`).join("") || `<div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div>`;
         const nb = $(".ax-none"); nb.hidden = !nl.length;
-        nb.innerHTML = nl.length ? `<button type="button" class="ax-ch ax-chb" data-x="nonet"><h3>⏳ Még nem lépett be</h3><span class="ax-b">${nl.length} bolt</span><span class="ax-sp"></span><small>${noneOpen || f ? "▴ elrejtés" : "▾ mutasd"}</small></button>${noneOpen || f ? `<div class="ax-nl">${nl.map(s=> `<span class="ax-nc" title="${esc(s.a)}"><span class="ax-av" style="--av:${avCol(s.n)}">${esc(avIni(s.n))}</span><span><b>${esc(s.n)}</b><small>${esc(s.e)}</small></span></span>`).join("")}</div>` : ""}` : "";
+        nb.innerHTML = nl.length ? `<button type="button" class="ax-ch ax-chb" data-x="nonet"><h3>⏳ Még nem lépett be</h3><span class="ax-b">${nl.length} bolt</span><span class="ax-sp"></span><small>${noneOpen || f ? "▴ elrejtés" : "▾ mutasd"}</small></button>${noneOpen || f ? `<div class="ax-nl">${nl.map(s=> `<button type="button" class="ax-nc" data-acc="${esc(s.n)}" title="${esc(s.a)} — kattints: fiók, új jelszó, újrakezdés"><span class="ax-av" style="--av:${avCol(s.n)}">${esc(avIni(s.n))}</span><span><b>${esc(s.n)}</b><small>${esc(s.e)}</small></span><em>🔑</em></button>`).join("")}</div><p class="ax-hint ax-nlh">Kattints egy boltra: megnézheted a fiókját, új jelszót adhatsz, vagy <b>↺ újrakezdheted</b> (pl. ha elírt a belépési cím).</p>` : ""}` : "";
       }
       sq.oninput = drawShops;
       /* --- 🏬 bolt adatlapja (oldalsó panel) --- */
@@ -7189,6 +7257,89 @@ service cloud.firestore {
       .ax-srow{flex-wrap:wrap;} .ax-sctl{justify-content:flex-start;}
     }
     @media (max-width:520px){ .ax-kpi b{font-size:22px;} .ax-kpis{gap:8px;} .ax-kpi{padding:12px;} .ax-tb .ax-inp{width:100%;max-width:none !important;} .ax-tb .ax-sel{flex:1;max-width:none;} .ax-tb .ax-sp{display:none;} .ax-drwf .ax-sp{display:none;} .ax-drwf .ax-btn{flex:1;} }
+
+    /* ===== Admin konzol — bolti kinézet: fejléc-kártya logóval, színes fülek, hős-kártya számokkal ===== */
+    .ax-app{display:block;height:100%;} .ax-main{display:block;height:100%;}
+    .ax-body{height:100%;padding:22px 24px 64px;}
+    .ax-hdr,.ax-ph,.ax-pane{max-width:1240px;margin-left:auto;margin-right:auto;}
+    .ax-hdr{position:relative;z-index:30;margin-bottom:18px;padding:12px 16px 10px;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,0) 45%),color-mix(in srgb,var(--ax-panel) 88%,transparent);border:1px solid var(--ax-line);box-shadow:0 14px 40px rgba(0,0,0,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:axHdr .5s cubic-bezier(.2,.8,.2,1) both;}
+    .ax.th-light .ax-hdr{background:rgba(255,255,255,.86);box-shadow:0 14px 40px rgba(60,40,10,.08);}
+    @keyframes axHdr{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+    .ax-hrow{display:flex;align-items:center;gap:10px;padding:0 2px 10px;min-width:0;}
+    .ax-brand{display:flex;align-items:center;gap:12px;padding:0;min-width:0;margin-right:auto;}
+    .ax-lg{display:flex;align-items:center;flex:none;} .ax-lgi{height:48px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));}
+    .ax.th-light .ax-lgi{filter:drop-shadow(0 3px 6px rgba(120,80,0,.18));}
+    .ax-bt{min-width:0;} .ax-bt b{display:block;font:800 17px/1.15 'Poppins',sans-serif;background:linear-gradient(135deg,#f6d886,#d9ad46);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;}
+    .ax.th-light .ax-bt b{background:linear-gradient(135deg,#c4913a,#9a6a12);-webkit-background-clip:text;background-clip:text;}
+    .ax-bt small{display:block;font-size:12px;color:var(--ax-dim);font-weight:500;letter-spacing:0;text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ax-search{margin-left:0;width:min(300px,28vw);flex:none;} .ax-search input{height:40px;border-radius:12px;background:var(--ax-panel2);}
+    .ax-hbtns{display:flex;align-items:center;gap:8px;flex:none;}
+    .ax-status{padding:0 12px;height:40px;border-radius:12px;border:1px solid var(--ax-line);background:var(--ax-panel2);font-weight:700;color:var(--ax-tx);}
+    .ax-hbtns .ax-ib{width:40px;height:40px;border-radius:12px;background:var(--ax-panel2);transition:transform .15s,border-color .15s,color .15s;} .ax-hbtns .ax-ib:hover{transform:translateY(-2px);border-color:var(--ax-acc);color:var(--ax-tx);}
+    .ax-hbtns .ax-tout:hover{border-color:var(--ax-red);color:var(--ax-red);}
+    .ax-me{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;height:40px;border-radius:999px;border:1px solid var(--ax-line);background:var(--ax-panel2);min-width:0;max-width:190px;}
+    .ax-me .ax-meav{width:30px;height:30px;font-size:12.5px;background:linear-gradient(135deg,#f0cf7a,#d9ad46);color:#1d1606;}
+    .ax-men{min-width:0;display:block;} .ax-men b{display:block;font-size:12.5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .ax-men small{display:block;font-size:10.5px;color:var(--ax-dim);line-height:1.2;}
+    /* fülek — ugyanúgy, mint a boltoknál */
+    .ax-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin:0;padding:10px 0 2px;border-top:1px solid var(--ax-line);overflow:visible;min-height:0;flex:none;}
+    .ax-nav button{flex:0 0 auto;width:auto;display:inline-flex;align-items:center;gap:7px;margin:0;padding:7px 11px 7px 7px;border-radius:13px;border:1px solid transparent;background:transparent;color:var(--ax-dim);font:700 13.5px 'Inter',sans-serif;transition:background .2s,color .2s,border-color .2s,transform .15s,box-shadow .2s;}
+    .ax-nav button .ps-i{font-style:normal;width:26px;height:26px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;background:color-mix(in srgb,var(--nc) 18%,transparent);transition:background .2s,transform .3s cubic-bezier(.34,1.56,.64,1);}
+    .ax-nav button:hover{color:var(--ax-tx);background:color-mix(in srgb,var(--nc) 10%,transparent);border-color:color-mix(in srgb,var(--nc) 35%,transparent);transform:translateY(-1px);}
+    .ax-nav button:hover .ps-i{transform:scale(1.08) rotate(-4deg);}
+    .ax-nav button.on{color:#fff;background:linear-gradient(135deg,color-mix(in srgb,var(--nc) 85%,#fff 15%),var(--nc));border-color:transparent;box-shadow:0 8px 20px color-mix(in srgb,var(--nc) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 2px rgba(0,0,0,.25);}
+    .ax-nav button.on .ps-i{background:rgba(255,255,255,.22);}
+    .ax-nav button svg{display:none;} .ax-nav button::before{display:none !important;}
+    .ax-nav em{margin-left:2px;min-width:20px;padding:1px 7px;font-size:11px;}
+    .ax-nav button.on em{background:rgba(255,255,255,.25);border-color:transparent;color:#fff;}
+    /* hős-kártya a lap tetején */
+    .ax-ph{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:nowrap;margin-bottom:16px;padding:18px 20px;border-radius:24px;border:1px solid color-mix(in srgb,var(--nc,#d9ad46) 32%,var(--ax-line));background:radial-gradient(520px 200px at 0% 0%,color-mix(in srgb,var(--nc,#d9ad46) 20%,transparent),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0) 60%),var(--ax-panel);box-shadow:0 14px 36px rgba(0,0,0,.22);overflow:hidden;}
+    .ax.th-light .ax-ph{box-shadow:0 10px 28px rgba(60,45,10,.07);}
+    .ax-ph.in{animation:axPh .45s cubic-bezier(.2,.8,.2,1) both;} @keyframes axPh{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+    .ax-phi{flex:none;width:54px;height:54px;border-radius:17px;display:grid;place-items:center;font-size:27px;background:color-mix(in srgb,var(--nc,#d9ad46) 22%,transparent);border:1px solid color-mix(in srgb,var(--nc,#d9ad46) 40%,transparent);box-shadow:0 8px 22px color-mix(in srgb,var(--nc,#d9ad46) 25%,transparent);}
+    .ax-ph.in .ax-phi{animation:axPhi .6s cubic-bezier(.34,1.56,.64,1) both;} @keyframes axPhi{from{transform:scale(.6) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+    .ax-pht{flex:1;min-width:0;} .ax-h1{font:800 24px/1.2 'Poppins',sans-serif;letter-spacing:-.01em;} .ax-sub{margin:4px 0 0;font-size:13px;}
+    .ax-phs{display:flex;gap:8px;flex:none;} .ax-phs:empty{display:none;}
+    .ax-stc{min-width:84px;padding:8px 12px;border-radius:14px;border:1px solid var(--ax-line);background:var(--ax-panel2);text-align:center;}
+    .ax-stc small{display:block;font:800 10px 'Inter',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ax-dim);white-space:nowrap;}
+    .ax-stc b{display:block;font:800 19px/1.25 'Poppins',sans-serif;color:var(--sc,var(--ax-tx));font-variant-numeric:tabular-nums;margin-top:2px;}
+    .ax-pha:empty{display:none;}
+    .ax-pane.on{animation:axIn .3s ease-out;}
+    /* még be nem lépett boltok — kattintható kártyák */
+    button.ax-nc{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid var(--ax-line);background:var(--ax-panel2);transition:border-color .15s,transform .15s;}
+    button.ax-nc{opacity:1;width:100%;border-radius:12px;} button.ax-nc > span:nth-child(2){min-width:0;flex:1;} button.ax-nc em{flex:none;} button.ax-nc .ax-av{flex:none;}
+    .fc-pw-warn b,.fc-pw-ed.rs p b{display:inline;font:inherit;font-weight:800;}
+    button.ax-nc:hover{border-color:var(--ax-acc);transform:translateY(-1px);} button.ax-nc em{margin-left:auto;font-style:normal;opacity:.55;font-size:13px;} button.ax-nc:hover em{opacity:1;}
+    .ax-nlh{margin:12px 0 0;}
+    /* fiókok: szűrő, újrakezdés, belépési lap */
+    .fc-pw-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;} .fc-pw-top .fc-pw-q{flex:1 1 220px;} .fc-pw-f{flex:none;}
+    .fc-pw-r{border-radius:14px;} .fc-pw-r.k-never{border-color:color-mix(in srgb,#f0953a 30%,transparent);} .fc-pw-st.wait{color:#f0953a;}
+    .fc-pw-warn{grid-column:1/-1;font-size:12.5px;line-height:1.5;padding:8px 11px;border-radius:10px;background:rgba(240,149,58,.1);border:1px solid rgba(240,149,58,.32);}
+    .fc-pw-ed.rs{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:10px;align-items:end;padding:12px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--ax-acc) 45%,transparent);background:color-mix(in srgb,var(--ax-acc) 6%,transparent);}
+    .fc-pw-ed.rs p{grid-column:1/-1;margin:0;font-size:12.5px;line-height:1.5;color:var(--ax-dim);} .fc-pw-ed.rs p b{color:var(--ax-tx);}
+    .fc-pw-ed.rs label{display:flex;flex-direction:column;gap:5px;min-width:0;} .fc-pw-ed.rs label span{font:800 10.5px 'Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ax-dim);}
+    .fc-pw-ed.rs input{min-width:0;width:100%;} .fc-pw-eb{display:flex;gap:6px;}
+    .fc-pw-card{display:inline-flex;gap:6px;flex-wrap:wrap;margin:4px 0;} .fc-pw-msg small{display:block;margin-top:4px;}
+    .fc-pw-msg button{border:1px solid var(--ax-line2);background:var(--ax-panel);color:inherit;font:700 12px 'Inter',sans-serif;padding:6px 10px;border-radius:9px;cursor:pointer;}
+    .fc-pw-msg button:hover{border-color:var(--ax-acc);}
+    /* tablet / telefon */
+    @media (max-width:1180px){ .ax-search{width:min(240px,24vw);} .ax-men{display:none;} .ax-me{padding:4px;max-width:none;} }
+    @media (max-width:900px){
+      .ax-body{padding:12px 10px 48px;}
+      .ax-hdr{padding:10px 10px 8px;border-radius:20px;margin-bottom:12px;}
+      .ax-hrow{flex-wrap:wrap;gap:8px;}
+      .ax-lgi{height:38px;} .ax-bt b{font-size:15px;} .ax-bt small{font-size:11px;}
+      .ax-search{order:5;width:100%;flex:1 1 100%;} .ax-search kbd{display:none;} .ax-search input{padding-right:12px;}
+      .ax-status{padding:0 10px;} .ax-status .ax-lt{display:none;} .ax-me{display:none;}
+      .ax-hbtns{gap:6px;} .ax-hbtns .ax-ib{width:36px;height:36px;}
+      .ax-nav{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+      .ax-nav::-webkit-scrollbar{display:none;}
+      .ax-nav button{padding:7px 10px 7px 7px;font-size:12.5px;}
+      .ax-ph{flex-wrap:wrap;padding:14px;gap:12px;border-radius:20px;} .ax-phi{width:44px;height:44px;font-size:22px;border-radius:14px;}
+      .ax-h1{font-size:19px;} .ax-phs{width:100%;order:3;} .ax-stc{flex:1;min-width:0;} .ax-pha{order:4;width:100%;} .ax-pha .ax-btn{flex:1;}
+      .fc-pw-ed.rs{grid-template-columns:1fr;}
+    }
+    @media (max-width:560px){ .ax-nav button:not(.on) .ps-t{display:none;} .ax-nav button{padding:6px 6px;gap:6px;} .ax-nav{gap:3px;} .ax-bt{display:none;} .ax-status{width:36px;padding:0;justify-content:center;} .ax-stc{padding:7px 6px;} .ax-stc b{font-size:16px;} }
+    @media (max-width:380px){ .ax-hbtns [data-x="mypw"]{display:none;} .ax-lgi{height:32px;} }
     `;
     document.head.appendChild(st);
   }
@@ -14746,6 +14897,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     if(!logoCache[k]) logoCache[k] = composeLogo(v, loc);
     return logoCache[k];
   }
+  /* a bolti logó stílusában bármilyen felirat (pl. az admin konzol fejlécéhez: „FirstPhone Admin”) */
+  window.fpLogoFor = txt=>{ const k = "color|" + txt; if(!logoCache[k]) logoCache[k] = composeLogo("color", txt); return logoCache[k]; };
   let brandedFor = null;
   async function refreshHeaderLogo(){
     const loc = state.settings.location || "";
@@ -14848,7 +15001,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* pl. kaposvar@firstphone.hu → Kaposvár TESCO; a beállításból ilyenkor kimarad a „Hely” lépés */
   const fpNormName = t=> String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
   /* a boltok belépő e-mail címe (a @firstphone.hu előtti rész) → bolt */
-  const FP_LOGIN = {"balassagyarmat": "BGYT", "bekescsaba": "BCST", "bonyhad": "BONT", "dunaplaza": "DUNP", "bp.pestiut": "PESTT", "cegled": "CEGT", "debrecen.plaza": "DEBP", "debrecen.tesco": "DEBT", "debrecen.forum": "DEBF", "dunakeszi.tesco": "DUKET", "eger": "EGRT", "gyongyos": "GYONT", "gyor": "GYORP", "hajduboszormeny": "HBOSZ", "hajduszoboszlo": "HSZOT", "hodmezovasarhely": "HMVT", "kaposvar": "KAPT", "karcag": "KARC", "kazincbarcika": "KAZB", "kecskemet.auchan": "KECA", "kisvarda": "KISV", "kisvarda.tesco": "KISVT", "komlo": "KOML", "mateszalka": "MSZT", "miskolc.auchan": "MISA", "nyirbator": "NYBAT", "nyiregyhaza.tesco": "NYIRT", "nyiregyhaza.plaza": "NYIRP", "nyiregyhaza": "NYIRF", "nyiregyhaza.korzo": "NYIRK", "sopron": "SOPT", "szolnok": "SZOLT", "szombathely": "SZOMT", "tiszaujvaros": "TISZT", "vac": "VACT", "varosnameny": "VASN", "zalaegerszeg": "ZEGT"};
+  const FP_LOGIN = {"balassagyarmat": "BGYT", "bekescsaba": "BCST", "bonyhad": "BONT", "dunaplaza": "DUNP", "bp.pestiut": "PESTT", "cegled": "CEGT", "debrecen.plaza": "DEBP", "debrecen.tesco": "DEBT", "debrecen.forum": "DEBF", "dunakeszi.tesco": "DUKET", "eger": "EGRT", "gyongyos": "GYONT", "gyor": "GYORP", "hajduboszormeny": "HBOSZ", "hajduszoboszlo": "HSZOT", "hodmezovasarhely": "HMVT", "kaposvar": "KAPT", "karcag": "KARC", "kazincbarcika": "KAZB", "kecskemet.auchan": "KECA", "kisvarda": "KISV", "kisvarda.tesco": "KISVT", "komlo": "KOML", "mateszalka": "MSZT", "miskolc.auchan": "MISA", "nyirbator": "NYBAT", "nyiregyhaza.tesco": "NYIRT", "nyiregyhaza.plaza": "NYIRP", "nyiregyhaza": "NYIRF", "nyiregyhaza.korzo": "NYIRK", "sopron": "SOPT", "szolnok": "SZOLT", "szombathely": "SZOMT", "tiszaujvaros": "TISZT", "vac": "VACT", "vasarosnameny": "VASN", "varosnameny": "VASN", "zalaegerszeg": "ZEGT"};
   window.FP_LOGIN = FP_LOGIN;
   const FP_LOGIN_N = Object.fromEntries(Object.entries(FP_LOGIN).map(([k, v])=> [fpNormName(k), k]));
   /* beírt boltnév → a bolt belépő neve (pl. „Debrecen Fórum” → debrecen.forum) */
@@ -18249,7 +18402,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   };
   /* FirstPhone üzletek elérhetősége (Üzletek.xlsx, ellenőrizve/javítva: 2026.10.) — id: a munkaasztal saját boltkódja */
   TT_BOOKS.sh = { title:"Üzletek", ic:"🏬", sub:"Minden FirstPhone bolt elérhetősége", ph:"Keresés — bolt, város, boltkód, gyorshívó, e-mail", foot:"FirstPhone üzletek · telefon · gyorshívó · e-mail · cím — forrás: Üzletek.xlsx (2026. október)", quick:["Tesco","Auchan","Debrecen","Nyíregyháza","Budapest"], shops:true,
-    data:[{"n": "Balassagyarmat Tesco", "c": "BALT", "p": "36212003915", "g": "15", "e": "balassagyarmat@firstphone.hu", "a": "2660 Balassagyarmat, Mikszáth Kálmán út 56.", "m": "Nógrád", "id": "BGYT"}, {"n": "Bonyhád", "c": "BONYT", "p": "36212003936", "g": "36", "e": "bonyhad@firstphone.hu", "a": "7150 Bonyhád, Völgység u. 8", "m": "Tolna", "id": "BONT"}, {"n": "Budapest Duna Plaza", "c": "BUDD", "p": "36212003927", "g": "27", "e": "dunaplaza@firstphone.hu", "a": "1138 Budapest XIII., Váci út 178. 2 em.", "m": "Budapest", "id": "DUNP"}, {"n": "Budapest Pesti úti Tesco", "c": "BUDPT", "p": "36212003925", "g": "25", "e": "bp.pestiut@firstphone.hu", "a": "1173 Budapest XVII., Pesti út 5-7", "m": "Budapest", "id": "PESTT"}, {"n": "Békéscsaba", "c": "BEKT", "p": "36212003934", "g": "34", "e": "bekescsaba@firstphone.hu", "a": "5600 Békéscsaba, Szarvasi út 68.", "m": "Békés", "id": "BCST"}, {"n": "Cegléd", "c": "CEGT", "p": "36212003944", "g": "44", "e": "cegled@firstphone.hu", "a": "2700 Cegléd, Malomtó szél 29-30", "m": "Pest", "id": "CEGT"}, {"n": "Debrecen Fórum", "c": "DEBF", "p": "36212003909", "g": "9", "e": "debrecen.forum@firstphone.hu", "a": "4024 Debrecen, Csapó utca 30. 1 em.", "m": "Hajdú-Bihar", "id": "DEBF"}, {"n": "Debrecen Plaza", "c": "DEBP", "p": "36212003908", "g": "8", "e": "debrecen.plaza@firstphone.hu", "a": "4026 Debrecen, Péterfia út 18. Debrecen Plaza fszt.", "m": "Hajdú-Bihar", "id": "DEBP"}, {"n": "Debrecen Tesco", "c": "DEBT", "p": "36212003922", "g": "22", "e": "debrecen.tesco@firstphone.hu", "a": "4031 Debrecen, Kishegyesi út 1-11", "m": "Hajdú-Bihar", "id": "DEBT"}, {"n": "Dunakeszi", "c": "DUKET", "p": "36212003935", "g": "35", "e": "dunakeszi.tesco@firstphone.hu", "a": "2120 Dunakeszi, Fóti út 120", "m": "Pest", "id": "DUKET"}, {"n": "Eger", "c": "EGET", "p": "36212003921", "g": "21", "e": "eger@firstphone.hu", "a": "3300 Eger, Rákóczi út 100", "m": "Heves", "id": "EGRT"}, {"n": "Gyöngyös", "c": "GYONT", "p": "36212003912", "g": "12", "e": "gyongyos@firstphone.hu", "a": "3200 Gyöngyös, Vásár út 2.", "m": "Heves", "id": "GYONT"}, {"n": "Győr Pláza", "c": "GYORP", "p": "36212003926", "g": "26", "e": "gyor@firstphone.hu", "a": "9024 Győr, Vasvári Pál u. 1-A", "m": "Győr-Moson-Sopron", "id": "GYORP"}, {"n": "Hajdúböszörmény", "c": "HAJB", "p": "36212003923", "g": "23", "e": "hajduboszormeny@firstphone.hu", "a": "4220 Hajdúböszörmény, Kossuth Lajos u. 5.", "m": "Hajdú-Bihar", "id": "HBOSZ"}, {"n": "Hajdúszoboszló", "c": "HAJT", "p": "36212003910", "g": "10", "e": "hajduszoboszlo@firstphone.hu", "a": "4200 Hajdúszoboszló, Kabai útfél 0228/2 hrsz.", "m": "Hajdú-Bihar", "id": "HSZOT"}, {"n": "Hódmezővásárhely", "c": "HODT", "p": "36212003924", "g": "24", "e": "hodmezovasarhely@firstphone.hu", "a": "6800 Hódmezővásárhely, Hódtó u. 17-19.", "m": "Csongrád-Csanád", "id": "HMVT"}, {"n": "Kaposvár", "c": "KAPV", "p": "36212003930", "g": "30", "e": "kaposvar@firstphone.hu", "a": "7400 Kaposvár, Berzsenyi u. 13. TESCO üzletsor", "m": "Somogy", "id": "KAPT"}, {"n": "Karcag", "c": "KARC", "p": "36212003919", "g": "19", "e": "karcag@firstphone.hu", "a": "5300 Karcag, Kossuth tér 15.", "m": "Jász-Nagykun-Szolnok", "id": "KARC"}, {"n": "Kazincbarcika", "c": "KAZB", "p": "36212003933", "g": "33", "e": "kazincbarcika@firstphone.hu", "a": "3700 Kazincbarcika, Egressy Béni út 22.", "m": "Borsod-Abaúj-Zemplén", "id": "KAZB"}, {"n": "Kecskemét Auchan", "c": "KECSA", "p": "36212003931", "g": "31", "e": "kecskemet.auchan@firstphone.hu", "a": "6000 Kecskemét, Dunaföldvári út 2", "m": "Bács-Kiskun", "id": "KECA"}, {"n": "Kisvárda", "c": "KISV", "p": "36212003900", "g": "0", "e": "kisvarda@firstphone.hu", "a": "4600 Kisvárda, Flórián tér 1", "m": "Szabolcs-Szatmár-Bereg", "id": "KISV"}, {"n": "Kisvárda Tesco", "c": "KISVT", "p": "36212003929", "g": "29", "e": "kisvarda.tesco@firstphone.hu", "a": "4600 Kisvárda, Városmajor utca 72.", "m": "Szabolcs-Szatmár-Bereg", "id": "KISVT"}, {"n": "Komló", "c": "KOML", "p": "36212003943", "g": "43", "e": "komlo@firstphone.hu", "a": "7300 Komló, Kossuth Lajos utca 99", "m": "Baranya", "id": "KOML"}, {"n": "Miskolc Auchan", "c": "MISB", "p": "36212003941", "g": "41", "e": "miskolc.auchan@firstphone.hu", "a": "3527 Miskolc, József Attila utca 87", "m": "Borsod-Abaúj-Zemplén", "id": "MISA"}, {"n": "Mátészalka", "c": "MATT", "p": "36212003902", "g": "2", "e": "mateszalka@firstphone.hu", "a": "4700 Mátészalka, Alkotmány út 1/A", "m": "Szabolcs-Szatmár-Bereg", "id": "MSZT"}, {"n": "Nyírbátor", "c": "NYIRB", "p": "36212003903", "g": "3", "e": "nyirbator@firstphone.hu", "a": "4300 Nyírbátor, Szabadság tér 27.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYBAT"}, {"n": "Nyíregyháza Kossuth tér", "c": "NYIRF", "p": "36212003907", "g": "7", "e": "nyiregyhaza@firstphone.hu", "a": "4400 Nyíregyháza, Zrínyi Ilona út 9", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRF"}, {"n": "Nyíregyháza Korzó", "c": "NYIRK", "p": "36212003906", "g": "6", "e": "nyiregyhaza.korzo@firstphone.hu", "a": "4400 Nyíregyháza, Nagy Imre tér 1. korzó B(Spar) épület fszt.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRK"}, {"n": "Nyíregyháza Pláza", "c": "NYIRP", "p": "36212003904", "g": "4", "e": "nyiregyhaza.plaza@firstphone.hu", "a": "4400 Nyíregyháza, Szegfű út 75. NyírPlaza fszt.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRP"}, {"n": "Nyíregyháza Tesco", "c": "NYIRT", "p": "36212003905", "g": "5", "e": "nyiregyhaza.tesco@firstphone.hu", "a": "4400 Nyíregyháza, Pazonyi út 36.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRT"}, {"n": "Sopron", "c": "SOPT", "p": "36212003916", "g": "16", "e": "sopron@firstphone.hu", "a": "9400 Sopron, Ipar krt. 30", "m": "Győr-Moson-Sopron", "id": "SOPT"}, {"n": "Szolnok", "c": "SZOLT", "p": "36212003939", "g": "39", "e": "szolnok@firstphone.hu", "a": "5000 Szolnok, Téglagyár út 30", "m": "Jász-Nagykun-Szolnok", "id": "SZOLT"}, {"n": "Szombathely", "c": "SZOMT", "p": "36212003937", "g": "37", "e": "szombathely@firstphone.hu", "a": "9700 Szombathely, Zanati út 70.", "m": "Vas", "id": "SZOMT"}, {"n": "Tiszaújváros", "c": "TISZT", "p": "36212003911", "g": "11", "e": "tiszaujvaros@firstphone.hu", "a": "3580 Tiszaújváros, Örösi út 1/A", "m": "Borsod-Abaúj-Zemplén", "id": "TISZT"}, {"n": "Vác", "c": "VACT", "p": "36212003914", "g": "14", "e": "vac@firstphone.hu", "a": "2600 Vác, Deres út 2.", "m": "Pest", "id": "VACT"}, {"n": "Vásárosnamény", "c": "VASN", "p": "36212003901", "g": "1", "e": "varosnameny@firstphone.hu", "a": "4800 Vásárosnamény, Kossuth út 2.", "m": "Szabolcs-Szatmár-Bereg", "id": "VASN"}, {"n": "Zalaegerszeg", "c": "ZEGT", "p": "36212003917", "g": "17", "e": "zalaegerszeg@firstphone.hu", "a": "8900 Zalaegerszeg, Sport u. 1.", "m": "Zala", "id": "ZEGT"}] };
+    data:[{"n": "Balassagyarmat Tesco", "c": "BALT", "p": "36212003915", "g": "15", "e": "balassagyarmat@firstphone.hu", "a": "2660 Balassagyarmat, Mikszáth Kálmán út 56.", "m": "Nógrád", "id": "BGYT"}, {"n": "Bonyhád", "c": "BONYT", "p": "36212003936", "g": "36", "e": "bonyhad@firstphone.hu", "a": "7150 Bonyhád, Völgység u. 8", "m": "Tolna", "id": "BONT"}, {"n": "Budapest Duna Plaza", "c": "BUDD", "p": "36212003927", "g": "27", "e": "dunaplaza@firstphone.hu", "a": "1138 Budapest XIII., Váci út 178. 2 em.", "m": "Budapest", "id": "DUNP"}, {"n": "Budapest Pesti úti Tesco", "c": "BUDPT", "p": "36212003925", "g": "25", "e": "bp.pestiut@firstphone.hu", "a": "1173 Budapest XVII., Pesti út 5-7", "m": "Budapest", "id": "PESTT"}, {"n": "Békéscsaba", "c": "BEKT", "p": "36212003934", "g": "34", "e": "bekescsaba@firstphone.hu", "a": "5600 Békéscsaba, Szarvasi út 68.", "m": "Békés", "id": "BCST"}, {"n": "Cegléd", "c": "CEGT", "p": "36212003944", "g": "44", "e": "cegled@firstphone.hu", "a": "2700 Cegléd, Malomtó szél 29-30", "m": "Pest", "id": "CEGT"}, {"n": "Debrecen Fórum", "c": "DEBF", "p": "36212003909", "g": "9", "e": "debrecen.forum@firstphone.hu", "a": "4024 Debrecen, Csapó utca 30. 1 em.", "m": "Hajdú-Bihar", "id": "DEBF"}, {"n": "Debrecen Plaza", "c": "DEBP", "p": "36212003908", "g": "8", "e": "debrecen.plaza@firstphone.hu", "a": "4026 Debrecen, Péterfia út 18. Debrecen Plaza fszt.", "m": "Hajdú-Bihar", "id": "DEBP"}, {"n": "Debrecen Tesco", "c": "DEBT", "p": "36212003922", "g": "22", "e": "debrecen.tesco@firstphone.hu", "a": "4031 Debrecen, Kishegyesi út 1-11", "m": "Hajdú-Bihar", "id": "DEBT"}, {"n": "Dunakeszi", "c": "DUKET", "p": "36212003935", "g": "35", "e": "dunakeszi.tesco@firstphone.hu", "a": "2120 Dunakeszi, Fóti út 120", "m": "Pest", "id": "DUKET"}, {"n": "Eger", "c": "EGET", "p": "36212003921", "g": "21", "e": "eger@firstphone.hu", "a": "3300 Eger, Rákóczi út 100", "m": "Heves", "id": "EGRT"}, {"n": "Gyöngyös", "c": "GYONT", "p": "36212003912", "g": "12", "e": "gyongyos@firstphone.hu", "a": "3200 Gyöngyös, Vásár út 2.", "m": "Heves", "id": "GYONT"}, {"n": "Győr Pláza", "c": "GYORP", "p": "36212003926", "g": "26", "e": "gyor@firstphone.hu", "a": "9024 Győr, Vasvári Pál u. 1-A", "m": "Győr-Moson-Sopron", "id": "GYORP"}, {"n": "Hajdúböszörmény", "c": "HAJB", "p": "36212003923", "g": "23", "e": "hajduboszormeny@firstphone.hu", "a": "4220 Hajdúböszörmény, Kossuth Lajos u. 5.", "m": "Hajdú-Bihar", "id": "HBOSZ"}, {"n": "Hajdúszoboszló", "c": "HAJT", "p": "36212003910", "g": "10", "e": "hajduszoboszlo@firstphone.hu", "a": "4200 Hajdúszoboszló, Kabai útfél 0228/2 hrsz.", "m": "Hajdú-Bihar", "id": "HSZOT"}, {"n": "Hódmezővásárhely", "c": "HODT", "p": "36212003924", "g": "24", "e": "hodmezovasarhely@firstphone.hu", "a": "6800 Hódmezővásárhely, Hódtó u. 17-19.", "m": "Csongrád-Csanád", "id": "HMVT"}, {"n": "Kaposvár", "c": "KAPV", "p": "36212003930", "g": "30", "e": "kaposvar@firstphone.hu", "a": "7400 Kaposvár, Berzsenyi u. 13. TESCO üzletsor", "m": "Somogy", "id": "KAPT"}, {"n": "Karcag", "c": "KARC", "p": "36212003919", "g": "19", "e": "karcag@firstphone.hu", "a": "5300 Karcag, Kossuth tér 15.", "m": "Jász-Nagykun-Szolnok", "id": "KARC"}, {"n": "Kazincbarcika", "c": "KAZB", "p": "36212003933", "g": "33", "e": "kazincbarcika@firstphone.hu", "a": "3700 Kazincbarcika, Egressy Béni út 22.", "m": "Borsod-Abaúj-Zemplén", "id": "KAZB"}, {"n": "Kecskemét Auchan", "c": "KECSA", "p": "36212003931", "g": "31", "e": "kecskemet.auchan@firstphone.hu", "a": "6000 Kecskemét, Dunaföldvári út 2", "m": "Bács-Kiskun", "id": "KECA"}, {"n": "Kisvárda", "c": "KISV", "p": "36212003900", "g": "0", "e": "kisvarda@firstphone.hu", "a": "4600 Kisvárda, Flórián tér 1", "m": "Szabolcs-Szatmár-Bereg", "id": "KISV"}, {"n": "Kisvárda Tesco", "c": "KISVT", "p": "36212003929", "g": "29", "e": "kisvarda.tesco@firstphone.hu", "a": "4600 Kisvárda, Városmajor utca 72.", "m": "Szabolcs-Szatmár-Bereg", "id": "KISVT"}, {"n": "Komló", "c": "KOML", "p": "36212003943", "g": "43", "e": "komlo@firstphone.hu", "a": "7300 Komló, Kossuth Lajos utca 99", "m": "Baranya", "id": "KOML"}, {"n": "Miskolc Auchan", "c": "MISB", "p": "36212003941", "g": "41", "e": "miskolc.auchan@firstphone.hu", "a": "3527 Miskolc, József Attila utca 87", "m": "Borsod-Abaúj-Zemplén", "id": "MISA"}, {"n": "Mátészalka", "c": "MATT", "p": "36212003902", "g": "2", "e": "mateszalka@firstphone.hu", "a": "4700 Mátészalka, Alkotmány út 1/A", "m": "Szabolcs-Szatmár-Bereg", "id": "MSZT"}, {"n": "Nyírbátor", "c": "NYIRB", "p": "36212003903", "g": "3", "e": "nyirbator@firstphone.hu", "a": "4300 Nyírbátor, Szabadság tér 27.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYBAT"}, {"n": "Nyíregyháza Kossuth tér", "c": "NYIRF", "p": "36212003907", "g": "7", "e": "nyiregyhaza@firstphone.hu", "a": "4400 Nyíregyháza, Zrínyi Ilona út 9", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRF"}, {"n": "Nyíregyháza Korzó", "c": "NYIRK", "p": "36212003906", "g": "6", "e": "nyiregyhaza.korzo@firstphone.hu", "a": "4400 Nyíregyháza, Nagy Imre tér 1. korzó B(Spar) épület fszt.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRK"}, {"n": "Nyíregyháza Pláza", "c": "NYIRP", "p": "36212003904", "g": "4", "e": "nyiregyhaza.plaza@firstphone.hu", "a": "4400 Nyíregyháza, Szegfű út 75. NyírPlaza fszt.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRP"}, {"n": "Nyíregyháza Tesco", "c": "NYIRT", "p": "36212003905", "g": "5", "e": "nyiregyhaza.tesco@firstphone.hu", "a": "4400 Nyíregyháza, Pazonyi út 36.", "m": "Szabolcs-Szatmár-Bereg", "id": "NYIRT"}, {"n": "Sopron", "c": "SOPT", "p": "36212003916", "g": "16", "e": "sopron@firstphone.hu", "a": "9400 Sopron, Ipar krt. 30", "m": "Győr-Moson-Sopron", "id": "SOPT"}, {"n": "Szolnok", "c": "SZOLT", "p": "36212003939", "g": "39", "e": "szolnok@firstphone.hu", "a": "5000 Szolnok, Téglagyár út 30", "m": "Jász-Nagykun-Szolnok", "id": "SZOLT"}, {"n": "Szombathely", "c": "SZOMT", "p": "36212003937", "g": "37", "e": "szombathely@firstphone.hu", "a": "9700 Szombathely, Zanati út 70.", "m": "Vas", "id": "SZOMT"}, {"n": "Tiszaújváros", "c": "TISZT", "p": "36212003911", "g": "11", "e": "tiszaujvaros@firstphone.hu", "a": "3580 Tiszaújváros, Örösi út 1/A", "m": "Borsod-Abaúj-Zemplén", "id": "TISZT"}, {"n": "Vác", "c": "VACT", "p": "36212003914", "g": "14", "e": "vac@firstphone.hu", "a": "2600 Vác, Deres út 2.", "m": "Pest", "id": "VACT"}, {"n": "Vásárosnamény", "c": "VASN", "p": "36212003901", "g": "1", "e": "vasarosnameny@firstphone.hu", "a": "4800 Vásárosnamény, Kossuth út 2.", "m": "Szabolcs-Szatmár-Bereg", "id": "VASN"}, {"n": "Zalaegerszeg", "c": "ZEGT", "p": "36212003917", "g": "17", "e": "zalaegerszeg@firstphone.hu", "a": "8900 Zalaegerszeg, Sport u. 1.", "m": "Zala", "id": "ZEGT"}] };
   window.FP_SHOPS = TT_BOOKS.sh.data;
   (function ttInit(){
     const root = document.getElementById("ttPage"); if(!root) return;

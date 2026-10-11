@@ -1,6 +1,6 @@
 /* FirstPhone Munkaasztal — admin végpont (Cloudflare Pages Function, ingyenes)
    Csak admin használhatja: a fő admin (admin@admin.com) és az általa / más admin által létrehozott
-   admin fiókok (Firebase custom claim: admin=true). Boltfiókok listája, új jelszó, letiltás,
+   admin fiókok (Firebase custom claim: admin=true). Boltfiókok listája, új jelszó, újrakezdés, letiltás,
    fiók létrehozása, admin fiókok létrehozása (név + e-mail + ideiglenes jelszó).
    Az új admin első belépéskor köteles jelszót cserélni (claim: mustChange=true) — amíg nem cseréli,
    a szerver és a Firestore szabályok sem engednek neki semmit.
@@ -121,6 +121,27 @@ export async function onRequest({ request, env }) {
       if (isAdm(u) && !isSuper(u) && email !== meEmail) { const a = attrs(u); a.mustChange = true; await idt(sa, "accounts:update", { localId: u.localId, password: pw, customAttributes: JSON.stringify(a) }); return json({ ok: true, temp: true }); }
       await idt(sa, "accounts:update", { localId: u.localId, password: pw });
       return json({ ok: true });
+    }
+    /* bolt újrakezdése: új jelszó, letiltás feloldása, és ha kell, a belépési cím javítása (pl. elírás) —
+       a bolt adatai (Firestore: boltok/{uid}) megmaradnak, mert a fiók azonosítója nem változik */
+    if (q.action === "reset") {
+      const pw = String(q.password || "");
+      if (pw.length < 6) return json({ ok: false, error: "a jelszó legalább 6 karakter legyen" }, 400);
+      const to = String(q.to || email).trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return json({ ok: false, error: "hibás új belépési cím" }, 400);
+      if (to === ADMIN || to === meEmail) return json({ ok: false, error: "ez a cím nem használható" }, 400);
+      const u = await byEmail(sa, email);
+      if (u && isAdm(u)) return json({ ok: false, error: "admin fiókot így nem lehet újrakezdeni" }, 403);
+      if (to !== email) {
+        const ex = await byEmail(sa, to);
+        if (ex && (!u || ex.localId !== u.localId)) return json({ ok: false, error: "az új belépési cím már egy másik fiókhoz tartozik" }, 409);
+      }
+      if (u) {
+        await idt(sa, "accounts:update", { localId: u.localId, email: to, password: pw, disableUser: false });
+        return json({ ok: true, moved: to !== email });
+      }
+      await idt(sa, "accounts", { email: to, password: pw, emailVerified: false });
+      return json({ ok: true, created: true, moved: to !== email });
     }
     if (q.action === "disable") {
       const u = await byEmail(sa, email); if (!u) return json({ ok: false, error: "nincs ilyen fiók" }, 404);
