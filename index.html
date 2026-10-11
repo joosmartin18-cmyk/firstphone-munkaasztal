@@ -1182,6 +1182,22 @@
   .sh-act{display:flex;flex-direction:column;gap:6px;margin-top:16px;} .sh-ok{padding:13px;border-radius:14px;border:0;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#171106;font:800 14.5px 'Inter',sans-serif;cursor:pointer;box-shadow:0 8px 20px rgba(217,173,70,.3);} .sh-lnk{border:0;background:none;color:var(--text-dim);font:600 13px 'Inter',sans-serif;cursor:pointer;padding:6px;} .sh-lnk:hover{color:var(--text);}
   .sh-n{margin:14px 0 0;font-size:11.5px;color:var(--text-faint);line-height:1.5;}
   @media (max-width:520px){ .sh-p{flex-wrap:wrap;} .sh-p em{width:100%;text-align:center;} .sh-h h2{font-size:19px;} }
+
+  /* diás, animált műszak-ablak */
+  .sh-ic span{display:inline-block;animation:shWave 2.2s ease-in-out infinite;transform-origin:70% 80%;} .sh-ic{animation:none !important;}
+  .sh-dots{display:flex;gap:6px;justify-content:center;margin:2px 0 12px;} .sh-dots i{width:8px;height:8px;border-radius:99px;background:var(--border);transition:width .35s cubic-bezier(.34,1.56,.64,1),background .3s;} .sh-dots i.on{width:26px;background:var(--gold);} .sh-dots i.ok{background:#3ecf8e;}
+  .sh-sl.still,.sh-sl.still .sh-p,.sh-sl.still .sh-c,.sh-sl.still .sh-seg button{animation:none !important;}
+  .sh-sl{animation:shSlF .45s cubic-bezier(.2,.8,.2,1) both;} .sh-sl.back{animation-name:shSlB;} .sh-sl.first{animation-name:shSl0;}
+  @keyframes shSlF{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}} @keyframes shSlB{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}} @keyframes shSl0{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .sh-sl .sh-p,.sh-sl .sh-c,.sh-sl .sh-seg button{animation:shPi .4s cubic-bezier(.2,.8,.2,1) both;} .sh-sl .sh-p:nth-child(2),.sh-sl .sh-c:nth-child(2){animation-delay:.07s} .sh-sl .sh-p:nth-child(3),.sh-sl .sh-c:nth-child(3){animation-delay:.14s} .sh-sl .sh-c:nth-child(4){animation-delay:.21s} .sh-sl .sh-c:nth-child(5){animation-delay:.28s}
+  @keyframes shPi{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+  .sh-p em{position:relative;overflow:hidden;} .sh-p em::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);animation:shShine 2.6s ease-in-out 1s infinite;} @keyframes shShine{0%{transform:translateX(-120%)}45%,100%{transform:translateX(120%)}}
+  .sh-fin{text-align:center;padding:4px 0 2px;} .sh-ok3{width:84px;height:84px;margin:4px auto 10px;} .sh-ok3 svg{width:100%;height:100%;fill:none;stroke:#3ecf8e;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;}
+  .sh-ok3 circle{stroke-dasharray:150;stroke-dashoffset:150;animation:shDraw .6s ease forwards;} .sh-ok3 path{stroke-dasharray:40;stroke-dashoffset:40;animation:shDraw .35s ease .5s forwards;} @keyframes shDraw{to{stroke-dashoffset:0}}
+  .sh-fin h3{margin:0 0 6px;font:800 20px 'Poppins',sans-serif;animation:shPi .4s ease .2s both;} .sh-fin p{margin:0 0 10px;color:var(--text-dim);font-size:13.5px;}
+  .sh-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;} .sh-tags span{font:700 12.5px 'Inter',sans-serif;padding:6px 11px;border-radius:99px;border:1px solid rgba(62,207,142,.45);background:rgba(62,207,142,.1);animation:shPi .4s cubic-bezier(.34,1.56,.64,1) both;}
+  .sh-chg{margin-top:12px;padding:9px 12px;border-radius:12px;background:rgba(217,173,70,.12);border:1px solid rgba(217,173,70,.4);font-size:13px;animation:shPi .4s ease .7s both;}
+  .sh-go{width:100%;margin-top:16px;position:relative;overflow:hidden;} .sh-go::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:rgba(0,0,0,.25);transform-origin:left;animation:shBar 6s linear forwards;} @keyframes shBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
   .app-card.adm{opacity:.55;cursor:not-allowed;} .app-card.adm .ck{background:none;border-color:var(--border);color:inherit;} .ft-chip.adm{opacity:.5;cursor:not-allowed;text-decoration:line-through;}
   .apps-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px;font-size:12.5px;color:var(--text-dim);font-weight:600;}
   .apps-bar button{border:1px solid var(--border);background:var(--bg-cell);color:var(--text);border-radius:999px;padding:5px 12px;font:700 12px 'Inter',sans-serif;cursor:pointer;}
@@ -4144,7 +4160,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261011-202753";</script>
+<script>window.FP_BUILD="20261011-203441";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -15253,7 +15269,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const PL = { full:"egész nap", am:"délelőtt", pm:"délután" };
     shiftOpen = true;
     const m = document.createElement("div"); m.className = "shift-back"; m.id = "shiftModal";
-    let step = now.length ? 1 : 2, pick = null, part = now.length === 1 ? now[0].part : (seg === "pm" && dt ? "pm" : "full"), forId = now.length === 1 ? now[0].id : "", other = "";
+    let prevStep = 0, fin = null, step = now.length ? 1 : 2, pick = null, part = now.length === 1 ? now[0].part : (seg === "pm" && dt ? "pm" : "full"), forId = now.length === 1 ? now[0].id : "", other = "";
     const done = ()=>{ try{ localStorage.setItem(SHIFT_SEEN, key + "|" + seg); }catch(e){} m.classList.add("out"); setTimeout(()=>{ m.remove(); shiftOpen = false; }, 220); };
     const draw = ()=>{
       const sub = `${HU_MONTHS[d.getMonth()]} ${d.getDate()}., ${["hétfő","kedd","szerda","csütörtök","péntek","szombat","vasárnap"][dow]}${hol ? " · 🎉 ünnep" : dt ? ` · nyitva ${dt.open}–${dt.close}` : " · zárva"}`;
@@ -15271,14 +15287,27 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           ${now.length ? `<div class="sh-row"><span>Kit helyettesít?</span><div class="sh-seg">${now.map(x=> `<button type="button" data-for="${esc(x.id)}" class="${forId === x.id ? "on" : ""}">${esc(x.P.name)}</button>`).join("")}<button type="button" data-for="" class="${!forId ? "on" : ""}">Senkit — mellette</button></div></div>` : ""}
           <div class="sh-act"><button type="button" class="sh-ok" data-save="1">✓ Mentés — a mai beosztást is átírom</button><button type="button" class="sh-lnk" data-only="1">Csak most, a beosztást ne írd át</button>${now.length ? `<button type="button" class="sh-lnk" data-back="1">← Vissza</button>` : ""}</div>`;
       }
-      m.innerHTML = `<div class="sh-c0" role="dialog" aria-label="Ki dolgozik ma?"><div class="sh-h"><span class="sh-ic">👋</span><div><h2>${greet}</h2><small>${sub}</small></div>${manual ? `<button type="button" class="sh-x" title="Bezárás">✕</button>` : ""}</div>${body}<p class="sh-n">Amit kiválasztasz, az ma ezen a gépen mindenhol a te neved lesz: chat, hibabejelentés, selejt, leltár, csomag.</p></div>`;
+      if(step === 3 && fin){ const first = String(fin.name).split(/\s+/).slice(-1)[0];
+        body = `<div class="sh-fin"><div class="sh-ok3"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="23"/><path d="M15 27l7 7 15-16"/></svg></div><h3>Szia ${esc(first)}! Jó munkát ma! ✨</h3>
+          <p>Ma ezen a gépen mindenhol <b>${esc(fin.name)}</b> neve szerepel:</p>
+          <div class="sh-tags">${[["💬","Chat"],["🐞","Hibabejelentés"],["🗑️","Selejt"],["📋","Leltár"],["📦","Csomag"]].map(([i, t], k)=> `<span style="animation-delay:${.25 + k * .09}s">${i} ${t}</span>`).join("")}</div>
+          ${fin.changed ? `<div class="sh-chg">📅 A mai beosztás is átírva: <b>${esc(fin.name)}</b> — ${PL[fin.part]}</div>` : ""}
+          <button type="button" class="sh-ok sh-go" data-fin="1">Kezdjük →</button></div>`; }
+      const dir = step > prevStep ? "fwd" : "back", tot = now.length ? 3 : 2, cur = now.length ? step : step - 1;
+      const inner = `<div class="sh-h"><span class="sh-ic"><span>${step === 3 ? "🎉" : hr < 10 ? "☀️" : hr < 17 ? "👋" : "🌙"}</span></span><div><h2>${step === 3 ? "Minden kész!" : greet}</h2><small>${sub}</small></div>${manual && step !== 3 ? `<button type="button" class="sh-x" title="Bezárás">✕</button>` : ""}</div>
+        <div class="sh-dots">${Array.from({ length:tot }, (_, i)=> `<i class="${i + 1 === cur ? "on" : i + 1 < cur ? "ok" : ""}"></i>`).join("")}</div>
+        <div class="sh-sl ${!prevStep ? "first" : step === prevStep ? "still" : dir}">${body}</div>${step !== 3 ? `<p class="sh-n">Amit kiválasztasz, az ma ezen a gépen mindenhol a te neved lesz: chat, hibabejelentés, selejt, leltár, csomag.</p>` : ""}`;
+      if(m.firstElementChild) m.firstElementChild.innerHTML = inner; else m.innerHTML = `<div class="sh-c0" role="dialog" aria-label="Ki dolgozik ma?">${inner}</div>`;
+      prevStep = step;
       const inp = m.querySelector(".sh-in"); if(inp) inp.oninput = ()=>{ other = inp.value; if(other.trim()){ pick = null; m.querySelectorAll(".sh-c").forEach(b=> b.classList.remove("on")); } };
     };
+    let finTm = null; const finT = ()=>{ clearTimeout(finTm); finTm = setTimeout(()=>{ if(m.isConnected) done(); }, 6000); };
     draw(); document.body.appendChild(m);
     m.addEventListener("click", e=>{
       const t = e.target;
       if(t.closest(".sh-x")){ done(); return; }
-      const me = t.closest("[data-me]"); if(me){ const x = now.find(z=> z.P.id === me.dataset.me); fpSetWho({ id:x.P.sub ? "" : x.P.id, name:x.P.name, part:x.part }); done(); try{ toast(`👋 Szia ${String(x.P.name).split(/\s+/).slice(-1)[0]}! Jó munkát ma!`); }catch(_){} try{ window.fpSound && fpSound("ok", .4); }catch(_){} return; }
+      const me = t.closest("[data-me]"); if(me){ const x = now.find(z=> z.P.id === me.dataset.me); fpSetWho({ id:x.P.sub ? "" : x.P.id, name:x.P.name, part:x.part }); fin = { name:x.P.name, part:x.part, changed:false }; step = 3; draw(); try{ localStorage.setItem(SHIFT_SEEN, key + "|" + seg); }catch(_){} try{ window.fpSound && fpSound("ok", .4); }catch(_){} finT(); return; }
+      if(t.closest("[data-fin]")){ clearTimeout(finTm); done(); return; }
       if(t.closest("[data-no]")){ step = 2; draw(); return; }
       if(t.closest("[data-back]")){ step = 1; draw(); return; }
       const pk = t.closest("[data-pick]"); if(pk){ pick = personById(pk.dataset.pick); other = ""; draw(); return; }
@@ -15288,8 +15317,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(sv || only){ const nm = (other || "").trim().replace(/\s+/g, " "), P = pick || (nm ? (emps.find(e=> e.name.toLowerCase() === nm.toLowerCase()) || null) : null);
         if(!P && !nm){ const c = m.querySelector(".sh-ch"); if(c){ c.classList.remove("shake"); void c.offsetWidth; c.classList.add("shake"); } try{ toast("Válaszd ki, ki dolgozik — vagy írd be a nevét."); }catch(_){} return; }
         const who = P ? { id:P.id, name:P.name } : { id:"", name:nm };
-        if(sv && dt){ shiftApply(who, part, forId || null); try{ toast(`📅 Mai beosztás átírva: ${who.name} — ${PL[part]}${forId ? ` (${(personById(forId) || { name:String(forId).replace(/^sub:/, "") }).name} helyett)` : ""}`); }catch(_){} }
-        fpSetWho(Object.assign(who, { part })); done(); try{ window.fpSound && fpSound("ok", .4); }catch(_){} return; }
+        if(sv && dt){ shiftApply(who, part, forId || null); try{ if(false) toast(`📅 Mai beosztás átírva: ${who.name} — ${PL[part]}${forId ? ` (${(personById(forId) || { name:String(forId).replace(/^sub:/, "") }).name} helyett)` : ""}`); }catch(_){} }
+        fpSetWho(Object.assign(who, { part })); fin = { name:who.name, part, changed:!!(sv && dt) }; step = 3; draw(); try{ localStorage.setItem(SHIFT_SEEN, key + "|" + seg); }catch(_){} try{ window.fpSound && fpSound("ok", .4); }catch(_){} finT(); return; }
     });
   }
   /* mikor jöjjön fel? minden nap a nyitáskor és a délutáni váltáskor egyszer — ha épp más ablak van nyitva, megvárja */
