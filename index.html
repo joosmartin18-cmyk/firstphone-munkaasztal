@@ -4160,7 +4160,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261011-203441";</script>
+<script>window.FP_BUILD="20261011-204514";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4450,31 +4450,99 @@
     .lg-show{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;padding:40px clamp(24px,5vw,80px);min-height:100vh;box-sizing:border-box;}
     .lg-show h2{margin:0;text-align:center;font:800 clamp(30px,3.6vw,50px)/1.08 'Poppins',sans-serif;letter-spacing:-.02em;}
     .lg-show h2 span{background:linear-gradient(135deg,#ffe39a,#d9ad46 50%,#4fb3c4);-webkit-background-clip:text;background-clip:text;color:transparent;}
-    .lg-dev{position:relative;width:min(620px,100%);border-radius:24px;padding:14px;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid var(--border,#2b2b33);box-shadow:0 40px 90px rgba(0,0,0,.45);animation:lgFloat 7s ease-in-out infinite;}
-    @keyframes lgFloat{0%,100%{transform:translateY(0) rotate(-.4deg)}50%{transform:translateY(-10px) rotate(.4deg)}}
-    .lg-dev::before{content:"";position:absolute;left:22px;top:-7px;display:block;width:40px;height:4px;border-radius:9px;background:var(--border,#3a3a44);}
-    .lg-dots3{display:flex;gap:6px;margin:0 0 10px 4px;} .lg-dots3 i{width:10px;height:10px;border-radius:50%;background:#e2585a;} .lg-dots3 i:nth-child(2){background:#f0a030;} .lg-dots3 i:nth-child(3){background:#30b37a;}
-    .lg-scr{position:relative;}
-    .lg-sl{position:absolute;inset:0;opacity:0;transform:translateX(30px) scale(.98);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);pointer-events:none;}
-    .lg-sl.on{position:relative;opacity:1;transform:none;}
-    .lg-sl.out{opacity:0;transform:translateX(-30px) scale(.98);}
-    .lg-sl .help-slide{display:block !important;animation:none !important;}
-    .lg-sl .hc-wrap{border-radius:16px;}
-    .lg-cap{display:flex;align-items:center;gap:14px;width:min(620px,100%);}
-    .lg-cap > i{font-style:normal;flex:0 0 52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--c,#d9ad46);box-shadow:0 10px 26px color-mix(in srgb,var(--c,#d9ad46) 40%,transparent);transition:background .4s;}
-    .lg-cap b{display:block;font:800 18px 'Poppins',sans-serif;} .lg-cap span{display:block;font-size:13.5px;color:var(--text-dim,#9c9ca6);font-weight:600;}
-    .lg-cap div{flex:1;min-width:0;animation:fcUp .45s ease both;}
-    .lg-pg{display:flex;gap:7px;} .lg-pg button{width:10px;height:10px;padding:0;border-radius:99px;border:0;background:var(--border,#3a3a44);cursor:pointer;transition:width .3s,background .3s;} .lg-pg button.on{width:30px;background:#d9ad46;}
+    .lg-show{gap:26px;}
+    .lg-show h2{animation:fcUp .6s ease both;}
+    .lg-orb{position:absolute;border-radius:50%;filter:blur(50px);opacity:.5;pointer-events:none;z-index:-1;transition:background 1s;animation:lgOrb 14s ease-in-out infinite;}
+    .lg-orb.a{width:340px;height:340px;left:8%;top:12%;background:var(--lc,#d9ad46);} .lg-orb.b{width:260px;height:260px;right:6%;bottom:12%;background:#4fb3c4;animation-delay:-7s;opacity:.32;}
+    @keyframes lgOrb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.1)}66%{transform:translate(-30px,25px) scale(.92)}}
+    .lg-stack{position:relative;width:min(580px,100%);height:340px;perspective:1400px;}
+    .lg-stack::before,.lg-stack::after{content:"";position:absolute;left:6%;right:6%;top:0;bottom:0;border-radius:26px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);transform:translateY(18px) scale(.94);opacity:.55;transition:background .6s;}
+    .lg-stack::after{left:12%;right:12%;transform:translateY(34px) scale(.88);opacity:.3;}
+    .lg-card{position:absolute;inset:0;z-index:2;border-radius:26px;overflow:hidden;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 16%,var(--bg-panel,#17171c)),var(--bg-panel,#17171c) 55%);border:1px solid color-mix(in srgb,var(--c) 35%,var(--border,#2b2b33));box-shadow:0 40px 90px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.03) inset;display:flex;flex-direction:column;}
+    .lg-card.in{animation:lgIn .75s cubic-bezier(.2,.9,.25,1.05) both;} .lg-card.out{z-index:3;animation:lgOut .6s cubic-bezier(.5,0,.75,0) both;pointer-events:none;}
+    @keyframes lgIn{from{opacity:0;transform:translateY(40px) scale(.9) rotateX(14deg)}to{opacity:1;transform:none}}
+    @keyframes lgOut{to{opacity:0;transform:translate(-70px,-30px) rotate(-7deg) scale(.95)}}
+    .lg-ch{display:flex;align-items:center;gap:12px;padding:16px 18px 10px;}
+    .lg-ch > i{font-style:normal;width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:23px;background:var(--c);box-shadow:0 10px 24px color-mix(in srgb,var(--c) 45%,transparent);animation:lgPop .6s .15s cubic-bezier(.3,1.6,.5,1) both;}
+    .lg-ch b{display:block;font:800 19px 'Poppins',sans-serif;} .lg-ch span{display:block;font-size:12.5px;font-weight:600;color:var(--text-dim,#9c9ca6);}
+    .lg-ch div{flex:1;min-width:0;animation:fcUp .5s .2s ease both;}
+    .lg-live{font:800 10px 'Inter',sans-serif;letter-spacing:.5px;padding:5px 9px;border-radius:99px;background:rgba(48,179,122,.14);color:#30b37a;display:flex;align-items:center;gap:6px;}
+    .lg-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#30b37a;animation:lgBl 1.4s infinite;}
+    @keyframes lgBl{50%{opacity:.25}}
+    @keyframes lgPop{from{opacity:0;transform:scale(.3) rotate(-25deg)}to{opacity:1;transform:none}}
+    .lg-sc{position:relative;flex:1;margin:0 18px 18px;border-radius:18px;background:rgba(0,0,0,.18);border:1px solid var(--border,#2b2b33);overflow:hidden;font-family:'Inter',sans-serif;}
+    body.light-theme .lg-sc{background:rgba(255,255,255,.6);}
+    .lg-sc *{box-sizing:border-box;}
+    .lg-toast{position:absolute;right:12px;bottom:12px;padding:8px 12px;border-radius:12px;background:var(--bg-panel2,#1d1d24);border:1px solid var(--border,#2b2b33);font:800 11.5px 'Inter',sans-serif;box-shadow:0 12px 30px rgba(0,0,0,.35);animation:lgToast .5s 3.1s cubic-bezier(.3,1.5,.5,1) both;}
+    @keyframes lgToast{from{opacity:0;transform:translateY(16px) scale(.8)}to{opacity:1;transform:none}}
+    /* beosztás */
+    .lgx-cal{position:absolute;left:14px;top:14px;right:14px;display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+    .lgx-cal i{font-style:normal;height:30px;border-radius:8px;background:rgba(128,128,128,.12);font:800 9.5px 'Inter',sans-serif;display:flex;align-items:center;justify-content:center;color:transparent;animation:lgCell .35s ease both;animation-delay:calc(var(--k)*28ms);}
+    .lgx-cal i.h{background:none;color:var(--text-dim,#9c9ca6);height:16px;}
+    .lgx-cal i.d{animation:lgCell .35s ease both,lgFill .4s ease forwards;animation-delay:calc(var(--k)*28ms),calc(900ms + var(--k)*45ms);}
+    .lgx-cal i.d.u{--fc:#e2bf55;} .lgx-cal i.d.z{--fc:#e2585a;}
+    @keyframes lgCell{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+    @keyframes lgFill{to{background:var(--fc,#7b8cff);color:#fff;}}
+    /* leltár */
+    .lgx-bc{position:absolute;left:16px;top:16px;width:150px;height:110px;border-radius:12px;background:#fff;padding:12px 14px;}
+    .lgx-bc::before{content:"";display:block;height:70px;background:repeating-linear-gradient(90deg,#111 0 3px,transparent 3px 5px,#111 5px 6px,transparent 6px 9px,#111 9px 13px,transparent 13px 15px);}
+    .lgx-bc::after{content:"5 999 123 456";display:block;text-align:center;font:700 10px monospace;color:#111;margin-top:4px;}
+    .lgx-las{position:absolute;left:10px;right:10px;top:20px;height:2px;background:#ff3b3b;box-shadow:0 0 12px 3px rgba(255,59,59,.7);animation:lgLas 1.3s ease-in-out infinite alternate;}
+    @keyframes lgLas{to{top:86px}}
+    .lgx-ls{position:absolute;left:182px;right:14px;top:16px;display:flex;flex-direction:column;gap:6px;}
+    .lgx-r{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:10px;background:rgba(128,128,128,.12);font:700 11.5px 'Inter',sans-serif;animation:lgRow .45s ease both;animation-delay:var(--dl);}
+    .lgx-r em{font-style:normal;font-weight:900;color:var(--c);}
+    @keyframes lgRow{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+    .lgx-big{position:absolute;left:16px;bottom:14px;font:900 30px 'Poppins',sans-serif;color:var(--c);} .lgx-big small{display:block;font:700 10.5px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);}
+    /* kassza */
+    .lgx-nt{position:absolute;left:24px;width:150px;height:62px;border-radius:9px;display:flex;align-items:center;justify-content:center;font:900 15px 'Poppins',sans-serif;color:rgba(0,0,0,.65);box-shadow:0 8px 18px rgba(0,0,0,.3);animation:lgDrop .55s cubic-bezier(.3,1.4,.5,1) both;animation-delay:var(--dl);border:2px dashed rgba(0,0,0,.15);}
+    @keyframes lgDrop{from{opacity:0;transform:translateY(-120px) rotate(-12deg)}to{opacity:1;transform:rotate(var(--r,0deg))}}
+    .lgx-sum{position:absolute;right:18px;top:20px;text-align:right;} .lgx-sum small{display:block;font:700 11px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);} .lgx-sum b{font:900 32px 'Poppins',sans-serif;color:var(--c);}
+    .lgx-bar{position:absolute;right:18px;top:96px;width:170px;display:flex;flex-direction:column;gap:7px;}
+    .lgx-bar span{display:block;height:9px;border-radius:9px;background:rgba(128,128,128,.15);overflow:hidden;} .lgx-bar span::after{content:"";display:block;height:100%;width:var(--w);background:var(--c);border-radius:9px;animation:lgW 1.2s ease both;animation-delay:var(--dl);}
+    @keyframes lgW{from{width:0}}
+    /* csomag */
+    .lgx-belt{position:absolute;left:0;right:0;top:142px;height:10px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 14px,transparent 14px 28px);animation:lgBelt .6s linear infinite;}
+    @keyframes lgBelt{to{background-position:28px 0}}
+    .lgx-bx{position:absolute;top:76px;width:70px;height:66px;border-radius:8px;background:linear-gradient(160deg,#d9a35c,#a8723a);box-shadow:inset 0 0 0 2px rgba(0,0,0,.12);display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font:900 9px 'Inter',sans-serif;color:#fff;animation:lgBox 1.6s cubic-bezier(.3,.8,.3,1) both;animation-delay:var(--dl);}
+    .lgx-bx::before{content:"";position:absolute;left:28px;top:0;width:8px;height:100%;background:rgba(255,255,255,.25);}
+    @keyframes lgBox{from{transform:translateX(560px)}to{transform:translateX(0)}}
+    .lgx-tags{position:absolute;left:14px;right:14px;bottom:14px;display:flex;gap:8px;}
+    .lgx-tags span{padding:7px 11px;border-radius:10px;font:800 11px 'Inter',sans-serif;background:rgba(128,128,128,.12);animation:fcUp .4s ease both;animation-delay:var(--dl);}
+    /* selejt */
+    .lgx-bin{position:absolute;right:30px;bottom:16px;width:76px;height:84px;border-radius:6px 6px 14px 14px;background:linear-gradient(180deg,#e2585a,#a8383a);display:flex;align-items:center;justify-content:center;font-size:30px;}
+    .lgx-bin::before{content:"";position:absolute;left:-6px;right:-6px;top:-10px;height:10px;border-radius:6px;background:#c84446;transform-origin:right bottom;animation:lgLid 1.5s ease-in-out infinite;}
+    @keyframes lgLid{0%,100%{transform:none}35%,60%{transform:rotate(28deg)}}
+    .lgx-it{position:absolute;right:52px;top:-30px;font-size:24px;animation:lgFall 1.5s ease-in infinite;animation-delay:var(--dl);}
+    @keyframes lgFall{0%{transform:translate(-120px,0) rotate(0);opacity:0}15%{opacity:1}55%{transform:translate(0,40px) rotate(160deg);opacity:1}70%,100%{transform:translate(0,110px) rotate(240deg);opacity:0}}
+    .lgx-sl{position:absolute;left:14px;top:14px;width:58%;display:flex;flex-direction:column;gap:6px;}
+    .lgx-sl .lgx-r s{opacity:.55;}
+    /* tudástár */
+    .lgx-q{position:absolute;left:14px;right:14px;top:14px;height:40px;border-radius:12px;border:1.5px solid var(--c);display:flex;align-items:center;padding:0 12px;gap:8px;font:700 13px 'Inter',sans-serif;}
+    .lgx-q span{display:inline-block;overflow:hidden;white-space:nowrap;width:0;border-right:2px solid var(--c);animation:lgTy 1.3s .4s steps(13) forwards,lgCar .7s step-end infinite;}
+    @keyframes lgTy{to{width:13ch}} @keyframes lgCar{50%{border-color:transparent}}
+    .lgx-res{position:absolute;left:14px;right:14px;top:64px;display:flex;flex-direction:column;gap:6px;}
+    .lgx-res .lgx-r{justify-content:flex-start;gap:10px;}
+    .lgx-res .lgx-r em{margin-left:auto;font-size:10px;padding:3px 7px;border-radius:7px;background:color-mix(in srgb,var(--c) 20%,transparent);}
+    /* fülek */
+    .lg-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;width:min(580px,100%);margin-top:16px;}
+    .lg-tabs button{position:relative;overflow:hidden;display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel,#17171c);color:var(--text-dim,#9c9ca6);font:800 12px 'Inter',sans-serif;cursor:pointer;transition:color .3s,border-color .3s,transform .2s;}
+    .lg-tabs button:hover{transform:translateY(-2px);color:var(--text,#eee);}
+    .lg-tabs button.on{color:var(--text,#eee);border-color:var(--c);}
+    .lg-tabs button::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--c);}
+    .lg-tabs button.on::after{animation:lgProg var(--dur,6.5s) linear forwards;}
+    .lg-show.pause .lg-tabs button.on::after{animation-play-state:paused;}
+    @keyframes lgProg{to{width:100%}}
     .lg-safe{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:12px;font-weight:700;color:var(--text-dim,#9c9ca6);}
     body.light-theme .lg-pane{background:rgba(255,255,255,.92);box-shadow:20px 0 60px rgba(60,40,10,.08);}
-    body.light-theme .lg-dev{background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.6));box-shadow:0 40px 90px rgba(60,40,10,.15);}
+    body.light-theme .lg-card{box-shadow:0 40px 90px rgba(60,40,10,.15);}
     @media (max-width:980px){
       .fc-full.fc-login{grid-template-columns:1fr;}
       .lg-pane{min-height:100vh;border-right:0;box-shadow:none;background:transparent;max-width:520px;margin:0 auto;width:100%;}
       .lg-show{display:none;}
       .lg-mid{justify-content:flex-start;padding-top:8vh;}
     }
-    html.fp-lite .lg-dev,html.fp-lite .fc-login .fc-go::after{animation:none !important;}
+    html.fp-lite .lg-orb,html.fp-lite .fc-login .fc-go::after{animation:none !important;}
     html.fp-lite .fc-full,html.fp-lite .fc-feats span{animation:none !important;}
     /* admin boltválasztó */
     .fc-crown{font-size:34px;} .fc-adm-h h2{margin:6px 0 4px;font:800 30px 'Poppins',sans-serif;} .fc-adm-h p{margin:0;color:var(--text-dim,#9c9ca6);font-size:14px;}
@@ -4545,8 +4613,24 @@
     const lg = document.querySelector("#logoInner img"), logo = lg && lg.getAttribute("src");
     const feats = [["📅","Beosztás"],["🏷️","Cetli generátor"],["📋","Leltár"],["💰","Kassza"],["📦","Csomag"],["🗑️","Selejt"],["✅","Teendők"],["📚","Tudástár"]];
     b.classList.add("fc-login");
-    const SHOW = [["helpBody","1","📅","Beosztás","A havi munkarend pár kattintással — PDF és jelenléti ív.","#7b8cff"],["lhelpBody","4","📋","Leltár","Vonalkódolvasóval, hangos visszajelzéssel.","#30b37a"],["khelpBody","3","💰","Kassza","Címletek, pénz hátul, kasszajelentés — azonnal.","#e2bf55"],["phelpBody","1","📦","Csomag","GLS és Posta csomagok beolvasása, kiadása.","#c98a3a"],["xhelpBody","1","🗑️","Selejt","A mai selejt egy helyen, ShieldUp külön.","#e2585a"],["thelpBody","1","📚","Tudástár","Segédlet, Kézikönyv, minden bolt elérhetősége.","#8a5aa8"]]
-      .map(s=>{ const src = document.getElementById(s[0]); const w = src && src.querySelector(`.help-slide[data-i="${s[1]}"] .hc-wrap`); return w ? { html:w.outerHTML, ic:s[2], t:s[3], x:s[4], c:s[5] } : null; }).filter(Boolean);
+    const R = (rows, base)=> rows.map((r, k)=> `<div class="lgx-r" style="--dl:${base + k * 0.35}s">${r}</div>`).join("");
+    const calHtml = ()=>{ let h = ["H","K","Sze","Cs","P","Szo","V"].map(d=> `<i class="h">${d}</i>`).join(""); const T = ["DE","DU","DE","","DU","DE","","DE","DU","Z","DE","DU","","DE","DE","DU","DE","","DU","DE","DE","","DE","DU","DE","DU","","Z"];
+      T.forEach((t, k)=> h += `<i class="${t ? "d" + (t === "DU" ? " u" : t === "Z" ? " z" : "") : ""}" style="--k:${k}">${t}</i>`); return `<div class="lgx-cal">${h}</div>`; };
+    const SHOW = [
+      { ic:"📅", t:"Beosztás", x:"A havi munkarend pár kattintással — PDF és jelenléti ív.", c:"#7b8cff",
+        h:()=> calHtml() + `<div class="lg-toast">📄 Havi beosztás PDF kész</div>` },
+      { ic:"📋", t:"Leltár", x:"Vonalkódolvasóval, hangos visszajelzéssel.", c:"#30b37a",
+        h:()=> `<div class="lgx-bc"><div class="lgx-las"></div></div><div class="lgx-ls">${R(["iPhone 15 tok <em>+1</em>","USB-C kábel <em>+3</em>","Kijelzővédő <em>+2</em>","Töltőfej 20W <em>+1</em>"], .5)}</div><div class="lgx-big"><span data-n="128">0</span> db<small>beolvasva ma</small></div><div class="lg-toast">🔊 Bip! Megvan</div>` },
+      { ic:"💰", t:"Kassza", x:"Címletek, pénz hátul, kasszajelentés — azonnal.", c:"#e2bf55",
+        h:()=> [["20 000","#9fb7e8",-4],["10 000","#d9a3c4",3],["5 000","#e8c58a",-2],["2 000","#a9d4b4",4]].map((n, k)=> `<div class="lgx-nt" style="top:${118 - k * 30}px;left:${22 + k * 26}px;background:${n[1]};--r:${n[2]}deg;--dl:${.2 + k * .35}s;z-index:${k}">${n[0]} Ft</div>`).join("")
+          + `<div class="lgx-sum"><small>Kasszában</small><b><span data-n="185000" data-f="1">0</span> Ft</b></div><div class="lgx-bar"><span style="--w:88%;--dl:.4s"></span><span style="--w:62%;--dl:.6s"></span><span style="--w:40%;--dl:.8s"></span></div><div class="lg-toast">✅ Kasszajelentés kész</div>` },
+      { ic:"📦", t:"Csomag", x:"GLS és Posta csomagok beolvasása, kiadása.", c:"#c98a3a",
+        h:()=> `<div class="lgx-belt"></div>` + ["GLS","POSTA","GLS","GLS","POSTA"].map((t, k)=> `<div class="lgx-bx" style="left:${20 + k * 92}px;--dl:${k * .3}s">${t}</div>`).join("")
+          + `<div class="lgx-tags"><span style="--dl:1.6s">📥 Beérkezett: <b data-n="5">0</b></span><span style="--dl:1.9s">📤 Kiadva: <b data-n="3">0</b></span></div><div class="lg-toast">📲 Értesítés kiküldve</div>` },
+      { ic:"🗑️", t:"Selejt", x:"A mai selejt egy helyen, ShieldUp külön.", c:"#e2585a",
+        h:()=> `<div class="lgx-sl">${R(["<s>Sérült tok</s> <em>1 db</em>","<s>Hibás kábel</s> <em>2 db</em>","🛡️ ShieldUp fólia <em>külön</em>"], .3)}</div><div class="lgx-bin">🗑️${["📱","🔌","🛡️"].map((e, k)=> `<span class="lgx-it" style="--dl:${k * .5}s">${e}</span>`).join("")}</div><div class="lg-toast" style="right:auto;left:12px">🧾 Mai selejt mentve</div>` },
+      { ic:"📚", t:"Tudástár", x:"Segédlet, Kézikönyv, minden bolt elérhetősége.", c:"#8a5aa8",
+        h:()=> `<div class="lgx-q">🔍 <span>Kassza zárása</span></div><div class="lgx-res">${R(["📘 Kasszazárás lépésről lépésre <em>Kézikönyv</em>","📗 Pénz hátra tétele <em>Segédlet</em>","📞 Debrecen Fórum · telefonszám <em>Boltok</em>"], 1.8)}</div><div class="lg-toast" style="animation-delay:3.4s">⭐ 3 találat</div>` }];
     const hr = new Date().getHours(), hi = hr < 10 ? "Jó reggelt!" : hr < 18 ? "Szép napot!" : "Jó estét!";
     b.innerHTML = `<div class="fc-glow"></div>
       <section class="lg-pane">
@@ -4570,8 +4654,9 @@
       </section>
       <section class="lg-show">
         <h2>A bolt napi munkája,<br><span>egy helyen.</span></h2>
-        <div class="lg-dev"><div class="lg-dots3"><i></i><i></i><i></i></div><div class="lg-scr">${SHOW.map((s, i)=> `<div class="lg-sl${i ? "" : " on"}"><div class="help-slide active">${s.html}</div></div>`).join("")}</div></div>
-        <div class="lg-cap"><i></i><div></div><span class="lg-pg">${SHOW.map((_, i)=> `<button type="button" data-p="${i}" aria-label="${i + 1}"></button>`).join("")}</span></div>
+        <i class="lg-orb a"></i><i class="lg-orb b"></i>
+        <div class="lg-stack" id="lgStack"></div>
+        <div class="lg-tabs">${SHOW.map((s, i)=> `<button type="button" data-p="${i}" style="--c:${s.c}">${s.ic} ${s.t}</button>`).join("")}</div>
         <div class="lg-safe"><span>☁️ Felhőben mentve</span><span>📱 Telefonon is</span><span>🔄 Mindig friss</span><span>❓ Animált súgó</span></div>
       </section>`;
     document.body.appendChild(b);
@@ -4582,17 +4667,23 @@
     const tick = ()=>{ if(!b.isConnected) return clearInterval(clk); const d = new Date(); b.querySelector(".lg-t").textContent = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
       b.querySelector(".lg-d").textContent = d.toLocaleDateString("hu-HU", { month:"long", day:"numeric", weekday:"long" }); };
     const clk = setInterval(tick, 10000); tick();
-    /* jobb oldali bemutató: a súgó jelenetei váltakoznak */
-    const sls = Array.from(b.querySelectorAll(".lg-sl")), cap = b.querySelector(".lg-cap"), pgs = Array.from(b.querySelectorAll(".lg-pg button"));
-    const fitS = ()=> b.querySelectorAll(".lg-sl.on .hc-wrap").forEach(w=>{ const st = w.querySelector(".hc-stage"); if(!st) return; const sc = Math.min(1.25, w.clientWidth / 480); w.style.height = Math.round(210 * sc) + "px"; st.style.transform = `translateX(${Math.max(0, (w.clientWidth - 480 * sc) / 2)}px) scale(${sc})`; });
-    let si = 0, sT = null;
-    const showS = i=>{ if(!sls.length) return; const prev = sls[si]; si = (i + sls.length) % sls.length;
-      if(prev !== sls[si]){ prev.classList.remove("on"); prev.classList.add("out"); setTimeout(()=> prev.classList.remove("out"), 650); }
-      sls[si].classList.add("on"); fitS(); const s = SHOW[si];
-      cap.style.setProperty("--c", s.c); cap.querySelector("i").textContent = s.ic; cap.querySelector("div").outerHTML = `<div><b>${s.t}</b><span>${s.x}</span></div>`;
-      pgs.forEach((p, k)=> p.classList.toggle("on", k === si)); clearTimeout(sT); sT = setTimeout(()=>{ if(b.isConnected) showS(si + 1); }, 6500); };
-    b.querySelector(".lg-pg").onclick = e=>{ const p = e.target.closest("[data-p]"); if(p) showS(+p.dataset.p); };
-    window.addEventListener("resize", fitS); setTimeout(()=> showS(0), 30);
+    /* jobb oldali bemutató: saját animált kártyák váltakoznak */
+    const shw = b.querySelector(".lg-show"), stk = b.querySelector("#lgStack"), pgs = Array.from(b.querySelectorAll(".lg-tabs button")), DUR = 6500;
+    let si = -1, sT = null, sLeft = DUR, sAt = 0;
+    const countUp = el=> el.querySelectorAll("[data-n]").forEach(n=>{ const to = +n.dataset.n, fm = n.dataset.f, t0 = performance.now() + 500;
+      const st = now=>{ if(!n.isConnected) return; const p = Math.max(0, Math.min(1, (now - t0) / 1400)), v = Math.round(to * (1 - Math.pow(1 - p, 3)));
+        n.textContent = fm ? v.toLocaleString("hu-HU") : v; if(p < 1) requestAnimationFrame(st); }; requestAnimationFrame(st); });
+    const arm = ms=>{ clearTimeout(sT); sLeft = ms; sAt = Date.now(); sT = setTimeout(()=>{ if(b.isConnected) showS(si + 1); }, ms); };
+    const showS = i=>{ i = (i + SHOW.length) % SHOW.length; if(i === si) return; si = i; const s = SHOW[si];
+      stk.querySelectorAll(".lg-card").forEach(o=>{ if(o.classList.contains("out")) return o.remove(); o.classList.remove("in"); o.classList.add("out"); setTimeout(()=> o.remove(), 620); });
+      const c = document.createElement("div"); c.className = "lg-card in"; c.style.setProperty("--c", s.c);
+      c.innerHTML = `<div class="lg-ch"><i>${s.ic}</i><div><b>${s.t}</b><span>${s.x}</span></div><span class="lg-live">ÉLŐ</span></div><div class="lg-sc">${s.h()}</div>`;
+      stk.appendChild(c); countUp(c); shw.style.setProperty("--lc", s.c);
+      pgs.forEach((p, k)=>{ p.classList.remove("on"); if(k === si){ void p.offsetWidth; p.classList.add("on"); } }); shw.classList.remove("pause"); arm(DUR); };
+    b.querySelector(".lg-tabs").onclick = e=>{ const p = e.target.closest("[data-p]"); if(p) showS(+p.dataset.p); };
+    stk.onmouseenter = ()=>{ clearTimeout(sT); sLeft = Math.max(400, sLeft - (Date.now() - sAt)); shw.classList.add("pause"); };
+    stk.onmouseleave = ()=>{ shw.classList.remove("pause"); arm(sLeft); };
+    setTimeout(()=> showS(0), 30);
     /* boltnév-javaslatok + az utoljára használt bolt */
     const sugEl = b.querySelector("#lgSug"), LAST = "firstphone_last_login";
     const SH = (window.FP_SHOPS || []).map(s=> ({ n:s.n, c:s.c }));
@@ -4998,7 +5089,7 @@
       { ic:"📢", c:"#5b95ff", sc:"nwan", t:"Közlemények az admintól", x:"Fontos hírek a munkaasztal tetején.", b:["Három fajta: 💬 tájékoztatás, ⚠️ fontos, ✅ jó hír","Lehet <b>lejárata</b> is — utána magától eltűnik","Az „✓ Elolvastam” gombbal bezárod"] },
       { ic:"🔔", c:"#4fb3c4", sc:"nwsnd", t:"Új hangok", x:"Modernebb, iPhone-szerű hangjelzések mindenhol.", b:["<b>Leltár</b>: lágy „pling” ha megvan, mély „tom-tom” ha nincs a listán","<b>Chat</b>: háromhangú értesítő új üzenetnél","<b>Csomag / Selejt</b>: rövid megerősítő hang"] },
       { ic:"🎨", c:"#6f7ff5", sc:"nwhd", t:"Színes fejléc", x:"Minden program saját színt kapott — egy pillantásra látod, hol vagy.", b:["Fent egy panelben a logó, a gombok és a programok, <b>középen</b>","Telefonon csak az ikonok látszanak — a kiválasztottnál a neve is","A 🎁 gomb a ❓ mellett jelzi, ha újdonság van"] },
-      { ic:"🔐", c:"#d9ad46", sc:"nwlg", t:"Belépő képernyő", x:"Gyorsabb és szebb belépés.", b:["Beírás közben <b>javasolja a boltot</b> — egy kattintás, és kész","Megjegyzi, melyik bolttal léptél be legutóbb (↺)","Nagy gépen jobb oldalt élő bemutató mutatja, mit tud a Munkaasztal","Ha a bolt belépési címe régen el volt írva, a régi és a helyes is működik (pl. <b>Vásárosnamény</b>)"] },
+      { ic:"🔐", c:"#d9ad46", sc:"nwlg", t:"Belépő képernyő", x:"Gyorsabb és szebb belépés.", b:["Beírás közben <b>javasolja a boltot</b> — egy kattintás, és kész","Megjegyzi, melyik bolttal léptél be legutóbb (↺)","Nagy gépen jobb oldalt <b>új, animált kártyák</b> mutatják a programokat (beosztás, leltár, kassza, csomag, selejt, tudástár) — a fülekkel válthatsz, rámutatva megáll","Ha a bolt belépési címe régen el volt írva, a régi és a helyes is működik (pl. <b>Vásárosnamény</b>)"] },
       { ic:"⬇️", c:"#2ea472", sc:"nwd", t:"Letöltés bármelyik gépről", x:"Ha egy idegen vagy zárolt gépen nem indul el a letöltés, van megoldás.", b:["Minden letöltés után lent megjelenik egy kis sáv","<b>⬇ Letöltés újra</b> · <b>🗂 Megnyitás új lapon</b> · <b>🖨 Nyomtatás</b>","iPhone-on és iPaden a megosztás lap nyílik"] },
       { ic:"🔄", c:"#4fb3c4", sc:"nwu", t:"Mindig friss", x:"A munkaasztal magától frissül — nem kell semmit nyomni.", b:["Ha új verzió jön, pár másodperc múlva magától frissül (a munkád előtte elmentődik)","Ha új dia van, a 🎁 gomb <b>színes lesz</b> és kiírja, hány új (pl. <b>„3 új”</b>) — bent az új diák <b>✨ ÚJ</b> jelet kapnak, fent egy gomb odaugrik","Az újdonságok és a súgó <b>mindig az elejéről</b> indulnak"] },
       { ic:"❓", c:"#d9ad46", sc:"nwh", t:"Ha elakadsz", x:"Minden oldalnak saját, animált súgója van.", b:["Fent a <b>❓</b> gomb: lépésről lépésre, képekkel","<b>▶ Bemutató</b>: körbevezet az egész munkaasztalon","Kérdés? Írj a <b>💬 Chatben</b> — hiba? Nyomd meg a <b>🐞</b> gombot"] }
