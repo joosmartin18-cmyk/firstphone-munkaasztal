@@ -4257,7 +4257,7 @@
   .hdr2 .ps-btn.active{color:#fff !important;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 85%,#fff 15%),var(--c)) !important;border-color:transparent !important;box-shadow:0 8px 20px color-mix(in srgb,var(--c) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 2px rgba(0,0,0,.25);}
   .hdr2 .ps-btn.active .ps-i{background:rgba(255,255,255,.22);}
   .hdr2 .ps-btn[data-page="beosztas"]{--c:#6f7ff5;} .hdr2 .ps-btn[data-page="cetli"]{--c:#2fa3b6;} .hdr2 .ps-btn[data-page="leltar"]{--c:#2ea472;} .hdr2 .ps-btn[data-page="kassza"]{--c:#d4a52c;}
-  .hdr2 .ps-btn[data-page="csomag"]{--c:#c47f2c;} .hdr2 .ps-btn[data-page="selejt"]{--c:#d9474a;} .hdr2 .ps-btn[data-page="tudastar"]{--c:#8a5aa8;} .hdr2 .ps-btn[data-page="teendo"]{--c:#d6589a;}
+  .hdr2 .ps-btn[data-page="csomag"]{--c:#c47f2c;} .hdr2 .ps-btn[data-page="selejt"]{--c:#d9474a;} .hdr2 .ps-btn[data-page="tudastar"]{--c:#8a5aa8;} .hdr2 .ps-btn[data-page="teendo"]{--c:#d6589a;} .hdr2 .ps-btn[data-page="tokfal"]{--c:#4f9cf0;}
   .hdr2 .ps-btn .ps-long{display:inline !important;}
   @media (max-width:899px){
     .hdr2{padding:10px 10px 8px;border-radius:20px;}
@@ -4271,6 +4271,100 @@
   @media (max-width:400px){ .hdr2 .ps-btn{padding:5px 3px !important;font-size:12px !important;} .hdr2 .ps-btn .ps-i{width:24px;height:24px;font-size:13px;} }
   body.light-theme .hdr2{background:rgba(255,255,255,.82);box-shadow:0 14px 40px rgba(60,40,10,.08);}
   html.fp-lite .hdr2{-webkit-backdrop-filter:none;backdrop-filter:none;}
+  /* ===== 🧱 Tokfal ===== */
+  .tf-page{display:none;}
+  body.page-tokfal .tf-page{display:block;}
+  body.page-tokfal #tabs, body.page-tokfal #autoAdvanceBanner, body.page-tokfal #mainPanel, body.page-tokfal #settingsPanel{display:none !important;}
+  .tf-top{display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;}
+  .tf-top::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(79,156,240,.16),transparent 50%);}
+  .tf-ic{width:54px;height:54px;flex:none;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(150deg,rgba(79,156,240,.32),rgba(79,156,240,.08));border:1px solid rgba(79,156,240,.45);position:relative;}
+  .tf-top h2{margin:0;font:800 22px 'Poppins',sans-serif;position:relative;} .tf-top p{margin:2px 0 0;font-size:13px;color:var(--text-dim);position:relative;}
+  .tf-card{padding:16px !important;margin-top:14px;}
+  .tf{display:flex;flex-direction:column;gap:12px;}
+  .tf-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .tf-search{flex:1 1 280px;display:flex;align-items:center;gap:8px;padding:0 14px;border-radius:14px;background:var(--bg-panel2);border:1.5px solid var(--border);transition:border-color .2s,box-shadow .2s;}
+  .tf-search:focus-within{border-color:#4f9cf0;box-shadow:0 0 0 4px rgba(79,156,240,.16);}
+  .tf-search i{font-style:normal;} .tf-search input{flex:1;min-width:0;border:0;background:none;outline:none;color:var(--text);font:700 14.5px 'Inter',sans-serif;padding:12px 0;}
+  .tf-stat{font:800 12px 'Inter',sans-serif;color:var(--text-dim);}
+  .tf-bar .action-btn{flex:0 0 auto !important;width:auto !important;}
+  .tf-res{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 12px;border-radius:14px;background:rgba(79,156,240,.1);border:1px solid rgba(79,156,240,.4);font-size:13px;animation:fadeInUp .3s ease;}
+  .tf-res.none{background:var(--bg-panel2);border-color:var(--border-soft);color:var(--text-dim);}
+  .tf-res button{border:1px solid rgba(79,156,240,.5);background:var(--bg-panel);color:var(--text);font:700 12px 'Inter',sans-serif;padding:5px 10px;border-radius:10px;cursor:pointer;}
+  .tf-res button strong{font:900 13px 'Poppins',sans-serif;color:#4f9cf0;} .tf-res button small{color:var(--text-dim);font-weight:700;}
+  .tf-walls{display:flex;gap:6px;flex-wrap:wrap;}
+  .tf-walls button{border:1px solid var(--border-soft);background:var(--bg-panel2);color:var(--text-dim);font:800 12.5px 'Inter',sans-serif;padding:7px 12px;border-radius:11px;cursor:pointer;}
+  .tf-walls button.on{color:var(--text);border-color:#4f9cf0;box-shadow:inset 0 -3px 0 #4f9cf0;}
+  .tf-walls button em{font-style:normal;margin-left:6px;padding:1px 7px;border-radius:99px;background:#4f9cf0;color:#fff;font-size:10.5px;}
+  .tf-walls button.add{border-style:dashed;}
+  .tf-set{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;padding:12px 14px;border-radius:16px;background:var(--bg-panel2);border:1px dashed rgba(79,156,240,.5);animation:fadeInUp .3s ease;}
+  .tf-f{display:flex;flex-direction:column;gap:6px;} .tf-f > span{font:800 10.5px 'Inter',sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--text-dim);}
+  .tf-f input{border:1.5px solid var(--border);background:var(--bg-panel);color:var(--text);font:700 14px 'Inter',sans-serif;padding:9px 11px;border-radius:11px;outline:none;min-width:200px;} .tf-f input:focus{border-color:#4f9cf0;}
+  .tf-step{display:flex;align-items:center;height:40px;border-radius:11px;border:1.5px solid var(--border);background:var(--bg-panel);overflow:hidden;}
+  .tf-step button{width:38px;height:100%;border:0;background:none;color:var(--text);font:800 17px 'Inter',sans-serif;cursor:pointer;} .tf-step button:hover{background:var(--bg-cell);}
+  .tf-step b{min-width:34px;text-align:center;font:900 16px 'Poppins',sans-serif;}
+  .tf-wdel{height:40px;border:1px solid rgba(226,88,90,.45);background:none;color:#e2585a;font:800 12.5px 'Inter',sans-serif;padding:0 12px;border-radius:11px;cursor:pointer;}
+  .tf-hint{flex:1 1 100%;margin:0;font-size:12px;color:var(--text-dim);}
+  .tf-gw{overflow-x:auto;padding:4px 2px 8px;}
+  .tf-grid{display:grid;grid-template-columns:28px repeat(var(--cols),minmax(118px,1fr));gap:6px;min-width:max-content;}
+  .tf-ch,.tf-rh{display:grid;place-items:center;font:900 12px 'Poppins',sans-serif;color:var(--text-dim);}
+  .tf-ch{height:24px;border-radius:8px;background:var(--bg-panel2);} .tf-rh{border-radius:8px;background:var(--bg-panel2);}
+  .tf-cell{position:relative;min-height:84px;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:20px 8px 8px;border-radius:13px;border:1.5px dashed var(--border);background:var(--bg-panel2);color:var(--text);cursor:pointer;text-align:left;font:inherit;transition:transform .2s,box-shadow .25s,opacity .3s,border-color .2s;animation:tfIn .4s cubic-bezier(.2,.8,.2,1) backwards;}
+  @keyframes tfIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+  .tf-cell:hover{transform:translateY(-2px);border-color:#4f9cf0;box-shadow:0 8px 18px rgba(0,0,0,.2);}
+  .tf-cell.has{border-style:solid;border-color:color-mix(in srgb,#4f9cf0 40%,var(--border));background:linear-gradient(160deg,color-mix(in srgb,#4f9cf0 12%,var(--bg-panel)),var(--bg-panel) 70%);}
+  .tf-cell .pos{position:absolute;top:5px;left:7px;font:900 10px 'Poppins',sans-serif;font-style:normal;color:var(--text-dim);letter-spacing:.03em;}
+  .tf-cell b{font:800 12.5px/1.2 'Inter',sans-serif;word-break:break-word;}
+  .tf-cell .tps{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:2px;} .tf-cell .tps u{text-decoration:none;font:800 9.5px 'Inter',sans-serif;padding:1px 6px;border-radius:6px;background:rgba(79,156,240,.18);color:var(--text);}
+  .tf-cell small{font:700 10px 'Inter',sans-serif;color:var(--text-dim);}
+  .tf-cell em{margin:auto;font-style:normal;font:700 11px 'Inter',sans-serif;color:var(--text-faint,var(--text-dim));}
+  .tf-cell.dim{opacity:.28;}
+  .tf-cell.hit{opacity:1;border-color:#4f9cf0;border-style:solid;box-shadow:0 0 0 3px rgba(79,156,240,.35);animation:tfHit 1.4s ease-in-out infinite;z-index:1;}
+  @keyframes tfHit{50%{box-shadow:0 0 0 7px rgba(79,156,240,.12)}}
+  .tf-cell.ping{animation:tfPing .9s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes tfPing{0%{transform:scale(1)}30%{transform:scale(1.1);box-shadow:0 0 0 6px rgba(79,156,240,.45)}100%{transform:none}}
+  .tf-back{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .22s;}
+  .tf-back.show{opacity:1;pointer-events:auto;}
+  .tf-dlg{width:min(560px,100%);max-height:92vh;overflow:auto;padding:16px;border-radius:20px;background:var(--bg-panel);border:1px solid var(--border);box-shadow:0 30px 70px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:12px;transform:translateY(14px) scale(.97);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+  .tf-back.show .tf-dlg{transform:none;}
+  .tf-dh{display:flex;align-items:center;gap:12px;} .tf-dh h3{margin:0;font:800 16px 'Poppins',sans-serif;} .tf-dh small{color:var(--text-dim);font-size:12px;} .tf-dh > div{flex:1;min-width:0;}
+  .tf-pos{width:46px;height:46px;flex:none;border-radius:13px;display:grid;place-items:center;font:900 16px 'Poppins',sans-serif;color:#fff;background:linear-gradient(135deg,#6fb0f5,#3d84d8);box-shadow:0 8px 18px rgba(79,156,240,.35);}
+  .tf-x{border:0;background:var(--bg-panel2);color:var(--text-dim);width:32px;height:32px;border-radius:10px;cursor:pointer;}
+  .tf-its{display:flex;flex-direction:column;gap:10px;}
+  .tf-it{padding:10px;border-radius:14px;background:var(--bg-panel2);border:1px solid var(--border-soft);display:flex;flex-direction:column;gap:8px;animation:fadeInUp .3s ease;}
+  .tf-ith{display:flex;justify-content:space-between;align-items:center;font:800 11px 'Inter',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);} .tf-ith button{border:0;background:none;color:var(--text-dim);cursor:pointer;}
+  .tf-inp{display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:12px;background:var(--bg-panel);border:1.5px solid var(--border);} .tf-inp:focus-within{border-color:#4f9cf0;}
+  .tf-inp i{font-style:normal;} .tf-inp input{flex:1;min-width:0;border:0;background:none;outline:none;color:var(--text);font:700 14.5px 'Inter',sans-serif;padding:11px 0;}
+  .tf-tps{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+  .tf-tps button{border:1.5px solid var(--border-soft);background:var(--bg-panel);color:var(--text-dim);font:800 12px 'Inter',sans-serif;padding:5px 10px;border-radius:99px;cursor:pointer;transition:all .15s;}
+  .tf-tps button.on{background:#4f9cf0;border-color:#4f9cf0;color:#fff;}
+  .tf-tadd{border:1.5px dashed var(--border);background:none;color:var(--text);font:700 12px 'Inter',sans-serif;padding:5px 10px;border-radius:99px;outline:none;width:110px;}
+  .tf-more{border:1.5px dashed rgba(79,156,240,.5);background:none;color:var(--text);font:800 13px 'Inter',sans-serif;padding:10px;border-radius:12px;cursor:pointer;}
+  .tf-df{display:flex;gap:10px;align-items:center;} .tf-df .tf-save{margin-left:auto;flex:0 0 auto !important;width:auto !important;padding:11px 22px !important;}
+  .tf-clr{border:1px solid var(--border-soft);background:none;color:var(--text-dim);font:800 12.5px 'Inter',sans-serif;padding:10px 12px;border-radius:11px;cursor:pointer;} .tf-clr:hover{color:#e2585a;border-color:rgba(226,88,90,.45);}
+  @media (max-width:640px){ .tf-grid{grid-template-columns:24px repeat(var(--cols),minmax(96px,1fr));} .tf-cell{min-height:74px;} .tf-stat{display:none;} }
+  body.light-theme .tf-cell{background:#fff;} body.light-theme .tf-cell.has{background:linear-gradient(160deg,rgba(79,156,240,.1),#fff 70%);}
+  /* súgó jelenetek: Tokfal */
+  .tfA > *,.tfB > *{position:absolute;}
+  .tfA .g,.tfB .g{left:20px;top:14px;display:grid;grid-template-columns:repeat(4,72px);gap:5px;}
+  .tfA .g i,.tfB .g i{height:50px;border-radius:9px;border:1.5px dashed var(--border,#2b2b33);background:var(--bg-panel2,#1d1d24);font:800 7.5px 'Inter',sans-serif;font-style:normal;padding:13px 5px 4px;box-sizing:border-box;position:relative;color:var(--text,#eee);}
+  .tfA .g i::before,.tfB .g i::before{content:attr(data-p);position:absolute;left:5px;top:3px;font:900 7px 'Poppins',sans-serif;color:var(--text-dim,#9c9ca6);}
+  .tfA .g i.f,.tfB .g i.f{border-style:solid;border-color:rgba(79,156,240,.5);background:linear-gradient(160deg,rgba(79,156,240,.16),var(--bg-panel,#17171c));}
+  .tfA .g i u,.tfB .g i u{display:inline-block;text-decoration:none;font-size:6px;padding:1px 3px;border-radius:3px;background:rgba(79,156,240,.25);margin:2px 1px 0 0;}
+  .tfA .dl{left:330px;top:24px;width:136px;padding:8px;border-radius:12px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);box-shadow:0 12px 26px rgba(0,0,0,.4);font:800 8px 'Inter',sans-serif;opacity:0;animation:tfaD 8s cubic-bezier(.34,1.56,.64,1) infinite;}
+  .tfA .dl b{display:block;font:900 10px 'Poppins',sans-serif;color:#4f9cf0;margin-bottom:4px;} .tfA .dl .in{border:1.5px solid #4f9cf0;border-radius:6px;padding:4px 5px;margin-bottom:4px;overflow:hidden;white-space:nowrap;}
+  .tfA .dl .in span{display:inline-block;overflow:hidden;width:0;vertical-align:bottom;animation:tfaT 8s steps(9) infinite;} @keyframes tfaT{0%,24%{width:0}40%,100%{width:46px}}
+  .tfA .dl .ch{display:flex;gap:3px;flex-wrap:wrap;} .tfA .dl .ch s{text-decoration:none;font-size:6.5px;padding:2px 5px;border-radius:99px;border:1px solid var(--border,#2b2b33);} .tfA .dl .ch s.o{animation:tfaC 8s ease infinite;}
+  @keyframes tfaC{0%,46%{background:none;color:inherit}50%,100%{background:#4f9cf0;color:#fff;border-color:#4f9cf0}}
+  @keyframes tfaD{0%,14%{opacity:0;transform:scale(.8)}20%,84%{opacity:1;transform:none}90%,100%{opacity:0}}
+  .tfA .g i.n{animation:tfaN 8s ease infinite;} @keyframes tfaN{0%,84%{border-style:dashed;border-color:var(--border,#2b2b33);background:var(--bg-panel2,#1d1d24)}88%,100%{border-style:solid;border-color:#4f9cf0;background:rgba(79,156,240,.2)}}
+  .tfA .g i.n span{opacity:0;animation:tfaS 8s ease infinite;} @keyframes tfaS{0%,84%{opacity:0}88%,100%{opacity:1}}
+  .tfA .hx-cur{animation:tfaCur 8s ease infinite;} @keyframes tfaCur{0%,4%{transform:translate(220px,200px);opacity:0}8%,14%{transform:translate(120px,96px);opacity:1}30%,40%{transform:translate(380px,48px)}46%,52%{transform:translate(360px,74px)}70%,100%{transform:translate(300px,190px);opacity:0}}
+  .tfB .q{left:20px;top:14px;width:300px;height:24px;border-radius:9px;border:1.5px solid #4f9cf0;background:var(--bg-panel2,#1d1d24);font:700 8.5px 'Inter',sans-serif;display:flex;align-items:center;padding:0 8px;gap:5px;}
+  .tfB .q span{display:inline-block;overflow:hidden;white-space:nowrap;width:0;border-right:1.5px solid #4f9cf0;animation:tfbT 8s steps(9) infinite;} @keyframes tfbT{0%,6%{width:0}24%,100%{width:46px}}
+  .tfB .g{top:48px;} .tfB .g i{animation:tfbDim 8s ease infinite;} .tfB .g i.h{animation:tfbHit 8s ease infinite;}
+  @keyframes tfbDim{0%,26%{opacity:1}32%,92%{opacity:.25}100%{opacity:1}} @keyframes tfbHit{0%,26%{box-shadow:none}32%,92%{box-shadow:0 0 0 3px rgba(79,156,240,.55);border-color:#4f9cf0}100%{box-shadow:none}}
+  .tfB .r{left:336px;top:14px;font:800 8.5px 'Inter',sans-serif;padding:8px 10px;border-radius:11px;background:rgba(79,156,240,.15);border:1px solid rgba(79,156,240,.5);opacity:0;animation:tfbR 8s ease infinite;} .tfB .r b{color:#4f9cf0;font:900 11px 'Poppins',sans-serif;}
+  @keyframes tfbR{0%,28%{opacity:0;transform:translateY(-8px)}34%,92%{opacity:1;transform:none}100%{opacity:0}}
   /* ⚠ fontos határidők a beosztásban */
   .dl-strip{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:0 0 12px;}
   .dl-strip .dl-h{align-self:center;font:900 10.5px 'Inter',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#e2585a;margin-right:4px;}
@@ -4478,6 +4572,7 @@
   }
   @media (max-width:560px){
     .hdr2 > .page-switch{grid-auto-flow:row;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-columns:auto;row-gap:4px !important;}
+    .hdr2 > .page-switch:has(.ps-btn[data-page="tokfal"]:not(.ps-off)){grid-template-columns:repeat(5,minmax(0,1fr));}
     .hdr2 .hdr-btns{gap:6px;flex-wrap:nowrap;}
     .hdr2 .hdr-btns .icon-btn,.hdr2 .hdr-btns .set-btn,.hdr2 .hdr-btns .fc-chip{width:34px !important;min-width:34px;height:34px !important;padding:0 !important;justify-content:center;border-radius:10px;}
     .hdr2 .hdr-btns .nw-hb .nw-t{display:none !important;}
@@ -4490,7 +4585,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261012-134137";</script>
+<script>window.FP_BUILD="20261012-144245";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -5409,6 +5504,7 @@
       { ic:"↩️", c:"#a78bfa", sc:"nwrx", t:"Válasz, reakció, „… ír”, elérhető", x:"A chat most már olyan, mint a telefonos üzenetküldők.", b:["<b>🟢 Zöld pötty</b>: az admin vagy a bolt épp bent van — <b>🟡</b> nem aktív, a fejlécben: mikor volt bent utoljára","Vidd az egeret egy üzenetre (telefonon koppints rá): <b>↩ Válasz</b> — az idézet ott lesz az új üzenet fölött, rákattintva odaugrik","<b>☺ Reakció</b>: 👍 ❤️ 😂 😮 😢 🙏 🔥 ✅ — <b>dupla kattintás</b> = ❤️, újra rányomva visszavonod","Látod, ha a másik <b>éppen ír</b> — az adminnál és a boltok közti chatben is"] },
       { ic:"✍️", c:"#8e7ff5", sc:"nww", t:"Ki írja? · Kézbesítve / Látta", x:"Kiválaszthatod a feladót, és látod, ha elolvasták.", b:["Az üzenetsor fölött: <b>Bolt</b>, egy <b>dolgozó</b> vagy <b>✏️ Más</b> név","<b>✓ Kézbesítve</b> · <b>✓✓ Látta</b> (lilán), időponttal","A dolgozó <b>profilképe</b> és neve látszik az üzenet mellett"] },
       { ic:"🐞", c:"#f0a030", sc:"nwb", t:"Hibabejelentés — az admin válaszol", x:"Saját gombja van fent a ❓ mellett — és most már választ is kapsz rá.", b:["Fent a <b>🐞</b> gomb: kiválasztod, melyik résznél (Leltár, Kassza…) és leírod, mi történt","Minden bejelentés kap egy <b>azonosítót</b> (pl. #V3AAC) — így könnyű hivatkozni rá","Ha az admin <b>válaszolt</b>, piros szám jelenik meg a 🐞 gombon, a válasz a bejelentés alatt olvasható","Látod az állapotát is: új, folyamatban vagy megoldva ✅"] },
+      { ic:"🧱", c:"#4f9cf0", sc:["fhelpBody","1"], mod:"tokfal", t:"Tokfal — hol vannak a tokok?", x:"Új program: a kinti tokfal térképe.", b:["Megadhatod, hány <b>oszlop</b> és <b>sor</b> van kint a falon (több fal is lehet)","Rekeszenként: <b>melyik telefon</b> tokjai vannak ott, és <b>milyen típusúak</b> (szilikon, MagSafe, könyvtok…)","<b>🔎 Keresés:</b> beírod a telefont, és a fal megmutatja, hol van (pl. <b>B2</b>)"] },
       { ic:"🖨️", c:"#9aa3b5", sc:"nwbp", mod:"beosztas", t:"Beosztás nyomtatása + határidők", x:"Fekete-fehér, A4-es havi beosztás — a fontos határidőkkel.", b:["Lent új <b>🖨️ Nyomtatás</b> gomb: modern, de nyomtatóbarát, egy oldalas ív","A tetején mindig: <b>📤 23-án beosztás elküldése</b> (ünnep → előtte), <b>📋 hónap utolsó napján jelenléti ív elküldése</b>, <b>🧾 1-jén zárások elküldése</b> (ünnep → +1 nap)","A naptár fölött is látszik, hány nap van még hátra — és a napokon is jelölve"] },
       { ic:"🛒", c:"#4fb3c4", sc:["dhelpBody","4"], mod:"teendo", ft:"rend", t:"Rendelés — teljesen új", x:"Fent a felírás, lent a lista állapot szerinti fülekkel.", b:["<b>🛡️ ShieldUp:</b> 125 / 150 / 160 / 200 / 350 micron, 131 micron - black, gél, 160 micron - tablet, sablon kicsi / nagy — egy kattintás","<b>🪟 Üvegfólia:</b> sima üveg · privacy · matt + telefon típusa · <b>📱 Tok:</b> hátlap tok vagy könyvtok + telefon típusa (+ márka) · <b>🔌 Tartozék:</b> töltőfej, kábel, óraszíj, fülhallgató… vagy beírod","A <b>darabszám nem kötelező</b>, megjegyzés mindenhol írható; üvegfóliánál és toknál <b>márka</b> is megadható","Lent: <b>🛒 Rendelni kell</b> · <b>📦 Megrendelve</b> · <b>✅ Megjött</b> fülek, <b>📦 Mind megrendelve</b>, <b>📋 Lista másolása</b>"] },
       { ic:"✅", c:"#d6589a", sc:["dhelpBody","1"], mod:"teendo", t:"Teendők — új tábla", x:"Fent egy sorban felírod, alatta határidő szerinti oszlopokban látod.", b:["Felső sáv: <b>mit</b> · <b>kinek</b> (👥 Közös vagy egy dolgozó) · <b>határidő</b> (Bármikor, Ma, Holnap, Péntek, 📅 bármelyik nap)","Tábla: <b>⚠️ Lejárt</b> · <b>📅 Ma</b> · <b>🗓️ Később</b> · <b>📌 Bármikor</b> — mindenki a saját nevénél pipál","<b>Mutasd:</b> egy dolgozóra szűrve csak az ő teendői látszanak"] },
@@ -8734,6 +8830,7 @@ service cloud.firestore {
     <button type="button" class="ps-btn" data-page="kassza" title="Kassza"><i class="ps-i">💰</i> <span class="ps-t">Kassza</span></button>
     <button type="button" class="ps-btn" data-page="csomag" title="Csomag"><i class="ps-i">📦</i> <span class="ps-t">Csomag</span></button>
     <button type="button" class="ps-btn" data-page="selejt" title="Selejt"><i class="ps-i">🗑️</i> <span class="ps-t">Selejt</span></button>
+    <button type="button" class="ps-btn" data-page="tokfal" title="Tokfal — hol vannak kint a tokok"><i class="ps-i">🧱</i> <span class="ps-t">Tokfal</span></button>
     <button type="button" class="ps-btn" data-page="teendo" title="Teendők — közös to-do lista"><i class="ps-i">✅</i> <span class="ps-t">Teendők</span></button>
     <button type="button" class="ps-btn" data-page="tudastar" title="Tudástár — Segédlet, Kézikönyv, Üzletek"><i class="ps-i">📚</i> <span class="ps-t">Tudástár</span></button>
   </div>
@@ -8979,6 +9076,11 @@ service cloud.firestore {
     <section class="panel or-card" id="orderCard" hidden></section>
   </div>
 
+  <div class="tf-page" id="tfPage">
+    <section class="panel tf-top"><div class="tf-ic">🧱</div><div><h2>Tokfal</h2><p>Hol vannak kint a tokok az üzletben — oszlopok, sorok, rekeszenként a telefon és a tok típusa.</p></div></section>
+    <section class="panel tf-card" id="tfCard"></section>
+  </div>
+
   <div class="sx-page" id="sxPage">
     <section class="panel sx-top">
       <div class="sx-ic">🗑️</div>
@@ -9214,6 +9316,14 @@ service cloud.firestore {
   </div>
 </div>
 
+<div class="modal-backdrop" id="fhelpModal">
+  <div class="modal help-modal" role="dialog" aria-labelledby="fhelpTitle">
+    <div class="help-top"><h2 id="fhelpTitle">🧱 Tokfal — így működik</h2><div style="display:flex;gap:8px;align-items:center"><span class="help-count" id="fhelpCount">1 / 2</span><button class="help-x" id="fhelpX" title="Bezárás">✕</button></div></div>
+    <div class="help-bars" id="fhelpBars"></div>
+    <div class="help-body" id="fhelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">🧱</div><div><h3>A fal felépítése</h3><p>Oszlopok (A, B, C…) és sorok (1, 2, 3…) — rekeszenként a telefon és a tok típusa.</p></div></div><div class="hc-wrap"><div class="hc-stage tfA"><div class="g"><i data-p="A1" class="f">iPhone 15<br><u>Szilikon</u><u>MagSafe</u></i><i data-p="B1" class="f">iPhone 16<br><u>Könyvtok</u></i><i data-p="C1" class=""></i><i data-p="D1" class="f">A56<br><u>Átlátszó</u></i><i data-p="A2" class="f">iPhone 13<br><u>Bőr</u></i><i data-p="B2" class="n"><span>iPhone 17<br><u>Szilikon</u></span></i><i data-p="C2" class="f">S25<br><u>Ütésálló</u></i><i data-p="D2" class=""></i><i data-p="A3" class=""></i><i data-p="B3" class="f">Redmi 14<br><u>Hátlap</u></i><i data-p="C3" class=""></i><i data-p="D3" class="f">iPhone 14<br><u>Könyvtok</u></i></div><div class="dl"><b>B2 rekesz</b><div class="in">📱 <span>iPhone 17</span></div><div class="ch"><s class="o">Szilikon</s><s>MagSafe</s><s>Könyvtok</s></div></div><svg class="hx-cur" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>Fent nyisd meg a <b>🧱 Tokfal</b> oldalt, és kattints a <b>⚙️ Fal beállítása</b> gombra.</div></li><li><div>Állítsd be, hány <b>oszlop</b> és hány <b>sor</b> van kint a falon (és adj nevet a falnak; több falat is felvehetsz).</div></li><li><div>Kattints egy <b>rekeszre</b> (pl. <b>B2</b>): írd be, <b>melyik telefon</b> tokjai vannak ott, és jelöld be, <b>milyen típusúak</b> (szilikon, MagSafe, könyvtok…) — vagy írj be másikat.</div></li><li><div>Egy rekeszbe <b>több telefon</b> is kerülhet (＋ Még egy telefon). <span>Minden magától mentődik — a felhőbe is.</span></div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">🔎</div><div><h3>Keresés: hol van a tok?</h3><p>Írd be a telefont — a fal megmutatja, hol van.</p></div></div><div class="hc-wrap"><div class="hc-stage tfB"><div class="q">🔎 <span>A56</span></div><div class="g"><i data-p="A1" class="f">iPhone 15<br><u>Szilikon</u></i><i data-p="B1" class="f">iPhone 16<br><u>Könyvtok</u></i><i data-p="C1" class=""></i><i data-p="D1" class="f h">A56<br><u>Átlátszó</u></i><i data-p="A2" class="f">iPhone 13<br><u>Bőr</u></i><i data-p="B2" class="f">iPhone 17</i><i data-p="C2" class="f">S25<br><u>Ütésálló</u></i><i data-p="D2" class=""></i><i data-p="A3" class=""></i><i data-p="B3" class="f h">A56<br><u>Könyvtok</u></i><i data-p="C3" class=""></i><i data-p="D3" class="f">iPhone 14</i></div><div class="r">📍 A56: <b>D1</b> · <b>B3</b></div></div></div><ol class="hs-steps"><li><div>A keresőbe írd be a telefont (pl. <i>A56</i>, <i>iPhone 15</i>) vagy a tok típusát (pl. <i>könyvtok</i>).</div></li><li><div>A fal elhalványul, a <b>találatok világítanak</b>; fölötte a pontos helyük (pl. <b>D1</b>, <b>B3</b>) — rákattintva odaugrik.</div></li><li><div>Ha valami átkerül máshová, kattints a rekeszre, és írd át — vagy <b>🧹 Rekesz ürítése</b>.</div></li></ol></section></div>
+    <div class="help-foot"><button class="action-btn secondary" id="fhelpPrev">← Vissza</button><span class="hint">Tipp: lapozz a ← → nyilakkal</span><button class="action-btn primary" id="fhelpNext">Tovább →</button></div>
+  </div>
+</div>
 <div class="modal-backdrop" id="dhelpModal">
   <div class="modal help-modal" role="dialog" aria-labelledby="dhelpTitle">
     <div class="help-top"><h2 id="dhelpTitle">✅ Teendők — így működik</h2><div style="display:flex;gap:8px;align-items:center"><span class="help-count" id="dhelpCount">1 / 3</span><button class="help-x" id="dhelpX" title="Bezárás">✕</button></div></div>
@@ -15024,12 +15134,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const selejtHelp = makeHelp("xhelp");
   const tudastarHelp = makeHelp("thelp");
   const teendoHelp = makeHelp("dhelp");
+  const tokfalHelp = makeHelp("fhelp");
   document.getElementById("helpBtn").onclick = ()=>{
     if(activePage === "leltar"){ leltarHelp.open(); return; }
     if(activePage === "kassza"){ kassaHelp.open(); return; }
     if(activePage === "csomag"){ csomagHelp.open(); return; }
     if(activePage === "selejt"){ selejtHelp.open(); return; }
     if(activePage === "tudastar"){ tudastarHelp.open(); return; }
+    if(activePage === "tokfal"){ tokfalHelp.open(); return; }
     if(activePage === "teendo"){ teendoHelp.open(document.getElementById("tdPage") && document.getElementById("tdPage").classList.contains("rend") ? "4" : null); return; }
     const fp = activePage === "cetli" ? childFP() : null;
     if(fp){ fp.openHelp(); return; }
@@ -16186,6 +16298,109 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     });
   }
 
+
+  /* ===================== 🧱 Tokfal — hol vannak kint a tokok az üzletben (egyelőre Kaposvár) ===================== */
+  /* state.tokfal = { walls:[{ id, name, cols, rows, cells:{ "r-c":{ items:[{ model, types:[...] }], note } } }], cur } */
+  const TF_TYPES = ["Szilikon","Átlátszó","MagSafe","Hátlap tok","Könyvtok","Ütésálló","Bőr","Mintás","Gyerek","Kártyatartós","Nyakba akasztható","Kameravédős"];
+  const TF_COLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let tfQ = "", tfSet = false, tfEd = null;
+  function tfData(){
+    if(!state.tokfal || typeof state.tokfal !== "object") state.tokfal = {};
+    const T = state.tokfal;
+    if(!Array.isArray(T.walls) || !T.walls.length) T.walls = [{ id:"w1", name:"Tokfal", cols:6, rows:5, cells:{} }];
+    T.walls.forEach(w=>{ w.cols = Math.max(1, Math.min(26, +w.cols || 6)); w.rows = Math.max(1, Math.min(30, +w.rows || 5)); if(!w.cells || typeof w.cells !== "object") w.cells = {}; });
+    if(!T.walls.some(w=> w.id === T.cur)) T.cur = T.walls[0].id;
+    return T;
+  }
+  const tfPos = (r, c)=> `${TF_COLS[c] || "?"}${r + 1}`;
+  const tfFold = s=> String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
+  function tfMatch(cell, q){ if(!q || !cell) return false; const hay = tfFold((cell.items || []).map(i=> (i.model || "") + " " + (i.types || []).join(" ")).join(" ") + " " + (cell.note || ""));
+    return tfFold(q).split(" ").every(w=> hay.includes(w)); }
+  function tfRender(){
+    const card = document.getElementById("tfCard"); if(!card) return;
+    const T = tfData(), W = T.walls.find(w=> w.id === T.cur);
+    const q = tfQ.trim(), filled = Object.keys(W.cells).filter(k=>{ const [r, c] = k.split("-").map(Number); return r < W.rows && c < W.cols && (W.cells[k].items || []).some(i=> i.model); });
+    const hits = q ? T.walls.flatMap(w=> Object.keys(w.cells).filter(k=>{ const [r, c] = k.split("-").map(Number); return r < w.rows && c < w.cols && tfMatch(w.cells[k], q); }).map(k=>{ const [r, c] = k.split("-").map(Number); return { w, k, pos:tfPos(r, c), cell:w.cells[k] }; })) : [];
+    const tabs = (T.walls.length > 1 || tfSet) ? `<div class="tf-walls">${T.walls.map(w=> { const n = q ? hits.filter(h=> h.w === w).length : 0; return `<button type="button" data-wall="${esc(w.id)}" class="${w.id === W.id ? "on" : ""}">🧱 ${esc(w.name)}${n ? `<em>${n}</em>` : ""}</button>`; }).join("")}${tfSet ? `<button type="button" class="add" data-wadd="1">＋ Új fal</button>` : ""}</div>` : "";
+    const setH = tfSet ? `<div class="tf-set">
+        <label class="tf-f"><span>A fal neve</span><input class="tf-wname" maxlength="30" value="${esc(W.name)}" placeholder="pl. Bal fal, Pult melletti"></label>
+        <div class="tf-f"><span>Oszlopok (A, B, C…)</span><div class="tf-step"><button type="button" data-dim="cols" data-d="-1">−</button><b>${W.cols}</b><button type="button" data-dim="cols" data-d="1">+</button></div></div>
+        <div class="tf-f"><span>Sorok (1, 2, 3…)</span><div class="tf-step"><button type="button" data-dim="rows" data-d="-1">−</button><b>${W.rows}</b><button type="button" data-dim="rows" data-d="1">+</button></div></div>
+        ${T.walls.length > 1 ? `<button type="button" class="tf-wdel" data-wdel="1">🗑 Fal törlése</button>` : ""}
+        <p class="tf-hint">Kattints egy rekeszre, és add meg, milyen telefon tokjai vannak ott, és azon belül milyen típusúak. Ha csökkented a méretet, a kilógó rekeszek adatai megmaradnak — visszanövelve újra látszanak.</p></div>` : "";
+    let grid = `<div class="tf-gw"><div class="tf-grid" style="--cols:${W.cols}"><span class="tf-corner"></span>${Array.from({ length:W.cols }, (_, c)=> `<span class="tf-ch">${TF_COLS[c]}</span>`).join("")}`;
+    for(let r = 0; r < W.rows; r++){
+      grid += `<span class="tf-rh">${r + 1}</span>`;
+      for(let c = 0; c < W.cols; c++){
+        const k = `${r}-${c}`, cell = W.cells[k], items = (cell && cell.items || []).filter(i=> i.model || (i.types || []).length), hit = q && tfMatch(cell, q);
+        grid += `<button type="button" class="tf-cell${items.length ? " has" : ""}${q ? (hit ? " hit" : " dim") : ""}" data-cell="${k}" style="animation-delay:${Math.min(40, r * W.cols + c) * 12}ms"><i class="pos">${tfPos(r, c)}</i>${items.length ? items.map(i=> `<b>${esc(i.model || "—")}</b>${(i.types || []).length ? `<span class="tps">${i.types.map(t=> `<u>${esc(t)}</u>`).join("")}</span>` : ""}`).join("") + (cell.note ? `<small>💬 ${esc(cell.note)}</small>` : "") : `<em>${tfSet ? "＋" : "üres"}</em>`}</button>`;
+      }
+    }
+    grid += `</div></div>`;
+    const res = q ? `<div class="tf-res${hits.length ? "" : " none"}">${hits.length ? `<b>📍 ${esc(q)}:</b> ${hits.map(h=> `<button type="button" data-goto="${esc(h.w.id)}|${h.k}">${T.walls.length > 1 ? esc(h.w.name) + " · " : ""}<strong>${h.pos}</strong>${(h.cell.items || []).filter(i=> tfMatch({ items:[i] }, q)).map(i=> ` <small>${esc(i.model)}${(i.types || []).length ? " · " + esc(i.types.join(", ")) : ""}</small>`).join("")}</button>`).join("")}` : `Nincs ilyen a falon: <b>${esc(q)}</b>`}</div>` : "";
+    card.innerHTML = `<div class="tf">
+      <div class="tf-bar"><div class="tf-search"><i>🔎</i><input class="tf-q" type="search" placeholder="Melyik telefon tokja hol van? pl. iPhone 15, A56, könyvtok" value="${esc(tfQ)}" autocomplete="off"></div>
+        <span class="tf-stat">${filled.length} / ${W.cols * W.rows} rekesz kitöltve</span>
+        <button type="button" class="action-btn ${tfSet ? "primary" : "secondary"} tf-setb">${tfSet ? "✓ Kész" : "⚙️ Fal beállítása"}</button></div>
+      ${res}${tabs}${setH}${grid}</div>`;
+    const qi = card.querySelector(".tf-q"); qi.oninput = ()=>{ tfQ = qi.value; const p = qi.selectionStart; tfRender(); const n = document.querySelector("#tfCard .tf-q"); if(n){ n.focus(); try{ n.setSelectionRange(p, p); }catch(_){} } };
+    card.querySelector(".tf-setb").onclick = ()=>{ tfSet = !tfSet; tfRender(); };
+    card.querySelectorAll("[data-wall]").forEach(b=> b.onclick = ()=>{ T.cur = b.dataset.wall; saveState(); tfRender(); });
+    const wa = card.querySelector("[data-wadd]"); if(wa) wa.onclick = ()=>{ const id = "w" + Date.now().toString(36); T.walls.push({ id, name:`Fal ${T.walls.length + 1}`, cols:W.cols, rows:W.rows, cells:{} }); T.cur = id; saveState(); tfRender(); toast("🧱 Új fal hozzáadva."); };
+    const wd = card.querySelector("[data-wdel]"); if(wd) wd.onclick = ()=>{ if(wd.dataset.arm !== "1"){ wd.dataset.arm = "1"; wd.textContent = "Biztos törlöd?"; setTimeout(()=>{ if(wd.isConnected){ wd.dataset.arm = ""; wd.textContent = "🗑 Fal törlése"; } }, 3000); return; }
+      T.walls = T.walls.filter(w=> w !== W); T.cur = T.walls[0].id; saveState(); tfRender(); toast("Fal törölve."); };
+    const wn = card.querySelector(".tf-wname"); if(wn) wn.onchange = ()=>{ W.name = wn.value.trim() || "Tokfal"; saveState(); tfRender(); };
+    card.querySelectorAll("[data-dim]").forEach(b=> b.onclick = ()=>{ const k = b.dataset.dim, mx = k === "cols" ? 26 : 30; W[k] = Math.max(1, Math.min(mx, W[k] + +b.dataset.d)); saveState(); tfRender(); });
+    card.querySelectorAll("[data-cell]").forEach(b=> b.onclick = ()=> tfOpen(W, b.dataset.cell));
+    card.querySelectorAll("[data-goto]").forEach(b=> b.onclick = ()=>{ const [wid, k] = b.dataset.goto.split("|"); T.cur = wid; tfRender(); setTimeout(()=>{ const c = document.querySelector(`#tfCard [data-cell="${k}"]`); if(c){ c.scrollIntoView({ behavior:"smooth", block:"center", inline:"center" }); c.classList.remove("ping"); void c.offsetWidth; c.classList.add("ping"); } }, 30); });
+  }
+  window.tfRender = tfRender;
+  /* rekesz szerkesztése */
+  function tfOpen(W, k){
+    const [r, c] = k.split("-").map(Number), cur = W.cells[k] || {};
+    tfEd = { W, k, items:(cur.items && cur.items.length ? cur.items : [{ model:"", types:[] }]).map(i=> ({ model:i.model || "", types:(i.types || []).slice() })), note:cur.note || "" };
+    let m = document.getElementById("tfModal");
+    if(!m){ m = document.createElement("div"); m.id = "tfModal"; m.className = "tf-back"; document.body.appendChild(m); }
+    const models = Array.from(new Set(state.tokfal.walls.flatMap(w=> Object.values(w.cells).flatMap(x=> (x.items || []).map(i=> i.model))).filter(Boolean).concat(typeof OMODELS !== "undefined" ? OMODELS : [])));
+    const draw = (focusI)=>{
+      const E = tfEd;
+      m.innerHTML = `<div class="tf-dlg" role="dialog" aria-label="Rekesz">
+        <div class="tf-dh"><span class="tf-pos">${tfPos(r, c)}</span><div><h3>${esc(W.name)} · ${r + 1}. sor, ${TF_COLS[c]} oszlop</h3><small>Milyen tokok vannak ebben a rekeszben?</small></div><button type="button" class="tf-x" data-x="1" title="Bezárás">✕</button></div>
+        <div class="tf-its">${E.items.map((it, i)=> `<div class="tf-it" data-i="${i}">
+          <div class="tf-ith"><span>📱 Telefon ${E.items.length > 1 ? i + 1 : ""}</span>${E.items.length > 1 ? `<button type="button" data-rm="${i}" title="Eltávolítás">✕</button>` : ""}</div>
+          <div class="tf-inp"><input class="tf-model" data-i="${i}" list="tfModels" maxlength="60" placeholder="pl. iPhone 15, Samsung Galaxy A56" value="${esc(it.model)}"></div>
+          <div class="tf-tps">${TF_TYPES.concat(it.types.filter(t=> !TF_TYPES.includes(t))).map(t=> `<button type="button" data-ti="${i}" data-t="${esc(t)}" class="${it.types.includes(t) ? "on" : ""}">${esc(t)}</button>`).join("")}<input class="tf-tadd" data-i="${i}" maxlength="24" placeholder="＋ más típus"></div></div>`).join("")}</div>
+        <datalist id="tfModels">${models.map(x=> `<option value="${esc(x)}">`).join("")}</datalist>
+        <button type="button" class="tf-more" data-add="1">＋ Még egy telefon ebbe a rekeszbe</button>
+        <div class="tf-inp nt"><i>💬</i><input class="tf-note" maxlength="80" placeholder="Megjegyzés (nem kötelező) — pl. alsó polc, fekete tokok" value="${esc(E.note)}"></div>
+        <div class="tf-df"><button type="button" class="tf-clr" data-clr="1">🧹 Rekesz ürítése</button><button type="button" class="action-btn primary tf-save" data-save="1">✓ Mentés</button></div></div>`;
+      m.querySelectorAll(".tf-model").forEach(inp=> inp.oninput = ()=>{ E.items[+inp.dataset.i].model = inp.value; });
+      m.querySelector(".tf-note").oninput = e=>{ E.note = e.target.value; };
+      m.querySelectorAll(".tf-tadd").forEach(inp=> inp.onkeydown = e=>{ if(e.key === "Enter"){ e.preventDefault(); const v = inp.value.trim(); if(v){ const T = E.items[+inp.dataset.i].types; if(!T.includes(v)) T.push(v); draw(+inp.dataset.i); } } });
+      m.querySelectorAll(".tf-model,.tf-note").forEach(inp=> inp.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.target.classList.contains("tf-tadd")){ e.preventDefault(); tfSave(); } }));
+      setTimeout(()=>{ const f = m.querySelector(`.tf-model[data-i="${focusI == null ? 0 : focusI}"]`); if(f && !f.value) f.focus(); }, 30);
+    };
+    m.onclick = e=>{
+      const t = e.target, E = tfEd; if(!E) return;
+      if(t === m || t.closest("[data-x]")) return tfClose();
+      const tb = t.closest("[data-t]"); if(tb){ const it = E.items[+tb.dataset.ti], v = tb.dataset.t; it.types = it.types.includes(v) ? it.types.filter(x=> x !== v) : it.types.concat(v); tb.classList.toggle("on"); return; }
+      if(t.closest("[data-add]")){ E.items.push({ model:"", types:[] }); draw(E.items.length - 1); return; }
+      const rm = t.closest("[data-rm]"); if(rm){ E.items.splice(+rm.dataset.rm, 1); draw(); return; }
+      if(t.closest("[data-clr]")){ delete E.W.cells[E.k]; saveState(); tfClose(); tfRender(); toast(`🧹 ${tfPos(r, c)} kiürítve.`); return; }
+      if(t.closest("[data-save]")) return tfSave();
+    };
+    draw(); requestAnimationFrame(()=> m.classList.add("show"));
+  }
+  function tfSave(){
+    const E = tfEd; if(!E) return;
+    const items = E.items.map(i=> ({ model:(i.model || "").trim().replace(/\s+/g, " "), types:i.types })).filter(i=> i.model || i.types.length);
+    if(items.length || E.note.trim()) E.W.cells[E.k] = { items, note:E.note.trim() }; else delete E.W.cells[E.k];
+    saveState(); const k = E.k; tfClose(); tfRender(); toast("🧱 Rekesz mentve.");
+    setTimeout(()=>{ const c = document.querySelector(`#tfCard [data-cell="${k}"]`); if(c){ c.classList.remove("ping"); void c.offsetWidth; c.classList.add("ping"); } }, 30);
+  }
+  function tfClose(){ const m = document.getElementById("tfModal"); tfEd = null; if(m){ m.classList.remove("show"); setTimeout(()=>{ if(!tfEd) m.innerHTML = ""; }, 250); } }
+  document.addEventListener("keydown", e=>{ if(e.key === "Escape" && tfEd) tfClose(); });
+
   /* ===================== ⭐ Műszak értékelés (zárás előtt 30 és 15 perccel) ===================== */
   /* state.ratings["YYYY-MM-DD"][<dolgozó id>] = { s:1–5, note, t } — alapból a szombathelyi boltnál van bekapcsolva */
   function rateOnIn(set){ set = set || {}; return set.rateOn !== undefined ? !!set.rateOn : /szombathely/i.test((set.location || "") + " " + (set.placeDetail || "")); }
@@ -16425,7 +16640,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* amit az admin minden boltnál (vagy ennél a boltnál) kikapcsolt, azt a bolt sem kapcsolhatja vissza */
   const admOff = (kind, k)=>{ try{ const c = window.fpAdminCfg ? window.fpAdminCfg() : null; return !!(c && c[kind] && c[kind][k] === false); }catch(e){ return false; } };
   window.fpAdmOff = admOff;
-  const modOnIn = (set, k)=> k === "tudastar" || (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false));
+  const modOnIn = (set, k)=> k === "tudastar" || (k === "tokfal" ? (/kaposv[aá]r/i.test(((set && set.location) || "") + " " + ((set && set.placeDetail) || "")) && !admOff("mods", k) && !(set && set.modules && set.modules[k] === false)) : (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false)));
   const modOn = k=> modOnIn(state.settings, k);
   window.fpModOn = modOn;
   /* funkciók programonként — minden bolt mindent kap (a P-touch nyomtatás csak Kaposváron), itt kapcsolhatók ki egyenként */
@@ -20124,6 +20339,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     csomag:   { title:"Csomag nyilvántartó", sub:"GLS · Magyar Posta · beolvasás, futár, havi összesítő" },
     selejt:   { title:"Selejt", sub:"Mai selejt · darab, ok · Excel letöltés · cetli" },
     teendo:   { title:"Teendők", sub:"Közös to-do lista · dolgozónként vagy mindkettőnek · határidővel" },
+    tokfal:   { title:"Tokfal", sub:"Hol vannak kint a tokok · oszlopok, sorok, telefon és tok típusa" },
     tudastar: { title:"Tudástár", sub:"Segédlet · Kézikönyv · Üzletek elérhetősége" }
   };
   let activePage = "beosztas";
@@ -20203,6 +20419,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     document.body.classList.toggle("page-tudastar", page === "tudastar");
     if(page === "tudastar" && window.ttShow) ttShow();
     document.body.classList.toggle("page-teendo", page === "teendo");
+    document.body.classList.toggle("page-tokfal", page === "tokfal");
+    if(page === "tokfal" && window.tfRender) tfRender();
     if(page === "teendo" && typeof renderTodos === "function") renderTodos();
     if(page === "leltar" && typeof ltRender === "function") ltRender();
     document.getElementById("pageTitle").textContent = PAGE_INFO[page].title;
