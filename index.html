@@ -4585,7 +4585,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261012-144245";</script>
+<script>window.FP_BUILD="20261012-144636";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -16640,7 +16640,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* amit az admin minden boltnál (vagy ennél a boltnál) kikapcsolt, azt a bolt sem kapcsolhatja vissza */
   const admOff = (kind, k)=>{ try{ const c = window.fpAdminCfg ? window.fpAdminCfg() : null; return !!(c && c[kind] && c[kind][k] === false); }catch(e){ return false; } };
   window.fpAdmOff = admOff;
-  const modOnIn = (set, k)=> k === "tudastar" || (k === "tokfal" ? (/kaposv[aá]r/i.test(((set && set.location) || "") + " " + ((set && set.placeDetail) || "")) && !admOff("mods", k) && !(set && set.modules && set.modules[k] === false)) : (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false)));
+  const modOnIn = (set, k)=> k === "tudastar" || (k === "tokfal" ? (/kaposvar/i.test(String(((set && set.location) || "") + " " + ((set && set.placeDetail) || "") + " " + (((window.FP_CLOUD || {}).user || {}).email || "")).normalize("NFD").replace(/[\u0300-\u036f]/g, "")) && !admOff("mods", k) && !(set && set.modules && set.modules[k] === false)) : (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false)));
   const modOn = k=> modOnIn(state.settings, k);
   window.fpModOn = modOn;
   /* funkciók programonként — minden bolt mindent kap (a P-touch nyomtatás csak Kaposváron), itt kapcsolhatók ki egyenként */
