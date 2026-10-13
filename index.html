@@ -3324,7 +3324,7 @@
   @keyframes sThemeFade{0%,35%{opacity:0}45%,85%{opacity:1}95%,100%{opacity:0}}
 
   /* ===================== CSOMAG NYILVÁNTARTÓ ===================== */
-  :root{--gls:#f2b705;--gls-ink:#0b2a8a;--mpl:#d4202c;--mpl-2:#a5151f;}
+  :root{--gls:#f2b705;--gls-ink:#0b2a8a;--mpl:#d4202c;--mpl-2:#a5151f;--dpd:#414042;--dpd-r:#dc0032;}
   .cs-page{display:none;}
   body.page-csomag .cs-page{display:block;}
   body.page-csomag #tabs, body.page-csomag #autoAdvanceBanner, body.page-csomag #mainPanel, body.page-csomag #settingsPanel{display:none !important;}
@@ -3348,7 +3348,7 @@
   .cs2-scan-in input::placeholder{font:600 13px 'Inter',sans-serif;letter-spacing:0;color:var(--text-dim);}
   .cs2-scan-in .action-btn{width:auto;min-width:0;flex:0 0 auto;padding:11px 18px;}
   .cs2-guess{flex:0 0 auto;font:800 11.5px 'Inter',sans-serif;padding:6px 10px;border-radius:9px;white-space:nowrap;}
-  .cs2-guess.gls{background:var(--gls);color:var(--gls-ink);} .cs2-guess.mpl{background:var(--mpl);color:#fff;} .cs2-guess.unk{background:rgba(240,160,48,.18);color:#f0a030;border:1px dashed #f0a030;}
+  .cs2-guess.gls{background:var(--gls);color:var(--gls-ink);} .cs2-guess.mpl{background:var(--mpl);color:#fff;} .cs2-guess.dpd{background:var(--dpd);color:#fff;box-shadow:inset 3px 0 0 var(--dpd-r);} .cs2-guess.unk{background:rgba(240,160,48,.18);color:#f0a030;border:1px dashed #f0a030;}
   .cs2-guess[hidden]{display:none;}
   .cs-scan-msg{margin-top:10px;font-size:12.5px;font-weight:600;color:var(--text-dim);min-height:18px;padding:0 4px;display:flex;align-items:flex-start;gap:9px;line-height:1.45;}
   .cs-scan-msg .cs-dot{width:8px;height:8px;border-radius:50%;background:var(--text-faint);flex:0 0 8px;margin-top:5px;}
@@ -3359,24 +3359,25 @@
   .cs-scan-msg.pop{animation:csPop .3s ease-out;}
   @keyframes csPop{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
   .cs-cn{padding:1px 7px;border-radius:6px;font-weight:800;}
-  .cs-cn.gls{background:var(--gls);color:var(--gls-ink);} .cs-cn.mpl{background:var(--mpl);color:#fff;}
+  .cs-cn.gls{background:var(--gls);color:var(--gls-ink);} .cs-cn.mpl{background:var(--mpl);color:#fff;} .cs-cn.dpd{background:var(--dpd);color:#fff;}
   /* szállító kártyák */
-  .cs2-cars{display:grid;grid-template-columns:1fr 1fr 1.05fr;gap:14px;}
+  .cs2-cars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.05fr);gap:14px;}
   .cs2-car{position:relative;overflow:hidden;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--border);background:var(--bg-panel);}
   .cs2-car.gls{background:linear-gradient(160deg,rgba(242,183,5,.2),rgba(242,183,5,.05) 55%),var(--bg-panel);border-color:rgba(242,183,5,.42);}
   .cs2-car.mpl{background:linear-gradient(160deg,rgba(212,32,44,.2),rgba(212,32,44,.05) 55%),var(--bg-panel);border-color:rgba(212,32,44,.42);}
-  .cs2-car.gls::after,.cs2-car.mpl::after{content:"";position:absolute;right:-34px;top:-34px;width:96px;height:96px;border-radius:50%;opacity:.14;pointer-events:none;z-index:0;}
+  .cs2-car.dpd{background:linear-gradient(160deg,rgba(220,0,50,.13),rgba(120,120,125,.08) 55%),var(--bg-panel);border-color:rgba(160,160,168,.45);}
+  .cs2-car.gls::after,.cs2-car.mpl::after,.cs2-car.dpd::after{content:"";position:absolute;right:-34px;top:-34px;width:96px;height:96px;border-radius:50%;opacity:.14;pointer-events:none;z-index:0;}
   .cs2-car > *{position:relative;z-index:1;}
-  .cs2-car.gls::after{background:var(--gls);} .cs2-car.mpl::after{background:var(--mpl);}
+  .cs2-car.gls::after{background:var(--gls);} .cs2-car.mpl::after{background:var(--mpl);} .cs2-car.dpd::after{background:var(--dpd-r);}
   .cs2-car-h{display:flex;align-items:center;gap:12px;}
   .cs2-logo{position:relative;flex:0 0 auto;width:96px;height:52px;border-radius:13px;border:none;cursor:pointer;display:grid;place-items:center;padding:6px 8px;overflow:hidden;
     box-shadow:0 4px 12px rgba(0,0,0,.18);transition:transform .15s ease;}
   .cs2-logo:hover{transform:translateY(-1px);}
-  .gls .cs2-logo{background:var(--gls);} .mpl .cs2-logo{background:var(--mpl);}
+  .gls .cs2-logo{background:var(--gls);} .mpl .cs2-logo{background:var(--mpl);} .dpd .cs2-logo{background:var(--dpd);box-shadow:inset 0 -4px 0 var(--dpd-r);}
   .cs2-logo.has{background:#fff !important;}
   .cs2-logo img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
   .cs2-wm{font:900 21px 'Poppins',sans-serif;letter-spacing:.02em;line-height:1;}
-  .gls .cs2-wm{color:var(--gls-ink);} .mpl .cs2-wm{color:#fff;font-size:17px;}
+  .gls .cs2-wm{color:var(--gls-ink);} .mpl .cs2-wm{color:#fff;font-size:17px;} .dpd .cs2-wm{color:#fff;font-size:19px;letter-spacing:-.02em;text-transform:lowercase;}
   .cs2-logo.has .cs2-wm{display:none;}
   .cs2-logo i{position:absolute;left:0;right:0;bottom:0;font:700 9px 'Inter',sans-serif;font-style:normal;background:rgba(0,0,0,.55);color:#fff;padding:2px 0;opacity:0;transition:opacity .15s ease;}
   .cs2-logo:hover i,.cs2-logo:focus-visible i{opacity:1;}
@@ -3389,7 +3390,7 @@
   .cs2-car-st .w b{color:#f0a030;}
   .cs2-hand{margin-top:auto;border:none;border-radius:12px;padding:11px 12px;font:800 12.5px 'Inter',sans-serif;cursor:pointer;transition:transform .15s ease,opacity .2s ease;}
   .cs2-hand:not(:disabled):hover{transform:translateY(-1px);}
-  .gls .cs2-hand{background:var(--gls);color:var(--gls-ink);} .mpl .cs2-hand{background:var(--mpl);color:#fff;}
+  .gls .cs2-hand{background:var(--gls);color:var(--gls-ink);} .mpl .cs2-hand{background:var(--mpl);color:#fff;} .dpd .cs2-hand{background:var(--dpd);color:#fff;box-shadow:inset 0 -3px 0 var(--dpd-r);}
   .cs2-hand:disabled{background:var(--bg-cell) !important;color:var(--text-dim) !important;border:1px dashed var(--border);cursor:default;}
   .cs2-car.tot{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px 14px;background:linear-gradient(160deg,rgba(217,173,70,.14),transparent 60%),var(--bg-panel);}
   .cs2-tot{display:flex !important;align-items:baseline;gap:6px;font-size:46px !important;line-height:1;margin-top:6px;color:var(--gold-light);}
@@ -3435,7 +3436,7 @@
   .cs-search{flex:1 1 160px;min-width:140px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);font:600 12.5px 'Inter',sans-serif;padding:9px 12px;border-radius:11px;outline:none;}
   .cs-search:focus{border-color:var(--gold);}
   .cs-cd{display:inline-block;width:10px;height:10px;border-radius:3px;flex:0 0 10px;}
-  .cs-cd.gls{background:var(--gls);box-shadow:inset 0 0 0 1.5px var(--gls-ink);} .cs-cd.mpl{background:var(--mpl);}
+  .cs-cd.gls{background:var(--gls);box-shadow:inset 0 0 0 1.5px var(--gls-ink);} .cs-cd.mpl{background:var(--mpl);} .cs-cd.dpd{background:var(--dpd);box-shadow:inset 0 0 0 2px var(--dpd-r);}
   .cs-oldwait{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;border-radius:12px;font-size:12.5px;font-weight:600;background:rgba(240,160,48,.1);border:1px solid rgba(240,160,48,.45);}
   .cs-oldwait[hidden]{display:none;}
   .cs-oldwait button{margin-left:auto;border:none;background:#f0a030;color:#1b1204;font:800 12px 'Inter',sans-serif;padding:6px 11px;border-radius:8px;cursor:pointer;}
@@ -3449,17 +3450,17 @@
   .cs-day b{font:700 13.5px 'Poppins',sans-serif;color:var(--text);}
   .cs-day em{margin-left:auto;font-style:normal;font-weight:700;font-size:11.5px;}
   .cs-row{padding:8px 10px 8px 10px;border-radius:13px;background:var(--bg-cell);border:1px solid var(--border-soft);border-left:4px solid var(--text-faint);}
-  .cs-row.c-gls{border-left-color:var(--gls);} .cs-row.c-mpl{border-left-color:var(--mpl);} .cs-row.c-\?{border-left-color:#f0a030;background:rgba(240,160,48,.07);}
+  .cs-row.c-gls{border-left-color:var(--gls);} .cs-row.c-mpl{border-left-color:var(--mpl);} .cs-row.c-dpd{border-left-color:var(--dpd-r);} .cs-row.c-\?{border-left-color:#f0a030;background:rgba(240,160,48,.07);}
   .cs-row.flash{animation:csFlash 1.2s ease-out;}
   @keyframes csFlash{0%,30%{background:rgba(217,173,70,.22)}}
   .cs-badge{width:100%;height:34px;border:none;border-radius:9px;padding:4px 8px;font:900 12.5px 'Poppins',sans-serif;cursor:pointer;display:grid;place-items:center;overflow:hidden;}
-  .cs-badge.gls{background:var(--gls);color:var(--gls-ink);} .cs-badge.mpl{background:var(--mpl);color:#fff;}
+  .cs-badge.gls{background:var(--gls);color:var(--gls-ink);} .cs-badge.mpl{background:var(--mpl);color:#fff;} .cs-badge.dpd{background:var(--dpd);color:#fff;box-shadow:inset 0 -3px 0 var(--dpd-r);text-transform:lowercase;}
   .cs-badge.has-logo{background:#fff !important;box-shadow:inset 0 0 0 1.5px var(--border);}
-  .cs-badge.has-logo.gls{box-shadow:inset 0 -3px 0 var(--gls);} .cs-badge.has-logo.mpl{box-shadow:inset 0 -3px 0 var(--mpl);}
+  .cs-badge.has-logo.gls{box-shadow:inset 0 -3px 0 var(--gls);} .cs-badge.has-logo.mpl{box-shadow:inset 0 -3px 0 var(--mpl);} .cs-badge.has-logo.dpd{box-shadow:inset 0 -3px 0 var(--dpd-r);}
   .cs-badge img{max-width:100%;max-height:24px;object-fit:contain;display:block;}
   .cs-pick{display:flex;gap:3px;padding:2px;border-radius:10px;border:1.5px dashed #f0a030;}
   .cs-pick button{flex:1;border:none;border-radius:7px;padding:6px 0;font:800 10.5px 'Poppins',sans-serif;cursor:pointer;}
-  .cs-pick .gls{background:var(--gls);color:var(--gls-ink);} .cs-pick .mpl{background:var(--mpl);color:#fff;}
+  .cs-pick .gls{background:var(--gls);color:var(--gls-ink);} .cs-pick .mpl{background:var(--mpl);color:#fff;} .cs-pick .dpd{background:var(--dpd);color:#fff;}
   .cs-code{min-width:0;}
   .cs-code b{display:block;font:700 14.5px 'Consolas','Courier New',monospace;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .cs-in{font-size:12px;font-weight:700;white-space:nowrap;}
@@ -3486,13 +3487,13 @@
   .cs2-col em{font:800 11px 'Poppins',sans-serif;font-style:normal;color:var(--text);min-height:14px;}
   .cs2-col .st{width:62%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;border-radius:7px 7px 3px 3px;overflow:hidden;border-bottom:2px solid var(--border);}
   .cs2-col .st i{display:block;width:100%;transition:height .4s ease;}
-  .cs2-col .st .g{background:var(--gls);} .cs2-col .st .m{background:var(--mpl);}
+  .cs2-col .st .g{background:var(--gls);} .cs2-col .st .m{background:var(--mpl);} .cs2-col .st .d{background:var(--dpd);}
   .cs2-col small{font-size:10.5px;font-weight:700;color:var(--text-dim);}
   .cs2-col.on small{color:var(--gold-light);font-weight:800;}
   .cs2-col.on .st{box-shadow:0 0 0 2px var(--gold);}
   body.light-theme .cs2-col.on small{color:var(--gold);}
   .cs-tbl{display:flex;flex-direction:column;gap:3px;max-height:280px;overflow:auto;}
-  .cs-tr{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(5,minmax(0,1fr));gap:4px;align-items:center;padding:7px 8px;border-radius:9px;font:600 12px 'Inter',sans-serif;color:var(--text);border:1px solid transparent;background:transparent;text-align:right;width:100%;}
+  .cs-tr{display:grid;grid-template-columns:minmax(0,1.7fr) repeat(6,minmax(0,1fr));gap:4px;align-items:center;padding:7px 8px;border-radius:9px;font:600 12px 'Inter',sans-serif;color:var(--text);border:1px solid transparent;background:transparent;text-align:right;width:100%;}
   .cs-tr > :first-child{text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .cs-tr > :first-child small{font-size:10px;color:var(--text-dim);font-weight:700;margin-left:3px;}
   .cs-tr.h{font-size:9.5px;font-weight:800;color:var(--text-dim);letter-spacing:.03em;text-transform:uppercase;}
@@ -3517,7 +3518,7 @@
   body.light-theme .cs-out-date input{color-scheme:light;}
   #csOutIn.err{border-color:var(--red) !important;animation:ltShake .4s ease;}
   @media (max-width:1060px){
-    .cs2-cars{grid-template-columns:1fr 1fr;}
+    .cs2-cars{grid-template-columns:1fr 1fr 1fr;}
     .cs2-car.tot{grid-column:1 / -1;grid-template-columns:auto 1fr auto;}
     .cs2-car.tot .cs2-tot-st{grid-column:auto;}
     .cs2-grid{grid-template-columns:1fr;}
@@ -3553,7 +3554,7 @@
   @keyframes phT2{0%,58%{opacity:0}62%,72%{opacity:1}76%,100%{opacity:0}}
   .prow{left:166px;width:290px;height:46px;border-radius:12px;background:var(--bg-cell);border:1px solid var(--border-soft);display:flex;align-items:center;gap:10px;padding:0 10px;}
   .prow .pb{font:900 11px Poppins,sans-serif;padding:6px 8px;border-radius:7px;min-width:46px;text-align:center;}
-  .pb.gls{background:#f2b705;color:#0b2a8a;} .pb.mpl{background:#d4202c;color:#fff;}
+  .pb.gls{background:#f2b705;color:#0b2a8a;} .pb.mpl{background:#d4202c;color:#fff;} .pb.dpd{background:#414042;color:#fff;box-shadow:inset 0 -2px 0 #dc0032;}
   .prow .pc{font:700 12px Consolas,monospace;color:var(--text);display:flex;flex-direction:column;}
   .prow .pc small{font:600 9.5px Inter,sans-serif;color:var(--text-dim);}
   .ph1 .r1{top:92px;border-left:4px solid #f2b705;opacity:0;} .ph1 .r2{top:146px;border-left:4px solid #d4202c;opacity:0;}
@@ -4523,7 +4524,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261013-172051";</script>
+<script>window.FP_BUILD="20261013-193949";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4987,7 +4988,7 @@
       { ic:"💰", t:"Kassza", x:"Címletek, pénz hátul, kasszajelentés — azonnal.", c:"#e2bf55",
         h:()=> [["20 000","#9fb7e8",-4],["10 000","#d9a3c4",3],["5 000","#e8c58a",-2],["2 000","#a9d4b4",4]].map((n, k)=> `<div class="lgx-nt" style="top:${118 - k * 30}px;left:${22 + k * 26}px;background:${n[1]};--r:${n[2]}deg;--dl:${.2 + k * .35}s;z-index:${k}">${n[0]} Ft</div>`).join("")
           + `<div class="lgx-sum"><small>Kasszában</small><b><span data-n="185000" data-f="1">0</span> Ft</b></div><div class="lgx-bar"><span style="--w:88%;--dl:.4s"></span><span style="--w:62%;--dl:.6s"></span><span style="--w:40%;--dl:.8s"></span></div><div class="lg-toast">✅ Kasszajelentés kész</div>` },
-      { ic:"📦", t:"Csomag", x:"GLS és Posta csomagok beolvasása, kiadása.", c:"#c98a3a",
+      { ic:"📦", t:"Csomag", x:"GLS, Posta és DPD csomagok beolvasása, kiadása.", c:"#c98a3a",
         h:()=> `<div class="lgx-belt"></div>` + ["GLS","POSTA","GLS","GLS","POSTA"].map((t, k)=> `<div class="lgx-bx" style="left:${20 + k * 92}px;--dl:${k * .3}s">${t}</div>`).join("")
           + `<div class="lgx-tags"><span style="--dl:1.6s">📥 Beérkezett: <b data-n="5">0</b></span><span style="--dl:1.9s">📤 Kiadva: <b data-n="3">0</b></span></div><div class="lg-toast">📲 Értesítés kiküldve</div>` },
       { ic:"🗑️", t:"Selejt", x:"A mai selejt egy helyen, ShieldUp külön.", c:"#e2585a",
@@ -5444,6 +5445,7 @@
       { ic:"🐞", c:"#f0a030", sc:"nwb", t:"Hibabejelentés — az admin válaszol", x:"Saját gombja van fent a ❓ mellett — és most már választ is kapsz rá.", b:["Fent a <b>🐞</b> gomb: kiválasztod, melyik résznél (Leltár, Kassza…) és leírod, mi történt","Minden bejelentés kap egy <b>azonosítót</b> (pl. #V3AAC) — így könnyű hivatkozni rá","Ha az admin <b>válaszolt</b>, piros szám jelenik meg a 🐞 gombon, a válasz a bejelentés alatt olvasható","Látod az állapotát is: új, folyamatban vagy megoldva ✅"] },
       { ic:"🗂️", c:"#30b37a", sc:"nwlh", mod:"leltar", t:"Korábbi leltárak", x:"Az előző leltárak is visszanézhetők.", b:["A Leltár oldal alján: <b>🗂️ Korábbi leltárak</b> — az utolsó 15","Látszik a dátum, a típus, ki csinálta, hány % készült el, és mi <b>hiányzott</b> vagy mennyi volt az <b>eltérés</b>","<b>👁 Megnézem</b> — visszanézed, a leltárívet újra letöltheted; leltárnapon is: <b>📂 Előző leltár</b>","Ha végeztél (leltárív letöltve vagy <b>✅ Kész, lezárom</b>): a kezdőoldal a <b>mai összegzést</b> és a <b>következő leltárt</b> mutatja"] },
       { ic:"⭐", c:"#d9ad46", sc:"nwfp", mod:"cetli", t:"FirstPhone pont / kedvezmény a cetlin", x:"Amennyi pontot vagy összeget beírsz, annyit levon a végösszegből.", b:["A termékek alatt új mező: <b>⭐ Pont</b> vagy <b>🏷️ Kedvezmény (Ft)</b> — 1 pont = 1 Ft","A cetlin: <b>Részösszeg</b> → <b>− levonás</b> → csökkentett <b>Fizetendő</b>; élőben látod: <i>329 990 − 5 000 = 324 990 Ft</i>","Szállítási címke, megérkezett rendelés, termék foglaló · 0 Ft alá nem megy, Fizetve-nél nem kerül rá, kiküldésnél az utánvét is ennyi"] },
+      { ic:"📦", c:"#dc0032", sc:"nwdp", mod:"csomag", t:"DPD csomagok is", x:"A Csomag nyilvántartó a DPD csomagokat is felismeri.", b:["Olvasd be a DPD címke vonalkódját — magától <b>DPD</b> lesz, és a <b>14 jegyű csomagszámot</b> menti el, mint a címkén (pl. 1638 0138 3877 13)","Új <b>DPD kártya</b>: havi darabszám, futárra váró csomagok, <b>🚚 Itt a DPD futár</b> — egyszerre átadod mindet","Szűrő, havi összesítő, oszlopdiagram és táblázat is külön mutatja a DPD-t; ugyanazt a csomagot kétszer nem rögzíti"] },
       { ic:"💚", c:"#30b37a", sc:"nwty", mod:"cetli", t:"Köszönő cetli — több példányban", x:"Beállíthatod, hány darabot nyomtasson.", b:["A Köszönő cetlinél új kártya: <b>🖨️ Hány darabot nyomtassak?</b> — <b>− / +</b> vagy gyorsgombok (1, 2, 3, 5, 6, 10, 12), legfeljebb 30","<b>Post-it:</b> annyi post-it-re nyomtat — A4 laponként 6 hely, kiírja, hány lap és hány post-it kell",["<b>P-touch:</b> a P-touch Editorban a <b>Példányszám</b> legyen ennyi — a böngészőből nyomtatva magától ennyi külön cetli jön ki","kap1"]] },
       { ic:"📖", c:"#8a5aa8", sc:"nwsg2", t:"Segédlet frissítve (2024.10.28)", x:"A Tudástár segédlete a legújabb, javított változat szerint.", b:["Új fejezetek: <b>💳 Firstkártya és FirstPont</b> (kártya létrehozása, pont jóváírás / levonás, felhasználás), <b>🛡️ Készülékvédelem</b>, <b>📮 Címirat nyomtatása</b> (GLS, Magyar Posta)","Frissült a <b>garancia</b>: ársávos 10.000–249.999 Ft → 2 év, 250.000 Ft felett → 3 év; Telekomos 2 év; refurbished iPhone / Samsung S 1 év","Új szabályok a <b>nullás eladásnál</b> és a <b>selejtnél</b>, frissült az <b>elérhetőségek</b> listája"] },
       { ic:"🟨", c:"#e8c547", sc:"nwpf", mod:"cetli", t:"Post-it: egy termék = egy post-it", x:"Új post-it elrendezés: ha egy termék van a cetlin, mindig egyetlen post-it-re fér.", b:["<b>Egy termék:</b> mindig <b>egy post-it</b> — tömörebb elrendezés (rendelésszám mellett a vonalkód, vevő mellett a telefon és az e-mail, dátum évszám nélkül), és ha kell, épp annyival kisebb betű, amennyi kell","<b>Két vagy több termék:</b> a további termékek a <b>következő post-it</b>-re kerülnek, felül <b>↪ folytatás · rendelésszám · vevő</b> jelzéssel","Mindig <b>két sor között</b> vág, semmi sem vágódik le vagy lóg ki — a nyomtatás és a kép (75×75) is ugyanilyen"] },
@@ -5820,6 +5822,20 @@
     .nwfp .tot .o{animation:fpOld 8s ease infinite;} .nwfp .tot .n{opacity:0;animation:fpNw 8s cubic-bezier(.34,1.56,.64,1) infinite;}
     @keyframes fpOld{0%,52%{opacity:1;transform:none;}56%{opacity:.5;transform:translateY(-4px);}60%,100%{opacity:0;transform:translateY(-12px);}}
     @keyframes fpNw{0%,56%{opacity:0;transform:translateY(12px) scale(.9);}62%,92%{opacity:1;transform:none;}100%{opacity:0;}}
+    .nwdp > *{position:absolute;}
+    .nwdp .lb{left:34px;top:22px;width:150px;height:168px;background:#fff;border-radius:6px;box-shadow:0 12px 24px rgba(0,0,0,.4);padding:10px;box-sizing:border-box;color:#111;transform:rotate(-4deg);}
+    .nwdp .lh{display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid #111;padding-bottom:5px;} .nwdp .lh b{font:900 15px 'Inter',sans-serif;color:#414042;} .nwdp .lh i{width:16px;height:16px;background:#dc0032;transform:rotate(45deg);border-radius:2px;}
+    .nwdp .ln{margin-top:8px;display:flex;flex-direction:column;gap:5px;} .nwdp .ln i{height:5px;border-radius:3px;background:#bbb;} .nwdp .ln i:nth-child(2){width:70%;} .nwdp .ln i:nth-child(3){width:55%;}
+    .nwdp .bc{margin-top:12px;height:46px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 3px,#111 3px 4px,#fff 4px 6px,#111 6px 9px,#fff 9px 10px);}
+    .nwdp .lb small{display:block;margin-top:5px;text-align:center;font:800 9px 'SF Mono',ui-monospace,monospace;letter-spacing:.06em;}
+    .nwdp .beam{left:30px;top:120px;width:160px;height:3px;background:#ff3b3b;box-shadow:0 0 12px 3px rgba(255,59,59,.7);border-radius:2px;opacity:0;animation:dpBm 6s ease infinite;}
+    @keyframes dpBm{0%,8%{opacity:0;transform:translateY(-14px);}12%{opacity:1;}24%{opacity:1;transform:translateY(16px);}30%,100%{opacity:0;transform:translateY(16px);}}
+    .nwdp .row{left:214px;top:84px;width:250px;height:46px;border-radius:12px;background:var(--bg-panel2,#1d1d24);border:1px solid var(--border,#2b2b33);border-left:4px solid #dc0032;display:flex;align-items:center;gap:9px;padding:0 10px;box-sizing:border-box;opacity:0;animation:dpRw 6s cubic-bezier(.34,1.56,.64,1) infinite;}
+    .nwdp .row .bd{background:#414042;color:#fff;font:900 11px 'Inter',sans-serif;padding:5px 8px;border-radius:7px;box-shadow:inset 0 -2px 0 #dc0032;}
+    .nwdp .row b{font:800 11.5px 'SF Mono',ui-monospace,monospace;color:var(--text,#eee);} .nwdp .row em{margin-left:auto;font:800 9px 'Inter',sans-serif;font-style:normal;color:#f0a030;}
+    @keyframes dpRw{0%,28%{opacity:0;transform:translateX(-20px) scale(.96);}36%,92%{opacity:1;transform:none;}100%{opacity:0;}}
+    .nwdp .ok{left:214px;top:142px;padding:5px 11px;border-radius:20px;background:rgba(48,179,122,.16);border:1px solid rgba(48,179,122,.5);color:#3ecf8e;font:800 11px 'Inter',sans-serif;opacity:0;animation:dpOk 6s ease infinite;}
+    @keyframes dpOk{0%,40%{opacity:0;transform:translateY(6px);}46%,92%{opacity:1;transform:none;}100%{opacity:0;}}
     .nwty > *{position:absolute;}
     .nwty .ctl{left:30px;top:76px;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--bg-panel2,#1d1d24);border:1.5px solid var(--border,#2b2b33);}
     .nwty .ctl span{width:34px;height:34px;border-radius:11px;border:1.5px solid var(--border,#2b2b33);display:grid;place-items:center;font:800 18px 'Inter',sans-serif;color:var(--text,#eee);}
@@ -6376,6 +6392,7 @@
       nwhl:`<div class="hc-wrap"><div class="hc-stage nwhl"><div class="adm"><small>👑 Admin · Ünnepnapok</small><div class="it i1"><b>12. 24.</b>Szenteste</div><div class="it i2"><b>12. 25.</b>Karácsony</div><div class="it i3"><b>12. 26.</b>Karácsony másnapja</div></div><div class="cal">${Array.from({length:14},(_,i)=>`<div class="d${i===9?" h1":i===10?" h2":i===11?" h3":""}"><span>${i+15}</span>${i===9?'<em>ÜNNEP<small>Szenteste</small></em><i>👑</i>':i===10?'<em>ÜNNEP<small>Karácsony</small></em><i>👑</i>':i===11?'<em>ÜNNEP<small>Másnap</small></em><i>👑</i>':''}</div>`).join("")}</div><div class="conf">🎉 ✨ 🎊</div></div></div>`,
       nwlh:`<div class="hc-wrap"><div class="hc-stage nwlh"><div class="it i1"><span class="d">12<small>OKT.</small></span><span class="t">H</span><b>Hétfői leltár<small>📱 hiányzott: 2</small></b><span class="bar"><i style="--w:96%"></i></span><span class="go">👁 Megnézem</span></div><div class="it i2"><span class="d">9<small>OKT.</small></span><span class="t p">P</span><b>Pénteki leltár<small>📱 minden megvolt · 🎧 egyezett</small></b><span class="bar"><i style="--w:100%"></i></span><span class="go">👁 Megnézem</span></div><div class="it i3"><span class="d">5<small>OKT.</small></span><span class="t">H</span><b>Hétfői leltár<small>🛡️ eltérés: −4</small></b><span class="bar"><i style="--w:88%"></i></span><span class="go">👁 Megnézem</span></div><div class="pv">📂 Korábbi leltár — visszanézés · ⬇️ Leltárív PDF</div>${CUR}</div></div>`,
       nwfp:`<div class="hc-wrap"><div class="hc-stage nwfp"><div class="in"><small>⭐ FIRSTPHONE PONT</small><div class="bx"><em class="ty">5 000</em><span>pont</span></div></div><div class="coin">⭐</div><div class="sl"><div class="r"><span>RÉSZÖSSZEG</span><b>329 990 Ft</b></div><div class="r cut"><span>FIRSTPHONE PONT</span><b>− 5 000 Ft</b></div><div class="tot"><span>FIZETENDŐ</span><b class="o">329 990 Ft</b><b class="n">324 990 Ft</b></div></div></div></div>`,
+      nwdp:`<div class="hc-wrap"><div class="hc-stage nwdp"><div class="lb"><div class="lh"><b>dpd</b><i></i></div><div class="ln"><i></i><i></i><i></i></div><div class="bc"></div><small>1638 0138 3877 13</small></div><div class="beam"></div><div class="row"><span class="bd">dpd</span><b>16380138387713</b><em>⏳ Futárra vár</em></div><div class="ok">✓ DPD felismerve</div></div></div>`,
       nwty:`<div class="hc-wrap"><div class="hc-stage nwty"><div class="ctl"><span class="mn">−</span><b class="nm"><em class="n1">1</em><em class="n2">3</em><em class="n3">5</em></b><span class="pl">+</span></div><div class="cd c1"><b>♥</b><i></i><i></i></div><div class="cd c2"><b>♥</b><i></i><i></i></div><div class="cd c3"><b>♥</b><i></i><i></i></div><div class="cd c4"><b>♥</b><i></i><i></i></div><div class="cd c5"><b>♥</b><i></i><i></i></div></div></div>`,
       nwsg2:`<div class="hc-wrap"><div class="hc-stage nwsg2"><div class="bk"><div class="pg l"><i></i><i></i><i></i><i></i><i></i></div><div class="pg r"><i></i><i></i><i></i><i></i><i></i></div><div class="fl"></div></div><div class="tb t1"><b>💳</b> FirstPont<em>ÚJ</em></div><div class="tb t2"><b>🛡️</b> Készülékvédelem<em>ÚJ</em></div><div class="tb t3"><b>📮</b> Címirat<em>ÚJ</em></div><div class="st">2024.10.28</div></div></div>`,
       nwpf:`<div class="hc-wrap"><div class="hc-stage nwpf"><div class="pa"><div class="bd"><b class="hd"></b><i style="width:88%"></i><i style="width:64%"></i><i style="width:92%"></i><i style="width:70%"></i><i style="width:84%"></i><i style="width:58%"></i><i style="width:90%"></i><i style="width:76%"></i><i style="width:66%"></i><i style="width:86%"></i><i style="width:72%"></i><i style="width:80%"></i></div></div><div class="bg1">🧩 1 termék → 1 post-it</div><div class="pb p1"><div class="bd2"><b class="hd"></b><i style="width:90%"></i><i style="width:66%"></i><i style="width:84%"></i><i style="width:72%"></i><i style="width:88%"></i><i style="width:60%"></i></div><span class="pn">1 / 2 ▸</span></div><div class="pb p2"><div class="bd2"><i style="width:78%"></i><i style="width:92%"></i><i style="width:64%"></i><i style="width:86%"></i><i style="width:70%"></i></div><span class="pn">2 / 2</span></div><div class="cut"><span>✂️</span></div><div class="bg2">📑 2+ termék → ↪ folytatás</div></div></div>`,
@@ -9040,7 +9057,7 @@ service cloud.firestore {
     <section class="panel cs2-top">
       <div class="cs2-title">
         <div class="cs2-ic">📦</div>
-        <div class="cs2-tt"><h2>Csomag nyilvántartó</h2><p id="csHeadSub">GLS és Magyar Posta csomagok — beolvasás, futárnak átadás, havi összesítő.</p></div>
+        <div class="cs2-tt"><h2>Csomag nyilvántartó</h2><p id="csHeadSub">GLS, Magyar Posta és DPD csomagok — beolvasás, futárnak átadás, havi összesítő.</p></div>
         <button type="button" class="action-btn secondary cs2-csv" id="csCsv" title="A kiválasztott hónap letöltése CSV-ben">⬇ CSV</button>
       </div>
       <div class="cs2-scan">
@@ -9070,6 +9087,14 @@ service cloud.firestore {
         </div>
         <div class="cs2-car-st"><div><small>Ebben a hónapban</small><b id="csNMpl">0</b></div><div class="w"><small>⏳ Futárra vár</small><b id="csWMpl">0</b></div></div>
         <button type="button" class="cs2-hand" data-bulk="mpl" id="csHMpl">🚚 Itt a Posta futár — átadás</button>
+      </section>
+      <section class="cs2-car dpd" data-car="dpd">
+        <div class="cs2-car-h">
+          <button type="button" class="cs2-logo" data-logo="dpd" title="Saját DPD logó feltöltése"><img alt="" hidden><span class="cs2-wm">dpd</span><i>🖼️ logó</i></button>
+          <div class="cs2-car-n"><small>Szállító</small><b>DPD</b></div>
+        </div>
+        <div class="cs2-car-st"><div><small>Ebben a hónapban</small><b id="csNDpd">0</b></div><div class="w"><small>⏳ Futárra vár</small><b id="csWDpd">0</b></div></div>
+        <button type="button" class="cs2-hand" data-bulk="dpd" id="csHDpd">🚚 Itt a DPD futár — átadás</button>
       </section>
       <section class="cs2-car tot">
         <div class="cs2-car-n"><small id="csSumK">Havi összesítő</small><b class="cs2-tot"><span id="csTot">0</span> <em>csomag</em></b></div>
@@ -9101,6 +9126,7 @@ service cloud.firestore {
             <button type="button" data-c="all" class="on">Mind</button>
             <button type="button" data-c="gls"><i class="cs-cd gls"></i>GLS</button>
             <button type="button" data-c="mpl"><i class="cs-cd mpl"></i>Posta</button>
+            <button type="button" data-c="dpd"><i class="cs-cd dpd"></i>DPD</button>
           </div>
           <input class="cs-search" id="csSearch" type="search" placeholder="🔎 Keresés (kód, név)" autocomplete="off">
         </div>
@@ -9361,7 +9387,7 @@ service cloud.firestore {
   <div class="modal help-modal" role="dialog" aria-labelledby="phelpTitle">
     <div class="help-top"><h2 id="phelpTitle">📦 Csomag nyilvántartó — így működik</h2><div style="display:flex;gap:8px;align-items:center"><span class="help-count" id="phelpCount">1 / 4</span><button class="help-x" id="phelpX" title="Bezárás">✕</button></div></div>
     <div class="help-bars" id="phelpBars"></div>
-    <div class="help-body" id="phelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">🔫</div><div><h3>Beolvasás — magától felismeri</h3><p>Olvasd be a vonalkódot: a szállítót és a mai dátumot rögzíti.</p></div></div><div class="hc-wrap"><div class="hc-stage ph1"><div class="plbl"><span class="pbc"><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i></span></div><div class="pbeam"></div><div class="pin"><span>🔫</span><em><span class="t1">00123456789</span><span class="t2">RB123456789HU</span></em></div><div class="prow r1"><b class="pb gls">GLS</b><span class="pc">00123456789<small>📥 ma 10:24</small></span></div><div class="prow r2"><b class="pb mpl">Posta</b><span class="pc">RB123456789HU<small>📥 ma 10:25</small></span></div></div></div><ol class="hs-steps"><li><div>A <b>📦 Csomag</b> oldalon olvasd be a csomag vonalkódját a vonalkódolvasóval — <b>bárhol az oldalon</b>, nem kell a mezőbe kattintani. Kézzel is beírhatod, majd <b>Enter</b>.</div></li><li><div>A szállítót <b>automatikusan felismeri</b>: a <b style="background:#d4202c;color:#fff;padding:0 5px;border-radius:4px">Magyar Posta</b> kódja betűkkel kezdődik és <b>HU</b>-ra végződik (pl. RB123456789HU), vagy JJH-val kezdődik; a <b style="background:#f2b705;color:#0b2a8a;padding:0 5px;border-radius:4px">GLS</b> csomagszáma csupa szám.</div></li><li><div>Gépelés közben a mező végén már látszik, <b>melyik szállító lesz</b>. A <b>beolvasás napja (a mai nap)</b> és ideje magától rögzül. Ha ugyanazt a kódot még egyszer beolvasod, szól, hogy már rögzítve van, és megmutatja.</div></li><li><div>Ha nem ismeri fel a szállítót, a sorban egy <b>GLS / Posta</b> választó jelenik meg — a hasonló kódokat legközelebb már magától felismeri. A szállító jelvényére kattintva bármikor átírhatod.</div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">🚚</div><div><h3>Futár elvitte — ki adta át?</h3><p>Amikor a futár elviszi, ezt kézzel jelölöd.</p></div></div><div class="hc-wrap"><div class="hc-stage ph2"><div class="prow r1"><b class="pb gls">GLS</b><span class="pc">00123456789<small>📥 10.04. 10:24</small></span><span class="pwait">⏳ Futárra vár</span><span class="pgo">🚚 Elvitte</span><span class="pdone">🚚 Elvitte 10.04.<small>Átadta: Kiss Anna</small></span></div><div class="pmod"><b>🚚 Ki adta át?</b><div><span class="ch c1">● Kiss Anna</span><span class="ch">● Nagy Péter</span></div><em>✓ Átadva</em></div><div class="hc-ripple r1" style="left:420px;top:46px"></div><div class="hc-ripple r2" style="left:110px;top:150px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>A futárra váró csomag (<b>⏳ Futárra vár</b>) sorában kattints a <b>🚚 Elvitte</b> gombra.</div></li><li><div>A felugró ablakban válaszd ki, <b>ki adta át</b> a futárnak (a dolgozók gombjai a Beállításokból jönnek), vagy írd be a nevet. Az átadás napja alapból a mai — szükség esetén átírható.</div></li><li><div>Ha itt a futár és sok csomagot visz, a <b>GLS</b> vagy a <b>Magyar Posta</b> kártyáján az <b>„Itt a … futár — X csomag átadása”</b> gombbal <b>egyszerre</b> jelölheted az összes várót. A kártyán azt is látod, hány csomag vár még.</div></li><li><div>Elrontottad? A sor végén a <b>↶</b> visszavonja az átadást; a <b>✕</b> (kétszer kattintva) törli a csomagot.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">📅</div><div><h3>Hónapokra bontva + összesítő</h3><p>Minden hónap külön lapon — a korábbiak is visszanézhetők.</p></div></div><div class="hc-wrap"><div class="hc-stage ph3 v2"><div class="pchips"><span class="c c1">október <em>12</em><i>3</i></span><span class="c c2">szeptember <em>38</em></span><span class="c">augusztus <em>33</em></span><span class="c">július <em>33</em></span></div><div class="psum2"><small>HAVI ÖSSZESÍTŐ</small><b><span class="m2">12</span><span class="m1">38</span></b><em>csomag</em><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="16" class="bg"/><circle cx="21" cy="21" r="16" class="fg"/></svg><span class="pct"><span class="m2">75%</span><span class="m1">100%</span></span><div class="pst"><span>🚚 Elvitte <b><span class="m2">9</span><span class="m1">38</span></b></span><span class="w">⏳ Vár <b><span class="m2">3</span><span class="m1">0</span></b></span></div></div><div class="pchart"><small>📊 UTOLSÓ 6 HÓNAP</small><div class="cols"><span class="col"><i class="m" style="height:21%"></i><i class="g" style="height:26%"></i><small>máj.</small></span><span class="col"><i class="m" style="height:24%"></i><i class="g" style="height:37%"></i><small>jún.</small></span><span class="col"><i class="m" style="height:37%"></i><i class="g" style="height:50%"></i><small>júl.</small></span><span class="col"><i class="m" style="height:37%"></i><i class="g" style="height:50%"></i><small>aug.</small></span><span class="col k5"><i class="m" style="height:42%"></i><i class="g" style="height:58%"></i><small>szept.</small></span><span class="col k6"><i class="m" style="height:13%"></i><i class="g" style="height:18%"></i><small>okt.</small></span></div></div></div></div><ol class="hs-steps"><li><div>A csomagok <b>a beolvasás hónapja szerint</b> kerülnek a hónapokba. A <b>hónap-sávban</b> minden hónap egy gomb (mellette a darabszám, narancsban a még várók) — kattints rá, vagy lapozz a <b>‹ ›</b> nyilakkal a <b>korábbi hónapokra</b>. A listában napokra bontva, a legújabb felül látod őket.</div></li><li><div>Szűrhetsz: <b>Mind / ⏳ Futárra vár / 🚚 Elvitte</b>, szállító (GLS / Posta), és kereshetsz vonalkódra vagy névre.</div></li><li><div>Felül a <b>havi összesítő</b> kártya: összes csomag, a kör pedig mutatja, hány százalékot vitt el már a futár; mellette a GLS és a Posta kártya a saját darabszámával. Jobb oldalt lent: <b>ki hányat adott át</b>.</div></li><li><div>A <b>📊 Összesítő — hónapok</b> részben az <b>oszlopdiagram</b> az utolsó 6 hónapot mutatja (sárga = GLS, piros = Posta), alatta a táblázat minden hónapot, alul a mindenkori összesennel. Egy oszlopra vagy sorra kattintva odaugrik.</div></li></ol></section><section class="help-slide" data-i="4"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Néhány apróság a csomagokhoz.</p></div></div><div class="tips"><div class="tip"><div class="ti">⚡</div><div><b>Bárhol olvashatsz</b><span>A Csomag oldalon a vonalkódolvasó akkor is működik, ha nincs kijelölve a mező — a kód magától a beolvasó mezőbe kerül.</span></div></div><div class="tip"><div class="ti">🎨</div><div><b>Színek</b><span>GLS = sárga, Magyar Posta = piros. A sor bal szélén lévő csík is a szállító színét mutatja.</span></div></div><div class="tip"><div class="ti">🖼️</div><div><b>Saját logó</b><span>A GLS vagy a Posta kártyáján a logó helyére kattintva feltöltheted a szállító logóját (PNG, JPG, SVG) — fehér alapon jelenik meg a kártyán és a sorokban is. Jobb klikkel törölheted.</span></div></div><div class="tip"><div class="ti">⚠️</div><div><b>Nem maradhat ott</b><span>Ha egy korábbi hónapból még van futárra váró csomag, egy narancs sáv figyelmeztet rá — a „Megnézem →” odaugrik.</span></div></div><div class="tip"><div class="ti">🔁</div><div><b>Dupla beolvasás</b><span>Ugyanazt a csomagot nem rögzíti kétszer: szól, mikor olvastad be és elvitte-e már a futár.</span></div></div><div class="tip kaponly"><div class="ti">📥</div><div><b>2026-os füzet (Kaposvár)</b><span>FirstPhone Kaposvárban a korábbi Csomag Nyilvántartó (GLS és MPL lapok) 2026-os csomagjai dátumra pontosan be vannak töltve, átadóval együtt (a füzet kódjai névre fordítva: KAPV_JO → Joós Martin, KAPV_E → Evelin) — a hónap-sávban visszanézheted őket. A már beolvasott csomagokat nem duplázza.</span></div></div><div class="tip"><div class="ti">⬇</div><div><b>CSV letöltés</b><span>A fejlécben a „⬇ CSV” a kiválasztott hónap csomagjait tölti le (Excelben megnyitható).</span></div></div><div class="tip"><div class="ti">💾</div><div><b>Megjegyzi</b><span>Minden csomag megmarad bezárás után is — a weboldalon bolti belépéssel a <b>felhőbe</b> is mentődik, így a bolt minden gépén és telefonján ugyanaz látszik (a feltöltött szállító-logók is).</span></div></div><div class="tip"><div class="ti">🎬</div><div><b>Oldal bemutatása</b><span>Animált körbevezetés az egész munkaasztalon. <button type="button" class="tour-again">▶ Bemutató indítása</button></span></div></div></div></section></div>
+    <div class="help-body" id="phelpBody"><section class="help-slide" data-i="1"><div class="hs-head"><div class="hs-icon">🔫</div><div><h3>Beolvasás — magától felismeri</h3><p>Olvasd be a vonalkódot: a szállítót és a mai dátumot rögzíti.</p></div></div><div class="hc-wrap"><div class="hc-stage ph1"><div class="plbl"><span class="pbc"><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i></span></div><div class="pbeam"></div><div class="pin"><span>🔫</span><em><span class="t1">00123456789</span><span class="t2">RB123456789HU</span></em></div><div class="prow r1"><b class="pb gls">GLS</b><span class="pc">00123456789<small>📥 ma 10:24</small></span></div><div class="prow r2"><b class="pb mpl">Posta</b><span class="pc">RB123456789HU<small>📥 ma 10:25</small></span></div></div></div><ol class="hs-steps"><li><div>A <b>📦 Csomag</b> oldalon olvasd be a csomag vonalkódját a vonalkódolvasóval — <b>bárhol az oldalon</b>, nem kell a mezőbe kattintani. Kézzel is beírhatod, majd <b>Enter</b>.</div></li><li><div>A szállítót <b>automatikusan felismeri</b>: a <b style="background:#d4202c;color:#fff;padding:0 5px;border-radius:4px">Magyar Posta</b> kódja betűkkel kezdődik és <b>HU</b>-ra végződik (pl. RB123456789HU), vagy JJH-val kezdődik; a <b style="background:#f2b705;color:#0b2a8a;padding:0 5px;border-radius:4px">GLS</b> csomagszáma csupa szám (9–13 jegy); a <b style="background:#414042;color:#fff;padding:0 5px;border-radius:4px;box-shadow:inset 0 -2px 0 #dc0032">DPD</b> címke vonalkódja „%”-kal kezdődik (irányítószám + 14 jegyű csomagszám + szolgáltatás + ország) — ebből a <b>14 jegyű csomagszámot</b> menti el, mint a címkén (pl. 1638 0138 3877 13). Kézzel a 14 jegyű csomagszámot is beírhatod.</div></li><li><div>Gépelés közben a mező végén már látszik, <b>melyik szállító lesz</b>. A <b>beolvasás napja (a mai nap)</b> és ideje magától rögzül. Ha ugyanazt a kódot még egyszer beolvasod, szól, hogy már rögzítve van, és megmutatja.</div></li><li><div>Ha nem ismeri fel a szállítót, a sorban egy <b>GLS / Posta / DPD</b> választó jelenik meg — a hasonló kódokat legközelebb már magától felismeri. A szállító jelvényére kattintva bármikor átírhatod.</div></li></ol></section><section class="help-slide" data-i="2"><div class="hs-head"><div class="hs-icon">🚚</div><div><h3>Futár elvitte — ki adta át?</h3><p>Amikor a futár elviszi, ezt kézzel jelölöd.</p></div></div><div class="hc-wrap"><div class="hc-stage ph2"><div class="prow r1"><b class="pb gls">GLS</b><span class="pc">00123456789<small>📥 10.04. 10:24</small></span><span class="pwait">⏳ Futárra vár</span><span class="pgo">🚚 Elvitte</span><span class="pdone">🚚 Elvitte 10.04.<small>Átadta: Kiss Anna</small></span></div><div class="pmod"><b>🚚 Ki adta át?</b><div><span class="ch c1">● Kiss Anna</span><span class="ch">● Nagy Péter</span></div><em>✓ Átadva</em></div><div class="hc-ripple r1" style="left:420px;top:46px"></div><div class="hc-ripple r2" style="left:110px;top:150px"></div><svg class="hc-cursor" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div></div><ol class="hs-steps"><li><div>A futárra váró csomag (<b>⏳ Futárra vár</b>) sorában kattints a <b>🚚 Elvitte</b> gombra.</div></li><li><div>A felugró ablakban válaszd ki, <b>ki adta át</b> a futárnak (a dolgozók gombjai a Beállításokból jönnek), vagy írd be a nevet. Az átadás napja alapból a mai — szükség esetén átírható.</div></li><li><div>Ha itt a futár és sok csomagot visz, a <b>GLS</b>, a <b>Magyar Posta</b> vagy a <b>DPD</b> kártyáján az <b>„Itt a … futár — X csomag átadása”</b> gombbal <b>egyszerre</b> jelölheted az összes várót. A kártyán azt is látod, hány csomag vár még.</div></li><li><div>Elrontottad? A sor végén a <b>↶</b> visszavonja az átadást; a <b>✕</b> (kétszer kattintva) törli a csomagot.</div></li></ol></section><section class="help-slide" data-i="3"><div class="hs-head"><div class="hs-icon">📅</div><div><h3>Hónapokra bontva + összesítő</h3><p>Minden hónap külön lapon — a korábbiak is visszanézhetők.</p></div></div><div class="hc-wrap"><div class="hc-stage ph3 v2"><div class="pchips"><span class="c c1">október <em>12</em><i>3</i></span><span class="c c2">szeptember <em>38</em></span><span class="c">augusztus <em>33</em></span><span class="c">július <em>33</em></span></div><div class="psum2"><small>HAVI ÖSSZESÍTŐ</small><b><span class="m2">12</span><span class="m1">38</span></b><em>csomag</em><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="16" class="bg"/><circle cx="21" cy="21" r="16" class="fg"/></svg><span class="pct"><span class="m2">75%</span><span class="m1">100%</span></span><div class="pst"><span>🚚 Elvitte <b><span class="m2">9</span><span class="m1">38</span></b></span><span class="w">⏳ Vár <b><span class="m2">3</span><span class="m1">0</span></b></span></div></div><div class="pchart"><small>📊 UTOLSÓ 6 HÓNAP</small><div class="cols"><span class="col"><i class="m" style="height:21%"></i><i class="g" style="height:26%"></i><small>máj.</small></span><span class="col"><i class="m" style="height:24%"></i><i class="g" style="height:37%"></i><small>jún.</small></span><span class="col"><i class="m" style="height:37%"></i><i class="g" style="height:50%"></i><small>júl.</small></span><span class="col"><i class="m" style="height:37%"></i><i class="g" style="height:50%"></i><small>aug.</small></span><span class="col k5"><i class="m" style="height:42%"></i><i class="g" style="height:58%"></i><small>szept.</small></span><span class="col k6"><i class="m" style="height:13%"></i><i class="g" style="height:18%"></i><small>okt.</small></span></div></div></div></div><ol class="hs-steps"><li><div>A csomagok <b>a beolvasás hónapja szerint</b> kerülnek a hónapokba. A <b>hónap-sávban</b> minden hónap egy gomb (mellette a darabszám, narancsban a még várók) — kattints rá, vagy lapozz a <b>‹ ›</b> nyilakkal a <b>korábbi hónapokra</b>. A listában napokra bontva, a legújabb felül látod őket.</div></li><li><div>Szűrhetsz: <b>Mind / ⏳ Futárra vár / 🚚 Elvitte</b>, szállító (GLS / Posta / DPD), és kereshetsz vonalkódra vagy névre.</div></li><li><div>Felül a <b>havi összesítő</b> kártya: összes csomag, a kör pedig mutatja, hány százalékot vitt el már a futár; mellette a GLS, a Posta és a DPD kártya a saját darabszámával. Jobb oldalt lent: <b>ki hányat adott át</b>.</div></li><li><div>A <b>📊 Összesítő — hónapok</b> részben az <b>oszlopdiagram</b> az utolsó 6 hónapot mutatja (sárga = GLS, piros = Posta, szürke = DPD), alatta a táblázat minden hónapot, alul a mindenkori összesennel. Egy oszlopra vagy sorra kattintva odaugrik.</div></li></ol></section><section class="help-slide" data-i="4"><div class="hs-head"><div class="hs-icon">💡</div><div><h3>Jó tudni</h3><p>Néhány apróság a csomagokhoz.</p></div></div><div class="tips"><div class="tip"><div class="ti">⚡</div><div><b>Bárhol olvashatsz</b><span>A Csomag oldalon a vonalkódolvasó akkor is működik, ha nincs kijelölve a mező — a kód magától a beolvasó mezőbe kerül.</span></div></div><div class="tip"><div class="ti">🎨</div><div><b>Színek</b><span>GLS = sárga, Magyar Posta = piros, DPD = szürke (piros csíkkal). A sor bal szélén lévő csík is a szállító színét mutatja.</span></div></div><div class="tip"><div class="ti">🖼️</div><div><b>Saját logó</b><span>A GLS, a Posta vagy a DPD kártyáján a logó helyére kattintva feltöltheted a szállító logóját (PNG, JPG, SVG) — fehér alapon jelenik meg a kártyán és a sorokban is. Jobb klikkel törölheted.</span></div></div><div class="tip"><div class="ti">⚠️</div><div><b>Nem maradhat ott</b><span>Ha egy korábbi hónapból még van futárra váró csomag, egy narancs sáv figyelmeztet rá — a „Megnézem →” odaugrik.</span></div></div><div class="tip"><div class="ti">🔁</div><div><b>Dupla beolvasás</b><span>Ugyanazt a csomagot nem rögzíti kétszer: szól, mikor olvastad be és elvitte-e már a futár.</span></div></div><div class="tip kaponly"><div class="ti">📥</div><div><b>2026-os füzet (Kaposvár)</b><span>FirstPhone Kaposvárban a korábbi Csomag Nyilvántartó (GLS és MPL lapok) 2026-os csomagjai dátumra pontosan be vannak töltve, átadóval együtt (a füzet kódjai névre fordítva: KAPV_JO → Joós Martin, KAPV_E → Evelin) — a hónap-sávban visszanézheted őket. A már beolvasott csomagokat nem duplázza.</span></div></div><div class="tip"><div class="ti">⬇</div><div><b>CSV letöltés</b><span>A fejlécben a „⬇ CSV” a kiválasztott hónap csomagjait tölti le (Excelben megnyitható).</span></div></div><div class="tip"><div class="ti">💾</div><div><b>Megjegyzi</b><span>Minden csomag megmarad bezárás után is — a weboldalon bolti belépéssel a <b>felhőbe</b> is mentődik, így a bolt minden gépén és telefonján ugyanaz látszik (a feltöltött szállító-logók is).</span></div></div><div class="tip"><div class="ti">🎬</div><div><b>Oldal bemutatása</b><span>Animált körbevezetés az egész munkaasztalon. <button type="button" class="tour-again">▶ Bemutató indítása</button></span></div></div></div></section></div>
     <div class="help-foot"><button class="action-btn secondary" id="phelpPrev">← Vissza</button><span class="hint">Tipp: lapozz a ← → nyilakkal</span><button class="action-btn primary" id="phelpNext">Tovább →</button></div>
   </div>
 </div>
@@ -16614,9 +16640,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     try{ if(modOn("leltar") && typeof ltIsLtDay === "function" && ltIsLtDay()){ const f = ltUpcoming(1)[0], T = LT_TYPES[f.type];
       out.push({ k:"lt", c:"#30b37a", ic:"📋", kick:"Ma leltár van", t:T.name, x:T.cats.join(" + ") + (f.reason ? ` · ${esc(f.reason)} miatt áthelyezve` : ""), go:"leltar", gl:"Leltár" }); } }catch(e){}
     try{ if(modOn("csomag")){ const o = JSON.parse(localStorage.getItem("firstphone_csomag") || "null"), W = (o && Array.isArray(o.items) ? o.items : []).filter(x=> !x.outAt);
-      if(W.length){ const g = W.filter(x=> x.car === "gls").length, p = W.filter(x=> x.car === "mpl").length, old = W.map(x=> x.inAt).filter(Boolean).sort()[0];
+      if(W.length){ const g = W.filter(x=> x.car === "gls").length, p = W.filter(x=> x.car === "mpl").length, dp = W.filter(x=> x.car === "dpd").length, old = W.map(x=> x.inAt).filter(Boolean).sort()[0];
         const dd = old ? Math.round((new Date(key) - new Date(old)) / 864e5) : 0;
-        out.push({ k:"cs", c:"#c98a3a", ic:"📦", kick:"Csomag vár kiadásra", t:`${W.length} csomag van bent`, x:[g ? `GLS: <strong>${g}</strong>` : "", p ? `Posta: <strong>${p}</strong>` : "", dd > 0 ? `a legrégebbi ${dd} napja` : ""].filter(Boolean).join(" · "), go:"csomag", gl:"Csomagok" }); } } }catch(e){}
+        out.push({ k:"cs", c:"#c98a3a", ic:"📦", kick:"Csomag vár kiadásra", t:`${W.length} csomag van bent`, x:[g ? `GLS: <strong>${g}</strong>` : "", p ? `Posta: <strong>${p}</strong>` : "", dp ? `DPD: <strong>${dp}</strong>` : "", dd > 0 ? `a legrégebbi ${dd} napja` : ""].filter(Boolean).join(" · "), go:"csomag", gl:"Csomagok" }); } } }catch(e){}
     try{ shTodos(fin).forEach((t, k, A)=>{ const P = t.who === "all" ? null : personById(t.who), late = t.due && t.due < key;
       out.push({ k:"td", c:late ? "#e2585a" : (P ? P.hex : "#d6589a"), ic:late ? "⚠️" : "✅", kick:`Teendő${A.length > 1 ? ` · ${k + 1}/${A.length}` : ""}${late ? " · lejárt" : " · ma"}`, t:t.text, x:(P ? esc(P.name) : "👥 Közös") + (late ? ` · határidő: ${esc(t.due.slice(5).replace("-", ". "))}.` : ""), go:"teendo", gl:"Teendők" }); }); }catch(e){}
     return out;
@@ -17228,7 +17254,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     { k:"cetli",    i:"🏷️", t:"Cetli generátor", d:"szállítási címke, foglaló, köszönő cetli" },
     { k:"leltar",   i:"📋", t:"Leltár", d:"Bizzio export, beolvasás, leltárív" },
     { k:"kassza",   i:"💰", t:"Kassza", d:"címletek, pénz hátul, kasszajelentés" },
-    { k:"csomag",   i:"📦", t:"Csomag", d:"GLS / Posta nyilvántartás, futár" },
+    { k:"csomag",   i:"📦", t:"Csomag", d:"GLS / Posta / DPD nyilvántartás, futár" },
     { k:"selejt",   i:"🗑️", t:"Selejt", d:"mai selejt, Excel, cetli" },
     { k:"teendo",   i:"✅", t:"Teendők", d:"közös to-do lista, határidő, pipálás" }
   ];
@@ -19713,7 +19739,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
   /* ===================== CSOMAG NYILVÁNTARTÓ (GLS · Magyar Posta) ===================== */
   const CS_KEY = "firstphone_csomag";
-  const CS_CAR = { gls:{ n:"GLS", l:"GLS" }, mpl:{ n:"Posta", l:"Magyar Posta" }, "?":{ n:"?", l:"Ismeretlen" } };
+  const CS_CAR = { gls:{ n:"GLS", l:"GLS" }, mpl:{ n:"Posta", l:"Magyar Posta" }, dpd:{ n:"dpd", l:"DPD" }, "?":{ n:"?", l:"Ismeretlen" } };
+  const CS_CARS = ["gls", "mpl", "dpd"];
   const CS_HM = ["január","február","március","április","május","június","július","augusztus","szeptember","október","november","december"];
   const CS_HD = ["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
   let cs = { items:[], learn:{}, lastBy:"" };
@@ -19753,11 +19780,20 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function csClean(raw){ return String(raw || "").replace(/[\u0000-\u001f\u007f]/g, "").replace(/^\][A-Za-z]\d/, "").replace(/\s+/g, "").toUpperCase(); }
   function csSig(c){ return c.replace(/\d/g, "9").replace(/[A-Z]/g, "A").slice(0, 3) + c.length; }
   /* szállító felismerése a vonalkódból */
+  /* DPD címke vonalkódja: „%” + 7 jegyű irányítószám + 14 jegyű csomagszám + 3 jegyű szolgáltatás + 3 jegyű ország
+     (pl. %0066620 16380138387713 337 616) — ebből a 14 jegyű csomagszámot tároljuk, mint a címkén: 1638 0138 3877 13 */
+  function csDpdNum(c){
+    let m = /^%?(\d{7})(\d{14})(\d{3})(\d{3})$/.exec(c); if(m) return m[2];
+    m = /^(\d{14})[A-Z]$/.exec(c); if(m) return m[1];          /* kézzel: a címke csomagszáma + ellenőrző betű (…13 W) */
+    return "";
+  }
   function csDetect(c){
+    if(csDpdNum(c)) return "dpd";
     if(/^[A-Z]{2}\d{9}HU$/.test(c)) return "mpl";            /* Magyar Posta azonosító: pl. RB123456789HU, CQ…HU */
     if(/^(JJH|JJD|PNT|MPL)/.test(c)) return "mpl";            /* MPL üzleti csomag */
     if(/^[A-Z]{2}\d{9}[A-Z]{2}$/.test(c)) return "mpl";       /* nemzetközi (UPU) — itthon a Posta kézbesíti */
-    if(/^\d{10,14}$/.test(c)) return "gls";                   /* GLS csomagszám: csupa szám */
+    if(/^\d{14}$/.test(c)) return cs.learn[c.slice(0, 3) + "|14"] || cs.learn[csSig(c)] || "dpd";   /* DPD csomagszám: 14 számjegy (a GLS-é rövidebb) */
+    if(/^\d{9,13}$/.test(c)) return "gls";                    /* GLS csomagszám: csupa szám */
     if(/^(?=.*\d)(?=.*[A-Z])[A-Z0-9]{8}$/.test(c)) return "gls"; /* GLS TrackID (8 karakter) */
     const lk = cs.learn[c.slice(0, 3) + "|" + c.length] || cs.learn[csSig(c)];
     return lk || "?";
@@ -19765,7 +19801,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function csLearn(c, car){ if(car === "?") return; cs.learn[c.slice(0, 3) + "|" + c.length] = car; cs.learn[csSig(c)] = car; }
   function csMsg(html, cls){ const m = document.getElementById("csMsg"); if(!m) return; m.className = "cs-scan-msg " + (cls || ""); m.innerHTML = `<span class="cs-dot"></span><span class="cs-mt">${html}</span>`; if(cls){ void m.offsetWidth; m.classList.add("pop"); } }
   function csScan(raw){
-    const c = csClean(raw);
+    let c = csClean(raw);
+    const dn = csDpdNum(c); if(dn) c = dn;
     const inp = document.getElementById("csScan"); if(inp){ inp.value = ""; const g = document.getElementById("csGuess"); if(g) g.hidden = true; }
     if(!c) return;
     if(c.length < 6){ csMsg(`<b>${csE(c)}</b> — túl rövid, ez nem csomag vonalkód.`, "err"); return; }
@@ -19780,14 +19817,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     cs.items.push(it); csSave();
     csView = csMKey(it.inAt); csFlashId = it.id;
     try{ fpSound && fpSound(car === "?" ? "info" : "ok"); }catch(e){}
-    if(car === "?") csMsg(`❓ <b>${csE(c)}</b> rögzítve ma — a szállítót nem ismertem fel, <b>válaszd ki a sorban</b> (GLS vagy Posta). Legközelebb a hasonló kódokat már felismerem.`, "warn");
+    if(car === "?") csMsg(`❓ <b>${csE(c)}</b> rögzítve ma — a szállítót nem ismertem fel, <b>válaszd ki a sorban</b> (GLS, Posta vagy DPD). Legközelebb a hasonló kódokat már felismerem.`, "warn");
     else csMsg(`✓ <b>${csE(c)}</b> rögzítve — <b class="cs-cn ${car}">${CS_CAR[car].l}</b> · ${csDShort(it.inAt)} ${it.inT}`, "ok");
     csDraw();
   }
   function csItemsOf(mk){ return cs.items.filter(x=> csMKey(x.inAt) === mk); }
   function csStats(list){
-    const r = { all:list.length, gls:0, mpl:0, unk:0, wait:0, out:0, by:{} };
-    list.forEach(x=>{ if(x.car === "gls") r.gls++; else if(x.car === "mpl") r.mpl++; else r.unk++; if(x.outAt){ r.out++; const b = x.by || "—"; r.by[b] = (r.by[b] || 0) + 1; } else r.wait++; });
+    const r = { all:list.length, gls:0, mpl:0, dpd:0, unk:0, wait:0, out:0, by:{} };
+    list.forEach(x=>{ if(x.car === "gls") r.gls++; else if(x.car === "mpl") r.mpl++; else if(x.car === "dpd") r.dpd++; else r.unk++; if(x.outAt){ r.out++; const b = x.by || "—"; r.by[b] = (r.by[b] || 0) + 1; } else r.wait++; });
     return r;
   }
   const CS_HS = ["jan.","febr.","márc.","ápr.","máj.","jún.","júl.","aug.","szept.","okt.","nov.","dec."];
@@ -19796,13 +19833,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   let csLogo = {};
   try{ csLogo = JSON.parse(localStorage.getItem(CS_LOGO_KEY) || "{}") || {}; }catch(e){ csLogo = {}; }
   function csBadge(car, flip){
-    const lg = csLogo[car], t = flip ? ` data-act="car" data-v="${car === "gls" ? "mpl" : "gls"}" title="Kattints, ha rossz a szállító (GLS ⇄ Posta)"` : "";
+    const nx = CS_CARS[(CS_CARS.indexOf(car) + 1) % CS_CARS.length];
+    const lg = csLogo[car], t = flip ? ` data-act="car" data-v="${nx}" title="Kattints, ha rossz a szállító (GLS → Posta → DPD)"` : "";
     return `<button type="button" class="cs-badge ${car}${lg ? " has-logo" : ""}"${t}>${lg ? `<img src="${lg}" alt="${CS_CAR[car].l}">` : CS_CAR[car].n}</button>`;
   }
   function csRowHTML(x){
     const car = CS_CAR[x.car] ? x.car : "?";
     const carH = car === "?"
-      ? `<span class="cs-pick"><button type="button" data-act="car" data-v="gls" class="gls">GLS</button><button type="button" data-act="car" data-v="mpl" class="mpl">Posta</button></span>`
+      ? `<span class="cs-pick"><button type="button" data-act="car" data-v="gls" class="gls">GLS</button><button type="button" data-act="car" data-v="mpl" class="mpl">Posta</button><button type="button" data-act="car" data-v="dpd" class="dpd">DPD</button></span>`
       : csBadge(car, true);
     const st = x.outAt
       ? `<span class="cs2-pill out"><span>🚚 Elvitte <b>${csDShort(x.outAt)}</b>${x.outT ? " " + x.outT : ""}</span><small>Átadta: <b>${csE(x.by || "—")}</b></small></span><button type="button" class="cs-ib" data-act="undo" title="Visszavonás: mégsem vitte el">↶</button>`
@@ -19857,17 +19895,18 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     csCount(document.getElementById("csTot"), S.all);
     document.getElementById("csNGls").textContent = S.gls;
     document.getElementById("csNMpl").textContent = S.mpl;
+    { const e = document.getElementById("csNDpd"); if(e) e.textContent = S.dpd; }
     document.getElementById("csNWait").textContent = S.wait;
     document.getElementById("csNOut").textContent = S.out;
     const pct = S.all ? Math.round(S.out / S.all * 100) : 0;
     document.getElementById("csRing").style.strokeDasharray = `${(pct/100*100.53).toFixed(1)} 100.53`;
     document.getElementById("csRingTx").textContent = pct + "%";
     const wAll = cs.items.filter(x=> !x.outAt);
-    [["gls","Gls"],["mpl","Mpl"]].forEach(([c, C])=>{
+    [["gls","Gls"],["mpl","Mpl"],["dpd","Dpd"]].forEach(([c, C])=>{
       const n = wAll.filter(x=> x.car === c).length;
-      document.getElementById("csW" + C).textContent = n;
+      const wEl = document.getElementById("csW" + C); if(!wEl) return; wEl.textContent = n;
       const b = document.getElementById("csH" + C); b.disabled = !n;
-      b.textContent = n ? `🚚 Itt a ${c === "gls" ? "GLS" : "Posta"} futár — ${n} csomag átadása` : "✓ Nincs futárra váró csomag";
+      b.textContent = n ? `🚚 Itt a ${c === "gls" ? "GLS" : c === "dpd" ? "DPD" : "Posta"} futár — ${n} csomag átadása` : "✓ Nincs futárra váró csomag";
       const card = document.querySelector(`.cs2-car.${c}`), lg = csLogo[c];
       const img = card.querySelector(".cs2-logo img"); img.hidden = !lg; if(lg) img.src = lg;
       card.querySelector(".cs2-logo").classList.toggle("has", !!lg);
@@ -19881,12 +19920,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const last = []; for(let k = 5; k >= 0; k--) last.push(csMShift(csView, -k));
     const ls = last.map(mk=> ({ mk, s:csStats(csItemsOf(mk)) })), mx = Math.max(1, ...ls.map(x=> x.s.all));
     document.getElementById("csChart").innerHTML = ls.map(({ mk, s })=>
-      `<button type="button" class="cs2-col${mk === csView ? " on" : ""}" data-m="${mk}" title="${csMLabel(mk)}: GLS ${s.gls}, Posta ${s.mpl}"><em>${s.all || ""}</em><span class="st"><i class="m" style="height:${s.mpl/mx*100}%"></i><i class="g" style="height:${s.gls/mx*100}%"></i></span><small>${CS_HS[+mk.slice(5)-1]}</small></button>`).join("");
+      `<button type="button" class="cs2-col${mk === csView ? " on" : ""}" data-m="${mk}" title="${csMLabel(mk)}: GLS ${s.gls}, Posta ${s.mpl}, DPD ${s.dpd}"><em>${s.all || ""}</em><span class="st"><i class="d" style="height:${s.dpd/mx*100}%"></i><i class="m" style="height:${s.mpl/mx*100}%"></i><i class="g" style="height:${s.gls/mx*100}%"></i></span><small>${CS_HS[+mk.slice(5)-1]}</small></button>`).join("");
     const tot = csStats(cs.items);
-    let t = `<div class="cs-tr h"><span>Hónap</span><span>GLS</span><span>Posta</span><span>Össz.</span><span>Elvitte</span><span>Vár</span></div>`;
+    let t = `<div class="cs-tr h"><span>Hónap</span><span>GLS</span><span>Posta</span><span>DPD</span><span>Össz.</span><span>Elvitte</span><span>Vár</span></div>`;
     months.forEach(mk=>{ const s = csStats(csItemsOf(mk));
-      t += `<button type="button" class="cs-tr${mk === csView ? " on" : ""}" data-m="${mk}"><span>${CS_HS[+mk.slice(5)-1]}<small>${mk.slice(0,4)}</small></span><span>${s.gls}</span><span>${s.mpl}</span><b>${s.all}</b><span>${s.out}</span><span class="${s.wait ? "w" : ""}">${s.wait}</span></button>`; });
-    t += `<div class="cs-tr f"><span>Összesen</span><span>${tot.gls}</span><span>${tot.mpl}</span><b>${tot.all}</b><span>${tot.out}</span><span class="${tot.wait ? "w" : ""}">${tot.wait}</span></div>`;
+      t += `<button type="button" class="cs-tr${mk === csView ? " on" : ""}" data-m="${mk}"><span>${CS_HS[+mk.slice(5)-1]}<small>${mk.slice(0,4)}</small></span><span>${s.gls}</span><span>${s.mpl}</span><span>${s.dpd}</span><b>${s.all}</b><span>${s.out}</span><span class="${s.wait ? "w" : ""}">${s.wait}</span></button>`; });
+    t += `<div class="cs-tr f"><span>Összesen</span><span>${tot.gls}</span><span>${tot.mpl}</span><span>${tot.dpd}</span><b>${tot.all}</b><span>${tot.out}</span><span class="${tot.wait ? "w" : ""}">${tot.wait}</span></div>`;
     document.getElementById("csTbl").innerHTML = t;
   }
   function csSetLogo(car, file){
@@ -20015,7 +20054,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     csInit(); csDraw();
     const sub = document.getElementById("csHeadSub");
     if(sub){ const loc = [state.settings.location, state.settings.placeDetail].filter(Boolean).join(" · ");
-      sub.textContent = `FirstPhone ${loc} — GLS és Magyar Posta csomagok: beolvasás, futárnak átadás, havi összesítő.`; }
+      sub.textContent = `FirstPhone ${loc} — GLS, Magyar Posta és DPD csomagok: beolvasás, futárnak átadás, havi összesítő.`; }
     setTimeout(()=>{ const s = document.getElementById("csScan"); if(s && activePage === "csomag" && !document.querySelector(".modal-backdrop.show")) s.focus({ preventScroll:true }); }, 80);
   }
 
@@ -21216,7 +21255,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           <li><i>🏷️</i><div><b>Cetli generátor</b><small>szállítási és egyéb cetlik</small></div></li>
           <li><i>📋</i><div><b>Leltár</b><small>bármilyen Excel, vonalkódolvasó, PDF képekkel</small></div></li>
           <li><i>💰</i><div><b>Kassza</b><small>címletek, pénz hátul, kasszajelentés</small></div></li>
-          <li><i>📦</i><div><b>Csomag</b><small>GLS / Posta beolvasás, futár, havi összesítő</small></div></li>
+          <li><i>📦</i><div><b>Csomag</b><small>GLS / Posta / DPD beolvasás, futár, havi összesítő</small></div></li>
           <li><i>🗑️</i><div><b>Selejt</b><small>mai selejt, Excel letöltés, cetli</small></div></li>
           <li><i>📚</i><div><b>Tudástár</b><small>segédlet és kézikönyv, kereshető</small></div></li>
         </ul>
