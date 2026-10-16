@@ -8,13 +8,17 @@
   window.FP_EMB_KEYS = KEYS;
   var m = /[?&]admv=([A-Za-z0-9_-]{6,})/.exec(location.search); if(!m) return;
   try{ if(window.top === window) return; }catch(e){}
-  var uid = m[1], pre = "fpemb_" + uid + "__", P = Storage.prototype, g = P.getItem, st = P.setItem, rm = P.removeItem;
+  var uid = m[1], pre = "fpemb_" + uid + "__";
   window.FP_EMBED = { uid:uid, pre:pre };
-  function mp(o, k){ k = String(k); try{ if(o === window.sessionStorage) return pre + k; if(o === window.localStorage && KEYS.indexOf(k) > -1) return pre + k; }catch(e){} return k; }
-  P.getItem = function(k){ return g.call(this, mp(this, k)); };
-  P.setItem = function(k, v){ return st.call(this, mp(this, k), v); };
-  P.removeItem = function(k){ return rm.call(this, mp(this, k)); };
-  try{ st.call(window.localStorage, pre + "firstphone_admin_store", uid); }catch(e){}
+  /* ugyanez a beágyazott cetli generátor ablakára is (parent.FP_EMB_HOOK(window)) */
+  window.FP_EMB_HOOK = function(W){ var P = W.Storage.prototype, g = P.getItem, st = P.setItem, rm = P.removeItem;
+    function mp(o, k){ k = String(k); try{ if(o === W.sessionStorage) return pre + k; if(o === W.localStorage && KEYS.indexOf(k) > -1) return pre + k; }catch(e){} return k; }
+    P.getItem = function(k){ return g.call(this, mp(this, k)); };
+    P.setItem = function(k, v){ return st.call(this, mp(this, k), v); };
+    P.removeItem = function(k){ return rm.call(this, mp(this, k)); };
+    return st; };
+  var st0 = window.FP_EMB_HOOK(window);
+  try{ st0.call(window.localStorage, pre + "firstphone_admin_store", uid); }catch(e){}
   document.documentElement.classList.add("fp-embed");
 })();
 </script>
@@ -4647,7 +4651,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261016-222710";</script>
+<script>window.FP_BUILD="20261016-224601";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -4809,7 +4813,11 @@
     .fc-al-h{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;}
     .fc-al-dot{position:relative;width:12px;height:12px;flex:none;border-radius:50%;background:#9aa3b5;} .fc-al.in .fc-al-dot{background:#3ecf8e;} .fc-al.in .fc-al-dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #3ecf8e;animation:fcAdR 1.6s ease-out infinite;}
     .fc-al-t{flex:1;min-width:0;} .fc-al-t b{display:block;font:800 13px 'Poppins',sans-serif;} .fc-al-t small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .fc-al-act{display:inline-block;animation:fcAlAct .45s ease both;} @keyframes fcAlAct{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .fc-al-act{display:inline-block;} .fc-al-act.chg{animation:fcAlAct .45s ease both;}
+    .fc-al-t b u{text-decoration:none;font:800 10px 'Inter',sans-serif;margin-left:4px;padding:1px 7px;border-radius:99px;background:rgba(62,207,142,.16);color:#3ecf8e;vertical-align:1px;}
+    .fc-al-ty{margin-top:4px;padding:5px 8px;border-radius:9px;background:rgba(217,173,70,.12);border:1px dashed rgba(217,173,70,.45);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:fcAlAct .3s ease both;}
+    .fc-al-ty span{color:var(--text-dim,#9c9ca6);font-weight:700;} .fc-al-ty b{display:inline !important;font:800 12px 'Inter',sans-serif !important;color:var(--text,#ececf1);} .fc-al-ty i{display:inline-block;width:2px;height:12px;margin-left:2px;vertical-align:-2px;background:#d9ad46;animation:fcAlCar 1s steps(1) infinite;} @keyframes fcAlCar{50%{opacity:0}}
+    .fc-al-i.act{background:transparent;border:1px solid var(--border,#2b2b33);} .fc-al-i.act p{font-weight:600;} @keyframes fcAlAct{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
     .fc-al-h em{font-style:normal;font:800 11px 'Inter',sans-serif;min-width:20px;height:20px;padding:0 6px;box-sizing:border-box;border-radius:99px;display:grid;place-items:center;background:#d9ad46;color:#1a1405;}
     .fc-al-x{border:0;background:none;color:var(--text-dim,#9c9ca6);cursor:pointer;font-size:12px;padding:4px;}
     .fc-al-pk{display:flex;gap:8px;align-items:center;margin:0 10px 10px;padding:8px 10px;border-radius:12px;background:rgba(217,173,70,.14);border:1px solid rgba(217,173,70,.35);font-size:12.5px;font-weight:700;animation:fcAlAct .5s cubic-bezier(.2,.9,.3,1.3) both;}
@@ -6952,10 +6960,12 @@
     if(document.hidden) return "⏸ épp másik ablakban";
     let pg = "beosztas"; try{ pg = localStorage.getItem("firstphone_active_page") || "beosztas"; }catch(e){}
     let a = pageName(pg);
+    try{ const tb = pg === "cetli" ? (()=>{ const f = document.querySelector("#cetliHost iframe"); try{ return f && f.contentDocument && f.contentDocument.querySelector("#cetliTabs .tab-btn.active b"); }catch(e){ return null; } })() : pg === "teendo" ? document.querySelector("#tdTabs [data-tab].on") : null; if(tb && tb.textContent.trim()) a += " · " + tb.textContent.replace(/\s+/g, " ").replace(/\d+$/, "").trim().slice(0, 40); }catch(e){}
     const dlg = document.querySelector(".popup-backdrop.show h3, .modal-backdrop.show h2, .modal-backdrop.show h3, .shift-back h2, .nw-back h3");
     if(dlg){ let t = (dlg.textContent || "").replace(/\s+/g, " ").trim(); const sub = document.querySelector(".popup-backdrop.show .popup-sub"); if(sub && sub.textContent.trim()) t += " — " + sub.textContent.replace(/\s+/g, " ").trim();
       if(t) a += " · " + t.slice(0, 70); }
-    const ae = document.activeElement; if(ae && /^(INPUT|TEXTAREA)$/.test(ae.tagName) && ae.type !== "checkbox" && ae.type !== "radio") a += " · ✍️ ír";
+    let ae = document.activeElement; try{ if(ae && ae.tagName === "IFRAME" && ae.contentDocument) ae = ae.contentDocument.activeElement; }catch(e){}
+    if(ae && /^(INPUT|TEXTAREA)$/.test(ae.tagName) && ae.type !== "checkbox" && ae.type !== "radio") a += " · ✍️ ír";
     return a;
   }
   function avWrite(view){ if(!S.db || !S.user) return; try{ S.db.collection("presence").doc("admin").set({ view:view, t:Date.now() }, { merge:true }).catch(()=>{}); }catch(e){} }
@@ -6965,19 +6975,62 @@
     if(!act){ if(avOwned){ avOwned = false; avLast = ""; avWrite(null); } return; }
     const a = pr.live ? avAct() : "", key = S.target + "|" + a, now = Date.now();
     if(!force && key === avLast && now - avT < 25000) return;
+    if(force && key === avLast && now - avT < 700 && !avDirty){ avSoon(); return; } avDirty = false;
     if(!avOwned){ avOwned = true; avSince = now; }
     avLast = key; avT = now;
-    avWrite({ uid:S.target, n:String(S.adminLbl || "Admin").slice(0, 60), act:a.slice(0, 140), t:now, since:avSince, live:!!pr.live });
+    let pgk = ""; try{ pgk = localStorage.getItem("firstphone_active_page") || ""; }catch(e){}
+    const V = { uid:S.target, n:String(S.adminLbl || "Admin").slice(0, 60), act:a.slice(0, 140), t:now, since:avSince, live:!!pr.live, pg:pgk };
+    if(pr.live){ if(avFld && now - avFld.t < 10000) V.fld = { l:avFld.l, v:avFld.v, t:avFld.t }; const E = avEv.filter(x=> now - x.t < 90000); if(E.length) V.ev = E; }
+    avWrite(V);
   }
-  function avStart(){ if(avOn) return; avOn = true; setInterval(()=> avTick(false), 2500); document.addEventListener("visibilitychange", ()=> avTick(true)); window.addEventListener("pagehide", ()=>{ if(avOwned){ avOwned = false; avWrite(null); } }); setTimeout(()=> avTick(true), 800); }
+  /* mit csinál az admin: melyik mezőbe mit ír, mit választ ki, mire kattint — mindenhol (cetli, csomag, kassza, leltár…) */
+  let avFld = null, avEv = [], avWT = null, avDirty = false;
+  const avCl = t=> String(t || "").replace(/\s+/g, " ").replace(/[*:：]+\s*$/, "").trim();
+  const avOk = t=> /[0-9A-Za-zÀ-ž]/.test(t || "");
+  const avLiveOn = ()=> S.admin && S.target && avPref().vis && avPref().live && (window.FP_EMBED || !document.querySelector(".ax"));
+  function avSoon(){ avDirty = true; if(avWT) return; avWT = setTimeout(()=>{ avWT = null; avTick(true); }, 900); }
+  function avLbl(el){
+    try{ if(el.id){ const l = el.ownerDocument.querySelector(`label[for="${CSS.escape(el.id)}"]`); if(l && avOk(avCl(l.textContent))) return avCl(l.textContent).slice(0, 40); } }catch(e){}
+    const lw = el.closest("label"); if(lw){ const t = avCl(Array.from(lw.childNodes).filter(n=> n !== el && !(n.contains && n.contains(el))).map(n=> n.textContent || "").join(" ")); if(avOk(t)) return t.slice(0, 40); }
+    const ar = el.getAttribute("aria-label") || el.getAttribute("title"); if(ar && avOk(avCl(ar))) return avCl(ar).slice(0, 40);
+    let p = el.parentElement; for(let i = 0; i < 3 && p; i++, p = p.parentElement){ const c = Array.from(p.querySelectorAll("label, .lbl, .label, h4, h5, b, span, small")).find(c=> !c.contains(el) && avOk(avCl(c.textContent)) && avCl(c.textContent).length < 50 && (c.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)); if(c) return avCl(c.textContent).slice(0, 40); }
+    const ph = String(el.placeholder || ""), ph2 = ph.replace(/\s*(—|–|-)?\s*pl\..*$/i, "").trim();
+    return avCl(ph2 || ph.replace(/^pl\.\s*/i, "") || el.name || "mező").slice(0, 40);
+  }
+  function avVal(el){
+    if(el.type === "password") return "••••";
+    if(el.type === "file") return Array.from(el.files || []).map(f=> f.name).join(", ").slice(0, 60) || "fájl";
+    if(el.tagName === "SELECT"){ const o = el.options[el.selectedIndex]; return o ? avCl(o.text) : ""; }
+    if(el.type === "checkbox" || el.type === "radio") return el.checked ? "✓ bekapcsolva" : "✗ kikapcsolva";
+    return String(el.value || "").replace(/\s+/g, " ").trim();
+  }
+  function avEvAdd(sv, ic){ if(!avLiveOn()) return; const now = Date.now(), last = avEv[avEv.length - 1]; if(last && last.s === sv && now - last.t < 2500) return;
+    let pg = ""; try{ pg = pageName(localStorage.getItem("firstphone_active_page") || "beosztas"); }catch(e){}
+    avEv.push({ t:now, s:String(sv).slice(0, 120), ic:ic || "👆", p:pg }); avEv = avEv.slice(-8); avSoon(); }
+  const avDocs = new WeakSet();
+  function avTrack(D){
+    D = D || document; if(avDocs.has(D)) return; avDocs.add(D);
+    if(D === document) setInterval(()=>{ document.querySelectorAll("iframe").forEach(f=>{ if(f.closest(".ax-swin")) return; try{ const d = f.contentDocument; if(d && d.body) avTrack(d); }catch(e){} }); }, 2000);
+    const document_ = D;
+    const skip = el=> !el || !el.closest || el.closest(".ax,.ax-swin,.ax-drw,#fcLogin,.fc-pwm");
+    document_.addEventListener("input", e=>{ const el = e.target; if(!avLiveOn() || skip(el) || !/^(INPUT|TEXTAREA)$/.test(el.tagName) || /^(password|checkbox|radio|file|range)$/.test(el.type)) return;
+      avFld = { l:avLbl(el), v:avVal(el).slice(0, 80), t:Date.now() }; avSoon(); }, true);
+    document_.addEventListener("change", e=>{ const el = e.target; if(!avLiveOn() || skip(el) || !/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.type === "password") return;
+      const v = avVal(el); if(!v) return; avFld = null;
+      avEvAdd((l=> `${l}${/[?!]$/.test(l) ? "" : ":"} ${v.slice(0, 70)}`)(avLbl(el)), el.tagName === "SELECT" ? "🔽" : el.type === "checkbox" || el.type === "radio" ? "☑️" : el.type === "file" ? "📎" : "✍️"); }, true);
+    document_.addEventListener("click", e=>{ if(!avLiveOn()) return; const bt = e.target.closest("button, [role=button], a[href], .tab-btn, .ps-btn, .day, .cal-cell, [data-key]"); if(skip(bt)) return;
+      let t = avCl(bt.getAttribute("aria-label") || bt.textContent); if(t.length < 3) t = avCl(bt.title || bt.getAttribute("aria-label") || t); if(!t || t.length < 2) return;
+      avEvAdd(t.slice(0, 50), /nyomtat|print|🖨/i.test(t) ? "🖨️" : /ment|save|felír|hozzáad|＋|\+/i.test(t) ? "💾" : /törl|🗑|✕/i.test(t) ? "🗑️" : /letölt|pdf|⬇/i.test(t) ? "⬇️" : "👆"); }, true);
+  }
+  function avStart(){ if(avOn) return; avOn = true; try{ avTrack(); }catch(e){} setInterval(()=> avTick(false), 2500); document.addEventListener("visibilitychange", ()=> avTick(true)); window.addEventListener("pagehide", ()=>{ if(avOwned){ avOwned = false; avWrite(null); } }); setTimeout(()=> avTick(true), 800); }
   window.fpAvLeave = ()=>{ avWrite(null); };
   /* --- a bolt oldalán: mit módosított az admin? (a régi és az új adat összevetése) --- */
   const FEED_KEY = "fp_adm_feed";
   const feedGet = ()=>{ try{ const L = JSON.parse(lsGet(FEED_KEY) || "[]") || []; return L.filter(x=> x && x.t > Date.now() - 864e5); }catch(e){ return []; } };
-  function admFeedAdd(items, who){
+  function admFeedAdd(items, who, act){
     if(!items || !items.length) return; const L = feedGet(), t = Date.now();
-    items.slice(0, 8).forEach(it=> L.push({ t, ic:it.ic, s:String(it.s).slice(0, 160), w:String(who || "Admin").slice(0, 40) }));
-    try{ lsSet(FEED_KEY, JSON.stringify(L.slice(-40))); }catch(e){}
+    items.slice(0, 8).forEach(it=> L.push(Object.assign({ t:act && it.t ? Math.min(it.t, t) : t, ic:it.ic, s:String(it.s).slice(0, 160), w:String(who || "Admin").slice(0, 40) }, it.p ? { p:String(it.p).slice(0, 40) } : {}, act ? { k:"a" } : { k:"d" })));
+    try{ lsSet(FEED_KEY, JSON.stringify(L.slice(-80))); }catch(e){}
     try{ sessionStorage.setItem("fp_adm_flash", String(t)); }catch(e){}
     try{ admLiveDraw(true); }catch(e){}
   }
@@ -7021,13 +7074,15 @@
     return out;
   }
   /* --- a bolt oldalán: felugró ablak + lent az élő jelzés --- */
-  let alView = null, alWasIn = false, alOpen = false, alLeftT = null;
+  let alView = null, alWasIn = false, alOpen = false, alLeftT = null, alPrevAct = "";
   const alIn = ()=>{ const p = PRES.admin, v = p && p.view; return !!(v && S.user && v.uid === S.user.uid && Date.now() - (v.t || 0) < 75000) ? v : null; };
   function admLiveInit(){
     css();
     presWatch(()=>{ const v = alIn();
       if(v && !alWasIn){ alWasIn = true; clearTimeout(alLeftT); let seen = ""; try{ seen = lsGet("fp_adm_in_seen") || ""; }catch(e){} if(String(v.since) !== seen){ try{ lsSet("fp_adm_in_seen", String(v.since)); }catch(e){} admInPop(v); try{ window.fpSound && fpSound("info", .45); }catch(e){} } }
       if(!v && alWasIn){ alWasIn = false; alLeft = Date.now(); }
+      if(v && Array.isArray(v.ev)){ let lt = 0; try{ lt = +(lsGet("fp_adm_evt") || 0); }catch(e){} const nw = v.ev.filter(x=> x && x.t > lt);
+        if(nw.length){ try{ lsSet("fp_adm_evt", String(Math.max.apply(null, nw.map(x=> x.t)))); }catch(e){} admFeedAdd(nw.map(x=> ({ ic:x.ic || "👆", s:x.s, p:x.p, t:x.t })), v.n || "Admin", true); } }
       alView = v; admLiveDraw(false); });
     setInterval(()=>{ const v = alIn(); if(!v && alWasIn){ alWasIn = false; alLeft = Date.now(); } alView = v; admLiveDraw(false); }, 10000);
     admLiveDraw(false);
@@ -7057,13 +7112,16 @@
         if(e.target.closest(".fc-al-h")){ alOpen = !alOpen; admLiveDraw(false); } }); }
     el.classList.remove("out");
     let fl = 0; try{ fl = +(sessionStorage.getItem("fp_adm_flash") || 0); }catch(e){}
-    const fresh = fl && Date.now() - fl < 12000;
-    const L = F.slice().reverse().slice(0, 12);
+    const fresh = fl && Date.now() - fl < 8000;
+    const L = F.slice().sort((a, c)=> c.t - a.t).slice(0, 30);
     el.className = "fc-al" + (v ? " in" : "") + (alOpen ? " open" : "") + (fresh || flash ? " flash" : "");
-    const st = v ? `<b>👑 ${esc(v.n || "Admin")} bent van</b><small>${v.live && v.act ? `<span class="fc-al-act" key="${esc(v.act)}">${esc(v.act)}</span>` : "épp a ti Munkaasztalotokat nézi"}</small>`
+    let myPg = ""; try{ myPg = localStorage.getItem("firstphone_active_page") || ""; }catch(e){}
+    const same = v && v.pg && v.pg === myPg, chg = v && v.act !== alPrevAct; alPrevAct = v ? v.act : "";
+    const ty = v && v.live && v.fld && Date.now() - (v.fld.t || 0) < 12000 ? `<div class="fc-al-ty"><span>✍️ ${esc(v.fld.l)}:</span> <b>${esc(v.fld.v || "…")}</b><i></i></div>` : "";
+    const st = v ? `<b>👑 ${esc(v.n || "Admin")} bent van${same ? ` <u>👀 itt, ezen az oldalon</u>` : ""}</b><small>${v.live && v.act ? `<span class="fc-al-act${chg ? " chg" : ""}">${esc(v.act)}</span>` : "épp a ti Munkaasztalotokat nézi"}</small>${ty}`
       : left ? `<b>👋 Az admin kilépett</b><small>a módosításai lent a listában</small>` : `<b>👑 Az admin módosított</b><small>${recent.length} változás az elmúlt fél órában</small>`;
     el.innerHTML = `<div class="fc-al-h" role="button" tabindex="0" title="Kattints a módosítások listájához"><span class="fc-al-dot"></span><div class="fc-al-t">${st}</div>${L.length ? `<em>${L.length}</em>` : ""}${v ? "" : `<button type="button" class="fc-al-x" title="Elrejtés">✕</button>`}</div>
-      ${alOpen ? `<div class="fc-al-l"><div class="fc-al-lh">📝 Az admin módosításai ma</div>${L.length ? L.map((x, i)=> `<div class="fc-al-i${i === 0 && fresh ? " nw" : ""}"><span>${x.ic}</span><p>${esc(x.s)}<small>${hhmm(x.t)} · ${esc(x.w)}</small></p></div>`).join("") : `<div class="fc-al-e">Még nem módosított semmit.</div>`}</div>` : (fresh && L[0] ? `<div class="fc-al-pk"><span>${L[0].ic}</span>${esc(L[0].s)}</div>` : "")}`;
+      ${alOpen ? `<div class="fc-al-l"><div class="fc-al-lh">📝 Mit csinált az admin ma</div>${L.length ? L.map((x, i)=> `<div class="fc-al-i${i === 0 && fresh ? " nw" : ""}${x.k === "a" ? " act" : ""}"><span>${x.ic}</span><p>${esc(x.s)}<small>${hhmm(x.t)}${x.p ? " · " + esc(x.p) : ""} · ${esc(x.w)}</small></p></div>`).join("") : `<div class="fc-al-e">Még nem módosított semmit.</div>`}</div>` : (fresh && L[0] ? `<div class="fc-al-pk"><span>${L[0].ic}</span>${esc(L[0].s)}</div>` : "")}`;
   }
   window.fpAdmLiveDraw = ()=> admLiveDraw(false);
   const pdot = id=>{ const i = presInfo(id); return i.k ? `<s class="pd ${i.k}" title="${esc(i.t)}"></s>` : ""; };
@@ -21591,7 +21649,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       syncChild();
       fpApplyLite();
     });
-    cetliFrame.srcdoc = document.getElementById("cetliDoc").textContent.replace(/<\\\/script/g, "</" + "script");
+    let cdoc = document.getElementById("cetliDoc").textContent.replace(/<\\\/script/g, "</" + "script");
+    if(window.FP_EMBED) cdoc = cdoc.replace(/<head>/i, "<head><script>try{ parent.FP_EMB_HOOK && parent.FP_EMB_HOOK(window); }catch(e){}</" + "script>");
+    cetliFrame.srcdoc = cdoc;
     host.appendChild(cetliFrame);
   }
   let lastPsPos = null;
