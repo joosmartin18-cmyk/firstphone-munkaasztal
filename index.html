@@ -4821,7 +4821,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261019-165427";</script>
+<script>window.FP_BUILD="20261019-171039";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -8211,7 +8211,7 @@ service cloud.firestore {
         if(hiT.length) att.push({ ic:"▲", k:"#ef5a5a", t:`${hiT.length} sürgős hibajegy`, go:"tix" });
         if(newT.length) att.push({ ic:"🐞", k:"#f0953a", t:`${newT.length} új hibajegy vár válaszra`, go:"tix" });
         if(un) att.push({ ic:"💬", k:"#9b7cf0", t:`${un} olvasatlan üzenet`, go:"inbox" });
-        list.filter(x=> x.ks && x.ks.diff).forEach(x=> att.push({ ic:"💰", k:"#ef5a5a", t:`${shortN(x)}: kassza ${x.ks.diff < 0 ? "hiány" : "többlet"} ${fmtFt(x.ks.diff)}`, u:x.uid }));
+        list.filter(x=> x.ks && x.ks.diff).forEach(x=> att.push({ ic:"💰", k:x.ks.diff < 0 ? "#ef5a5a" : "#f0a030", t:`${shortN(x)}: kassza ${x.ks.diff < 0 ? "hiány" : "többlet"} ${fmtFt(x.ks.diff)}`, u:x.uid }));
         list.filter(x=> (x.wait || 0) >= 10).forEach(x=> att.push({ ic:"📦", k:"#2fa3b6", t:`${shortN(x)}: ${x.wait} csomag vár átvételre`, u:x.uid }));
         list.filter(isStale).forEach(x=> att.push({ ic:"💤", k:"#8b95a7", t:`${shortN(x)}: ${x.ms ? ago(x.ms) : "még nem"} mentett`, u:x.uid }));
         if(newsCfg.on){ const nn = list.filter(x=> !seenOf(x)).length; if(nn) att.push({ ic:"🎁", k:"#9b7cf0", t:`${nn} bolt még nem nézte meg az újdonságokat`, go:"news" }); }
@@ -8235,7 +8235,7 @@ service cloud.firestore {
       const sv = (x, k)=> k === "name" ? nameOf(x) : k === "ks" ? (x.ks && x.ks.diff != null ? Math.abs(x.ks.diff) : -1) : k === "lt" ? (x.lt && x.lt.at || "") : k === "msg" ? (x.msg ? 1 : 0) : k === "nseen" ? (x.nseen ? x.nseen.at : 0) : k === "tix" ? openOf(x.uid) : (x[k] == null ? -1 : x[k]);
       const sMatch = x=>{ const f = sq.value.trim().toLowerCase(); if(f && !(nameOf(x) + " " + x.email + " " + (x.addr || "")).toLowerCase().includes(f)) return false;
         return sFilt === "today" ? x.ms >= day0() : sFilt === "stale" ? isStale(x) : sFilt === "ks" ? !!(x.ks && x.ks.diff) : sFilt === "pkg" ? (x.wait || 0) > 0 : true; };
-      const ksH = x=> !x.ks ? `<small>—</small>` : x.ks.diff == null ? `<span class="ax-b">nincs jelentés</span>` : x.ks.diff === 0 ? `<span class="ax-b g">✓ egyezik</span>` : x.ks.diff < 0 ? `<span class="ax-b r">hiány ${fmtFt(x.ks.diff)}</span>` : `<span class="ax-b bl">többlet ${fmtFt(x.ks.diff)}</span>`;
+      const ksH = x=> !x.ks ? `<small>—</small>` : x.ks.diff == null ? `<span class="ax-b">nincs jelentés</span>` : x.ks.diff === 0 ? `<span class="ax-b g">✓ egyezik</span>` : x.ks.diff < 0 ? `<span class="ax-b r">hiány ${fmtFt(x.ks.diff)}</span>` : `<span class="ax-b o">többlet ${fmtFt(x.ks.diff)}</span>`;
       function drawShopsIfOn(){ if(paneOn("shops")) drawShops(); }
       function drawShops(){
         const L = list.filter(sMatch).sort((a, c)=>{ const A = sv(a, sortK), C = sv(c, sortK); const r = typeof A === "string" ? A.localeCompare(C, "hu") : A - C; return sortUp ? r : -r; });
@@ -8245,7 +8245,7 @@ service cloud.firestore {
             const lt = x.lt && x.lt.at ? `${esc(String(x.lt.at).slice(0, 10).replace(/-/g, "."))}. <small>${x.lt.type === "P" ? "péntek" : x.lt.type === "H" ? "hétfő" : ""}</small>` : `<small>—</small>`, ot = openOf(x.uid);
             return `<tr class="go" data-uid="${esc(x.uid)}"><td><div class="ax-sc">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${esc(x.email || "")}</small></span></div></td><td>${isStale(x) ? `<span class="ax-b r">${ago(x.ms)}</span>` : `<span class="ax-dt ${stDot(x)}"></span>${ago(x.ms)}`}</td><td class="num">${x.wait == null ? "<small>—</small>" : x.wait}</td><td class="num">${x.sx == null ? "<small>—</small>" : x.sx}</td><td>${ksH(x)}</td><td>${lt}</td><td class="num">${x.emp == null ? "<small>—</small>" : x.emp}</td><td class="num">${ot ? `<span class="ax-b o">${ot}</span>` : "<small>—</small>"}</td></tr>`; }).join("") || `<tr><td colspan="${COLS.length}"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></td></tr>`) + `</tbody>`;
         else $(".ax-sgrid").innerHTML = L.map(x=> `<button type="button" class="ax-scard" data-uid="${esc(x.uid)}"><span class="h">${axAv(x, true)}<span><b>${esc(shortN(x))}</b><small>${esc([x.place, x.addr].filter(Boolean).join(" · ") || x.email)}</small></span></span>
-            <span class="k"><span><small>Csomag</small><b>${x.wait == null ? "—" : x.wait}</b></span><span title="Selejt ma"><small>Selejt</small><b>${x.sx == null ? "—" : x.sx}</b></span><span><small>Dolgozó</small><b>${x.emp == null ? "—" : x.emp}</b></span><span><small>Kassza</small><b>${!x.ks || x.ks.diff == null ? "—" : x.ks.diff === 0 ? "✓" : "⚠"}</b></span></span>
+            <span class="k"><span><small>Csomag</small><b>${x.wait == null ? "—" : x.wait}</b></span><span title="Selejt ma"><small>Selejt</small><b>${x.sx == null ? "—" : x.sx}</b></span><span><small>Dolgozó</small><b>${x.emp == null ? "—" : x.emp}</b></span><span><small>Kassza</small><b class="ax-ksv ${!x.ks || x.ks.diff == null ? "" : x.ks.diff === 0 ? "ok" : x.ks.diff < 0 ? "minus" : "plus"}" title="${!x.ks || x.ks.diff == null ? "Nincs kasszajelentés" : x.ks.diff === 0 ? "Egyezik a kassza" : (x.ks.diff < 0 ? "Hiány " : "Többlet ") + fmtFt(x.ks.diff)}">${!x.ks || x.ks.diff == null ? "—" : x.ks.diff === 0 ? "✓" : fmtFt(x.ks.diff).replace(" Ft", "")}</b></span></span>
             <span class="f"><span><span class="ax-dt ${stDot(x)}"></span>${stDotT(x)}</span><span>💾 ${ago(x.ms)}</span></span></button>`).join("") || `<div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div>`;
         const nb = $(".ax-none"); nb.hidden = !nl.length;
         nb.innerHTML = nl.length ? `<button type="button" class="ax-ch ax-chb" data-x="nonet"><h3>⏳ Még nem lépett be</h3><span class="ax-b">${nl.length} bolt</span><span class="ax-sp"></span><small>${noneOpen || f ? "▴ elrejtés" : "▾ mutasd"}</small></button>${noneOpen || f ? `<div class="ax-nl">${nl.map(s=> `<button type="button" class="ax-nc" data-acc="${esc(s.n)}" title="${esc(s.a)} — kattints: fiók, új jelszó, újrakezdés"><span class="ax-av" style="--av:${avCol(s.n)}">${esc(avIni(s.n))}</span><span><b>${esc(s.n)}</b><small>${esc(s.e)}</small></span><em>🔑</em></button>`).join("")}</div><p class="ax-hint ax-nlh">Kattints egy boltra: megnézheted a fiókját, új jelszót adhatsz, vagy <b>↺ újrakezdheted</b> (pl. ha elírt a belépési cím).</p>` : ""}` : "";
@@ -8281,7 +8281,11 @@ service cloud.firestore {
               return card("✅", "#d6589a", "Teendők", O.length ? `<ul class="ax-dl">${O.slice(0, 8).map(t=>{ const P = E.find(e=> e.id === t.who), lt = t.due && t.due < tk, nt = Array.isArray(t.notes) && t.notes.length ? t.notes[t.notes.length - 1].x : "";
                 return `<li><span>${lt ? "⚠️ " : ""}${esc(String(t.text).slice(0, 70))}${nt ? ` <small>💬 ${esc(nt.slice(0, 40))}</small>` : ""}</span><small>${P ? esc(P.name.split(/\s+/)[0]) : "👥 közös"}${t.due ? " · " + esc(t.due.slice(5).replace("-", ".")) + "." : ""}</small></li>`; }).join("")}${O.length > 8 ? `<li class="more">… és még ${O.length - 8}</li>` : ""}</ul>` : empty("nincs nyitott teendő"), O.length ? `<span class="ax-dcnt${late.length ? " hot" : ""}">${O.length} nyitott${late.length ? ` · ${late.length} lejárt` : ""}</span>` : ""); })()}
             <div class="ax-dgrid">
-              ${card("💰", "#e2bf55", "Kassza", !x.ks ? empty("nincs adat") : `<div class="ax-dks"><div><small>Megszámolva</small><b>${ft(x.ks.cnt)}</b></div>${x.ks.rep ? `<div><small>Jelentés</small><b>${ft(x.ks.rep)}</b></div>` : ""}</div>`, x.ks && x.ks.rep ? `<span class="ax-dst ${ksOk ? "ok" : "bad"}">${ksOk ? "✓ egyezik" : "⚠ eltérés"}</span>` : "")}
+              ${card("💰", "#e2bf55", "Kassza", !x.ks ? empty("nincs adat") : (()=>{ const d = x.ks.rep ? x.ks.diff : null, k = d == null ? "none" : d === 0 ? "ok" : d < 0 ? "minus" : "plus";
+                const T = d == null ? "Nincs kasszajelentés" : d === 0 ? "Egyezik a kassza" : d < 0 ? `Hiány: ${fmtFt(d).replace("−", "")}` : `Többlet: ${fmtFt(d).replace("+", "")}`;
+                const S = d == null ? "A bolt még nem írta be a jelentés összegét — csak a megszámolt pénz látszik." : d === 0 ? "A megszámolt pénz pontosan annyi, amennyi a jelentés szerint kell." : d < 0 ? "Kevesebb pénz van, mint amennyinek lennie kell." : "Több pénz van, mint amennyinek lennie kell.";
+                return `<div class="ax-ksr ${k}"><i>${d == null ? "🧾" : d === 0 ? "✓" : d < 0 ? "−" : "+"}</i><span><b>${T}</b><small>${S}</small></span></div><div class="ax-dks"><div><small>Megszámolva</small><b>${ft(x.ks.cnt)}</b></div>${x.ks.rep ? `<div><small>Jelentés szerint</small><b>${ft(x.ks.rep)}</b></div><div class="ax-ksd ${k}"><small>Eltérés</small><b>${d === 0 ? "0 Ft" : fmtFt(d)}</b></div>` : ""}</div>`; })(),
+                x.ks && x.ks.rep ? `<span class="ax-dst ${ksOk ? "ok" : x.ks.diff < 0 ? "bad" : "warn"}">${ksOk ? "✓ egyezik" : x.ks.diff < 0 ? "▼ hiány" : "▲ többlet"}</span>` : "")}
               ${card("📋", "#30b37a", "Utolsó leltár", x.lt && x.lt.at ? `<div class="ax-dks"><div><small>${x.lt.type === "P" ? "Pénteki" : x.lt.type === "H" ? "Hétfői" : "Leltár"}</small><b>${esc(String(x.lt.at).slice(0, 10).replace(/-/g, "."))}.</b></div><div><small>Tétel</small><b>${esc(x.lt.n)}</b></div></div>` : empty("nincs adat"))}
             </div>
             ${card("👥", "#7b8cff", "Dolgozók", emps.length ? `<div class="ax-demps">${emps.map(n=> `<span><i style="--av:${avCol(n)}">${esc(avIni(n))}</i>${esc(n)}</span>`).join("")}</div>` : empty("nincs megadva"), `<span class="ax-dcnt">${emps.length}</span>`)}
@@ -9193,7 +9197,16 @@ service cloud.firestore {
     .ax-dc header{display:flex;align-items:center;gap:9px;margin-bottom:9px;} .ax-dc header .ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:14px;background:color-mix(in srgb,var(--c) 18%,transparent);flex:none;}
     .ax-dc h4{margin:0;flex:1;font:700 13.5px 'Poppins',sans-serif;}
     .ax-dcnt{font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ax-tx);} .ax-dcnt.hot{background:rgba(240,149,58,.2);color:#f0953a;}
-    .ax-dst{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px;} .ax-dst.ok{background:rgba(62,207,142,.14);color:#3ecf8e;} .ax-dst.bad{background:rgba(239,90,90,.14);color:#ef5a5a;}
+    .ax-dst{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px;} .ax-dst.ok{background:rgba(62,207,142,.14);color:#3ecf8e;} .ax-dst.bad{background:rgba(239,90,90,.14);color:#ef5a5a;} .ax-dst.warn{background:rgba(240,160,48,.15);color:#f0a030;}
+    .ax-ksr{display:flex;align-items:center;gap:11px;padding:10px 12px;margin-bottom:12px;border-radius:13px;border:1.5px solid var(--ax-line);background:var(--ax-panel2);animation:axKsPop .5s cubic-bezier(.34,1.56,.64,1);}
+    .ax-ksr i{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:900 17px/1 'Poppins',sans-serif;font-style:normal;background:var(--ax-panel);color:var(--ax-tx);}
+    .ax-ksr b{display:block;font:800 15px/1.2 'Poppins',sans-serif;} .ax-ksr small{display:block;font-size:11.5px;color:var(--ax-dim);margin-top:2px;}
+    .ax-ksr.ok{border-color:#30b37a;background:color-mix(in srgb,#30b37a 13%,var(--ax-panel2));} .ax-ksr.ok i{background:#30b37a;color:#fff;} .ax-ksr.ok b{color:#3ecf8e;}
+    .ax-ksr.minus{border-color:#ef5a5a;background:color-mix(in srgb,#ef5a5a 13%,var(--ax-panel2));} .ax-ksr.minus i{background:#ef5a5a;color:#fff;} .ax-ksr.minus b{color:#ff7b7d;}
+    .ax-ksr.plus{border-color:#f0a030;background:color-mix(in srgb,#f0a030 13%,var(--ax-panel2));} .ax-ksr.plus i{background:#f0a030;color:#fff;} .ax-ksr.plus b{color:#f5b04a;}
+    .ax-ksd.ok b{color:#3ecf8e;} .ax-ksd.minus b{color:#ff7b7d;} .ax-ksd.plus b{color:#f5b04a;}
+    .ax-ksv.ok{color:#3ecf8e;} .ax-ksv.minus{color:#ff7b7d;} .ax-ksv.plus{color:#f5b04a;}
+    @keyframes axKsPop{0%{transform:scale(.96);opacity:0;}100%{transform:none;opacity:1;}}
     .ax-dks{display:flex;gap:16px;flex-wrap:wrap;} .ax-dks small{display:block;font-size:11px;color:var(--ax-dim);} .ax-dks b{font:800 16px 'Poppins',sans-serif;}
     .ax-dempty{margin:0;font-size:12.5px;color:var(--ax-faint);}
     .ax-dp{margin:0;} .ax-dp b{display:block;font-size:13.5px;} .ax-dp small{display:block;font-size:12px;color:var(--ax-dim);margin-top:2px;overflow-wrap:anywhere;}
