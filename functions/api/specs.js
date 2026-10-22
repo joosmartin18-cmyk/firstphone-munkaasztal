@@ -61,7 +61,7 @@ export async function onRequest({ request }) {
     const pr = u.searchParams.get("probe");
     if (pr) { const pu = new URL(pr); if (!/(^|\.)(devicespecifications\.com|phonearena\.com|kimovil\.com|smartprix\.com|gadgets360\.com|gsmarena\.com|icecat\.biz|samsung\.com|mobilecity|nanoreview\.net|versus\.com|phonedb\.net|91mobiles\.com|techradar\.com|wikipedia\.org)$/.test(pu.hostname)) return json({ ok:false, error:"host" }, 400);
       const r = await fetch(pu.href, { headers: { "user-agent": UA, "accept": "text/html,application/json", "accept-language": "en-US,en;q=0.8" } }); const t = await r.text();
-      return json({ ok:true, status:r.status, len:t.length, title:(t.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||"", head:t.slice(0,400).replace(/\s+/g," "), links:(t.match(/href="[^"]{0,140}"/g)||[]).slice(0,80) }); }
+      return json({ ok:true, status:r.status, len:t.length, title:(t.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||"", head:t.slice(0,400).replace(/\s+/g," "), links:(t.match(/href="[^"]{0,140}"/g)||[]).slice(0,80), grep:(u.searchParams.get("g") ? (t.match(new RegExp(".{0,120}" + u.searchParams.get("g").replace(/[^a-z0-9_\-]/gi, "") + ".{0,160}", "gi")) || []).slice(0, 6) : []) }); }
     if (id) {
       if (!/^[a-z0-9_\-]+-\d+$/i.test(id)) return json({ ok: false, error: "hibás azonosító" }, 400);
       const s = sheet(await get(id + ".php"));
