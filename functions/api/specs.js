@@ -57,6 +57,11 @@ export async function onRequest({ request }) {
   if (request.method !== "GET") return json({ ok: false, error: "GET kell" }, 405);
   const u = new URL(request.url), q = (u.searchParams.get("q") || "").trim().slice(0, 60), id = (u.searchParams.get("id") || "").trim();
   try {
+    /* ideiglenes: forrás-próba (csak néhány ismert adatlap-oldalra) */
+    const pr = u.searchParams.get("probe");
+    if (pr) { const pu = new URL(pr); if (!/(^|\.)(devicespecifications\.com|phonearena\.com|kimovil\.com|smartprix\.com|gadgets360\.com|gsmarena\.com|icecat\.biz|samsung\.com|mobilecity|nanoreview\.net|versus\.com|phonedb\.net|91mobiles\.com|techradar\.com|wikipedia\.org)$/.test(pu.hostname)) return json({ ok:false, error:"host" }, 400);
+      const r = await fetch(pu.href, { headers: { "user-agent": UA, "accept": "text/html,application/json", "accept-language": "en-US,en;q=0.8" } }); const t = await r.text();
+      return json({ ok:true, status:r.status, len:t.length, title:(t.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||"", head:t.slice(0,400).replace(/\s+/g," "), links:(t.match(/href="[^"]{0,140}"/g)||[]).slice(0,80) }); }
     if (id) {
       if (!/^[a-z0-9_\-]+-\d+$/i.test(id)) return json({ ok: false, error: "hibás azonosító" }, 400);
       const s = sheet(await get(id + ".php"));
