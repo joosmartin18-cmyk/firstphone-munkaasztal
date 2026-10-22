@@ -119,8 +119,8 @@ function page(o) {
   const g = "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(o.web);
   const today = budaToday();
   const up = String(o.ev || "").split("\n").map(l => l.split("|")).filter(x => x[0] && x[0] >= today).slice(0, 14);
-  const list = up.length ? up.map(([k, s, e, part, mates]) => { const [y, m, d] = k.split("-").map(Number), dt = new Date(Date.UTC(y, m - 1, d)), wd = HU_D[dt.getUTCDay()];
-    return `<li data-k="${esc(k)}"${k === today ? ' class="td"' : ""}><div class="dd"><b>${d}</b><small>${HU_M[m - 1].slice(0, 3)}.</small></div><div class="dx"><b>${k === today ? "Ma · " + wd : wd.charAt(0).toUpperCase() + wd.slice(1)}</b><span>${esc(s)}–${esc(e)} · ${PART[part] || ""}</span>${mates ? `<small>Veled: ${esc(mates)}</small>` : ""}</div></li>`; }).join("")
+  const list = up.length ? up.map(([k, s, e, part, mates, away]) => { const [y, m, d] = k.split("-").map(Number), dt = new Date(Date.UTC(y, m - 1, d)), wd = HU_D[dt.getUTCDay()];
+    return `<li data-k="${esc(k)}"${k === today ? ' class="td"' : ""}><div class="dd"><b>${d}</b><small>${HU_M[m - 1].slice(0, 3)}.</small></div><div class="dx"><b>${k === today ? "Ma · " + wd : wd.charAt(0).toUpperCase() + wd.slice(1)}</b><span>${s ? esc(s) + "–" + esc(e) + " · " : ""}${PART[part] || ""}</span>${away ? `<small class="aw">🔁 Helyettesítés: FirstPhone ${esc(away)}</small>` : mates ? `<small>Veled: ${esc(mates)}</small>` : ""}</div></li>`; }).join("")
     : `<li class="no">Most nincs előtted beosztott nap.</li>`;
   return `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
 <title>${esc(o.name || "Beosztás")} · FirstPhone</title><link rel="manifest" href="${esc(o.base)}/manifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -133,7 +133,7 @@ h1{font-size:20px;margin:0;line-height:1.2;} .top small{display:block;color:#a9a
 ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;} li{display:flex;gap:12px;align-items:center;padding:9px 10px;border-radius:14px;background:#23232c;}
 li.td{background:linear-gradient(135deg,rgba(245,179,0,.22),rgba(245,179,0,.06));border:1px solid rgba(245,179,0,.45);} li.no{color:#a9a9b6;justify-content:center;}
 .dd{width:44px;text-align:center;flex:none;} .dd b{display:block;font-size:20px;line-height:1;} .dd small{color:#f5b300;font-weight:700;font-size:12px;}
-.dx b{display:block;font-size:14.5px;} .dx span{display:block;font-size:13.5px;color:#e8e8ee;} .dx small{display:block;font-size:12px;color:#a9a9b6;}
+.dx b{display:block;font-size:14.5px;} .dx small.aw{color:#7fa9ff;font-weight:700;} .dx span{display:block;font-size:13.5px;color:#e8e8ee;} .dx small{display:block;font-size:12px;color:#a9a9b6;}
 a.b,button.b{display:flex;width:100%;align-items:center;gap:12px;padding:14px 15px;border-radius:15px;margin-top:9px;text-decoration:none;color:#fff;font:inherit;font-weight:700;background:#26262f;border:1px solid #34343f;text-align:left;cursor:pointer;}
 a.b small,button.b small{display:block;font-weight:500;color:#a9a9b6;font-size:12.5px;} a.b i,button.b i{font-style:normal;font-size:23px;} .b.p{background:linear-gradient(135deg,#f5b300,#e08a00);color:#1b1404;border:0;} .b.p small{color:#3a2a05;}
 .b:disabled{opacity:.55;} .st{margin-top:10px;font-size:13.5px;color:#a9a9b6;} .st.ok{color:#30b37a;font-weight:700;} .st.err{color:#ef5a5a;}

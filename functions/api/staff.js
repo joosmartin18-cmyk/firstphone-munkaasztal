@@ -41,10 +41,10 @@ async function metas(sa, fresh) {
   if (META && !fresh && Date.now() - METAat < 5 * 60e3) return META;
   const t = await accessToken(sa), out = []; let page = "";
   do {
-    const u = `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/boltok?pageSize=300&mask.fieldPaths=sid&mask.fieldPaths=loc&mask.fieldPaths=place&mask.fieldPaths=emps` + (page ? "&pageToken=" + encodeURIComponent(page) : "");
+    const u = `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/boltok?pageSize=300&mask.fieldPaths=sid&mask.fieldPaths=loc&mask.fieldPaths=place&mask.fieldPaths=emps&mask.fieldPaths=addr` + (page ? "&pageToken=" + encodeURIComponent(page) : "");
     const r = await fetch(u, { headers: { authorization: "Bearer " + t } }); if (!r.ok) throw new Error("Firestore " + r.status);
     const j = await r.json();
-    (j.documents || []).forEach(d => { const f = d.fields || {}; out.push({ uid: d.name.split("/").pop(), sid: unfv(f.sid) || "", loc: unfv(f.loc) || "", place: unfv(f.place) || "", emps: unfv(f.emps) || null }); });
+    (j.documents || []).forEach(d => { const f = d.fields || {}; out.push({ uid: d.name.split("/").pop(), sid: unfv(f.sid) || "", loc: unfv(f.loc) || "", place: unfv(f.place) || "", addr: unfv(f.addr) || "", emps: unfv(f.emps) || null }); });
     page = j.nextPageToken || "";
   } while (page);
   META = out; METAat = Date.now(); return out;
@@ -81,10 +81,11 @@ export async function onRequest({ request, env }) {
       const groups = {};
       (Array.isArray(q.list) ? q.list : []).slice(0, 400).forEach(x => { if (!x || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.d || "")) || !x.n) return;
         const h = home(x.s, x.l); if (!h || h.uid === src) return;
-        (groups[h.uid] = groups[h.uid] || []).push({ d: x.d, n: String(x.n).slice(0, 60), p: ["full", "am", "pm"].includes(x.p) ? x.p : "full" }); });
+        const tm = t => /^\d{1,2}:\d{2}$/.test(String(t || "")) ? String(t) : "";
+        (groups[h.uid] = groups[h.uid] || []).push({ d: x.d, n: String(x.n).slice(0, 60), p: ["full", "am", "pm"].includes(x.p) ? x.p : "full", ts: tm(x.ts), te: tm(x.te) }); });
       const label = [meM.loc, meM.place].filter(Boolean).join(" ") || "másik bolt";
       const prev = await fsGet(sa, `boltok/${src}/away/_out`), old = (prev && Array.isArray(prev.homes)) ? prev.homes : [];
-      for (const uid of Object.keys(groups)) await fsSet(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.sid || "", list: JSON.stringify(groups[uid]), at: new Date() });
+      for (const uid of Object.keys(groups)) await fsSet(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.sid || "", addr: meM.addr || "", list: JSON.stringify(groups[uid]), at: new Date() });
       for (const uid of old) if (!groups[uid] && /^[A-Za-z0-9]{6,64}$/.test(uid)) await fsDel(sa, `boltok/${uid}/away/${src}`);
       await fsSet(sa, `boltok/${src}/away/_out`, { homes: Object.keys(groups), at: new Date() });
       return json({ ok: true, homes: Object.keys(groups).length });
