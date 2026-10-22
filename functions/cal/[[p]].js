@@ -154,7 +154,7 @@ li.hl{outline:2px solid #f5b300;animation:hl 1.2s ease 2;} @keyframes hl{50%{tra
 <a class="b" href="${esc(g)}"><i>🗓️</i><span>Google Naptár<small>Android, Gmail — „Hozzáadás” gomb</small></span></a>
 <a class="b" id="oa" href="calshow:" hidden><i>📆</i><span>Naptár app megnyitása<small>ha már feliratkoztál</small></span></a>
 <a class="b" href="${esc(o.ics)}"><i>⬇️</i><span>Csak letöltés (.ics)<small>egyszeri, nem frissül magától</small></span></a></div>
-<div class="f">FirstPhone Munkaasztal · teszt</div></div>
+<div class="f">FirstPhone Munkaasztal</div></div>
 <script>
 (function(){
   var BASE=${JSON.stringify(o.base)}, KEY=${JSON.stringify(o.vapid || "")};
