@@ -5027,7 +5027,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261022-174130";</script>
+<script>window.FP_BUILD="20261022-174921";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -17074,6 +17074,11 @@ const SPK_KEY = 'firstphone_specko';
 const SPK_API = 'https://firstphone-munkaasztal.pages.dev/api/specs';
 let SPK = { items:[] }, spkOpen = null, spkN = 1, spkSel = null;
 try{ const v = JSON.parse(localStorage.getItem(SPK_KEY) || 'null'); if(v && Array.isArray(v.items)) SPK = v; }catch(e){}
+/* régebbi / hibás sorok rendbetétele: minden sor [kulcs, fő adat, kiegészítés] */
+function spkFix(){ const K = ['net','mem','disp','cpu','cam','bat','sd','sim','wifi','os']; SPK.items = (SPK.items || []).filter(it=> it && typeof it === 'object');
+  SPK.items.forEach(it=>{ const R = Array.isArray(it.rows) ? it.rows : []; it.rows = K.map((k, i)=>{ let r = R.find(x=> Array.isArray(x) && x[0] === k) || R[i] || []; if(!Array.isArray(r)) r = []; if(r[0] !== k) r = r.length === 2 ? [k, r[0], r[1]] : [k, r[1], r[2]]; return [k, String(r[1] == null ? '' : r[1]), String(r[2] == null ? '' : r[2])]; });
+    it.copies = Math.max(1, it.copies | 0); it.brand = String(it.brand || ''); it.model = String(it.model || ''); it.code = String(it.code || ''); it.price = +it.price || 0; }); }
+spkFix();
 function spkSave(){ try{ localStorage.setItem(SPK_KEY, JSON.stringify(SPK)); }catch(e){} }
 /* 🏷️ márkalogók: a bolt tölti fel (hivatalos logó), fekete-fehérre alakítva, márkánként egyszer */
 const SPK_LKEY = 'firstphone_specko_logos';
@@ -17296,7 +17301,7 @@ async function spkImportGo(btn){
     try{ const j = await spkJson(`${SPK_API}?q=${encodeURIComponent(g.name)}`), L = j.list || [];
       if(!L.length){ nf.push(g.name); continue; }
       const s = await spkJson(`${SPK_API}?id=${encodeURIComponent(L[0].id)}`), m = spkMap(s, L[0].name, g.raw || g.name);
-      it.rows = SPK_ROWS.map(([k], ix)=>{ const b = g.rows[ix], w = m.rows[ix]; if(k === 'mem' && b[1]) return b; if(k === 'net' && b[1]) return [b[1], [w[2] || '', /\+/.test(b[2]) ? b[2].replace(/^.*?(\+.*)$/, '$1') : ''].filter(Boolean).join(' · ')]; return w[1] ? w : b; });
+      it.rows = SPK_ROWS.map(([k], ix)=>{ const b = g.rows[ix], w = m.rows[ix]; if(k === 'mem' && b[1]) return b; if(k === 'net' && b[1]) return [k, b[1], [w[2] || '', /\+/.test(b[2]) ? b[2].replace(/^.*?(\+.*)$/, '$1') : ''].filter(Boolean).join(' · ')]; return w[1] ? w : b; });
       it.code = it.code || m.code; it.src = 'Bizzio + GSMArena (' + L[0].name + ')'; ok++; spkSave(); spkList(); spkRender();
     }catch(e){ nf.push(g.name); } }
   spkMsg(`✓ ${G.length} féle telefon (${n} kártya) a lapon · netről kiegészítve: ${ok}${nf.length ? ` · nem találtam a neten: ${spkE(nf.join(', '))} — ezeknél a dokumentum adatai maradtak` : ''}. Nézd át az előnézetet!`, nf.length ? '' : 'ok');
@@ -17361,7 +17366,8 @@ function spkMap(s, nm, q){
 /* egy kártya + a lapok */
 function spkCard(it){
   const rows = (it.rows || []).filter(r=> r[1]).map(r=> `<div class="spk-rw"><i>${spkSvg(r[0])}</i><div><b>${spkE(r[1])}</b>${r[2] ? `<em>${spkE(r[2])}</em>` : ''}</div></div>`).join('');
-  const logo = (typeof LOGO_BLACK !== 'undefined' && LOGO_BLACK) ? `<img src="${LOGO_BLACK}" alt="FirstPhone">` : `<span class="fpt">FirstPhone</span>`;
+  let lb = ''; try{ lb = LOGO_BLACK || ''; }catch(e){ lb = ''; } /* a logó később töltődik be — addig felirat */
+  const logo = lb ? `<img src="${lb}" alt="FirstPhone">` : `<span class="fpt">FirstPhone</span>`;
   const lg = SPKL[spkBk(it.brand)], ml = spkMLogo(it);
   return `<section class="spk-card"><div class="spk-hd">${ml ? `<img class="ml" src="${ml.u}" alt="${spkE((it.brand + ' ' + it.model).trim())}">` : `${lg ? `<img class="bl" src="${lg.u}" alt="${spkE(it.brand)}">` : it.brand ? `<span class="br">${spkE(it.brand)}</span>` : ''}<span class="md">${spkE(it.model || it.brand || '—')}</span>`}${it.code ? `<span class="cd">${spkE(it.code)}</span>` : ''}</div>
     <div class="spk-sp">${rows || '<div class="spk-rw"><div><b>—</b></div></div>'}</div>
@@ -17381,7 +17387,9 @@ function spkFit(root){
   });
 }
 let spkT = null;
-function spkRender(){
+function spkRender(){ try{ spkRender0(); }catch(e){ const st = document.getElementById('spk-stage'); if(st) st.innerHTML = `<div class="spk-empty">⚠ Hiba az előnézetben: ${spkE(e && e.message || e)}<br><small>Írd meg nekem ezt a sort — addig a „🗑 Lap ürítése” után újra betöltheted.</small></div>`; ['spk-print','spk-pdf','spk-clear'].forEach(id=>{ const b = document.getElementById(id); if(b) b.disabled = false; }); try{ console.error(e); }catch(_){} } }
+function spkRender0(){
+  spkFix();
   const st = document.getElementById('spk-stage'); if(!st) return;
   const P = spkPages(), n = SPK.items.reduce((a, x)=> a + Math.max(1, x.copies | 0), 0);
   document.getElementById('spk-pages').textContent = n ? `${n} kártya · ${P.length} oldal` : '';
@@ -17523,7 +17531,7 @@ async function spkPdf(btn){
   const cl = document.getElementById('spk-clear'); cl.onclick = ()=>{ if(!cl.classList.contains('armed')){ cl.classList.add('armed'); cl.textContent = 'Biztos? Kattints újra'; setTimeout(()=>{ cl.classList.remove('armed'); cl.textContent = '🗑 Lap ürítése'; }, 3000); return; }
     cl.classList.remove('armed'); cl.textContent = '🗑 Lap ürítése'; SPK.items = []; spkOpen = null; spkSave(); spkList(); spkRender(); };
   window.addEventListener('resize', ()=>{ if(document.body.dataset.tab === 'specko'){ clearTimeout(spkT); spkT = setTimeout(spkRender, 150); } });
-  spkList(); spkRender();
+  try{ spkList(); }catch(e){} setTimeout(spkRender, 0); /* a többi rész (logó stb.) betöltése után rajzol */
 })();
 
 function ogStoreCheck(){
