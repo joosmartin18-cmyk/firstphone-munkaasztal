@@ -1,12 +1,12 @@
 /* FirstPhone Munkaasztal — 📱 készülék adatok lekérdezése (Cloudflare Pages Function, ingyenes)
    A böngésző nem tud közvetlenül más oldalról adatot olvasni, ezért ez a kis végpont kérdezi le
-   a GSMArena nyilvános adatlapját, és tiszta JSON-ként adja vissza.
+   a GSMArena nyilvános adatlapját, és tiszta JSON-ként adja vissza (Telefon adatlap a Cetli generátorban).
      GET /api/specs?q=galaxy a57        → találati lista [{ id, name, img }]
      GET /api/specs?id=14379 → az adatlap mezői { name, spec:{ kulcs: érték }, rows:[[csoport, címke, érték]] }
    Az eredményt 3 napig gyorsítótárazza (Cloudflare cache), így a forrást is kíméli. */
 const json = (o, s = 200, ttl = 0) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json; charset=utf-8", "cache-control": ttl ? `public, max-age=${ttl}` : "no-store", "access-control-allow-origin": "*" } });
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
-const ENT = { amp: "&", lt: "<", gt: ">", quot: '"', "#039": "'", apos: "'", nbsp: " ", deg: "°", times: "×", micro: "µ", "#8482": "™", "#174": "®" };
+const ENT = { amp: "&", lt: "<", gt: ">", quot: '"', "#039": "'", apos: "'", nbsp: " ", thinsp: " ", ensp: " ", emsp: " ", deg: "°", times: "×", micro: "µ", "#8482": "™", "#174": "®" };
 const dec = s => String(s || "").replace(/&(#x?[0-9a-f]+|[a-z0-9]+);/gi, (m, e) => { const k = e.toLowerCase(); if (ENT[k] != null) return ENT[k]; if (k[0] === "#") { const n = k[1] === "x" ? parseInt(k.slice(2), 16) : parseInt(k.slice(1), 10); return isFinite(n) ? String.fromCodePoint(n) : m; } return m; });
 const txt = h => dec(String(h || "").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "")).replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, "\n").trim();
 
@@ -76,11 +76,6 @@ export async function onRequest({ request }) {
   if (request.method !== "GET") return json({ ok: false, error: "GET kell" }, 405);
   const u = new URL(request.url), q = (u.searchParams.get("q") || "").trim().slice(0, 60), id = (u.searchParams.get("id") || "").trim();
   try {
-    /* ideiglenes: forrás-próba (csak néhány ismert adatlap-oldalra) */
-    const pr = u.searchParams.get("probe");
-    if (pr) { const pu = new URL(pr); if (!/(^|\.)(devicespecifications\.com|phonearena\.com|kimovil\.com|smartprix\.com|gadgets360\.com|gsmarena\.com|icecat\.biz|samsung\.com|mobilecity|nanoreview\.net|versus\.com|phonedb\.net|91mobiles\.com|techradar\.com|wikipedia\.org)$/.test(pu.hostname)) return json({ ok:false, error:"host" }, 400);
-      const r = await fetch(pu.href, { headers: { "user-agent": UA, "accept": "text/html,application/json", "accept-language": "en-US,en;q=0.8" } }); const t = await r.text();
-      return json({ ok:true, status:r.status, len:t.length, title:(t.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||"", head:t.slice(0,400).replace(/\s+/g," "), links:(t.match(/href="[^"]{0,140}"/g)||[]).slice(0,80), grep:(u.searchParams.get("g") ? (t.match(new RegExp(".{0,120}" + u.searchParams.get("g").replace(/[^a-z0-9_\-]/gi, "") + ".{0,160}", "gi")) || []).slice(0, 6) : []) }); }
     if (id) {
       if (!/^\d{1,6}$/.test(id)) return json({ ok: false, error: "hibás azonosító" }, 400);
       const s = sheet(await get("phone-" + id + ".php"));
