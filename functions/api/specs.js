@@ -32,14 +32,17 @@ const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ
 async function search(q) {
   const { makers, phones } = await quick();
   /* a bolti terméknévből a fölösleg ki: tárhely, RAM, színek, típuskód, „kártyafüggetlen”, DS… */
-  const drop = /^(\d+(gb|tb|g)|gb|tb|ds|dual|sim|duos|kartyafuggetlen|fuggetlen|okostelefon|mobiltelefon|telefon|black|white|blue|green|gray|grey|silver|gold|pink|purple|violet|navy|graphite|fekete|feher|kek|zold|szurke|ezust|arany|lila|rozsaszin|hu|eu|nfc|4g|lte)$/;
+  const drop = /^(\d+(gb|tb|g)|gb|tb|ds|dual|sim|duos|kartyafuggetlen|fuggetlen|okostelefon|mobiltelefon|telefon|black|white|blue|green|gray|grey|silver|gold|pink|purple|violet|navy|graphite|fekete|feher|kek|zold|szurke|ezust|arany|lila|rozsaszin|hu|eu|nfc)$/;
   const toks = norm(q).split(" ").filter(t => t && !drop.test(t) && !/^sm\s?[a-z]\d/.test(t) && !/^[a-z]{1,3}\d{3,}[a-z]?$/.test(t));
   if (!toks.length) return [];
   const out = [];
   phones.forEach((p, k) => {
     const mk = makers[p[0]] || "", nm = String(p[2] || ""), hay = " " + norm(mk + " " + nm + " " + (p[3] || "")) + " ", full = norm(mk + " " + nm);
+    /* a számot tartalmazó szavaknak (pl. A57, S26, 15) pontosan egyezniük kell — a 4G / 5G csak pluszpont */
+    if (toks.some(t => /\d/.test(t) && !/^[2345]g$/.test(t) && !hay.includes(" " + t + " "))) return;
     let sc = 0; toks.forEach(t => { if (hay.includes(" " + t + " ")) sc += 3; else if (hay.includes(" " + t)) sc += 1; });
     if (!sc) return;
+    const extra = norm(nm).split(" ").filter(w => w && !toks.includes(w)).length; sc -= extra * 0.3;
     if (full === toks.join(" ") || norm(nm) === toks.join(" ")) sc += 5;
     out.push({ sc, k, id: String(p[1]), name: (mk + " " + nm).trim(), img: p[4] ? "https://fdn2.gsmarena.com/vv/bigpic/" + p[4] : "" });
   });
