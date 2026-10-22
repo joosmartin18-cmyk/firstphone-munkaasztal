@@ -20,7 +20,7 @@ async function accessToken(sa) {
   if (tokCache && tokCache.exp > Date.now() + 60000) return tokCache.t;
   const now = Math.floor(Date.now() / 1000);
   const head = b64uStr(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const body = b64uStr(JSON.stringify({ iss: sa.client_email, scope: "https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/cloud-platform", aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600 }));
+  const body = b64uStr(JSON.stringify({ iss: sa.client_email, scope: "https://www.googleapis.com/auth/identitytoolkit https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/cloud-platform", aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600 }));
   const pem = sa.private_key.replace(/-----[^-]+-----/g, "").replace(/\s+/g, "");
   const der = Uint8Array.from(atob(pem), c => c.charCodeAt(0));
   const key = await crypto.subtle.importKey("pkcs8", der, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["sign"]);
@@ -94,6 +94,113 @@ async function wpSend(sa, sub, payload, origin) {
   const body = await wpEncrypt(payload, sub.keys.p256dh, sub.keys.auth);
   const r = await fetch(sub.endpoint, { method: "POST", headers: { authorization: `vapid t=${h}.${b64u(sig)}, k=${v.pub}`, "content-encoding": "aes128gcm", "content-type": "application/octet-stream", ttl: "86400", urgency: "normal" }, body });
   return r.status;
+}
+
+/* ---- 🔁 helyettesítés másik boltban (boltok/{otthoni bolt}/away/{ahol helyettesít}) ---- */
+async function fsList(sa, path, fields) {
+  const q = (fields || []).map(f => "mask.fieldPaths=" + encodeURIComponent(f)).join("&"), out = []; let page = "";
+  do { const r = await fetch(fsBase(sa) + path + "?pageSize=300" + (q ? "&" + q : "") + (page ? "&pageToken=" + encodeURIComponent(page) : ""), { headers: { authorization: "Bearer " + await accessToken(sa) } });
+    if (!r.ok) break; const j = await r.json();
+    (j.documents || []).forEach(doc => out.push(Object.assign({ id: doc.name.split("/").pop() }, Object.fromEntries(Object.entries(doc.fields || {}).map(([k, v]) => [k, unfv(v)])))));
+    page = j.nextPageToken || ""; } while (page);
+  return out;
+}
+async function fsDel(sa, path) { await fetch(fsBase(sa) + path, { method: "DELETE", headers: { authorization: "Bearer " + await accessToken(sa) } }).catch(() => {}); }
+const foldN = t => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+const parseL = v => { try { const a = JSON.parse(v || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+/* név-egyezés: pontosan, vagy ha csak részben (pl. „Norbert” / „Hack Norbi”), akkor az egyetlen dolgozó, akire illik */
+function whoMatch(n, names) { const f = foldN(n); const ex = names.find(x => foldN(x) === f); if (ex) return ex;
+  const T = f.split(/\s+/).filter(w => w.length >= 3); if (!T.length) return null;
+  const C = names.filter(nm => { const W = foldN(nm).split(/\s+/); return T.every(t => W.some(w => w.startsWith(t) || t.startsWith(w) || (t.length >= 4 && w.length >= 4 && t.slice(0, 4) === w.slice(0, 4)))); });
+  return C.length === 1 ? C[0] : null; }
+async function awayOf(sa, uid, name) {
+  const n = foldN(name), out = [];
+  const meta = await fsGet(sa, `boltok/${uid}`, ["emps"]).catch(() => null), names = (meta && Array.isArray(meta.emps) && meta.emps.length) ? meta.emps : [name];
+  (await fsList(sa, `boltok/${uid}/away`, ["src", "sid", "addr", "list"])).forEach(doc => { if (doc.id === "_out") return;
+    parseL(doc.list).forEach(x => { if (x && /^\d{4}-\d{2}-\d{2}$/.test(String(x.d || "")) && foldN(whoMatch(x.n, names) || "") === n) out.push({ d: x.d, p: x.p || "full", ts: x.ts || "", te: x.te || "", at: doc.src || "másik bolt", sid: doc.sid || "", addr: doc.addr || "" }); }); });
+  return out.sort((a, b) => a.d.localeCompare(b.d));
+}
+const icsE = t => String(t == null ? "" : t).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+function icsFold(l) { const out = []; let cur = "", n = 0; for (const ch of l) { const b = enc.encode(ch).length; if (n + b > 73) { out.push(cur); cur = " "; n = 1; } cur += ch; n += b; } out.push(cur); return out.join("\r\n"); }
+const PARTN = { full: "egész nap", am: "délelőtt", pm: "délután" };
+function awayIcs(A, emp) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z"), L = [];
+  const hm = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || "")); return m ? m[1].padStart(2, "0") + m[2] + "00" : null; };
+  A.forEach(x => { const d = x.d.replace(/-/g, ""), s = hm(x.ts), e = hm(x.te), aw = "FirstPhone " + x.at;
+    const nd = new Date(Date.UTC(+x.d.slice(0, 4), +x.d.slice(5, 7) - 1, +x.d.slice(8, 10) + 1)).toISOString().slice(0, 10).replace(/-/g, "");
+    L.push("BEGIN:VEVENT", `UID:fp-${x.d}-${emp}-hely@firstphone-munkaasztal`, "DTSTAMP:" + stamp,
+      ...(s && e ? [`DTSTART;TZID=Europe/Budapest:${d}T${s}`, `DTEND;TZID=Europe/Budapest:${d}T${e}`] : [`DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${nd}`]),
+      "SUMMARY:" + icsE("🔁 Helyettesítés · " + x.at), "LOCATION:" + icsE(x.addr ? aw + ", " + x.addr : aw),
+      "DESCRIPTION:" + icsE((x.ts ? `${x.ts}–${x.te} · ` : "") + `${PARTN[x.p] || ""}\nHelyettesítés: ${aw}${x.sid ? " (" + x.sid + ")" : ""}\n\nA beosztás változásakor magától frissül.`),
+      "TRANSP:OPAQUE", "STATUS:CONFIRMED", "END:VEVENT"); });
+  return L.map(icsFold).join("\r\n");
+}
+const VTZ = ["BEGIN:VTIMEZONE", "TZID:Europe/Budapest", "BEGIN:DAYLIGHT", "TZOFFSETFROM:+0100", "TZOFFSETTO:+0200", "TZNAME:CEST", "DTSTART:19700329T020000", "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU", "END:DAYLIGHT",
+  "BEGIN:STANDARD", "TZOFFSETFROM:+0200", "TZOFFSETTO:+0100", "TZNAME:CET", "DTSTART:19701025T030000", "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU", "END:STANDARD", "END:VTIMEZONE"].join("\r\n");
+/* értesítés egy dolgozó telefonjaira (iPhone → a saját oldalán át a Naptár app, máshol → Google Naptár, azon a napon) */
+async function pushTo(sa, path, doc, base, origin, title, body, day, tag) {
+  const L = (doc.push || []).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
+  if (!L.length) return { sent: 0, subs: 0, codes: [] };
+  day = /^\d{4}-\d{2}-\d{2}$/.test(String(day || "")) ? day : budaToday(); const [yy, mm, dd] = day.split("-").map(Number);
+  const subs = String(doc.subAll || doc.sub || "").split(","), gUrl = `https://calendar.google.com/calendar/r/day/${yy}/${mm}/${dd}`, aUrl = `${base}?open=cal&d=${day}`;
+  const res = await Promise.all(L.map(s => { const apple = /push\.apple\.com/i.test(s.endpoint), go = apple ? aUrl : (subs.includes("google") || !subs.includes("apple") ? gUrl : aUrl);
+    return wpSend(sa, s, JSON.stringify({ title, body, url: go, tag }), origin).catch(() => 0); }));
+  const keep = L.filter((s, i) => res[i] !== 404 && res[i] !== 410);
+  if (keep.length !== L.length) await fsPatch(sa, path, { push: keep.map(x => JSON.stringify(x)), pushN: keep.length }).catch(() => {});
+  return { sent: res.filter(c => c >= 200 && c < 300).length, subs: keep.length, codes: res };
+}
+const HU_MA = ["jan.", "febr.", "márc.", "ápr.", "máj.", "jún.", "júl.", "aug.", "szept.", "okt.", "nov.", "dec."], HU_DA = ["v", "h", "k", "sze", "cs", "p", "szo"];
+const fdHu = k => { const [y, m, d] = k.split("-").map(Number); return `${HU_MA[m - 1]} ${d}. (${HU_DA[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]})`; };
+/* POST /cal/_out — a hívó bolt „másik boltból jött” helyettesítői → a saját boltjuk megkapja (+ 🔔 a dolgozónak) */
+async function handleOut(request, sa, origin) {
+  const idToken = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+  if (!idToken) return json({ ok: false, error: "nincs belépve" }, 401);
+  const lr = await fetch(`https://identitytoolkit.googleapis.com/v1/projects/${sa.project_id}/accounts:lookup`, { method: "POST", headers: { authorization: "Bearer " + await accessToken(sa), "content-type": "application/json" }, body: JSON.stringify({ idToken }) });
+  const me = ((await lr.json().catch(() => ({}))).users || [])[0];
+  if (!lr.ok || !me || me.disabled) return json({ ok: false, error: "érvénytelen belépés" }, 401);
+  let at = {}; try { at = JSON.parse(me.customAttributes || "{}") || {}; } catch (e) {}
+  const isAdm = (String(me.email || "").toLowerCase() === "admin@admin.com" || at.admin === true) && !at.mustChange;
+  const q = await request.json().catch(() => ({}));
+  const src = isAdm && q.src ? String(q.src) : me.localId;
+  if (!/^[A-Za-z0-9]{6,64}$/.test(src || "")) return json({ ok: false, error: "melyik bolt?" }, 400);
+  const M = (await fsList(sa, "boltok", ["sid", "loc", "place", "addr", "emps"])).map(x => ({ uid: x.id, sid: x.sid || "", loc: x.loc || "", place: x.place || "", addr: x.addr || "", emps: Array.isArray(x.emps) ? x.emps : [] }));
+  const meM = M.find(x => x.uid === src) || {};
+  const home = (s, l) => { s = String(s || "").toUpperCase(); let h = s ? M.find(x => x.sid && x.sid.toUpperCase() === s) : null;
+    if (!h && l) { const fl = foldN(l), L = M.filter(x => x.loc && fl.startsWith(foldN(x.loc))); h = L.length === 1 ? L[0] : L.find(x => x.place && fl.includes(foldN(x.place))) || null; }
+    return h; };
+  const tm = t => /^\d{1,2}:\d{2}$/.test(String(t || "")) ? String(t) : "";
+  const groups = {};
+  (Array.isArray(q.list) ? q.list : []).slice(0, 400).forEach(x => { if (!x || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.d || "")) || !x.n) return;
+    const h = home(x.s, x.l); if (!h || h.uid === src) return;
+    (groups[h.uid] = groups[h.uid] || []).push({ d: x.d, n: String(x.n).slice(0, 60), p: ["full", "am", "pm"].includes(x.p) ? x.p : "full", ts: tm(x.ts), te: tm(x.te) }); });
+  const label = [meM.loc, meM.place].filter(Boolean).join(" ") || "másik bolt";
+  const prev = await fsGet(sa, `boltok/${src}/away/_out`, ["homes"]), old = (prev && Array.isArray(prev.homes)) ? prev.homes.filter(u => /^[A-Za-z0-9]{6,64}$/.test(u)) : [];
+  const today = budaToday(), notes = [];
+  for (const uid of Array.from(new Set(Object.keys(groups).concat(old)))) {
+    const was = parseL(((await fsGet(sa, `boltok/${uid}/away/${src}`, ["list"])) || {}).list), now = groups[uid] || [];
+    if (now.length) await fsPatch(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.sid || "", addr: meM.addr || "", list: JSON.stringify(now), at: new Date() });
+    else await fsDel(sa, `boltok/${uid}/away/${src}`);
+    /* mi változott dolgozónként (csak mától előre) → 🔔 */
+    const key = x => x.ts + "–" + x.te + "|" + x.p, byN = {};
+    was.concat(now).forEach(x => { if (x && x.d >= today) byN[foldN(x.n)] = x.n; });
+    for (const fn of Object.keys(byN)) {
+      const W = Object.fromEntries(was.filter(x => foldN(x.n) === fn).map(x => [x.d, x])), N = Object.fromEntries(now.filter(x => foldN(x.n) === fn).map(x => [x.d, x]));
+      const ch = Array.from(new Set(Object.keys(W).concat(Object.keys(N)))).filter(d => d >= today).sort().filter(d => (W[d] ? key(W[d]) : "") !== (N[d] ? key(N[d]) : ""));
+      if (ch.length) notes.push({ uid, name: byN[fn], ch, W, N });
+    }
+  }
+  await fsPatch(sa, `boltok/${src}/away/_out`, { homes: Object.keys(groups), at: new Date() });
+  let sent = 0;
+  for (const nt of notes) {
+    const docs = await fsList(sa, `boltok/${nt.uid}/cal`, ["name", "t", "push", "sub", "subAll"]);
+    const hm = M.find(x => x.uid === nt.uid) || {}, who = whoMatch(nt.name, (hm.emps && hm.emps.length) ? hm.emps : docs.map(x => x.name || "").filter(Boolean)) || nt.name;
+    const doc = docs.find(x => x.id !== "_cfg" && foldN(x.name) === foldN(who) && x.t); if (!doc || !(doc.push || []).length) continue;
+    const line = d => { const a = nt.W[d], b = nt.N[d], tt = x => x.ts ? `${x.ts}–${x.te}` : PARTN[x.p]; return !a ? `${fdHu(d)}: ${tt(b)}` : !b ? `${fdHu(d)}: törölve` : `${fdHu(d)}: ${tt(a)} → ${tt(b)}`; };
+    const body = nt.ch.slice(0, 3).map(line).join("\n") + (nt.ch.length > 3 ? `\n…és még ${nt.ch.length - 3} nap` : "");
+    const r = await pushTo(sa, `boltok/${nt.uid}/cal/${doc.id}`, doc, `${origin}/cal/${nt.uid}/${doc.id}/${doc.t}`, origin, `🔁 Helyettesítés · ${label}`, body, nt.ch[0], "fp-hely-" + Date.now()).catch(() => ({ sent: 0 }));
+    sent += r.sent || 0;
+  }
+  return json({ ok: true, homes: Object.keys(groups).length, notified: sent });
 }
 
 /* ---- segédek ---- */
@@ -198,6 +305,12 @@ li.hl{outline:2px solid #f5b300;animation:hl 1.2s ease 2;} @keyframes hl{50%{tra
 export async function onRequest(context) {
   const { request, env, params } = context;
   const seg = [].concat(params.p || []);
+  if (seg.length === 1 && seg[0] === "_out") {
+    if (request.method !== "POST") return txt("POST kell", 405);
+    let sa0; try { sa0 = JSON.parse(env.FIREBASE_SA || ""); } catch (e) { sa0 = null; }
+    if (!sa0 || !sa0.private_key) return json({ ok: false, error: "nosa" }, 503);
+    try { return await handleOut(request, sa0, new URL(request.url).origin); } catch (e) { return json({ ok: false, error: String((e && e.message) || e) }, 502); }
+  }
   if (seg.length < 3 || seg.length > 4) return txt("Hiányos naptár link.", 404);
   let [uid, emp, tok, act] = seg; const isIcs = /\.ics$/i.test(tok); tok = tok.replace(/\.ics$/i, "");
   if (!/^[A-Za-z0-9]{6,64}$/.test(uid) || !/^[A-Za-z0-9_-]{2,40}$/.test(emp) || !/^[A-Za-z0-9]{16,64}$/.test(tok) || (act && !/^(push|notify|manifest)$/.test(act)) || (act && isIcs)) return txt("Hibás naptár link.", 404);
@@ -221,7 +334,10 @@ export async function onRequest(context) {
         if (!all.includes(k) || d.sub !== k || !fresh) { if (!all.includes(k)) all.push(k);
           context.waitUntil(fsPatch(sa, path, { sub: k, subAll: all.join(","), subAt: new Date() }).catch(() => {})); }
       }
-      return new Response(d.ics || "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//FirstPhone//Munkaasztal//HU\r\nEND:VCALENDAR\r\n", { headers: { "content-type": "text/calendar; charset=utf-8", "content-disposition": `inline; filename="beosztas.ics"`, "cache-control": "private, max-age=300" } });
+      /* + ahol másik boltban helyettesít (a másik bolt küldte) */
+      let ics = d.ics || ("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//FirstPhone//Munkaasztal//HU\r\nX-WR-TIMEZONE:Europe/Budapest\r\n" + VTZ + "\r\nEND:VCALENDAR\r\n");
+      try { const A = await awayOf(sa, uid, d.name); if (A.length) ics = ics.replace(/END:VCALENDAR\s*$/, awayIcs(A, emp) + "\r\nEND:VCALENDAR\r\n"); } catch (e) {}
+      return new Response(ics, { headers: { "content-type": "text/calendar; charset=utf-8", "content-disposition": `inline; filename="beosztas.ics"`, "cache-control": "private, max-age=300" } });
     }
     if (act === "manifest") {
       return new Response(JSON.stringify({ name: "FirstPhone beosztás – " + (d.name || ""), short_name: "Beosztás", start_url: base, scope: "/cal/", display: "standalone", background_color: "#111116", theme_color: "#111116",
@@ -241,20 +357,14 @@ export async function onRequest(context) {
       const b = await request.json().catch(() => ({}));
       const title = b.test ? "🔔 Próba értesítés" : String(b.title || "").slice(0, 90), body = b.test ? "Így szól, ha jön az új havi beosztás, vagy változik a tiéd — koppints rá, és megnyílik a naptárad." : String(b.body || "").slice(0, 400);
       if (!title) return json({ ok: false, error: "nincs cím" }, 400);
-      const L = (d.push || []).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
-      if (!L.length) return json({ ok: true, sent: 0, subs: 0 });
-      /* rákattintva a naptár nyíljon meg, azon a napon: iPhone → Naptár app (a saját oldalon át, calshow:), máshol → Google Naptár */
-      const day = /^\d{4}-\d{2}-\d{2}$/.test(String(b.d || "")) ? b.d : budaToday(), [yy, mm, dd] = day.split("-").map(Number);
-      const subs = String(d.subAll || d.sub || "").split(","), gUrl = `https://calendar.google.com/calendar/r/day/${yy}/${mm}/${dd}`, aUrl = `${base}?open=cal&d=${day}`;
-      const tag = b.test ? "fp-cal-test" : "fp-cal-" + Date.now();
-      const res = await Promise.all(L.map(s => { const apple = /push\.apple\.com/i.test(s.endpoint), go = apple ? aUrl : (subs.includes("google") || !subs.includes("apple") ? gUrl : aUrl);
-        return wpSend(sa, s, JSON.stringify({ title, body, url: go, tag }), url.origin).catch(() => 0); }));
-      const keep = L.filter((s, i) => res[i] !== 404 && res[i] !== 410);
-      if (keep.length !== L.length) await fsPatch(sa, path, { push: keep.map(x => JSON.stringify(x)), pushN: keep.length }).catch(() => {});
-      return json({ ok: true, sent: res.filter(c => c >= 200 && c < 300).length, subs: keep.length, codes: res });
+      /* rákattintva a naptár nyíljon meg, azon a napon */
+      const r = await pushTo(sa, path, d, base, url.origin, title, body, b.d, b.test ? "fp-cal-test" : "fp-cal-" + Date.now());
+      return json(Object.assign({ ok: true }, r));
     }
     let vk = ""; try { vk = (await vapid(sa)).pub; } catch (e) {}
-    return new Response(page({ name: d.name, ev: d.ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
+    let ev = String(d.ev || "");
+    try { const A = await awayOf(sa, uid, d.name); if (A.length) ev = ev.split("\n").filter(Boolean).concat(A.map(x => [x.d, x.ts, x.te, x.p, "", x.at].join("|"))).sort().join("\n"); } catch (e) {}
+    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
   } catch (e) {
     return txt("Hiba: " + String((e && e.message) || e), 502);
   }

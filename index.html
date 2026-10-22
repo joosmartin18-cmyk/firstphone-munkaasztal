@@ -2911,6 +2911,7 @@
   .badge.away .aw-k{font-size:9px;font-weight:800;opacity:.92;letter-spacing:.02em;} .badge.away .aw-at{font-size:11px;font-weight:900;letter-spacing:.02em;word-break:break-word;} .badge.away .half-time{font-size:9.5px;opacity:.95;}
   .badge.away.clash{background:repeating-linear-gradient(135deg,#c94445 0 8px,#d85253 8px 16px);box-shadow:0 4px 12px rgba(226,88,90,.3);} .badge.away .aw-w{font-size:8.5px;font-weight:800;background:rgba(0,0,0,.22);border-radius:6px;padding:1px 5px;margin-top:2px;}
   .badge.away .aw-s{display:none;}
+  .badge.away.repl{background:repeating-linear-gradient(135deg,#6b7280 0 8px,#767e8c 8px 16px);box-shadow:0 4px 12px rgba(0,0,0,.25);}
   @media (max-width:640px){ .badge.away{padding:4px 2px;overflow:hidden;} .badge.away .aw-k,.badge.away .aw-at,.badge.away .half-time,.badge.away .aw-w{display:none;} .badge.away .aw-s{display:block;font-size:7.5px;font-weight:900;white-space:nowrap;} }
 
 
@@ -5271,7 +5272,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261022-235755";</script>
+<script>window.FP_BUILD="20261023-001928";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -17920,33 +17921,46 @@ if(window.parent && window.parent !== window) document.documentElement.classList
      a saját boltja is lássa — a dolgozó saját fülén (a közös tervezőben nem): „🔁 Helyettesít · Szombathely TESCO”.
      Küldés: a /api/staff (act:"out") a hívó bolt összes „másik boltból jött” helyettesítőjét átadja a saját boltjuknak.
      Fogadás: boltok/{mi}/away/{másik bolt} = { src:"Szombathely TESCO", list:"[{d,n,p}]" } ===== */
-  let awayMap = {}, awayT = null;
+  let awayRaw = [], awayT = null, awayTarget = null, awayBusy = false;
   const AWAY_SIG = "firstphone_away_sig";
   function awayOut(){ const n = new Date(); let y = n.getFullYear(), m = n.getMonth(); if(m < 1){ m = 12; y--; } const from = `${y}-${pad2(m)}`, L = [];
     Object.keys(state.subs || {}).filter(k=> k.slice(0, 7) >= from).sort().forEach(k=> subsOf(k).forEach(x=>{ if(!(x && x.name && x.from && (x.from.s || x.from.l))) return;
       const dt = dayTimes(dowOfKey(k)), pt = x.part || "full", ts = dt ? (pt === "pm" ? dt.mid : dt.open) : "", te = dt ? (pt === "am" ? dt.mid : dt.close) : "";
       L.push({ d:k, n:x.name, p:pt, s:x.from.s || "", l:x.from.l || "", ts, te }); }));
     return L; }
+  /* a bolt (vagy az admin a bolt nevében) elküldi: kik jöttek hozzá más boltból helyettesíteni */
   function awaySync(){
-    const C = window.FP_CLOUD; if(!C || !C.on || C.admin || !window.firebase) return;
-    const L = awayOut(), sig = JSON.stringify(L); let last = null; try{ last = localStorage.getItem(AWAY_SIG); }catch(e){}
+    const C = window.FP_CLOUD; if(!C || !C.on || !C.target || !window.firebase) return;
+    const KEY = AWAY_SIG + "_" + C.target, L = awayOut(), sig = JSON.stringify(L); let last = null; try{ last = localStorage.getItem(KEY); }catch(e){}
     if(sig === last || (last === null && !L.length)) return;
+    const tgt = C.target, adm = !!C.admin;
     clearTimeout(awayT); awayT = setTimeout(async ()=>{ try{ const u = firebase.auth().currentUser; if(!u) return; const t = await u.getIdToken();
-      const r = await fetch("/api/staff", { method:"POST", headers:{ "content-type":"application/json", authorization:"Bearer " + t }, body:JSON.stringify({ act:"out", list:L }) });
-      const j = await r.json(); if(j && j.ok) try{ localStorage.setItem(AWAY_SIG, sig); }catch(e){} }catch(e){} }, 3000);
+      /* a szerver átadja a saját boltjuknak, betölti a naptárukba és 🔔 értesíti őket */
+      const r = await fetch("/cal/_out", { method:"POST", headers:{ "content-type":"application/json", authorization:"Bearer " + t }, body:JSON.stringify(Object.assign({ list:L }, adm ? { src:tgt } : {})) });
+      const j = await r.json(); if(j && j.ok) try{ localStorage.setItem(KEY, sig); }catch(e){} }catch(e){} }, 2500);
   }
   window.fpAwaySync = awaySync;
   async function awayLoad(){
     const C = window.FP_CLOUD; if(!C || !C.on || !C.db || !C.target) return false;
-    try{ const snap = await C.db.collection("boltok").doc(C.target).collection("away").get(), m = {};
+    const tgt = C.target; awayBusy = true;
+    try{ const snap = await C.db.collection("boltok").doc(tgt).collection("away").get(), R = [];
       snap.docs.forEach(d=>{ if(d.id === "_out") return; const v = d.data() || {}; let L = []; try{ L = JSON.parse(v.list || "[]"); }catch(e){}
-        L.forEach(x=>{ if(!x || !x.n) return; const k = sFold(x.n); (m[k] = m[k] || []).push({ d:x.d, p:x.p || "full", ts:x.ts || "", te:x.te || "", at:v.src || "másik bolt", sid:v.sid || "", addr:v.addr || "" }); }); });
-      const ch = JSON.stringify(m) !== JSON.stringify(awayMap); awayMap = m;
+        L.forEach(x=>{ if(!x || !x.n || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.d || ""))) return; R.push({ n:x.n, d:x.d, p:x.p || "full", ts:x.ts || "", te:x.te || "", at:v.src || "másik bolt", sid:v.sid || "", addr:v.addr || "" }); }); });
+      if(window.FP_CLOUD.target !== tgt) return false;
+      const ch = JSON.stringify(R) !== JSON.stringify(awayRaw) || awayTarget !== tgt; awayRaw = R; awayTarget = tgt;
       if(ch && personById(activeTab) && !isSubId(activeTab)) renderCalendar();
-      if(ch) try{ if(window.fpCalAuto) fpCalAuto(); }catch(e){}
-      return true; }catch(e){ return false; }
+      return true; }catch(e){ return false; }finally{ awayBusy = false; }
   }
-  const awayFor = (p, key)=> p ? (awayMap[sFold(p.name)] || []).filter(x=> x.d === key) : [];
+  /* név-egyezés: pontosan ugyanaz, vagy ha csak részben (pl. „Norbert” / „Hack Norbi”), akkor az egyetlen dolgozó, akire illik */
+  function awayWho(n){ const f = sFold(n), E = employees(); const ex = E.find(e=> sFold(e.name) === f); if(ex) return ex;
+    const T = f.split(/\s+/).filter(w=> w.length >= 3); if(!T.length) return null;
+    const C = E.filter(e=>{ const W = sFold(e.name).split(/\s+/); return T.every(t=> W.some(w=> w.startsWith(t) || t.startsWith(w) || (t.length >= 4 && w.length >= 4 && t.slice(0, 4) === w.slice(0, 4)))); });
+    return C.length === 1 ? C[0] : null; }
+  function awayOf(p){
+    const C = window.FP_CLOUD;
+    if(C && C.on && C.target && C.target !== awayTarget && !awayBusy){ awayLoad(); return []; }
+    if(!p || isSubId(p.id)) return []; return awayRaw.filter(x=>{ const w = awayWho(x.n); return w && w.id === p.id; }); }
+  const awayFor = (p, key)=> awayOf(p).filter(x=> x.d === key);
   (function awayBoot(n){ const C = window.FP_CLOUD; if(!C || !C.enabled) return;
     if(!C.on){ if(n < 40) setTimeout(()=> awayBoot(n + 1), 1500); return; }
     awayLoad(); awaySync(); setInterval(()=>{ if(document.visibilityState === "visible") awayLoad(); }, 10 * 60 * 1000); })(0);
@@ -18431,6 +18445,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const sh = String(x.sid || String(x.at).split(/\s+/)[0].slice(0, 5)).toUpperCase();
           ch.innerHTML = `<span class="aw-s">🔁 ${esc(sh)}</span><span class="aw-k">🔁 ${pre}Helyettesít</span><b class="aw-at">${esc(String(x.at).toUpperCase())}</b>${x.ts && x.te ? `<span class="half-time">${esc(x.ts)}–${esc(x.te)}</span>` : ""}${here ? `<span class="aw-w">⚠ itt is be van osztva</span>` : ""}`;
           ch.title = `${P0.name} ezen a napon itt helyettesít: FirstPhone ${x.at}${x.sid ? " (" + x.sid + ")" : ""} — ${x.p === "am" ? "délelőtt" : x.p === "pm" ? "délután" : "egész nap"}${x.ts ? " " + x.ts + "–" + x.te : ""}${here ? " · ⚠ nálunk is be van osztva!" : ""}`;
+          if(badgeWrap.classList.contains("empty")) badgeWrap.style.display = "none";
+          cell.appendChild(ch); });
+        /* akit nálunk helyettesítenek: ki jön helyette (pl. Szombathelyről) */
+        if(P0) subsOf(key).filter(x=> x && x.forId === P0.id).forEach(x=>{ const ch = document.createElement("div"); ch.className = "badge away repl";
+          ch.innerHTML = `<span class="aw-s">🔁 ${esc(iniOf({ name:x.name }))}</span><span class="aw-k">🔁 Helyettesíti${x.part === "am" ? " · DE" : x.part === "pm" ? " · DU" : ""}</span><b class="aw-at">${esc(x.name)}</b>${x.from ? `<span class="half-time">🏬 ${esc(fromLong(x.from))}</span>` : ""}`;
+          ch.title = `${P0.name} helyett ezen a napon: ${x.name}${x.from ? " (" + fromLong(x.from) + ")" : ""}`;
           if(badgeWrap.classList.contains("empty")) badgeWrap.style.display = "none";
           cell.appendChild(ch); }); }
       if((activeTab === "planner" || activeTab === "prev") && dt && !(pa && pa.kind === "unnep")){
@@ -20108,12 +20128,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const mates = dayPeople(parseAssign(a)).filter(x=> x.id !== pid).map(x=>{ const p = personById(x.id); return p ? callName(p) + (x.part !== "full" ? " (" + CAL_PART[x.part] + ")" : "") : ""; }).filter(Boolean);
       ev.push({ k, part:pp.part, s, e, ts:pp.start, te:pp.end, mates });
     });
-    /* + ahol másik boltban helyettesít (a másik bolt küldte: awayMap) */
-    const P = personById(pid);
-    if(P && !isSubId(pid)) (awayMap[sFold(P.name)] || []).filter(x=> /^\d{4}-\d{2}-\d{2}$/.test(x.d) && x.d.slice(0, 7) >= fromYm && x.d.slice(0, 7) <= toYm).forEach(x=>{
-      const s = calHM(x.ts), e = calHM(x.te);
-      ev.push({ k:x.d, part:x.p || "full", s, e, ts:x.ts || "", te:x.te || "", mates:[], away:{ at:x.at, addr:x.addr || "", sid:x.sid || "" } }); });
-    return ev.sort((a, b)=> a.k.localeCompare(b.k) || (a.away ? 1 : 0) - (b.away ? 1 : 0));
+    /* a másik boltban végzett helyettesítéseket a szerver teszi a naptárba (/cal/… .ics) — akkor is, ha itt épp nincs megnyitva a Munkaasztal */
+    return ev;
   }
   /* tömör lista (a dolgozó oldalához és a változás-figyeléshez): nap|kezd|vég|rész|kivel|(helyettesítés: melyik bolt) */
   const calEvStr = ev=> ev.map(x=> [x.k, x.ts, x.te, x.part, x.mates.join(", ").replace(/[|\n]/g, " ")].concat(x.away ? [String(x.away.at).replace(/[|\n]/g, " ")] : []).join("|")).join("\n");
@@ -20251,7 +20267,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState === "hidden") calFlush(); });
   /* változásfigyelés: mentéskor (pár mp várakozással) újra feltölti, ha már be van kapcsolva */
   const calSig = ()=>{ const c = calCfg(), thr = calThrough(false), from = calAddM(calNowYm(), -1);
-    return JSON.stringify([thr, employees().map(p=> [p.id, p.name, p.nick || "", calLbl(p.id), awayMap[sFold(p.name)] || null]), Object.keys(state.schedule || {}).concat(Object.keys(state.subs || {})).filter(k=> k.slice(0, 7) >= from && k.slice(0, 7) <= thr).sort().map(k=> [k, state.schedule[k] || null, (state.subs || {})[k] || null]), state.settings.hours, state.settings.address, c.auto]); };
+    return JSON.stringify([thr, employees().map(p=> [p.id, p.name, p.nick || "", calLbl(p.id)]), Object.keys(state.schedule || {}).concat(Object.keys(state.subs || {})).filter(k=> k.slice(0, 7) >= from && k.slice(0, 7) <= thr).sort().map(k=> [k, state.schedule[k] || null, (state.subs || {})[k] || null]), state.settings.hours, state.settings.address, c.auto]); };
   let calTimer = null;
   function calAutoCheck(){
     if(!calOk() || !calCfg().on || !calCloud()) return;

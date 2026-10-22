@@ -3,9 +3,7 @@
    Munkaasztal-fióknak, és csak a kért bolt dolgozóinak NEVÉT (semmi mást).
      POST /api/staff  { sid:"KAPT", loc:"Kaposvár", det:"TESCO" }  (Authorization: Bearer <Firebase idToken>)
        → { ok, found, emps:[ "Tóth Evelin Melissza", … ] }
-     POST /api/staff  { act:"out", list:[{ d:"2026-10-24", n:"Hack Norbert", p:"full", s:"SOPT", l:"Sopron" }] }
-       → a hívó bolt (pl. Szombathely) helyettesítői, akik egy másik boltból jöttek: a saját boltjuk (pl. Sopron)
-         megkapja (boltok/{otthoni bolt}/away/{hívó bolt}), így ott a dolgozó saját fülén látszik, hol helyettesít.
+     (A „máshol helyettesít” átadás a /cal/_out végponton van — ott a naptár és az értesítés is.)
    A nevek a bolt névjegyéből (boltok/{uid}.emps), vagy ha az még nincs, a bolt mentett beosztásából jönnek. */
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const enc = new TextEncoder();
@@ -71,25 +69,6 @@ export async function onRequest({ request, env }) {
     const lj = await lr.json().catch(() => ({})); const me = (lj.users || [])[0];
     if (!lr.ok || !me || me.disabled) return json({ ok: false, error: "érvénytelen belépés" }, 401);
     const q = await request.json().catch(() => ({}));
-    /* a mi helyettesítőink → a saját boltjuk is lássa, hogy nálunk helyettesítenek */
-    if (q.act === "out") {
-      const src = me.localId; if (!/^[A-Za-z0-9]{6,64}$/.test(src || "")) return json({ ok: false, error: "ki vagy?" }, 400);
-      const M = await metas(sa), meM = M.find(x => x.uid === src) || {};
-      const home = (s, l) => { s = String(s || "").toUpperCase(); let h = s ? M.find(x => x.sid && x.sid.toUpperCase() === s) : null;
-        if (!h && l) { const fl = fold(l), L = M.filter(x => x.loc && fl.startsWith(fold(x.loc))); h = L.length === 1 ? L[0] : L.find(x => x.place && fl.includes(fold(x.place))) || null; }
-        return h; };
-      const groups = {};
-      (Array.isArray(q.list) ? q.list : []).slice(0, 400).forEach(x => { if (!x || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.d || "")) || !x.n) return;
-        const h = home(x.s, x.l); if (!h || h.uid === src) return;
-        const tm = t => /^\d{1,2}:\d{2}$/.test(String(t || "")) ? String(t) : "";
-        (groups[h.uid] = groups[h.uid] || []).push({ d: x.d, n: String(x.n).slice(0, 60), p: ["full", "am", "pm"].includes(x.p) ? x.p : "full", ts: tm(x.ts), te: tm(x.te) }); });
-      const label = [meM.loc, meM.place].filter(Boolean).join(" ") || "másik bolt";
-      const prev = await fsGet(sa, `boltok/${src}/away/_out`), old = (prev && Array.isArray(prev.homes)) ? prev.homes : [];
-      for (const uid of Object.keys(groups)) await fsSet(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.sid || "", addr: meM.addr || "", list: JSON.stringify(groups[uid]), at: new Date() });
-      for (const uid of old) if (!groups[uid] && /^[A-Za-z0-9]{6,64}$/.test(uid)) await fsDel(sa, `boltok/${uid}/away/${src}`);
-      await fsSet(sa, `boltok/${src}/away/_out`, { homes: Object.keys(groups), at: new Date() });
-      return json({ ok: true, homes: Object.keys(groups).length });
-    }
     const sid = String(q.sid || "").toUpperCase().slice(0, 8), loc = fold(q.loc).slice(0, 40), det = fold(q.det).slice(0, 40);
     if (!sid && !loc) return json({ ok: false, error: "melyik bolt?" }, 400);
     const M = await metas(sa);
