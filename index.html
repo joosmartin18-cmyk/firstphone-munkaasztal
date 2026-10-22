@@ -5027,7 +5027,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261022-153855";</script>
+<script>window.FP_BUILD="20261022-160424";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -17193,43 +17193,58 @@ function spkCardsFrom(stream){
 }
 /* a Bizzio sorokból (sorrendtől függetlenül) a mi 10 sorunk */
 function spkFromBizzio(c){
-  const L = c.lines.slice(), f = {}; let name = [], last = '';
+  /* a kártya első sora mindig a termék neve; a többit tartalom alapján ismeri fel (a sorrend és a hiányzó sorok nem számítanak) */
+  const L = c.lines.map(t=> String(t).replace(/\s+/g, ' ').trim()).filter(Boolean), f = {}; let last = '';
+  const nm0 = L.shift() || '';
+  const NA = t=> !t || /^(nincs adat|nem ismert|nincs)(\s+(nincs adat|nem ismert|nincs))*$/i.test(t.replace(/[,\s]+/g, ' ').trim());
   const cls = t=>{
-    if(/k[aá]rtyaf[uü]ggetlen|f[uü]ggetlen/i.test(t)) return 'net';
-    if(/^(android|ios|ipados|harmony)/i.test(t)) return 'os';
+    if(/k[aá]rtyaf[uü]ggetlen|szolg[aá]ltat[oó]f[uü]gg|f[uü]ggetlen/i.test(t)) return 'net';
+    if(/^(android|ios|ipados|harmony|kaios)/i.test(t)) return 'os';
+    if(/^nyom[oó]gombos/i.test(t)) return last === 'os' || f.os ? 'touch' : 'os';
     if(/[eé]rint[őo]k[eé]perny/i.test(t)) return 'touch';
-    if(/\d+(\.\d+)?\s*["”]\s*\d+\s*x\s*\d+/i.test(t)) return 'res';
-    if(/amoled|oled|lcd|ips|retina|tft/i.test(t)) return 'dtype';
-    if(/ghz|mag\(ok\)|core\b/i.test(t)) return 'cpu';
-    if(/^\d+\s*(gb|tb|mb)\s*,\s*\d+(\.\d+)?\s*(gb|mb)/i.test(t)) return 'mem';
+    if(/\d+([.,]\d+)?\s*["”]\s*\d+\s*x\s*\d+/i.test(t)) return 'res';
+    if(/amoled|oled|lcd|ips|retina|tft|qqvga|qvga/i.test(t)) return 'dtype';
+    if(/ghz|mag\(ok\)|core\b/i.test(t) || (last === 'res' && /nincs adat|nem ismert/i.test(t))) return 'cpu';
+    if(/^[>\d][^,]*\s*(gb|tb|mb)?\s*,\s*[\d.]+\s*(gb|mb)$/i.test(t) || /^(nincs adat|nem ismert)\s*,/i.test(t)) return 'mem';
     if(/mah/i.test(t)) return 'bat';
     if(/wi-?fi|802\.11/i.test(t)) return 'wifi';
-    if(/\bmp\b|mpx/i.test(t) && /\d/.test(t)) return 'cam';
-    if(/dual\s*sim|hybrid|single\s*sim|nano-?sim|esim/i.test(t)) return 'sim';
-    if(/b[oő]v[ií]thet|microsd|^(nem|igen)$/i.test(t)) return last === 'wifi' || last === 'radio' ? 'radio' : 'sd';
+    if(/\(1\.\)|\bmpx?\b/i.test(t)) return 'cam';
+    if(/dual\s*sim|dupla\s*sim|hybrid|szimpla\s*sim|single\s*sim|nano-?sim|esim/i.test(t)) return 'sim';
+    if(/b[oő]v[ií]thet|microsd/i.test(t)) return 'sd';
+    if(/^(nem|igen)$/i.test(t)) return last === 'wifi' || last === 'net2' || last === 'radio' ? 'radio' : 'sd';
+    if(/^(gsm|[2345]g\b|hspa|lte)/i.test(t)) return 'net2';
     return '';
   };
-  L.forEach(t=>{ const k = cls(t); if(!k && !Object.keys(f).length){ name.push(t); return; } if(k){ if(!f[k]) f[k] = t; last = k; } });
-  const nm = name.join(' ').replace(/\s+/g, ' ').trim(), toks = nm.split(' ');
-  const brand = toks[0] || '';
-  const codeTok = toks.find(x=> /^(SM-)?[A-Z]{1,2}\d{3,4}[A-Z]{0,2}(\/DS)?$/.test(x) && /\d/.test(x)) || '';
+  L.forEach(t=>{ const k = cls(t); if(k){ if(!f[k] && !NA(t)) f[k] = t; last = k; } });
+  /* név: márka + típus; a tárhely, RAM, „Dual Sim”, szín, HU, kódok külön */
+  let nm = nm0, extra = ''; const pl = nm.indexOf(' + '); if(pl > 0){ extra = nm.slice(pl + 3).trim(); nm = nm.slice(0, pl).trim(); }
+  const toks = nm.split(' '), brand = toks[0] || '';
+  const codeTok = toks.find(x=> /^(SM-)?[A-Z]{1,2}\d{3,4}[A-Z]{0,2}(\/DS)?$/.test(x) && /\d/.test(x) && !/^\d/.test(x)) || '';
   const code = codeTok ? (/^samsung$/i.test(brand) && !/^SM-/.test(codeTok) ? 'SM-' + codeTok : codeTok) : '';
-  const model = toks.slice(1).filter(x=> x !== codeTok && !/^\d+\s*\/\s*\d+\s*(GB|TB)$/i.test(x) && !/^\d+(GB|TB)$/i.test(x) && !/^(DS|kártyafüggetlen)$/i.test(x)).join(' ').trim();
-  const g = /\b5G\b/i.test(nm) ? '5G' : /\b4G\b|LTE/i.test(nm) ? '4G' : '';
+  const model = toks.slice(1).join(' ').replace(new RegExp('\\b' + codeTok.replace(/[\/\-]/g, '\\$&') + '\\b'), ' ')
+    .replace(/\(\s*\d{4}\s*\)/g, m=> m).replace(/\((black|white|blue|grey|gray|green|red|pink|purple|silver|gold|yellow|fekete|feh[eé]r|k[eé]k|sz[uü]rke|z[oö]ld|piros|lila|ez[uü]st|arany|[^)]*\b(black|blue|grey|gray|green)\b[^)]*)\)/gi, ' ')
+    .replace(/\b\d+\s*\/\s*\d+\s*(GB|TB)\b|\b\d+\s*(GB|TB)(\s*RAM)?\b|\bDual\s*SIM\b|\bDualSIM\b|\bDS\b|\bHU\b|\bEU\b/gi, ' ').replace(/\s+/g, ' ').trim();
+  const g = /\b5G\b/i.test(nm0) ? '5G' : /\b4G\b|LTE/i.test(nm0 + ' ' + (f.net2 || '')) ? '4G' : '';
   const R = {};
-  R.net = ['Kártyafüggetlen', g];
-  const mm = (f.mem || '').match(/^(\d+)\s*(GB|TB|MB)\s*,\s*(\d+(?:\.\d+)?)\s*(GB|MB)/i); if(mm) R.mem = [`${mm[1]} ${mm[2].toUpperCase()} tárhely`, `${spkDec(mm[3])} ${mm[4].toUpperCase()} RAM`];
-  else { const sm = nm.match(/(\d+)\s*\/\s*(\d+)\s*(GB|TB)/i) || nm.match(/(\d+)\s*(GB|TB)/i); if(sm) R.mem = sm.length > 3 ? [`${sm[2]} ${sm[3].toUpperCase()} tárhely`, `${sm[1]} GB RAM`] : [`${sm[1]} ${sm[2].toUpperCase()} tárhely`, '']; }
-  const rs = (f.res || '').match(/(\d+(?:\.\d+)?)\s*["”]/), dt = f.dtype || '', typ = /amoled/i.test(dt) ? 'AMOLED' : /oled|retina/i.test(dt) ? 'OLED' : /lcd|ips|tft/i.test(dt) ? 'LCD' : dt, hz = (dt.match(/(\d+)\s*hz/i) || [])[1];
+  R.net = [/szolg[aá]ltat[oó]f[uü]gg/i.test(f.net || '') ? 'Szolgáltatófüggő' : 'Kártyafüggetlen', [g, extra ? '+ ' + extra : ''].filter(Boolean).join(' · ')];
+  const mm = (f.mem || '').match(/^(\d+)\s*(GB|TB|MB)\s*,\s*(\d+(?:\.\d+)?)\s*(GB|MB)/i);
+  if(mm && /GB|TB/i.test(mm[2])) R.mem = [`${mm[1]} ${mm[2].toUpperCase()} tárhely`, `${spkDec(mm[3])} ${mm[4].toUpperCase()} RAM`];
+  else { const sm = nm.match(/(\d+)\s*\/\s*(\d+)\s*(GB|TB)/i), s2 = nm.match(/(\d+)\s*GB\s*RAM/i), s3 = (nm.replace(/\d+\s*GB\s*RAM/i, '').match(/(\d+)\s*(GB|TB)/i));
+    if(sm) R.mem = [`${sm[2]} ${sm[3].toUpperCase()} tárhely`, `${sm[1]} GB RAM`]; else if(s3) R.mem = [`${s3[1]} ${s3[2].toUpperCase()} tárhely`, s2 ? s2[1] + ' GB RAM' : '']; }
+  const rs = (f.res || '').replace(',', '.').match(/(\d+(?:\.\d+)?)\s*["”]/), dt = f.dtype || '', typ = /amoled/i.test(dt) ? 'AMOLED' : /oled|retina/i.test(dt) ? 'OLED' : /lcd|ips|tft|qqvga|qvga/i.test(dt) ? 'LCD' : dt, hz = (dt.match(/(\d+)\s*hz/i) || [])[1];
   if(rs || typ) R.disp = [`${rs ? spkDec(rs[1]) + '" ' : ''}${typ}`.trim(), hz ? hz + ' Hz' : ''];
-  if(f.cpu){ const cn = (f.cpu.match(/(\d+)\s*mag/i) || [])[1] || ({ octa:8, hexa:6, quad:4, deca:10 }[((f.cpu.match(/(octa|hexa|quad|deca)-core/i) || [])[1] || '').toLowerCase()]), gz = (f.cpu.match(/([\d.]+)(?:\/[\d.]+)*\s*ghz/i) || [])[1]; R.cpu = [cn ? cn + ' magos processzor' : 'Processzor', gz ? 'max. ' + spkDec(gz) + ' GHz' : '']; }
-  if(f.cam){ const ms = f.cam.match(/\(1\.\)\s*([\d+\s]+)\s*MP/i), fr = f.cam.match(/\(2\.\)\s*(\d+)\s*MP/i); R.cam = [ms ? ms[1].replace(/\s+/g, '').split('+').join(' + ') + ' MP' : f.cam, fr ? `előlapi kamera: ${fr[1]} MP` : '']; }
-  if(f.bat){ const b = (f.bat.match(/(\d{3,5})\s*mah/i) || [])[1]; R.bat = [b ? b + ' mAh' : f.bat, '']; }
-  if(f.sd) R.sd = /^nem|nem\s*b[oő]v/i.test(f.sd) ? ['Nem bővíthető', ''] : ['microSD', ''];
-  if(f.sim) R.sim = [/dual|hybrid/i.test(f.sim) ? 'Dual SIM' : 'SIM', /hybrid/i.test(f.sim) ? 'hibrid foglalat' : ''];
-  if(f.wifi){ const w = f.wifi, std = /\/7\b/.test(w) ? 'Wi-Fi 7' : /6e/i.test(w) ? 'Wi-Fi 6E' : /\/6\b/.test(w) ? 'Wi-Fi 6' : /\bac\b/.test(w) ? 'Wi-Fi 5' : 'Wi-Fi'; R.wifi = [std, '']; }
-  if(f.os) R.os = [f.os.trim(), ''];
-  return { brand, model:model || nm, code, price:c.price || 0, rows:SPK_ROWS.map(([k])=> [k, (R[k] || ['', ''])[0] || '', (R[k] || ['', ''])[1] || '']), name:nm };
+  if(f.cpu){ const cn = (f.cpu.match(/(\d+)\s*mag/i) || [])[1] || ({ octa:8, hexa:6, quad:4, deca:10 }[((f.cpu.match(/(octa|hexa|quad|deca)-core/i) || [])[1] || '').toLowerCase()]), gz = Array.from(f.cpu.matchAll(/(\d+(?:\.\d+)?)(?=\s*(?:\/|ghz|\s|$))/gi)).map(m=> +m[1]).filter(x=> x > 0 && x < 6), mx = gz.length ? Math.max(...gz) : 0;
+    if(cn || mx) R.cpu = [cn ? cn + ' magos processzor' : 'Processzor', mx ? 'max. ' + spkDec(mx) + ' GHz' : '']; }
+  if(f.cam){ const ms = f.cam.match(/\(1\.\)\s*([\d.+\s]+?)\s*MP/i), fr = f.cam.match(/\(2\.\)\s*([\d.]+)\s*MP/i);
+    if(ms) R.cam = [ms[1].replace(/\s+/g, '').split('+').map(spkDec).join(' + ') + ' MP', fr ? `előlapi kamera: ${spkDec(fr[1])} MP` : '']; }
+  if(f.bat){ const b = (f.bat.match(/(\d{3,5})\s*mah/i) || [])[1]; if(b) R.bat = [b + ' mAh', '']; }
+  if(f.sd) R.sd = /^nem|nem\s*b[oő]v/i.test(f.sd) ? ['Nem bővíthető', ''] : ['Bővíthető', /microsd/i.test(f.sd) ? 'microSD kártyával' : ''];
+  if(f.sim) R.sim = [/dual|dupla|hybrid/i.test(f.sim) ? 'Dual SIM' : 'Egy SIM', /hybrid/i.test(f.sim) ? 'hibrid foglalat' : ''];
+  if(f.wifi){ const w = f.wifi, std = /\/7\b/.test(w) ? 'Wi-Fi 7' : /6e/i.test(w) ? 'Wi-Fi 6E' : /\/6\b/.test(w) ? 'Wi-Fi 6' : /\bac\b/.test(w) ? 'Wi-Fi 5' : /\bn\b/.test(w) ? 'Wi-Fi 4' : 'Wi-Fi'; R.wifi = [std, '']; }
+  else if(f.os && /nyom[oó]gombos/i.test(f.os)) R.wifi = ['Nincs Wi-Fi', ''];
+  if(f.radio && /igen/i.test(f.radio)) R.wifi = [(R.wifi ? R.wifi[0] + ' · ' : '') + 'FM rádió', ''];
+  if(f.os) R.os = /nyom[oó]gombos/i.test(f.os) ? ['Nyomógombos telefon', 'egyszerű kezelés'] : [f.os.trim(), ''];
+  return { brand, model:model || nm, code, price:c.price || 0, rows:SPK_ROWS.map(([k])=> [k, (R[k] || ['', ''])[0] || '', (R[k] || ['', ''])[1] || '']), name:(brand + ' ' + (model || '')).trim() || nm0, raw:nm0 };
 }
 /* a kép bájtjai (RTF: hex, DOCX: a zipből) */
 async function spkImgBlob(tk){
@@ -17266,17 +17281,25 @@ async function spkImportFile(f){
   }catch(e){ spkMsg('⚠ ' + spkE(e.message || e), 'err'); }
 }
 async function spkImportGo(btn){
-  if(!spkImp) return; const G = spkImp, net = !!(document.getElementById('spk-impnet') || {}).checked; btn.disabled = true; let ok = 0, nf = [];
-  for(let i = 0; i < G.length; i++){ const g = G[i]; btn.textContent = net ? `Netről kiegészítés… ${i + 1}/${G.length}` : 'Hozzáadás…';
-    let rows = g.rows, code = g.code, src = 'Bizzio dokumentum';
-    if(net){ try{ const j = await spkJson(`${SPK_API}?q=${encodeURIComponent(g.name)}`), L = j.list || [];
-        if(L.length){ const s = await spkJson(`${SPK_API}?id=${encodeURIComponent(L[0].id)}`), m = spkMap(s, L[0].name, g.name);
-          rows = SPK_ROWS.map(([k], ix)=>{ const b = g.rows[ix], w = m.rows[ix]; if(k === 'mem' && b[1]) return b; return w[1] ? w : b; }); code = code || m.code; src = 'Bizzio + GSMArena (' + L[0].name + ')'; ok++; }
-        else nf.push(g.model); }catch(e){ nf.push(g.model); } }
-    if(g.logo){ SPKM[spkMk(g.brand, g.model)] = { n:(g.brand + ' ' + g.model).trim(), u:g.logo }; }
-    spkAdd({ brand:g.brand, model:g.model, code, price:g.price, copies:g.copies, rows, src }); }
-  spkMSave(); spkImp = null; document.getElementById('spk-res').innerHTML = ''; spkList(); spkRender();
-  spkMsg(`✓ ${G.length} féle telefon a lapon${net ? ` · netről kiegészítve: ${ok}` : ''}${nf.length ? ` · nem találtam a neten: ${spkE(nf.join(', '))} (ezeknél a dokumentum adatai maradtak)` : ''}. Nézd át az előnézetet!`, nf.length ? '' : 'ok');
+  if(!spkImp) return; const G = spkImp, net = !!(document.getElementById('spk-impnet') || {}).checked; spkImp = null; btn.disabled = true;
+  /* 1) azonnal mind a lapra kerül (a dokumentum adataival) */
+  const added = G.map(g=>{ if(g.logo) SPKM[spkMk(g.brand, g.model)] = { n:(g.brand + ' ' + g.model).trim(), u:g.logo };
+    const it = { id:'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), brand:g.brand, model:g.model, code:g.code, price:g.price, copies:g.copies, rows:g.rows, src:'Bizzio dokumentum' };
+    SPK.items.push(it); return { it, g }; });
+  spkMSave(); spkSave(); document.getElementById('spk-res').innerHTML = ''; spkList(); spkRender();
+  const n = G.reduce((a, g)=> a + g.copies, 0);
+  if(!net){ spkMsg(`✓ ${G.length} féle telefon (${n} kártya) a lapon. Nézd át az előnézetet!`, 'ok'); return; }
+  /* 2) utána egyenként kiegészíti / javítja a netről — közben már látszik minden */
+  let ok = 0; const nf = [];
+  for(let i = 0; i < added.length; i++){ const { it, g } = added[i];
+    spkMsg(`✓ ${G.length} féle telefon (${n} kártya) a lapon · 🌐 netes kiegészítés: ${i + 1}/${added.length} — <b>${spkE(g.name)}</b>`, 'busy');
+    try{ const j = await spkJson(`${SPK_API}?q=${encodeURIComponent(g.name)}`), L = j.list || [];
+      if(!L.length){ nf.push(g.name); continue; }
+      const s = await spkJson(`${SPK_API}?id=${encodeURIComponent(L[0].id)}`), m = spkMap(s, L[0].name, g.raw || g.name);
+      it.rows = SPK_ROWS.map(([k], ix)=>{ const b = g.rows[ix], w = m.rows[ix]; if(k === 'mem' && b[1]) return b; if(k === 'net' && b[1]) return [b[1], [w[2] || '', /\+/.test(b[2]) ? b[2].replace(/^.*?(\+.*)$/, '$1') : ''].filter(Boolean).join(' · ')]; return w[1] ? w : b; });
+      it.code = it.code || m.code; it.src = 'Bizzio + GSMArena (' + L[0].name + ')'; ok++; spkSave(); spkList(); spkRender();
+    }catch(e){ nf.push(g.name); } }
+  spkMsg(`✓ ${G.length} féle telefon (${n} kártya) a lapon · netről kiegészítve: ${ok}${nf.length ? ` · nem találtam a neten: ${spkE(nf.join(', '))} — ezeknél a dokumentum adatai maradtak` : ''}. Nézd át az előnézetet!`, nf.length ? '' : 'ok');
 }
 
 const spkE = t=> String(t == null ? '' : t).replace(/[&<>"]/g, c=> ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
