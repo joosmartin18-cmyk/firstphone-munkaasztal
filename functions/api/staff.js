@@ -3,6 +3,9 @@
    Munkaasztal-fióknak, és csak a kért bolt dolgozóinak NEVÉT (semmi mást).
      POST /api/staff  { sid:"KAPT", loc:"Kaposvár", det:"TESCO" }  (Authorization: Bearer <Firebase idToken>)
        → { ok, found, emps:[ "Tóth Evelin Melissza", … ] }
+     POST /api/staff  { act:"out", list:[{ d:"2026-10-24", n:"Hack Norbert", p:"full", s:"SOPT", l:"Sopron" }] }
+       → a hívó bolt (pl. Szombathely) helyettesítői, akik egy másik boltból jöttek: a saját boltjuk (pl. Sopron)
+         megkapja (boltok/{otthoni bolt}/away/{hívó bolt}), így ott a dolgozó saját fülén látszik, hol helyettesít.
    A nevek a bolt névjegyéből (boltok/{uid}.emps), vagy ha az még nincs, a bolt mentett beosztásából jönnek. */
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const enc = new TextEncoder();
@@ -25,12 +28,17 @@ async function accessToken(sa) {
   return tokCache.t;
 }
 const unfv = x => !x ? null : "stringValue" in x ? x.stringValue : "integerValue" in x ? Number(x.integerValue) : "arrayValue" in x ? (x.arrayValue.values || []).map(unfv) : "booleanValue" in x ? x.booleanValue : null;
+const fv = v => v === null || v === undefined ? { nullValue: null } : v instanceof Date ? { timestampValue: v.toISOString() } : Array.isArray(v) ? { arrayValue: v.length ? { values: v.map(fv) } : {} } : typeof v === "number" ? { integerValue: String(Math.round(v)) } : { stringValue: String(v) };
+const docUrl = (sa, path) => `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/${path}`;
+async function fsGet(sa, path) { const r = await fetch(docUrl(sa, path), { headers: { authorization: "Bearer " + await accessToken(sa) } }); if (!r.ok) return null; const f = (await r.json()).fields || {}; return Object.fromEntries(Object.entries(f).map(([k, v]) => [k, unfv(v)])); }
+async function fsSet(sa, path, data) { const r = await fetch(docUrl(sa, path), { method: "PATCH", headers: { authorization: "Bearer " + await accessToken(sa), "content-type": "application/json" }, body: JSON.stringify({ fields: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, fv(v)])) }) }); if (!r.ok) throw new Error("Firestore " + r.status); }
+async function fsDel(sa, path) { await fetch(docUrl(sa, path), { method: "DELETE", headers: { authorization: "Bearer " + await accessToken(sa) } }).catch(() => {}); }
 const fold = t => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 
 /* a boltok névjegye — 5 percig megőrizzük */
 let META = null, METAat = 0;
-async function metas(sa) {
-  if (META && Date.now() - METAat < 5 * 60e3) return META;
+async function metas(sa, fresh) {
+  if (META && !fresh && Date.now() - METAat < 5 * 60e3) return META;
   const t = await accessToken(sa), out = []; let page = "";
   do {
     const u = `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/boltok?pageSize=300&mask.fieldPaths=sid&mask.fieldPaths=loc&mask.fieldPaths=place&mask.fieldPaths=emps` + (page ? "&pageToken=" + encodeURIComponent(page) : "");
@@ -63,6 +71,24 @@ export async function onRequest({ request, env }) {
     const lj = await lr.json().catch(() => ({})); const me = (lj.users || [])[0];
     if (!lr.ok || !me || me.disabled) return json({ ok: false, error: "érvénytelen belépés" }, 401);
     const q = await request.json().catch(() => ({}));
+    /* a mi helyettesítőink → a saját boltjuk is lássa, hogy nálunk helyettesítenek */
+    if (q.act === "out") {
+      const src = me.localId; if (!/^[A-Za-z0-9]{6,64}$/.test(src || "")) return json({ ok: false, error: "ki vagy?" }, 400);
+      const M = await metas(sa), meM = M.find(x => x.uid === src) || {};
+      const home = (s, l) => { s = String(s || "").toUpperCase(); let h = s ? M.find(x => x.sid && x.sid.toUpperCase() === s) : null;
+        if (!h && l) { const fl = fold(l), L = M.filter(x => x.loc && fl.startsWith(fold(x.loc))); h = L.length === 1 ? L[0] : L.find(x => x.place && fl.includes(fold(x.place))) || null; }
+        return h; };
+      const groups = {};
+      (Array.isArray(q.list) ? q.list : []).slice(0, 400).forEach(x => { if (!x || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.d || "")) || !x.n) return;
+        const h = home(x.s, x.l); if (!h || h.uid === src) return;
+        (groups[h.uid] = groups[h.uid] || []).push({ d: x.d, n: String(x.n).slice(0, 60), p: ["full", "am", "pm"].includes(x.p) ? x.p : "full" }); });
+      const label = [meM.loc, meM.place].filter(Boolean).join(" ") || "másik bolt";
+      const prev = await fsGet(sa, `boltok/${src}/away/_out`), old = (prev && Array.isArray(prev.homes)) ? prev.homes : [];
+      for (const uid of Object.keys(groups)) await fsSet(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.sid || "", list: JSON.stringify(groups[uid]), at: new Date() });
+      for (const uid of old) if (!groups[uid] && /^[A-Za-z0-9]{6,64}$/.test(uid)) await fsDel(sa, `boltok/${uid}/away/${src}`);
+      await fsSet(sa, `boltok/${src}/away/_out`, { homes: Object.keys(groups), at: new Date() });
+      return json({ ok: true, homes: Object.keys(groups).length });
+    }
     const sid = String(q.sid || "").toUpperCase().slice(0, 8), loc = fold(q.loc).slice(0, 40), det = fold(q.det).slice(0, 40);
     if (!sid && !loc) return json({ ok: false, error: "melyik bolt?" }, 400);
     const M = await metas(sa);
