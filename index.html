@@ -5264,7 +5264,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261022-232630";</script>
+<script>window.FP_BUILD="20261022-233426";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -24309,7 +24309,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
   /* havi beosztás (mindenki egy lapon): a Munkaasztal sötét, modern stílusában — a napokban teljes névvel és idővel, jól olvasható méretben */
   async function drawTeamScheduleCanvas(ids){
-    const people = ids.map(id=> personById(id)).filter(Boolean);
+    /* helyettesítőnél a név mellett a bolt is (pl. Szabó Kinga · KAPV) — a rácsban és a listában is */
+    const pById = id=>{ const p = personById(id); return p && p.sub && p.from ? Object.assign({}, p, { name:p.name + " · " + fromShort(p.from) }) : p; };
+    const people = ids.map(id=> pById(id)).filter(Boolean);
     const tShort = t=> String(t || "").replace(/^0(\d)/, "$1");
     /* --- a hónap napjai: előbb kiszámoljuk, mi kerül egy-egy napba --- */
     const start = firstWeekdayMon0(state.year, state.month), total = daysInMonth(state.year, state.month), rows = Math.ceil((start + total) / 7);
@@ -24317,7 +24319,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const order = { full:0, am:1, pm:2 }, days = [];
     for(let d = 1; d <= total; d++){ const c = (start + d - 1) % 7, key = dateKey(state.year, state.month, d), a = effAssign(key), pa = parseAssign(a), dt = dayTimes(c);
       let list = []; if(pa && pa.kind !== "unnep") list = dayPeople(pa).filter(x=> counts[x.id] !== undefined).sort((p1, p2)=> order[p1.part] - order[p2.part]);
-      list = list.map(it=>{ const pp = personById(it.id), part = personPart(it.id, a, c); counts[it.id]++; return { pp, part:it.part, tm:part && !part.holiday ? `${tShort(part.start)}–${tShort(part.end)}` : "" }; }).filter(x=> x.pp);
+      list = list.map(it=>{ const pp = pById(it.id), part = personPart(it.id, a, c); counts[it.id]++; return { pp, part:it.part, tm:part && !part.holiday ? `${tShort(part.start)}–${tShort(part.end)}` : "" }; }).filter(x=> x.pp);
       days.push({ d, c, r:Math.floor((start + d - 1) / 7), hol:!!(pa && pa.kind === "unnep"), hn:pa && pa.kind === "unnep" ? holName(key, a) : "", closed:!dt, list }); }
     return drawMonthGrid({ y:state.year, m:state.month, people, counts, days, start, total, rows, hours:hoursSummary(), place:workplaceName(), address:state.settings.address || "" });
   }
@@ -24414,7 +24416,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     people.forEach((pp, i)=>{ const lx = mX + (i % 3) * (colL + gap), ly = y + Math.floor(i / 3) * (chipH + H * 0.005);
       roundRectPath(ctx, lx, ly, colL, chipH, chipH * 0.3); ctx.fillStyle = tint(pp.hex, LT ? 0.18 : 0.2); ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = tint(pp.hex, LT ? 0.45 : 0.5); ctx.stroke();
       roundRectPath(ctx, lx, ly, chipH * 0.28, chipH, chipH * 0.14); ctx.fillStyle = pp.hex; ctx.fill();
-      const nm = pp.sub ? `${pp.name} (helyettesítő${pp.from ? " · " + fromShort(pp.from) : ""})` : pp.name; ctx.font = F(800, W * 0.0135); let t = nm; const maxW = colL - chipH * 0.6 - W * 0.07; while(ctx.measureText(t).width > maxW && t.length > 3) t = t.slice(0, -2) + "…";
+      const nm = pp.sub ? `${pp.name} (helyettesítő)` : pp.name; ctx.font = F(800, W * 0.0135); let t = nm; const maxW = colL - chipH * 0.6 - W * 0.07; while(ctx.measureText(t).width > maxW && t.length > 3) t = t.slice(0, -2) + "…";
       ctx.fillStyle = INK; ctx.fillText(t, lx + chipH * 0.55, ly + chipH * 0.66);
       ctx.font = F(800, W * 0.0125); ctx.fillStyle = LT ? deep(pp.hex) : pp.hex; ctx.textAlign = "right"; ctx.fillText(`${counts[pp.id]} nap`, lx + colL - chipH * 0.35, ly + chipH * 0.66); ctx.textAlign = "left"; });
     y += legendRows * (chipH + H * 0.005) + H * 0.016;
@@ -24565,7 +24567,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         const L = dayPeople(pa).sort((p1, p2)=> order[p1.part] - order[p2.part]).map(it=>{ const pp = personById(it.id); if(!pp) return ""; const part = personPart(it.id, a, c);
           if(counts[it.id] !== undefined) counts[it.id] += it.part === "full" ? 1 : .5;
           const tag = it.part === "am" ? "DE" : it.part === "pm" ? "DU" : "";
-          return `<div class="p${pp.sub ? " sub" : ""}"><b>${esc(pp.name)}</b><span>${tag ? `<i>${tag}</i>` : ""}${part && !part.holiday ? `${tShort(part.start)}–${tShort(part.end)}` : ""}${pp.sub ? ` <i class="h">HELY.${pp.from ? " · " + esc(fromShort(pp.from)) : ""}</i>` : ""}</span></div>`; }).join("");
+          return `<div class="p${pp.sub ? " sub" : ""}"><b>${esc(pp.name)}</b>${pp.sub && pp.from ? `<em class="fr">🏬 ${esc(fromLong(pp.from))}</em>` : ""}<span>${tag ? `<i>${tag}</i>` : ""}${part && !part.holiday ? `${tShort(part.start)}–${tShort(part.end)}` : ""}${pp.sub ? ` <i class="h">HELY.</i>` : ""}</span></div>`; }).join("");
         body = L || `<div class="emp">—</div>`;
       } else body = `<div class="emp">—</div>`;
       const marks = (DL[key] || []).map(x=> `<div class="dl"><i class="e">${x.ic}</i> ${esc(x.t)}</div>`).join("");
@@ -24577,7 +24579,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       return `<div class="dlb${x.moved.length ? " mv" : ""}"><div class="dd"><b>${dd}</b><span>${HU_MONTHS[mm - 1].slice(0, 3).toLowerCase()}.</span></div><div class="dt"><b><i class="e">${x.ic}</i> ${esc(x.t)}</b><span>${fpDlLbl(x.key)} — ${esc(x.x)}</span>${mv}</div></div>`; }).join("");
     let logo = ""; try{ logo = await getLogoDataUrl("color"); }catch(e){}
     const shop = ["FirstPhone " + (se.location || ""), se.placeDetail || "", se.address || ""].filter(Boolean).join(" · ");
-    const sum = people.map(p=> `<span><b>${esc(p.name)}</b> ${String(counts[p.id] || 0).replace(".", ",")} nap</span>`).join("");
+    const sum = people.map(p=> `<span><b>${esc(p.name)}</b> ${String(counts[p.id] || 0).replace(".", ",")} nap</span>`).join("")
+      + subIdsInMonth(y, m).map(id=>{ const sp = personById(id); return `<span>🔁 <b>${esc(sp.name)}</b>${sp.from ? ` (${esc(fromLong(sp.from))})` : ""} helyettesítő · ${subDaysCount(id)} nap</span>`; }).join("");
     const now = new Date();
     const css = `@page{size:A4 landscape;margin:9mm}
       *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -24607,7 +24610,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       .p{margin-top:1.5px;padding:0 0 0 4px;border-left:2.5px solid #111;line-height:1.1}
       .p b{display:block;font-size:${rows > 5 ? 8.5 : 9}px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .p span{display:block;font-size:${rows > 5 ? 7.5 : 8}px;line-height:1.3;font-weight:700;color:#333;white-space:nowrap} .e{font-style:normal;filter:grayscale(1)}
       .p i{font-style:normal;font-size:7.5px;font-weight:900;border:1px solid #111;border-radius:3px;padding:0 2px;margin-right:3px}
-      .p.sub{border-left-style:dashed} .p i.h{background:#111;color:#fff}
+      .p.sub{border-left-style:dashed} .p i.h{background:#111;color:#fff} .p .fr{display:block;font-style:normal;font-size:7.5px;font-weight:800;margin:1px 0;letter-spacing:.01em}
       .hol{text-align:center;margin-top:3px} .hol b{display:block;font-size:12px;letter-spacing:.12em} .hol span{display:block;font-size:9px;font-weight:800;margin-top:1px} .hol small{font-size:8px;color:#444}
       .cls,.emp{text-align:center;color:#666;font-size:9px;margin-top:10px}
       .dl{margin:2px 0 2px;font-size:7.5px;font-weight:900;background:#111;color:#fff;border-radius:3px;padding:1.5px 4px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -25105,7 +25108,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       return yy + infoLineH;
     }
     yLeft = infoRow(marginX, yLeft, "Munkavállaló", p.name, true);
-    yLeft = infoRow(marginX, yLeft, "Beosztás", p.sub ? "Helyettesítő" + (p.from ? " – " + fromLong(p.from) : "") : "Bolti dolgozó", false);
+    yLeft = infoRow(marginX, yLeft, "Beosztás", p.sub ? "Helyettesítő" : "Bolti dolgozó", false);
+    if(p.sub && p.from) yLeft = infoRow(marginX, yLeft, "Melyik boltból jött", fromLong(p.from), true);
     yLeft = infoRow(marginX, yLeft, "Időszak", `${HU_MONTHS[state.month-1]} ${state.year}`, false);
     yRight = infoRow(marginX+colGap, yRight, "Munkahely", workplaceName(), false);
     yRight = infoRow(marginX+colGap, yRight, "Cím", state.settings.address || "—", false);
