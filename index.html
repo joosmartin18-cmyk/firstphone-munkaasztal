@@ -5027,7 +5027,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261022-160424";</script>
+<script>window.FP_BUILD="20261022-174130";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -17389,7 +17389,8 @@ function spkRender(){
   ['spk-print','spk-pdf','spk-clear'].forEach(id=>{ const b = document.getElementById(id); if(b) b.disabled = !SPK.items.length; });
   if(!P.length){ st.innerHTML = `<div class="spk-empty">📄 Az A4-es lap itt jelenik meg.<br>Bal oldalt add hozzá a telefonokat — egy lapra 8 kártya fér.</div>`; return; }
   st.innerHTML = P.map(p=> `<div class="spk-pgw">${p}</div>`).join('');
-  requestAnimationFrame(()=>{ const W = st.clientWidth || 400; st.querySelectorAll('.spk-pgw').forEach(w=>{ const pg = w.firstElementChild, pw = pg.offsetWidth, ph = pg.offsetHeight, k = W / pw; pg.style.transform = `scale(${k})`; w.style.height = Math.round(ph * k) + 'px'; }); spkFit(st); });
+  /* az A4 lap mérete fix (210 × 297 mm = 793,7 × 1122,5 px) — így akkor is jó, ha épp rejtett fülön rajzolódik */
+  requestAnimationFrame(()=>{ const W = st.clientWidth || (st.parentNode && st.parentNode.clientWidth) || 420, k = W / 793.7; st.querySelectorAll('.spk-pgw').forEach(w=>{ const pg = w.firstElementChild; pg.style.transform = `scale(${k})`; w.style.height = Math.round(1122.5 * k) + 'px'; }); spkFit(st); });
 }
 function spkList(){
   spkLogos();
@@ -17440,12 +17441,23 @@ function spkDocHtml(){
 }
 async function spkPrint(){
   if(!SPK.items.length) return;
-  const old = document.getElementById('spkPrintFrame'); if(old) old.remove();
-  const fr = document.createElement('iframe'); fr.id = 'spkPrintFrame'; fr.style.cssText = 'position:fixed;right:0;bottom:0;width:210mm;height:297mm;border:0;visibility:hidden;pointer-events:none';
-  document.body.appendChild(fr); const d = fr.contentDocument; d.open(); d.write(spkDocHtml()); d.close();
-  await new Promise(r=> setTimeout(r, 400)); try{ await d.fonts.ready; }catch(e){}
-  spkFit(d); await new Promise(r=> setTimeout(r, 120));
-  try{ fr.contentWindow.focus(); fr.contentWindow.print(); }catch(e){ showToast('⚠ Nem sikerült a nyomtatás: ' + e.message); }
+  /* ugyanúgy, mint a többi cetlinél: ez az oldal nyomtat, csak a lapok látszanak */
+  let area = document.getElementById('spkPrintArea'); if(!area){ area = document.createElement('div'); area.id = 'spkPrintArea'; document.body.appendChild(area); }
+  let css = document.getElementById('spkPrintCss'); if(!css){ css = document.createElement('style'); css.id = 'spkPrintCss'; }
+  document.head.appendChild(css); /* mindig a legutolsó stílus legyen */
+  css.textContent = `#spkPrintArea{position:fixed;left:-20000px;top:0;width:210mm;background:#fff;}
+    @media print{ @page{ size:A4 portrait; margin:0; } html,body{background:#fff !important;margin:0 !important;padding:0 !important;}
+      body.spk-printing > *:not(#spkPrintArea){display:none !important;}
+      body.spk-printing #spkPrintArea{position:static !important;left:auto !important;display:block !important;}
+      #spkPrintArea .spk-pg{break-after:page;page-break-after:always;} #spkPrintArea .spk-pg:last-child{break-after:auto;page-break-after:auto;} }`;
+  const ps = document.getElementById('pageSizeStyle'), psOld = ps ? ps.textContent : null; if(ps) ps.textContent = '';
+  area.innerHTML = spkPages().join('');
+  try{ await document.fonts.ready; }catch(e){} await new Promise(r=> setTimeout(r, 60)); spkFit(area);
+  const done = ()=>{ document.body.classList.remove('spk-printing'); if(ps && psOld != null) ps.textContent = psOld; window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  document.body.classList.add('spk-printing');
+  try{ window.focus(); window.print(); }catch(e){ showToast('⚠ A nyomtatás itt nem indul el — használd a ⬇ PDF gombot, és azt nyomtasd ki.'); }
+  setTimeout(done, 60000);
 }
 async function spkPdf(btn){
   const P = window.parent && window.parent.fpAdmPdf; if(!SPK.items.length) return;
