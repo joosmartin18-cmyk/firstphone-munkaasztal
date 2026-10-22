@@ -10,9 +10,14 @@ self.addEventListener("push", e => {
 });
 self.addEventListener("notificationclick", e => {
   e.notification.close();
+  /* a naptár nyílik meg azon a napon: iPhone-on a saját oldalon át (Naptár app), máshol a Google Naptár */
   const u = (e.notification.data || {}).url || "/cal/";
-  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(L => {
-    for (const c of L) if (c.url.indexOf(u) === 0 && "focus" in c) return c.focus();
+  e.waitUntil((async () => {
+    const same = u.indexOf(self.location.origin) === 0, base = u.split("?")[0];
+    if (same) {
+      const L = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      for (const c of L) if (c.url.split("?")[0] === base && "navigate" in c) { try { const n = await c.navigate(u); return (n || c).focus(); } catch (_) {} }
+    }
     return self.clients.openWindow(u);
-  }));
+  })());
 });

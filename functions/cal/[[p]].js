@@ -120,7 +120,7 @@ function page(o) {
   const today = budaToday();
   const up = String(o.ev || "").split("\n").map(l => l.split("|")).filter(x => x[0] && x[0] >= today).slice(0, 14);
   const list = up.length ? up.map(([k, s, e, part, mates]) => { const [y, m, d] = k.split("-").map(Number), dt = new Date(Date.UTC(y, m - 1, d)), wd = HU_D[dt.getUTCDay()];
-    return `<li${k === today ? ' class="td"' : ""}><div class="dd"><b>${d}</b><small>${HU_M[m - 1].slice(0, 3)}.</small></div><div class="dx"><b>${k === today ? "Ma · " + wd : wd.charAt(0).toUpperCase() + wd.slice(1)}</b><span>${esc(s)}–${esc(e)} · ${PART[part] || ""}</span>${mates ? `<small>Veled: ${esc(mates)}</small>` : ""}</div></li>`; }).join("")
+    return `<li data-k="${esc(k)}"${k === today ? ' class="td"' : ""}><div class="dd"><b>${d}</b><small>${HU_M[m - 1].slice(0, 3)}.</small></div><div class="dx"><b>${k === today ? "Ma · " + wd : wd.charAt(0).toUpperCase() + wd.slice(1)}</b><span>${esc(s)}–${esc(e)} · ${PART[part] || ""}</span>${mates ? `<small>Veled: ${esc(mates)}</small>` : ""}</div></li>`; }).join("")
     : `<li class="no">Most nincs előtted beosztott nap.</li>`;
   return `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
 <title>${esc(o.name || "Beosztás")} · FirstPhone</title><link rel="manifest" href="${esc(o.base)}/manifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
@@ -139,8 +139,11 @@ a.b small,button.b small{display:block;font-weight:500;color:#a9a9b6;font-size:1
 .b:disabled{opacity:.55;} .st{margin-top:10px;font-size:13.5px;color:#a9a9b6;} .st.ok{color:#30b37a;font-weight:700;} .st.err{color:#ef5a5a;}
 .how{margin:10px 0 0;padding:0 0 0 20px;color:#d6d6de;font-size:14px;} .how li{display:list-item;background:none;padding:2px 0;}
 .f{margin-top:6px;font-size:12px;color:#6f6f7c;text-align:center;}
+li.hl{outline:2px solid #f5b300;animation:hl 1.2s ease 2;} @keyframes hl{50%{transform:scale(1.03);}}
+.oc{border-color:rgba(245,179,0,.6);background:linear-gradient(135deg,rgba(245,179,0,.16),#1b1b22 70%);} .oc p{margin:0;color:#d6d6de;font-size:14px;}
 </style></head><body><div class="c">
 <div class="top"><img src="/cal-icon.png" alt=""><div><h1>${esc(o.name || "Beosztás")}</h1><small>FirstPhone beosztás · a te műszakjaid</small></div></div>
+<div class="card oc" id="oc" hidden><h2>📅 Az értesítésből jöttél</h2><p id="ocx"></p><a class="b p" id="ob" href="#"><i>📅</i><span>Megnyitás a naptárban<small id="obs">azon a napon</small></span></a></div>
 <div class="card"><h2>Következő műszakjaid</h2><ul>${list}</ul></div>
 <div class="card"><h2>🔔 Értesítés</h2><div id="nt">Ha új havi beosztás jön, vagy változik a beosztásod, a telefonod szól.</div>
 <button class="b p" id="nb" type="button" hidden><i>🔔</i><span>Értesítést kérek<small>egyszer kell engedélyezni</small></span></button>
@@ -149,6 +152,7 @@ a.b small,button.b small{display:block;font-weight:500;color:#a9a9b6;font-size:1
 <div class="card"><h2>📅 A naptáradba</h2>
 <a class="b p" href="${esc(o.web.replace(/^https:/, "webcal:"))}"><i>🍎</i><span>iPhone / iPad / Mac naptár<small>Feliratkozás → magától frissül</small></span></a>
 <a class="b" href="${esc(g)}"><i>🗓️</i><span>Google Naptár<small>Android, Gmail — „Hozzáadás” gomb</small></span></a>
+<a class="b" id="oa" href="calshow:" hidden><i>📆</i><span>Naptár app megnyitása<small>ha már feliratkoztál</small></span></a>
 <a class="b" href="${esc(o.ics)}"><i>⬇️</i><span>Csak letöltés (.ics)<small>egyszeri, nem frissül magától</small></span></a></div>
 <div class="f">FirstPhone Munkaasztal · teszt</div></div>
 <script>
@@ -158,6 +162,19 @@ a.b small,button.b small{display:block;font-weight:500;color:#a9a9b6;font-size:1
   var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   var standalone=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
   function st(t,c){ ns.textContent=t; ns.className='st'+(c?' '+c:''); }
+  /* értesítésre kattintva: ?open=cal&d=ÉÉÉÉ-HH-NN → a naptár megnyitása azon a napon */
+  function calUrl(k){ var p=String(k||'').split('-').map(Number); if(p.length<3||!p[0]) return ''; if(ios) return 'calshow:'+Math.round(new Date(p[0],p[1]-1,p[2],9,0).getTime()/1000-978307200); return 'https://calendar.google.com/calendar/r/day/'+p[0]+'/'+p[1]+'/'+p[2]; }
+  var HM=['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
+  if(ios){ var oa=document.getElementById('oa'); oa.hidden=false; oa.href=calUrl(new Date().toISOString().slice(0,10)); }
+  try{ var q=new URLSearchParams(location.search), od=q.get('d');
+    if(q.get('open')==='cal' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(od||'')){ var u=calUrl(od), pp=od.split('-').map(Number);
+      document.getElementById('oc').hidden=false; document.getElementById('ob').href=u;
+      document.getElementById('obs').textContent=HM[pp[1]-1]+' '+pp[2]+'. — '+(ios?'iPhone Naptár':'Google Naptár');
+      document.getElementById('ocx').textContent='Nyílik a naptárad… ha nem nyílt meg magától, nyomd meg a gombot.';
+      var li=document.querySelector('li[data-k="'+od+'"]'); if(li){ li.classList.add('hl'); }
+      setTimeout(function(){ location.href=u; },350);
+      try{ history.replaceState(null,'',location.pathname); }catch(e){}
+    } }catch(e){}
   function k8(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; var b=atob(s), a=new Uint8Array(b.length); for(var i=0;i<b.length;i++) a[i]=b.charCodeAt(i); return a; }
   if(!KEY){ st('Az értesítés most nem érhető el.','err'); return; }
   if(ios && !standalone){ nt.innerHTML='iPhone-on előbb tedd ki ezt az oldalt a <b>főképernyőre</b>, és onnan nyisd meg:<ol class="how"><li>Lent a <b>Megosztás</b> gomb (négyzet felfelé nyíllal)</li><li><b>„Főképernyőhöz adás”</b> → Hozzáadás</li><li>Nyisd meg a főképernyőről a <b>Beosztás</b> ikont, és ott nyomd meg az 🔔 gombot</li></ol>'; return; }
@@ -222,12 +239,16 @@ export async function onRequest(context) {
     }
     if (act === "notify") {
       const b = await request.json().catch(() => ({}));
-      const title = b.test ? "🔔 Próba értesítés" : String(b.title || "").slice(0, 90), body = b.test ? "Így fogsz szólni, ha jön az új havi beosztás, vagy változik a tiéd." : String(b.body || "").slice(0, 400);
+      const title = b.test ? "🔔 Próba értesítés" : String(b.title || "").slice(0, 90), body = b.test ? "Így szól, ha jön az új havi beosztás, vagy változik a tiéd — koppints rá, és megnyílik a naptárad." : String(b.body || "").slice(0, 400);
       if (!title) return json({ ok: false, error: "nincs cím" }, 400);
       const L = (d.push || []).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
       if (!L.length) return json({ ok: true, sent: 0, subs: 0 });
-      const payload = JSON.stringify({ title, body, url: base, tag: b.test ? "fp-cal-test" : "fp-cal-" + Date.now() });
-      const res = await Promise.all(L.map(s => wpSend(sa, s, payload, url.origin).catch(() => 0)));
+      /* rákattintva a naptár nyíljon meg, azon a napon: iPhone → Naptár app (a saját oldalon át, calshow:), máshol → Google Naptár */
+      const day = /^\d{4}-\d{2}-\d{2}$/.test(String(b.d || "")) ? b.d : budaToday(), [yy, mm, dd] = day.split("-").map(Number);
+      const subs = String(d.subAll || d.sub || "").split(","), gUrl = `https://calendar.google.com/calendar/r/day/${yy}/${mm}/${dd}`, aUrl = `${base}?open=cal&d=${day}`;
+      const tag = b.test ? "fp-cal-test" : "fp-cal-" + Date.now();
+      const res = await Promise.all(L.map(s => { const apple = /push\.apple\.com/i.test(s.endpoint), go = apple ? aUrl : (subs.includes("google") || !subs.includes("apple") ? gUrl : aUrl);
+        return wpSend(sa, s, JSON.stringify({ title, body, url: go, tag }), url.origin).catch(() => 0); }));
       const keep = L.filter((s, i) => res[i] !== 404 && res[i] !== 410);
       if (keep.length !== L.length) await fsPatch(sa, path, { push: keep.map(x => JSON.stringify(x)), pushN: keep.length }).catch(() => {});
       return json({ ok: true, sent: res.filter(c => c >= 200 && c < 300).length, subs: keep.length, codes: res });
