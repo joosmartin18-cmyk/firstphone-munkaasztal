@@ -225,43 +225,116 @@ function budaToday() { const p = new Intl.DateTimeFormat("en-CA", { timeZone: "E
 function page(o) {
   const g = "https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(o.web);
   const today = budaToday();
-  const up = String(o.ev || "").split("\n").map(l => l.split("|")).filter(x => x[0] && x[0] >= today).slice(0, 14);
-  const list = up.length ? up.map(([k, s, e, part, mates, away]) => { const [y, m, d] = k.split("-").map(Number), dt = new Date(Date.UTC(y, m - 1, d)), wd = HU_D[dt.getUTCDay()];
-    return `<li data-k="${esc(k)}"${k === today ? ' class="td"' : ""}><div class="dd"><b>${d}</b><small>${HU_M[m - 1].slice(0, 3)}.</small></div><div class="dx"><b>${k === today ? "Ma · " + wd : wd.charAt(0).toUpperCase() + wd.slice(1)}</b><span>${s ? esc(s) + "–" + esc(e) + " · " : ""}${PART[part] || ""}</span>${away ? `<small class="aw">🔁 Helyettesítés: FirstPhone ${esc(away)}</small>` : mates ? `<small>Veled: ${esc(mates)}</small>` : ""}</div></li>`; }).join("")
-    : `<li class="no">Most nincs előtted beosztott nap.</li>`;
+  const all = String(o.ev || "").split("\n").map(l => l.split("|")).filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x[0] || ""));
+  const up = all.filter(x => x[0] >= today).slice(0, 14);
+  const nm = String(o.name || "").trim(), tk = nm.split(/\s+/).filter(t => !/^(dr|ifj|id|özv)\.?$/i.test(t)), first = tk.length > 1 ? tk[1] : (tk[0] || "");
+  const dayInfo = k => { const [y, m, d] = k.split("-").map(Number), dt = new Date(Date.UTC(y, m - 1, d)); return { y, m, d, wd: HU_D[dt.getUTCDay()] }; };
+  const rel = k => { const a = Date.UTC(...today.split("-").map((v, i) => i === 1 ? v - 1 : +v)), [y, m, d] = k.split("-").map(Number), n = Math.round((Date.UTC(y, m - 1, d) - a) / 864e5); return n === 0 ? "ma" : n === 1 ? "holnap" : n === 2 ? "holnapután" : n + " nap múlva"; };
+  const row = ([k, s, e, part, mates, away]) => { const I = dayInfo(k);
+    return `<li data-k="${esc(k)}"${k === today ? ' class="td"' : ""}><div class="dd p-${esc(part || "full")}"><b>${I.d}</b><small>${HU_M[I.m - 1].slice(0, 3)}.</small></div><div class="dx"><b>${k === today ? "Ma · " + I.wd : I.wd.charAt(0).toUpperCase() + I.wd.slice(1)}<em>${esc(rel(k))}</em></b><span>${s ? esc(s) + "–" + esc(e) + " · " : ""}${PART[part] || ""}</span>${away ? `<small class="aw">🔁 Helyettesítés: FirstPhone ${esc(away)}</small>` : mates ? `<small>Veled: ${esc(mates)}</small>` : ""}</div></li>`; };
+  const list = up.length ? up.map(row).join("") : `<li class="no">Most nincs előtted beosztott nap.</li>`;
+  /* a nagy kártya: ma / a következő műszak */
+  const nx = up[0], hero = nx ? (() => { const I = dayInfo(nx[0]), isT = nx[0] === today;
+    return `<div class="hero${isT ? " now" : ""}${nx[5] ? " away" : ""}"><small>${isT ? "Ma dolgozol" : "Következő műszak · " + esc(rel(nx[0]))}</small><b>${nx[1] ? esc(nx[1]) + "–" + esc(nx[2]) : esc(PART[nx[3]] || "")}</b>
+      <span>${isT ? "" : `${I.wd.charAt(0).toUpperCase() + I.wd.slice(1)}, ${HU_M[I.m - 1]} ${I.d}. · `}${esc(PART[nx[3]] || "")}</span>${nx[5] ? `<em>🔁 Helyettesítés: FirstPhone ${esc(nx[5])}</em>` : nx[4] ? `<em>👥 Veled: ${esc(nx[4])}</em>` : ""}<i>${isT ? "☀️" : "📅"}</i></div>`; })()
+    : `<div class="hero none"><small>Következő műszak</small><b>Most nincs</b><span>Ha jön az új beosztás, itt látod — és szól a telefonod.</span><i>🌙</i></div>`;
+  const cnt = all.filter(x => x[0].slice(0, 7) === today.slice(0, 7)).length;
   return `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
 <title>${esc(o.name || "Beosztás")} · FirstPhone</title><link rel="manifest" href="${esc(o.base)}/manifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Beosztás"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#111116">
 <link rel="apple-touch-icon" href="/cal-icon.png"><link rel="icon" href="/cal-icon.png"><style>
-:root{color-scheme:dark;}*{box-sizing:border-box;}[hidden]{display:none !important;}body{margin:0;min-height:100vh;background:#111116;color:#f2f2f5;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:max(18px,env(safe-area-inset-top)) 16px 28px;}
-.c{max-width:440px;margin:0 auto;} .top{display:flex;align-items:center;gap:12px;margin:6px 0 16px;} .top img{width:46px;height:46px;border-radius:12px;}
-h1{font-size:20px;margin:0;line-height:1.2;} .top small{display:block;color:#a9a9b6;font-size:13px;}
-.card{background:#1b1b22;border:1px solid #2c2c36;border-radius:20px;padding:16px;margin-bottom:14px;} h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#a9a9b6;margin:0 0 10px;}
-ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;} li{display:flex;gap:12px;align-items:center;padding:9px 10px;border-radius:14px;background:#23232c;}
-li.td{background:linear-gradient(135deg,rgba(245,179,0,.22),rgba(245,179,0,.06));border:1px solid rgba(245,179,0,.45);} li.no{color:#a9a9b6;justify-content:center;}
-.dd{width:44px;text-align:center;flex:none;} .dd b{display:block;font-size:20px;line-height:1;} .dd small{color:#f5b300;font-weight:700;font-size:12px;}
-.dx b{display:block;font-size:14.5px;} .dx small.aw{color:#7fa9ff;font-weight:700;} .dx span{display:block;font-size:13.5px;color:#e8e8ee;} .dx small{display:block;font-size:12px;color:#a9a9b6;}
-a.b,button.b{display:flex;width:100%;align-items:center;gap:12px;padding:14px 15px;border-radius:15px;margin-top:9px;text-decoration:none;color:#fff;font:inherit;font-weight:700;background:#26262f;border:1px solid #34343f;text-align:left;cursor:pointer;}
-a.b small,button.b small{display:block;font-weight:500;color:#a9a9b6;font-size:12.5px;} a.b i,button.b i{font-style:normal;font-size:23px;} .b.p{background:linear-gradient(135deg,#f5b300,#e08a00);color:#1b1404;border:0;} .b.p small{color:#3a2a05;}
-.b:disabled{opacity:.55;} .st{margin-top:10px;font-size:13.5px;color:#a9a9b6;} .st.ok{color:#30b37a;font-weight:700;} .st.err{color:#ef5a5a;}
+:root{color-scheme:dark;--bg:#0f0f14;--card:#1a1a22;--card2:#22222c;--line:#2d2d38;--tx:#f3f3f6;--dim:#a3a3b2;--gold:#f5b300;--blue:#7fa9ff;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}[hidden]{display:none !important;}
+html{background:var(--bg);} body{margin:0;min-height:100vh;background:radial-gradient(600px 300px at 90% -10%,rgba(245,179,0,.14),transparent 70%),var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"SF Pro Text","Segoe UI",sans-serif;padding:0 0 calc(86px + env(safe-area-inset-bottom));}
+.c{max-width:460px;margin:0 auto;padding:0 16px;}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;margin:0 -16px 14px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(15,15,20,.78);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);border-bottom:1px solid rgba(255,255,255,.06);}
+.top img{width:40px;height:40px;border-radius:11px;flex:none;} .top h1{font-size:19px;margin:0;line-height:1.15;font-weight:800;letter-spacing:-.01em;} .top small{display:block;color:var(--dim);font-size:12.5px;}
+.pg{display:none;animation:in .25s ease;} .pg.on{display:block;} @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;margin:0 0 14px;padding:18px 18px 16px;border-radius:24px;background:linear-gradient(140deg,#f5b300,#e07a00);color:#1c1303;box-shadow:0 16px 40px rgba(224,122,0,.28);}
+.hero.now{background:linear-gradient(140deg,#3fd08a,#16955c);color:#03190e;box-shadow:0 16px 40px rgba(22,149,92,.3);} .hero.away{background:linear-gradient(140deg,#7fa9ff,#4b6fe0);color:#06102a;} .hero.none{background:linear-gradient(140deg,#2a2a36,#1d1d26);color:var(--tx);box-shadow:none;border:1px solid var(--line);}
+.hero small{display:block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.78;} .hero b{display:block;font-size:36px;line-height:1.1;font-weight:850;margin:4px 0 2px;letter-spacing:-.02em;}
+.hero span{display:block;font-size:14.5px;font-weight:650;} .hero em{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:99px;background:rgba(0,0,0,.14);font-style:normal;font-size:13px;font-weight:700;}
+.hero i{position:absolute;right:14px;top:10px;font-style:normal;font-size:46px;opacity:.35;transform:rotate(-8deg);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px;margin-bottom:14px;} h2{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin:2px 2px 10px;font-weight:800;}
+/* havi naptár */
+.mh{display:flex;align-items:center;gap:8px;margin:0 0 8px;} .mh b{flex:1;text-align:center;font-size:16.5px;font-weight:800;} .mh button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--tx);font-size:18px;cursor:pointer;} .mh button:disabled{opacity:.3;}
+.wk,.gr{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;} .wk span{font-size:11px;font-weight:800;color:var(--dim);padding:2px 0;}
+.gr button{position:relative;aspect-ratio:1/1.05;border:0;border-radius:12px;background:transparent;color:var(--tx);font:700 14px system-ui,-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0;}
+.gr button.pa{color:#5f5f6c;} .gr button.x{visibility:hidden;}
+.gr button.w{background:rgba(245,179,0,.16);color:#ffd36a;} .gr button.w.am{background:linear-gradient(180deg,rgba(245,179,0,.3) 50%,rgba(245,179,0,.06) 50%);} .gr button.w.pm{background:linear-gradient(180deg,rgba(245,179,0,.06) 50%,rgba(245,179,0,.3) 50%);}
+.gr button.w.aw{background:rgba(127,169,255,.2);color:#b9cfff;} .gr button.w.pa{opacity:.45;}
+.gr button.t{box-shadow:inset 0 0 0 2px var(--tx);} .gr button.sel{outline:2px solid var(--gold);outline-offset:1px;}
+.gr button i{font-style:normal;font-size:8.5px;font-weight:800;opacity:.85;line-height:1;}
+.dsel{margin-top:10px;padding:10px 12px;border-radius:14px;background:var(--card2);font-size:14px;} .dsel b{display:block;font-size:14.5px;} .dsel small{display:block;color:var(--dim);font-size:12.5px;}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--dim);} .lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:rgba(245,179,0,.5);} .lg i.b{background:rgba(127,169,255,.6);}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;} li{display:flex;gap:12px;align-items:center;padding:10px 10px;border-radius:16px;background:var(--card2);}
+li.td{background:linear-gradient(135deg,rgba(63,208,138,.2),rgba(63,208,138,.05));border:1px solid rgba(63,208,138,.45);} li.no{color:var(--dim);justify-content:center;}
+.dd{width:46px;height:46px;border-radius:14px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(245,179,0,.14);} .dd b{display:block;font-size:19px;line-height:1;} .dd small{color:var(--gold);font-weight:800;font-size:11px;}
+.dx{min-width:0;flex:1;} .dx b{display:flex;align-items:center;gap:8px;font-size:14.5px;} .dx b em{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:700;color:var(--dim);} .dx small.aw{color:var(--blue);font-weight:700;} .dx span{display:block;font-size:13.5px;color:#e8e8ee;} .dx small{display:block;font-size:12px;color:var(--dim);}
+a.b,button.b{display:flex;width:100%;align-items:center;gap:12px;padding:14px 15px;border-radius:16px;margin-top:9px;text-decoration:none;color:#fff;font:inherit;font-weight:700;background:var(--card2);border:1px solid #34343f;text-align:left;cursor:pointer;}
+a.b small,button.b small{display:block;font-weight:500;color:var(--dim);font-size:12.5px;} a.b i,button.b i{font-style:normal;font-size:23px;} .b.p{background:linear-gradient(135deg,#f5b300,#e08a00);color:#1b1404;border:0;} .b.p small{color:#3a2a05;}
+.b:disabled{opacity:.55;} .st{margin-top:10px;font-size:13.5px;color:var(--dim);} .st.ok{color:#30b37a;font-weight:700;} .st.err{color:#ef5a5a;}
 .how{margin:10px 0 0;padding:0 0 0 20px;color:#d6d6de;font-size:14px;} .how li{display:list-item;background:none;padding:2px 0;}
-.f{margin-top:6px;font-size:12px;color:#6f6f7c;text-align:center;}
-li.hl{outline:2px solid #f5b300;animation:hl 1.2s ease 2;} @keyframes hl{50%{transform:scale(1.03);}}
-.oc{border-color:rgba(245,179,0,.6);background:linear-gradient(135deg,rgba(245,179,0,.16),#1b1b22 70%);} .oc p{margin:0;color:#d6d6de;font-size:14px;}
+.f{margin:6px 0 10px;font-size:12px;color:#6f6f7c;text-align:center;}
+li.hl{outline:2px solid var(--gold);animation:hl 1.2s ease 2;} @keyframes hl{50%{transform:scale(1.03);}}
+.oc{border-color:rgba(245,179,0,.6);background:linear-gradient(135deg,rgba(245,179,0,.16),var(--card) 70%);} .oc p{margin:0;color:#d6d6de;font-size:14px;}
+.nt{font-size:14.5px;color:#dcdce4;}
+/* alsó tab-sáv */
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(3,1fr);padding:6px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(20,20,27,.86);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);border-top:1px solid rgba(255,255,255,.07);}
+.tb button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;border:0;background:none;color:var(--dim);font:700 11px system-ui,-apple-system,sans-serif;cursor:pointer;}
+.tb button i{font-style:normal;width:46px;height:30px;border-radius:99px;display:grid;place-items:center;font-size:19px;transition:background .2s;} .tb button.on{color:var(--tx);} .tb button.on i{background:rgba(245,179,0,.22);box-shadow:inset 0 0 0 1px rgba(245,179,0,.4);}
+.tb button .dot{position:absolute;top:4px;left:calc(50% + 10px);width:9px;height:9px;border-radius:50%;background:#ef5a5a;box-shadow:0 0 0 2px #14141b;}
 </style></head><body><div class="c">
-<div class="top"><img src="/cal-icon.png" alt=""><div><h1>${esc(o.name || "Beosztás")}</h1><small>FirstPhone beosztás · a te műszakjaid</small></div></div>
+<div class="top"><img src="/cal-icon.png" alt=""><div><h1>${first ? "Szia, " + esc(first) + "! 👋" : esc(o.name || "Beosztás")}</h1><small>${esc(o.shop ? o.shop + " · " : "FirstPhone · ")}${esc(nm || "a te műszakjaid")}</small></div></div>
+<section class="pg on" data-pg="m">
 <div class="card oc" id="oc" hidden><h2>📅 Az értesítésből jöttél</h2><p id="ocx"></p><a class="b p" id="ob" href="#"><i>📅</i><span>Megnyitás a naptárban<small id="obs">azon a napon</small></span></a></div>
+${hero}
+<div class="card" id="cal"><div class="mh"><button type="button" id="mp" aria-label="Előző hónap">‹</button><b id="ml"></b><button type="button" id="mn" aria-label="Következő hónap">›</button></div>
+<div class="wk"><span>H</span><span>K</span><span>Sze</span><span>Cs</span><span>P</span><span>Szo</span><span>V</span></div><div class="gr" id="gr"></div><div class="dsel" id="ds" hidden></div>
+<div class="lg"><span><i></i>dolgozol${cnt ? " · ebben a hónapban " + cnt + " nap" : ""}</span><span><i class="b"></i>helyettesítés</span></div></div>
 <div class="card"><h2>Következő műszakjaid</h2><ul>${list}</ul></div>
-<div class="card"><h2>🔔 Értesítés</h2><div id="nt">Ha új havi beosztás jön, vagy változik a beosztásod, a telefonod szól.</div>
+</section>
+<section class="pg" data-pg="n"><div class="card"><h2>🔔 Értesítés</h2><div class="nt" id="nt">Ha új havi beosztás jön, vagy változik a beosztásod, a telefonod szól.</div>
 <button class="b p" id="nb" type="button" hidden><i>🔔</i><span>Értesítést kérek<small>egyszer kell engedélyezni</small></span></button>
 <button class="b" id="nx" type="button" hidden><i>📨</i><span>Próba értesítés<small>így fog kinézni</small></span></button>
-<div class="st" id="ns"></div></div>
-<div class="card"><h2>📅 A naptáradba</h2>
+<div class="st" id="ns"></div></div></section>
+<section class="pg" data-pg="c"><div class="card"><h2>📅 A naptáradba</h2>
 <a class="b p" href="${esc(o.web.replace(/^https:/, "webcal:"))}"><i>🍎</i><span>iPhone / iPad / Mac naptár<small>Feliratkozás → magától frissül</small></span></a>
 <a class="b" href="${esc(g)}"><i>🗓️</i><span>Google Naptár<small>Android, Gmail — „Hozzáadás” gomb</small></span></a>
 <a class="b" id="oa" href="calshow:" hidden><i>📆</i><span>Naptár app megnyitása<small>ha már feliratkoztál</small></span></a>
-<a class="b" href="${esc(o.ics)}"><i>⬇️</i><span>Csak letöltés (.ics)<small>egyszeri, nem frissül magától</small></span></a></div>
+<a class="b" href="${esc(o.ics)}"><i>⬇️</i><span>Csak letöltés (.ics)<small>egyszeri, nem frissül magától</small></span></a></div></section>
 <div class="f">FirstPhone Munkaasztal</div></div>
+<nav class="tb" id="tb"><button type="button" class="on" data-to="m"><i>📅</i>Műszakok</button><button type="button" data-to="n"><i>🔔</i>Értesítés<span class="dot" id="tbd" hidden></span></button><button type="button" data-to="c"><i>🗓️</i>Naptárba</button></nav>
+<script>
+/* fülek + havi naptár (a műszakok a beosztásból) */
+(function(){
+  var EV=${JSON.stringify(all.map(x => x.slice(0, 6))).replace(/</g, "\\u003c")}, TODAY=${JSON.stringify(today)};
+  var HM=['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'], HD=['vasárnap','hétfő','kedd','szerda','csütörtök','péntek','szombat'], PT={full:'egész nap',am:'délelőtt',pm:'délután'};
+  var tb=document.getElementById('tb');
+  function show(k){ Array.prototype.forEach.call(document.querySelectorAll('.pg'),function(p){ p.classList.toggle('on',p.dataset.pg===k); }); Array.prototype.forEach.call(tb.querySelectorAll('button'),function(b){ b.classList.toggle('on',b.dataset.to===k); }); try{ window.scrollTo(0,0); }catch(e){} try{ sessionStorage.setItem('fp_cal_tab',k); }catch(e){} }
+  tb.addEventListener('click',function(e){ var b=e.target.closest('button'); if(b) show(b.dataset.to); });
+  window.fpCalTab=show;
+  var M={}; EV.forEach(function(x){ (M[x[0]]=M[x[0]]||[]).push(x); });
+  var months=Object.keys(M).map(function(k){ return k.slice(0,7); }).concat([TODAY.slice(0,7)]).filter(function(v,i,a){ return a.indexOf(v)===i; }).sort();
+  var cur=TODAY.slice(0,7), sel='';
+  var gr=document.getElementById('gr'), ml=document.getElementById('ml'), ds=document.getElementById('ds'), mp=document.getElementById('mp'), mn=document.getElementById('mn');
+  function p2(n){ return (n<10?'0':'')+n; }
+  function draw(){ var y=+cur.slice(0,4), m=+cur.slice(5,7), f=(new Date(y,m-1,1).getDay()+6)%7, n=new Date(y,m,0).getDate(), h='';
+    ml.textContent=HM[m-1].charAt(0).toUpperCase()+HM[m-1].slice(1)+' '+y;
+    for(var i=0;i<f;i++) h+='<button type="button" class="x" tabindex="-1"></button>';
+    for(var d=1;d<=n;d++){ var k=y+'-'+p2(m)+'-'+p2(d), L=M[k]||[], c=[]; if(L.length){ c.push('w'); var pp=L.map(function(x){return x[3];}); if(pp.length===1&&pp[0]==='am') c.push('am'); if(pp.length===1&&pp[0]==='pm') c.push('pm'); if(L.some(function(x){return x[5];})) c.push('aw'); }
+      if(k<TODAY) c.push('pa'); if(k===TODAY) c.push('t'); if(k===sel) c.push('sel');
+      h+='<button type="button" data-k="'+k+'" class="'+c.join(' ')+'">'+d+(L.length?'<i>'+(L[0][1]||'')+'</i>':'')+'</button>'; }
+    gr.innerHTML=h; var ix=months.indexOf(cur); mp.disabled=ix<=0; mn.disabled=ix<0||ix>=months.length-1; }
+  function pick(k){ sel=k; var L=M[k]||[], p=k.split('-').map(Number), wd=HD[new Date(p[0],p[1]-1,p[2]).getDay()];
+    ds.hidden=false; ds.innerHTML='<b>'+HM[p[1]-1].charAt(0).toUpperCase()+HM[p[1]-1].slice(1)+' '+p[2]+'., '+wd+'</b>'+(L.length?L.map(function(x){ return '<small>'+(x[1]?x[1]+'–'+x[2]+' · ':'')+(PT[x[3]]||'')+(x[5]?' · 🔁 FirstPhone '+x[5]:x[4]?' · veled: '+x[4]:'')+'</small>'; }).join(''):'<small>Ezen a napon nem dolgozol.</small>'); draw(); }
+  gr.addEventListener('click',function(e){ var b=e.target.closest('button[data-k]'); if(b) pick(b.dataset.k); });
+  mp.onclick=function(){ var ix=months.indexOf(cur); if(ix>0){ cur=months[ix-1]; draw(); } };
+  mn.onclick=function(){ var ix=months.indexOf(cur); if(ix<months.length-1){ cur=months[ix+1]; draw(); } };
+  draw();
+  try{ var t0=sessionStorage.getItem('fp_cal_tab'); if(t0&&t0!=='m'&&!/[?&]open=cal/.test(location.search)) show(t0); }catch(e){}
+})();
+</script>
 <script>
 (function(){
   var BASE=${JSON.stringify(o.base)}, KEY=${JSON.stringify(o.vapid || "")};
@@ -269,6 +342,7 @@ li.hl{outline:2px solid #f5b300;animation:hl 1.2s ease 2;} @keyframes hl{50%{tra
   var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   var standalone=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
   function st(t,c){ ns.textContent=t; ns.className='st'+(c?' '+c:''); }
+  (function(){ var d=document.getElementById('tbd'); if(!d) return; function u(){ d.hidden=!( !nb.hidden || /Főképernyő/.test(nt.textContent) ); } new MutationObserver(u).observe(nb,{attributes:true}); new MutationObserver(u).observe(nt,{childList:true,subtree:true}); u(); })();
   /* értesítésre kattintva: ?open=cal&d=ÉÉÉÉ-HH-NN → a naptár megnyitása azon a napon */
   function calUrl(k){ var p=String(k||'').split('-').map(Number); if(p.length<3||!p[0]) return ''; if(ios) return 'calshow:'+Math.round(new Date(p[0],p[1]-1,p[2],9,0).getTime()/1000-978307200); return 'https://calendar.google.com/calendar/r/day/'+p[0]+'/'+p[1]+'/'+p[2]; }
   var HM=['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
@@ -364,7 +438,8 @@ export async function onRequest(context) {
     let vk = ""; try { vk = (await vapid(sa)).pub; } catch (e) {}
     let ev = String(d.ev || "");
     try { const A = await awayOf(sa, uid, d.name); if (A.length) ev = ev.split("\n").filter(Boolean).concat(A.map(x => [x.d, x.ts, x.te, x.p, "", x.at].join("|"))).sort().join("\n"); } catch (e) {}
-    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
+    let shop = ""; try { const sh = await fsGet(sa, "boltok/" + uid, ["loc", "place"]); if (sh && sh.loc) shop = "FirstPhone " + sh.loc + (sh.place ? " " + String(sh.place).split(/[,(]/)[0].trim() : ""); } catch (e) {}
+    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk, shop }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
   } catch (e) {
     return txt("Hiba: " + String((e && e.message) || e), 502);
   }
