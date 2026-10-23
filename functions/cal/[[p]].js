@@ -163,7 +163,7 @@ async function handleOut(request, sa, origin) {
   const q = await request.json().catch(() => ({}));
   const src = isAdm && q.src ? String(q.src) : me.localId;
   if (!/^[A-Za-z0-9]{6,64}$/.test(src || "")) return json({ ok: false, error: "melyik bolt?" }, 400);
-  const M = (await fsList(sa, "boltok", ["sid", "loc", "place", "addr", "emps"])).map(x => ({ uid: x.id, sid: x.sid || "", loc: x.loc || "", place: x.place || "", addr: x.addr || "", emps: Array.isArray(x.emps) ? x.emps : [] }));
+  const M = (await fsList(sa, "boltok", ["sid", "code", "loc", "place", "addr", "emps"])).map(x => ({ uid: x.id, sid: x.sid || "", code: x.code || "", loc: x.loc || "", place: x.place || "", addr: x.addr || "", emps: Array.isArray(x.emps) ? x.emps : [] }));
   const meM = M.find(x => x.uid === src) || {};
   const home = (s, l) => { s = String(s || "").toUpperCase(); let h = s ? M.find(x => x.sid && x.sid.toUpperCase() === s) : null;
     if (!h && l) { const fl = foldN(l), L = M.filter(x => x.loc && fl.startsWith(foldN(x.loc))); h = L.length === 1 ? L[0] : L.find(x => x.place && fl.includes(foldN(x.place))) || null; }
@@ -178,7 +178,7 @@ async function handleOut(request, sa, origin) {
   const today = budaToday(), notes = [];
   for (const uid of Array.from(new Set(Object.keys(groups).concat(old)))) {
     const was = parseL(((await fsGet(sa, `boltok/${uid}/away/${src}`, ["list"])) || {}).list), now = groups[uid] || [];
-    if (now.length) await fsPatch(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.sid || "", addr: meM.addr || "", list: JSON.stringify(now), at: new Date() });
+    if (now.length) await fsPatch(sa, `boltok/${uid}/away/${src}`, { src: label, sid: meM.code || meM.sid || "", addr: meM.addr || "", list: JSON.stringify(now), at: new Date() });
     else await fsDel(sa, `boltok/${uid}/away/${src}`);
     /* mi változott dolgozónként (csak mától előre) → 🔔 */
     const key = x => x.ts + "–" + x.te + "|" + x.p, byN = {};

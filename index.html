@@ -5307,7 +5307,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261023-020549";</script>
+<script>window.FP_BUILD="20261023-022034";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -5369,7 +5369,7 @@
     const se = (st && st.settings) || {};
     /* sid + a dolgozók neve: hogy más bolt helyettesítőnek ki tudja választani (csak a nevek, a /api/staff végponton át) */
     const emps = (Array.isArray(se.employees) ? se.employees : []).map(e=> String((e && e.name) || "").trim()).filter(Boolean).slice(0, 40);
-    S.db.collection("boltok").doc(S.user.uid).set({ email:S.user.email, loc:se.location || "", place:se.placeDetail || "", addr:se.address || "", sid:se.storeId || "", emps, t:firebase.firestore.FieldValue.serverTimestamp(), ms:now }, { merge:true }).catch(()=>{});
+    S.db.collection("boltok").doc(S.user.uid).set({ email:S.user.email, loc:se.location || "", place:se.placeDetail || "", addr:se.address || "", sid:se.storeId || "", code:(window.fpStCode ? fpStCode(se.storeId) : "") || se.storeId || "", emps, t:firebase.firestore.FieldValue.serverTimestamp(), ms:now }, { merge:true }).catch(()=>{});
   }
   async function push(k){
     if(!S.user || !S.db) return;
@@ -7461,7 +7461,7 @@
       nwtl:`<div class="hc-wrap"><div class="hc-stage nwtl"><div class="chips"><b class="c1">HU<i>Magyar</i></b><b class="c2">PL<i>Polski</i></b><b class="c3">RO<i>Română</i></b><b class="c4">SK<i>Slovenčina</i></b><b class="c5">DE<i>Deutsch</i></b></div><div class="card"><div class="lg">First<em>Phone</em>®</div><span class="hrt">♥</span><div class="tx"><span class="t1"><b>Köszönjük a vásárlást!</b><small>Reméljük, üzleteink bármelyikében viszontlátunk!</small></span><span class="t2"><b>Dziękujemy za zakupy!</b><small>Mamy nadzieję, że zobaczymy się w jednym z naszych sklepów!</small></span><span class="t3"><b>Vă mulțumim pentru cumpărături!</b><small>Sperăm să vă revedem în oricare dintre magazinele noastre!</small></span><span class="t4"><b>Ďakujeme za nákup!</b><small>Dúfame, že sa opäť uvidíme v niektorej z našich predajní!</small></span><span class="t5"><b>Vielen Dank für Ihren Einkauf!</b><small>Wir freuen uns, Sie in einem unserer Geschäfte wiederzusehen!</small></span></div><div class="fl"><span class="f1">KÖVESS MINKET</span><span class="f2">OBSERWUJ NAS</span><span class="f3">URMĂRIȚI-NE</span><span class="f4">SLEDUJTE NÁS</span><span class="f5">FOLGEN SIE UNS</span></div></div><div class="globe">🌍</div></div></div>`,
       nwdl:`<div class="hc-wrap"><div class="hc-stage nwdl"><div class="clk"><b><span class="h1">23:59</span><span class="h2">00:00</span></b><small>🕛 ÉJFÉL</small></div><div class="gr"><i class="p1">📄</i><i class="p2">🖼️</i><i class="p3">📄</i><i class="p4">🖼️</i><i class="p5">📄</i><i class="p6">🖼️</i></div><div class="bar">🕛 A nap végén minden fotó és dokumentum törlődik <em>még 2 óra 14 perc</em></div><div class="ok">✨ Tiszta lap — új nap</div></div></div>`,
       nwtj:`<div class="hc-wrap"><div class="hc-stage nwtj"><div class="cal"><div class="hd"><b>Október 2026</b><span class="mm">📍 Ma</span></div><div class="g"><i class="">1</i><i class="">2</i><i class="">3</i><i class="">4</i><i class="">5</i><i class="">6</i><i class="">7</i><i class="">8</i><i class="">9</i><i class="">10</i><i class="">11</i><i class="">12</i><i class="">13</i><i class="">14</i><i class="">15</i><i class="">16</i><i class="">17</i><i class="">18</i><i class="">19</i><i class="">20</i><i class="">21</i><i class="">22</i><i class="t">23</i><i class="">24</i><i class="">25</i><i class="">26</i><i class="">27</i><i class="">28</i></div><div class="ring"></div></div><div class="bn">♻️ 23-a után jöhet a <b>November</b> beosztás <span class="go">November →</span></div></div></div>`,
-      nwsf:`<div class="hc-wrap"><div class="hc-stage nwsf"><div class="fm"><small>🏬 MELYIK BOLTBÓL JÖTT?</small><div class="in"><span class="ty">KAPV</span><i class="cur"></i></div><div class="sg"><span class="s1"><b>KAPT</b> Kaposvár TESCO</span></div><small class="l2">👥 KI JÖTT?</small><div class="ppl"><span class="p1">Kiss Anna</span><span class="p2">Tóth Evelin</span><span class="p3">Joós Martin</span></div></div><div class="cell"><div class="n">14</div><div class="bd">NAGY PÉTER</div><div class="sb">🔁 Tóth Evelin · KAPV</div></div><div class="doc"><small>JELENLÉTI ÍV</small><b>Tóth Evelin</b><em>Helyettesítő – Kaposvár (KAPV)</em><i></i><i></i></div></div></div>`,
+      nwsf:`<div class="hc-wrap"><div class="hc-stage nwsf"><div class="fm"><small>🏬 MELYIK BOLTBÓL JÖTT?</small><div class="in"><span class="ty">KAPV</span><i class="cur"></i></div><div class="sg"><span class="s1"><b>KAPV</b> Kaposvár TESCO</span></div><small class="l2">👥 KI JÖTT?</small><div class="ppl"><span class="p1">Kiss Anna</span><span class="p2">Tóth Evelin</span><span class="p3">Joós Martin</span></div></div><div class="cell"><div class="n">14</div><div class="bd">NAGY PÉTER</div><div class="sb">🔁 Tóth Evelin · KAPV</div></div><div class="doc"><small>JELENLÉTI ÍV</small><b>Tóth Evelin</b><em>Helyettesítő – Kaposvár (KAPV)</em><i></i><i></i></div></div></div>`,
       nwnk:`<div class="hc-wrap"><div class="hc-stage nwnk"><div class="row"><i class="av">TE</i><div class="nm">Tóth Evelin Melissza</div></div><div class="ch"><span class="lb">👋 Hívónév:</span><b class="o1">Evelin</b><b class="o2">Melissza</b><b class="o3">Evelin Melissza</b></div><div class="hi"><span class="w">👋</span> Szia, <b>Evelin</b>! Jó munkát ma!</div><div class="doc"><small>JELENLÉTI ÍV</small><div class="ln"><b>Tóth Evelin Melissza</b><i></i></div><div class="ln dim"><i></i><i></i></div><em>teljes név marad</em></div></div></div>`,
       nwcx:`<div class="hc-wrap"><div class="hc-stage nwcx"><div class="ls"><small>📅 NAPTÁRBA · DOLGOZÓK</small><div class="r r1"><i style="background:#a78bfa">A</i><b>Anna</b><em class="ok">✓ iPhone</em></div><div class="r r2"><i style="background:#5b95ff">P</i><b>Péter</b><em class="no">🚫 nem kéri</em></div><div class="r r3"><i style="background:#f472b6">K</i><b>Kriszti</b><em class="ok">✓ Google</em></div><div class="cn"><span class="c0">⏳ még nincs mindenki kész</span><span class="c1">3 / 3 kész 🎉</span></div></div><div class="bar"><div class="bt b1">⬇️ PDF</div><div class="bt b2">🖨️</div><div class="bt b3">📋</div><div class="bt cal">📅 Naptárba</div><div class="bt b5">🗑️</div><div class="pf"><i></i><i></i><i></i><i></i><i></i></div></div><div class="ad">🛡️ admin: <b>📌 Gomb vissza</b></div></div></div>`,
       nwco:`<div class="hc-wrap"><div class="hc-stage nwco"><div class="ph"><div class="nt"></div><div class="ls"><b>9:41</b><div class="bn"><i></i><div><b>🔄 Változott a beosztásod</b><small>okt. 24. (szo): 9:00–14:30 → 14:30–20:00</small></div></div></div><div class="cv"><div class="ch"><span>‹ Október</span><b>24 szombat</b></div><div class="hr"><em>13</em><u></u></div><div class="hr"><em>14</em><u></u></div><div class="ev"><b>🍀 Bolti dolgozó</b><small>14:30–20:00 · FirstPhone</small></div><div class="hr"><em>18</em><u></u></div></div><div class="tap"></div></div><div class="lb"><b>Koppints rá</b><small>→ megnyílik a naptárad<br>pont azon a napon</small></div><div class="ar">➜</div></div></div>`,
@@ -8126,7 +8126,7 @@ service cloud.firestore {
       else P = [{ id:a.type, part:"full" }]; }
     (((st && st.subs) || {})[key] || []).forEach(sb=>{ if(!sb || !sb.name) return; const i = P.findIndex(x=> x.id === sb.forId);
       if(i > -1){ if(sb.part === "full" || P[i].part === sb.part) P.splice(i, 1); else if(P[i].part === "full") P[i] = { id:P[i].id, part:sb.part === "am" ? "pm" : "am" }; }
-      const fc = sb.from ? String(sb.from.c || sb.from.l || "") : "";
+      const fc = sb.from ? (window.fpFromShort ? fpFromShort(sb.from) : String(sb.from.c || sb.from.l || "")) : "";
       P.push({ id:"sub:" + sb.name, part:sb.part || "full", sub:true, nm:sb.name + (fc ? ` (${fc})` : "") }); });
     const people = P.map(x=>{ const e = emp(x.id), from = x.part === "pm" ? mid : open, to = x.part === "am" ? mid : close;
       return { id:x.id, name:x.sub ? x.nm : (e ? e.name : "?"), hex:x.sub ? "#9aa3b5" : (e && e.hex) || "#7b8cff", part:x.part, from, to, sub:!!x.sub }; }).filter(x=> x.name !== "?");
@@ -8818,7 +8818,8 @@ service cloud.firestore {
           ["tix","Nyitott jegyek",openT.length,newT.length ? `${newT.length} új${hiT.length ? ` · ${hiT.length} sürgős` : ""}` : "nincs új jegy","#f0953a",null,newT.length > 0], ["inbox","Olvasatlan",un,"chat üzenet","#9b7cf0",null,un > 0],
           ["shops:pkg","Csomag vár",wait,"átvételre, összesen","#2fa3b6"], ["shops","Selejt ma",sx,"darab, minden bolt","#e0b04a"],
           ["shops:ks","Kassza eltérés",ksBad,"boltnál nem egyezik","#ef5a5a",null,ksBad > 0], ["shops:stale","Inaktív",stale,"7+ napja nem mentett","#8b95a7"]];
-        kp.innerHTML = K.map(([go, l, v, s, c, p, al])=> `<button type="button" class="ax-kpi${al ? " alert" : ""}" data-go="${go}" style="--k:${c}"><small>${l}</small><b>${v}</b><p>${s}</p>${p != null ? `<span class="bar"><i style="width:${p}%"></i></span>` : ""}</button>`).join("");
+        const KI = { "Boltok":"🏬", "Ma aktív":"⚡", "Nyitott jegyek":"🐞", "Olvasatlan":"💬", "Csomag vár":"📦", "Selejt ma":"🗑️", "Kassza eltérés":"💰", "Inaktív":"💤" };
+        kp.innerHTML = K.map(([go, l, v, s, c, p, al])=> `<button type="button" class="ax-kpi${al ? " alert" : ""}" data-go="${go}" style="--k:${c}"><i class="ki" aria-hidden="true">${KI[l] || ""}</i><small>${l}</small><b>${v}</b><p>${s}</p>${p != null ? `<span class="bar"><i style="width:${p}%"></i></span>` : ""}</button>`).join("");
         const att = [];
         if(hiT.length) att.push({ ic:"▲", k:"#ef5a5a", t:`${hiT.length} sürgős hibajegy`, go:"tix" });
         if(newT.length) att.push({ ic:"🐞", k:"#f0953a", t:`${newT.length} új hibajegy vár válaszra`, go:"tix" });
@@ -10077,6 +10078,30 @@ service cloud.firestore {
       .ax-dstat{grid-template-columns:repeat(2,minmax(0,1fr));}
       .ax-srow{flex-wrap:wrap;} .ax-sctl{justify-content:flex-start;}
     }
+    /* 🎨 2026-10-23: színesebb admin — színátmenetes csempék nagy ikonnal, színes kártyák (az elrendezés a mostani marad) */
+    .ax-kpi{background:linear-gradient(135deg,var(--k),color-mix(in srgb,var(--k) 58%,#0b0b10));border:0;color:#fff;box-shadow:0 10px 24px color-mix(in srgb,var(--k) 26%,transparent);}
+    .ax-kpi small{color:rgba(255,255,255,.9);} .ax-kpi small::before{background:rgba(255,255,255,.85);}
+    .ax-kpi b span{color:rgba(255,255,255,.72);} .ax-kpi p{color:rgba(255,255,255,.82);}
+    .ax-kpi .bar{background:rgba(0,0,0,.22);} .ax-kpi .bar i{background:rgba(255,255,255,.92);}
+    .ax-kpi .ki{position:absolute;right:12px;bottom:8px;font-size:42px;line-height:1;font-style:normal;opacity:.26;transform:rotate(-8deg);pointer-events:none;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s;}
+    .ax-kpi:hover{transform:translateY(-3px);border:0;box-shadow:0 16px 34px color-mix(in srgb,var(--k) 38%,transparent);} .ax-kpi:hover .ki{transform:rotate(0) scale(1.1);opacity:.4;}
+    .ax-kpi.alert{border:0;background:linear-gradient(135deg,var(--k),color-mix(in srgb,var(--k) 58%,#0b0b10));box-shadow:0 0 0 2px rgba(255,255,255,.55) inset,0 12px 28px color-mix(in srgb,var(--k) 40%,transparent);} .ax-kpi.alert p{color:#fff;font-weight:700;}
+    .ax-dhero{background:radial-gradient(circle at 88% -12%,transparent 0 92px,rgba(255,255,255,.075) 93px 132px,transparent 133px),linear-gradient(120deg,color-mix(in srgb,var(--av) 72%,#16384a),color-mix(in srgb,var(--av) 30%,#11151d));color:#fff;border-bottom:0;}
+    .ax-dhero .ax-dhtx small{color:rgba(255,255,255,.86);}
+    .ax-dhero .ax-dchip,.ax-dhero .ax-dpres{background:rgba(8,12,18,.34);border-color:rgba(255,255,255,.16);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+    .ax-dhero .ax-dpres.live{background:rgba(8,40,24,.5);border-color:rgba(120,240,180,.5);color:#9ff5c8;} .ax-dhero .ax-dpres.away{background:rgba(48,32,6,.5);border-color:rgba(255,205,110,.5);color:#ffd987;}
+    .ax-dtl{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 58%,#0b0b10));border:0;color:#fff;box-shadow:0 10px 22px color-mix(in srgb,var(--c) 24%,transparent);}
+    .ax-dtl .ic{position:absolute;right:8px;bottom:6px;width:auto;height:auto;background:none;font-size:38px;opacity:.28;transform:rotate(-8deg);}
+    .ax-dtl small{color:rgba(255,255,255,.9);} .ax-dtl em{color:rgba(255,255,255,.8);}
+    .ax-dc{border-left:4px solid var(--c);background:linear-gradient(100deg,color-mix(in srgb,var(--c) 11%,var(--ax-panel)),var(--ax-panel) 55%);}
+    .ax-dc header .ic{background:color-mix(in srgb,var(--c) 26%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 40%,transparent);}
+    .ax-drw.th-light .ax-dtl{box-shadow:0 10px 22px color-mix(in srgb,var(--c) 24%,transparent);}
+    .ax.th-light .ax-kpi{background:linear-gradient(135deg,var(--k),color-mix(in srgb,var(--k) 72%,#2a2230));box-shadow:0 10px 24px color-mix(in srgb,var(--k) 24%,transparent);}
+    .ax.th-light .ax-kpi.alert{box-shadow:0 0 0 2px rgba(255,255,255,.7) inset,0 12px 28px color-mix(in srgb,var(--k) 36%,transparent);}
+    .ax-drwf .ax-btn[data-dx="chat"],.ax-drwf .ax-btn[data-dx="ann"],.ax-drwf .ax-btn[data-dx="dl"],.ax-drwf .ax-btn[data-dx="full"]{background:color-mix(in srgb,var(--bc) 16%,var(--ax-panel));border-color:color-mix(in srgb,var(--bc) 45%,transparent);color:color-mix(in srgb,var(--bc) 70%,#fff);}
+    .ax-drwf .ax-btn[data-dx="chat"]{--bc:#4f8cff;} .ax-drwf .ax-btn[data-dx="ann"]{--bc:#a66bff;} .ax-drwf .ax-btn[data-dx="dl"]{--bc:#22b8a6;} .ax-drwf .ax-btn[data-dx="full"]{--bc:#8a94a8;}
+    .ax-drwf .ax-btn[data-dx]:not(.pri):hover{background:color-mix(in srgb,var(--bc,#d9ad46) 26%,var(--ax-panel));}
+    .ax.th-light .ax-drwf .ax-btn[data-dx="chat"],.ax.th-light .ax-drwf .ax-btn[data-dx="ann"],.ax.th-light .ax-drwf .ax-btn[data-dx="dl"],.ax.th-light .ax-drwf .ax-btn[data-dx="full"],.ax-drw.th-light .ax-drwf .ax-btn[data-dx]:not(.pri){color:color-mix(in srgb,var(--bc,#8a6a1a) 80%,#000);}
     @media (max-width:520px){ .ax-kpi b{font-size:22px;} .ax-kpis{gap:8px;} .ax-kpi{padding:12px;} .ax-tb .ax-inp{width:100%;max-width:none !important;} .ax-tb .ax-sel{flex:1;max-width:none;} .ax-tb .ax-sp{display:none;} .ax-drwf .ax-sp{display:none;} .ax-drwf .ax-btn{flex:1;} }
 
     /* ===== Admin konzol — bolti kinézet: fejléc-kártya logóval, színes fülek, hős-kártya számokkal ===== */
@@ -17949,13 +17974,18 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function isSubId(id){ return typeof id === "string" && id.indexOf("sub:") === 0; }
   /* helyettesítő: melyik boltból jött? from = { s:"KAPT" (bolt), c:"KAPV" (kód, ahogy beírták), l:"Kaposvár" } — nem kötelező */
   function subFromOf(name){ let f = null; Object.keys(state.subs || {}).sort().forEach(k=> subsOf(k).forEach(x=>{ if(x && x.name === name && x.from) f = x.from; })); return f; }
-  const fromShort = f=> f ? String(f.c || f.l || "") : "";
-  const fromLong = f=> f ? (f.l ? f.l + (f.c && f.c !== f.s ? " – " + f.c : f.c ? " (" + f.c + ")" : "") : String(f.c || "")) : "";
+  /* a bolt valódi boltkódja (Üzletek.xlsx, pl. KAPV) a munkaasztal saját azonosítójából (pl. KAPT) */
+  function stCode(id){ id = String(id || ""); if(!id) return ""; try{ const sh = (window.FP_SHOPS || []).find(x=> x.id === id); if(sh && sh.c) return String(sh.c); }catch(e){} return id; }
+  window.fpStCode = stCode;
+  /* a kód: amit beírtak, vagy (ha nem írtak mást) a bolt valódi boltkódja — a régi mentéseknél is */
+  const fromCode = f=> !f ? "" : f.c && f.c !== f.s ? String(f.c) : f.s ? stCode(f.s) : String(f.c || "");
+  const fromShort = f=> f ? String(fromCode(f) || f.l || "") : "";
+  const fromLong = f=> f ? (f.l ? f.l + (fromCode(f) ? " – " + fromCode(f) : "") : fromCode(f)) : "";
   window.fpFromShort = fromShort;
   const sFold = t=> String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
   function subStoreMatches(q){ q = sFold(q); if(!q) return []; const q3 = q.slice(0, 3), own = state.settings.storeId;
-    return FP_STORES.filter(x=> x.id !== own).map(x=>{ const id = sFold(x.id), lab = sFold(x.label), loc = sFold(x.location); let sc = 0;
-      if(id === q) sc = 100; else if(id.startsWith(q)) sc = 80; else if(loc.startsWith(q) || lab.startsWith(q)) sc = 70; else if(lab.includes(q)) sc = 40; else if(q.length >= 3 && id.startsWith(q3)) sc = 30;
+    return FP_STORES.filter(x=> x.id !== own).map(x=>{ const id = sFold(x.id), cd = sFold(stCode(x.id)), lab = sFold(x.label), loc = sFold(x.location); let sc = 0;
+      if(cd === q || id === q) sc = 100; else if(cd.startsWith(q) || id.startsWith(q)) sc = 80; else if(loc.startsWith(q) || lab.startsWith(q)) sc = 70; else if(lab.includes(q)) sc = 40; else if(q.length >= 3 && (cd.startsWith(q3) || id.startsWith(q3))) sc = 30;
       return { x, sc }; }).filter(r=> r.sc).sort((a, b)=> b.sc - a.sc || a.x.label.localeCompare(b.x.label, "hu")).slice(0, 5).map(r=> r.x); }
   const subStoreName = st=> FP_STORES.filter(z=> z.location === st.location).length > 1 ? st.label : st.location;
   const subStaffCache = {};
@@ -18485,9 +18515,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const hp = P0 ? personPart(P0.id, a, dowOfKey(key)) : null, here = !!(hp && !hp.holiday);
           if(here) ch.classList.add("clash");
           const pre = x.p === "am" ? "DE · " : x.p === "pm" ? "DU · " : "";
-          const sh = String(x.sid || String(x.at).split(/\s+/)[0].slice(0, 5)).toUpperCase();
+          const sh = String(x.sid ? stCode(x.sid) : String(x.at).split(/\s+/)[0].slice(0, 5)).toUpperCase();
           ch.innerHTML = `<span class="aw-s">🔁 ${esc(sh)}</span><span class="aw-k">🔁 ${pre}Helyettesít</span><b class="aw-at">${esc(String(x.at).toUpperCase())}</b>${x.ts && x.te ? `<span class="half-time">${esc(x.ts)}–${esc(x.te)}</span>` : ""}${here ? `<span class="aw-w">⚠ itt is be van osztva</span>` : ""}`;
-          ch.title = `${P0.name} ezen a napon itt helyettesít: FirstPhone ${x.at}${x.sid ? " (" + x.sid + ")" : ""} — ${x.p === "am" ? "délelőtt" : x.p === "pm" ? "délután" : "egész nap"}${x.ts ? " " + x.ts + "–" + x.te : ""}${here ? " · ⚠ nálunk is be van osztva!" : ""}`;
+          ch.title = `${P0.name} ezen a napon itt helyettesít: FirstPhone ${x.at}${x.sid ? " (" + stCode(x.sid) + ")" : ""} — ${x.p === "am" ? "délelőtt" : x.p === "pm" ? "délután" : "egész nap"}${x.ts ? " " + x.ts + "–" + x.te : ""}${here ? " · ⚠ nálunk is be van osztva!" : ""}`;
           if(badgeWrap.classList.contains("empty")) badgeWrap.style.display = "none";
           cell.appendChild(ch); });
         /* akit nálunk helyettesítenek: ki jön helyette (pl. Szombathelyről) */
@@ -18635,7 +18665,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       /* melyik boltból: kód vagy város → találatok; rákattintva betölti annak a boltnak a dolgozóit */
       const fromIn = sbox.querySelector(".sp-from"), fsBox = sbox.querySelector(".sp-fs"), stBox = sbox.querySelector(".sp-staff");
       const drawFs = ()=>{ const L = subStoreMatches(fromIn.value);
-        fsBox.innerHTML = L.map(x=> `<button type="button" data-st="${esc(x.id)}" class="${fromSt && fromSt.id === x.id ? "on" : ""}"><b>${esc(x.id)}</b> ${esc(x.label)}</button>`).join("");
+        fsBox.innerHTML = L.map(x=> `<button type="button" data-st="${esc(x.id)}" class="${fromSt && fromSt.id === x.id ? "on" : ""}"><b>${esc(stCode(x.id))}</b> ${esc(x.label)}</button>`).join("");
         fsBox.querySelectorAll("[data-st]").forEach(b=> b.onclick = ()=> pickSt(FP_STORES.find(z=> z.id === b.dataset.st))); };
       const pickSt = async st=>{ fromSt = st; drawFs(); stBox.hidden = false;
         stBox.innerHTML = `<span class="sp-sl">⏳ ${esc(st.label)} dolgozói…</span>`;
@@ -18659,7 +18689,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         if(employees().some(e=> (e.name||"").trim().toLowerCase() === nm.toLowerCase())){ toast("Ez a név már dolgozóként szerepel — válaszd a dolgozók közül."); return; }
         const forId = sbox.querySelector(".sp-for").value || null;
         const ft = fromIn.value.trim(), codeT = /^[A-Z]{2,6}[0-9]?$/.test(ft) ? ft : "";
-        const from = fromSt ? { s:fromSt.id, c:codeT || fromSt.id, l:subStoreName(fromSt) } : ft ? (codeT ? { c:codeT } : { l:ft }) : null;
+        const from = fromSt ? { s:fromSt.id, c:codeT || stCode(fromSt.id), l:subStoreName(fromSt) } : ft ? (codeT ? { c:codeT } : { l:ft }) : null;
         const list = subsOf(key).filter(x=> x.name !== nm);
         const sel = curSel();
         let origPart = null;

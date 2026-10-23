@@ -1,7 +1,7 @@
 /* FirstPhone Munkaasztal — 🔁 helyettesítő: egy másik bolt dolgozóinak neve (Cloudflare Pages Function, ingyenes)
    A boltok egymás adatait nem láthatják (Firestore szabály), ezért ez a végpont adja vissza — csak belépett
    Munkaasztal-fióknak, és csak a kért bolt dolgozóinak NEVÉT (semmi mást).
-     POST /api/staff  { sid:"KAPT", loc:"Kaposvár", det:"TESCO" }  (Authorization: Bearer <Firebase idToken>)
+     POST /api/staff  { sid:"KAPT" (vagy a valódi kód: "KAPV"), loc:"Kaposvár", det:"TESCO" }  (Authorization: Bearer <Firebase idToken>)
        → { ok, found, emps:[ "Tóth Evelin Melissza", … ] }
      (A „máshol helyettesít” átadás a /cal/_out végponton van — ott a naptár és az értesítés is.)
    A nevek a bolt névjegyéből (boltok/{uid}.emps), vagy ha az még nincs, a bolt mentett beosztásából jönnek. */
@@ -39,10 +39,10 @@ async function metas(sa, fresh) {
   if (META && !fresh && Date.now() - METAat < 5 * 60e3) return META;
   const t = await accessToken(sa), out = []; let page = "";
   do {
-    const u = `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/boltok?pageSize=300&mask.fieldPaths=sid&mask.fieldPaths=loc&mask.fieldPaths=place&mask.fieldPaths=emps&mask.fieldPaths=addr` + (page ? "&pageToken=" + encodeURIComponent(page) : "");
+    const u = `https://firestore.googleapis.com/v1/projects/${sa.project_id}/databases/(default)/documents/boltok?pageSize=300&mask.fieldPaths=sid&mask.fieldPaths=code&mask.fieldPaths=loc&mask.fieldPaths=place&mask.fieldPaths=emps&mask.fieldPaths=addr` + (page ? "&pageToken=" + encodeURIComponent(page) : "");
     const r = await fetch(u, { headers: { authorization: "Bearer " + t } }); if (!r.ok) throw new Error("Firestore " + r.status);
     const j = await r.json();
-    (j.documents || []).forEach(d => { const f = d.fields || {}; out.push({ uid: d.name.split("/").pop(), sid: unfv(f.sid) || "", loc: unfv(f.loc) || "", place: unfv(f.place) || "", addr: unfv(f.addr) || "", emps: unfv(f.emps) || null }); });
+    (j.documents || []).forEach(d => { const f = d.fields || {}; out.push({ uid: d.name.split("/").pop(), sid: unfv(f.sid) || "", code: unfv(f.code) || "", loc: unfv(f.loc) || "", place: unfv(f.place) || "", addr: unfv(f.addr) || "", emps: unfv(f.emps) || null }); });
     page = j.nextPageToken || "";
   } while (page);
   META = out; METAat = Date.now(); return out;
@@ -72,7 +72,7 @@ export async function onRequest({ request, env }) {
     const sid = String(q.sid || "").toUpperCase().slice(0, 8), loc = fold(q.loc).slice(0, 40), det = fold(q.det).slice(0, 40);
     if (!sid && !loc) return json({ ok: false, error: "melyik bolt?" }, 400);
     const M = await metas(sa);
-    let hit = sid ? M.find(x => x.sid && x.sid.toUpperCase() === sid) : null;
+    let hit = sid ? (M.find(x => x.sid && x.sid.toUpperCase() === sid) || M.find(x => x.code && x.code.toUpperCase() === sid)) : null;
     if (!hit && loc) { const L = M.filter(x => fold(x.loc) === loc); hit = L.find(x => det && fold(x.place).includes(det)) || (L.length === 1 ? L[0] : L.find(x => !det)); }
     if (!hit) return json({ ok: true, found: false, emps: [] });
     let emps = Array.isArray(hit.emps) ? hit.emps : null;
