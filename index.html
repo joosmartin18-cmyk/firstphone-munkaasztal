@@ -5511,6 +5511,46 @@
   @media (prefers-reduced-motion:reduce){ html.fp-rnav:not(.fp-anim-full) #pageSwitch,html.fp-rnav:not(.fp-anim-full) #pageSwitch *,html.fp-rnav:not(.fp-anim-full) #pageSwitch::after{animation:none !important;} }
   @media print{ html.fp-rnav #pageSwitch{display:none !important;} html.fp-rnav body{padding-left:0 !important;} }
   @media (max-height:640px){ html.fp-rnav #pageSwitch .ps-btn .ps-i{width:34px !important;height:34px !important;font-size:16px !important;} html.fp-rnav #pageSwitch .ps-btn{padding:5px 2px !important;font-size:10.5px !important;} }
+
+  /* ===================== ➡ JOBB OLDALI GOMBSÁV + egysoros fejléc (próba: Kaposvár, gépen) ===================== */
+  #fpTools{display:none;}
+  html.fp-rnav:not(.m-app) body{padding-right:96px;}
+  html.fp-rnav.tt-full body{padding-right:0;} html.fp-rnav.tt-full #fpTools{display:none !important;}
+  html.fp-rnav #fpTools{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:56;display:block;width:72px;max-height:calc(100vh - 28px);padding:10px 0;box-sizing:border-box;overflow-y:auto;overflow-x:visible;scrollbar-width:none;isolation:isolate;
+    border:1px solid rgba(240,199,102,.24);border-radius:28px;
+    background:radial-gradient(100px 150px at 50% 0%,rgba(240,199,102,.14),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0) 40%),color-mix(in srgb,var(--bg-panel,#17171c) 93%,transparent);
+    box-shadow:0 22px 54px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);animation:rnInR .6s cubic-bezier(.2,.9,.3,1) backwards;}
+  html.fp-rnav #fpTools::-webkit-scrollbar{display:none;}
+  html.fp-rnav body.light-theme #fpTools{background:radial-gradient(100px 150px at 50% 0%,rgba(217,173,70,.16),transparent 70%),rgba(255,255,255,.92);box-shadow:0 18px 44px rgba(60,40,10,.14);border-color:rgba(217,173,70,.35);}
+  html.fp-rnav #fpTools::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:1.5px;pointer-events:none;
+    background:conic-gradient(from var(--axa,0deg),transparent 0 64%,rgba(240,199,102,.85) 74%,#fff1bd 77%,rgba(240,199,102,.85) 80%,transparent 90%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:axRing 9s linear infinite reverse;}
+  html.fp-lite #fpTools::after{animation-iteration-count:infinite !important;}
+  html.fp-rnav #fpTools .hdr-btns{display:flex !important;flex-direction:column !important;flex-wrap:nowrap !important;align-items:center !important;justify-content:flex-start !important;gap:7px !important;margin:0 !important;padding:0 !important;width:100% !important;}
+  html.fp-rnav #fpTools .hdr-btns > *{flex:none !important;margin:0 !important;transform:none;animation:rnItemR .5s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--k,0) * 45ms + .2s);}
+  html.fp-rnav #fpTools .set-btn-wrap{position:relative;display:block;}
+  html.fp-rnav #fpTools :is(.icon-btn,.set-btn,.fc-chip){position:relative;width:48px !important;height:48px !important;min-width:0 !important;max-width:none !important;padding:0 !important;margin:0 !important;border-radius:16px !important;display:grid !important;place-items:center !important;font-size:20px !important;line-height:1 !important;overflow:visible !important;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .25s,background .25s;}
+  html.fp-rnav #fpTools :is(.icon-btn,.set-btn,.fc-chip):hover{transform:translateX(-3px) scale(1.06);border-color:color-mix(in srgb,var(--gold,#d9ad46) 60%,var(--border)) !important;box-shadow:0 10px 22px rgba(0,0,0,.3),0 0 0 3px color-mix(in srgb,var(--gold,#d9ad46) 16%,transparent);}
+  html.fp-rnav #fpTools #mMenuBtn{display:none !important;}
+  html.fp-rnav #fpTools .set-btn .gt{display:none !important;} html.fp-rnav #fpTools .set-btn .gi{font-size:21px;margin:0 !important;}
+  html.fp-rnav #fpTools .fc-chip > span{display:none !important;}
+  html.fp-rnav #fpTools .fc-chip::after{content:"☁️";font-size:20px;}
+  html.fp-rnav #fpTools .fc-chip.adm::after{content:"👑";}
+  html.fp-rnav #fpTools .fc-chip > i{position:absolute !important;top:6px;right:6px;margin:0 !important;}
+  html.fp-rnav #fpTools .nw-hb .nw-t{position:absolute;top:-6px;right:-8px;padding:1px 5px;border-radius:99px;font-size:9.5px;line-height:1.4;background:#e2585a;color:#fff;}
+  html.fp-rnav #fpTools .set-hint{left:auto !important;right:calc(100% + 16px) !important;top:0 !important;transform:none !important;}
+  #fpTip{position:fixed;z-index:9100;pointer-events:none;padding:7px 12px;border-radius:12px;background:var(--bg-panel,#17171c);color:var(--text,#ecece8);border:1px solid color-mix(in srgb,var(--gold,#d9ad46) 45%,var(--border,#2b2b33));box-shadow:0 12px 30px rgba(0,0,0,.35);font:700 13px 'Inter',sans-serif;white-space:nowrap;opacity:0;transform:translateX(10px);transition:opacity .16s,transform .22s cubic-bezier(.34,1.56,.64,1);}
+  #fpTip.on{opacity:1;transform:none;} #fpTip small{display:block;font-weight:500;font-size:11.5px;color:var(--text-dim,#9c9ca6);}
+  html.fp-rnav:not(.m-app) .app > .hdr2{display:flex;align-items:center;gap:18px;padding:12px 18px !important;}
+  html.fp-rnav:not(.m-app) .hdr2 > .topbar{flex:none;padding:0 !important;border:0 !important;}
+  html.fp-rnav:not(.m-app) .hdr2 > .topbar .header-right{display:none !important;}
+  html.fp-rnav:not(.m-app) .hdr2 > .hdr-ctx{flex:1 1 auto;min-width:0;border-top:0 !important;border-left:1px solid var(--border);padding:2px 0 2px 18px !important;min-height:0;}
+  html.fp-rnav:not(.m-app) .hdr2 > .hdr-ctx .header-title h1{font-size:20px;}
+  @keyframes rnInR{from{opacity:0;transform:translate(46px,-50%)}to{opacity:1;transform:translate(0,-50%)}}
+  @keyframes rnItemR{from{opacity:0;transform:translateX(18px) scale(.9)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){ html.fp-rnav:not(.fp-anim-full) #fpTools,html.fp-rnav:not(.fp-anim-full) #fpTools *,html.fp-rnav:not(.fp-anim-full) #fpTools::after{animation:none !important;} }
+  @media print{ html.fp-rnav #fpTools{display:none !important;} html.fp-rnav body{padding-right:0 !important;} }
   /* ===================== ⬆ GÖRGETÉSKOR KOMPAKT FEJLÉC (gépen) — az ikonok animálva felugranak egy lebegő sávba ===================== */
   .hdr-ph{display:none;}
   html.hdr-mini .hdr-ph{display:block;transition:height .35s ease;}
@@ -5768,7 +5808,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-220726";</script>
+<script>window.FP_BUILD="20261024-222351";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -27189,6 +27229,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       try{ e.animate([{ transform:`translate(${dx}px,${dy}px) scale(${sc})` }, { transform:"none" }], { duration:560, delay:i * 28, easing:"cubic-bezier(.34,1.35,.64,1)", fill:"backwards" }); }catch(er){} });
   }
   function set(on){
+    if(on && H.classList.contains("fp-rnav")) on = false;
     if(on === mini || busy || H.classList.contains("m-app")) return; const h = hdr(); if(!h) return;
     busy = true; setTimeout(()=> busy = false, 450);
     flip(()=>{
@@ -27824,7 +27865,16 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 <script>/* ===================== ⬅ bal oldali menü — próba Kaposvárnál (gépen). A programválasztót kiveszi a fejlécből, és a bal szélre teszi; vissza is tehető. ===================== */
 (function fpRightNav(){
   const H = document.documentElement, KEY = "firstphone_rnav";
-  let home = null, next = null, busy = false;
+  let home = null, next = null, busy = false, bHome = null, bNext = null, tools = null, tip = null;
+  const TIPS = { settingsBtn:["Üzlet & dolgozók","hely, nyitvatartás, dolgozók"], animToggle:["Animációk","teljes / könnyített / automatikus"], themeToggle:["Sötét / világos mód",""], helpBtn:["Súgó","hogyan működik"], nwBtn:["Újdonságok","mi változott"], scanBtn:["Fotók és dokumentumok","telefonnal fotózod, itt látod"], docBtn:["Dokumentumok","amit az admin küldött"], bugBtn:["Hibabejelentés","írj az adminnak"] };
+  function tipShow(el){ if(!tip){ tip = document.createElement("div"); tip.id = "fpTip"; document.body.appendChild(tip); }
+    const id = el.id || (el.querySelector("button") || {}).id || "", t = TIPS[id], r = el.getBoundingClientRect();
+    let a = t ? t[0] : (el.getAttribute("data-t") || el.title || ""), b = t ? t[1] : "";
+    if(id === "fcChip"){ const s = (el.textContent || "").replace(/^[☁️👑\s]+/u, "").trim(); a = s || "Fiók"; b = "felhő · belépés / kilépés"; }
+    if(!a) return; tip.innerHTML = `${a.replace(/[<>&]/g, "")}${b ? `<small>${b.replace(/[<>&]/g, "")}</small>` : ""}`;
+    tip.style.right = (innerWidth - r.left + 12) + "px"; tip.style.top = (r.top + r.height / 2) + "px"; tip.style.marginTop = (-tip.offsetHeight / 2) + "px"; const tok = tip._tok = Date.now(); requestAnimationFrame(()=>{ if(tip._tok === tok) tip.classList.add("on"); }); }
+  const tipHide = ()=>{ if(tip){ tip._tok = 0; tip.classList.remove("on"); } };
+  window.fpTipHide = tipHide;
   const off = ()=>{ try{ return localStorage.getItem(KEY) === "off"; }catch(e){ return false; } };
   const want = ()=> !!document.body && document.body.classList.contains("is-kap") && !off() && !H.classList.contains("m-app") && !H.classList.contains("fp-scanonly");
   function ui(ps){
@@ -27840,11 +27890,20 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const on = want();
       if(on && !H.classList.contains("fp-rnav")){
         if(ps.parentNode !== document.body){ home = ps.parentNode; next = ps.nextSibling; document.body.appendChild(ps); }
+        const hb = document.querySelector(".hdr2 .hdr-btns");
+        if(hb){ if(!tools){ tools = document.createElement("div"); tools.id = "fpTools"; tools.setAttribute("aria-label", "Eszközök");
+            tools.addEventListener("mouseover", e=>{ const t = e.target.closest(".hdr-btns > *"); if(t){ const b = t.matches("button") ? t : t.querySelector("button"); if(b && b.title){ b.setAttribute("data-t", b.title); b.removeAttribute("title"); } tipShow(t); } });
+            tools.addEventListener("mouseout", e=>{ const t = e.target.closest(".hdr-btns > *"); if(t && !t.contains(e.relatedTarget)){ const b = t.matches("button") ? t : t.querySelector("button"); if(b && !b.title && b.getAttribute("data-t")) b.title = b.getAttribute("data-t"); tipHide(); } });
+            tools.addEventListener("click", ()=>{ tipHide(); setTimeout(tipHide, 60); }); }
+          bHome = hb.parentNode; bNext = hb.nextSibling; tools.appendChild(hb); if(!tools.isConnected) document.body.appendChild(tools);
+          Array.from(hb.children).forEach((c, k)=> c.style.setProperty("--k", k)); }
         ps.querySelectorAll(".ps-btn").forEach((b, k)=> b.style.setProperty("--k", k));
         H.classList.add("fp-rnav");
       } else if(!on && H.classList.contains("fp-rnav")){
-        H.classList.remove("fp-rnav");
+        H.classList.remove("fp-rnav"); tipHide();
         if(home && ps.parentNode === document.body) home.insertBefore(ps, next && next.parentNode === home ? next : null);
+        const hb = tools && tools.querySelector(".hdr-btns"); if(hb && bHome){ bHome.insertBefore(hb, bNext && bNext.parentNode === bHome ? bNext : null); }
+        if(tools) tools.remove();
       }
     }finally{ busy = false; }
     try{ window.fpSizeCetli && setTimeout(fpSizeCetli, 60); }catch(e){}
@@ -27852,6 +27911,41 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const start = ()=>{ apply(); new MutationObserver(apply).observe(document.body, { attributes:true, attributeFilter:["class"] }); new MutationObserver(apply).observe(H, { attributes:true, attributeFilter:["class"] }); };
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
   window.fpRightNav = apply;
+})();</script>
+<script>/* ===================== 🎬 megnyitás-animáció (próba: Kaposvár, oldalsávos mód) — az ablak onnan nő ki, ahová kattintottál; programváltáskor a tartalom a menü felől úszik be. Gyenge gépen (⚡) csak könnyű áttűnés. ===================== */
+(function fpOpenFx(){
+  const H = document.documentElement; let last = null;
+  addEventListener("pointerdown", e=>{ last = { x:e.clientX, y:e.clientY, t:Date.now() }; }, true);
+  const on = ()=> H.classList.contains("fp-rnav") && !H.classList.contains("m-app");
+  const lite = ()=> H.classList.contains("fp-lite") || (matchMedia("(prefers-reduced-motion: reduce)").matches && !H.classList.contains("fp-anim-full"));
+  const RX = /(back|modal|popup|sheet|overlay|-mod\b|sk-mod|-view|-ed\b|drw|wait|fc-full)/;
+  const isOv = el=>{ if(!(el instanceof HTMLElement) || el.id === "fpTip") return false; const c = typeof el.className === "string" ? el.className : ""; if(!RX.test(c)) return false;
+    const cs = getComputedStyle(el); if(cs.position !== "fixed" || cs.display === "none" || cs.visibility === "hidden") return false; const r = el.getBoundingClientRect(); return r.width >= innerWidth * .85 && r.height >= innerHeight * .85; };
+  const cardOf = ov=>{ let best = null, area = 0; for(const c of ov.children){ if(/^(SCRIPT|STYLE)$/.test(c.tagName)) continue; const r = c.getBoundingClientRect(), a = r.width * r.height; if(a > area){ area = a; best = c; } } return best; };
+  function play(ov){
+    if(!on() || !ov.isConnected) return; const now = Date.now(); if(ov._fx && now - ov._fx < 700) return; ov._fx = now; try{ window.fpTipHide && fpTipHide(); }catch(e){}
+    const card = cardOf(ov) || ov, r = card.getBoundingClientRect(); if(!r.width || !r.height) return;
+    try{
+      if(lite()){ card.animate([{ opacity:0, transform:"translateY(10px)" }, { opacity:1, transform:"none" }], { duration:190, easing:"ease-out" }); ov.animate([{ opacity:0 }, { opacity:1 }], { duration:150 }); return; }
+      const fresh = last && now - last.t < 1500, ox = fresh ? last.x : innerWidth / 2, oy = fresh ? last.y : innerHeight / 2;
+      const dx = ox - (r.left + r.width / 2), dy = oy - (r.top + r.height / 2), s = Math.max(.08, Math.min(.3, 60 / Math.max(r.width, r.height)));
+      card.animate([{ transform:`translate(${dx}px,${dy}px) scale(${s})`, opacity:0 }, { opacity:1, offset:.4 }, { transform:"none", opacity:1 }], { duration:480, easing:"cubic-bezier(.2,.9,.25,1.04)" });
+      ov.animate([{ opacity:0 }, { opacity:1 }], { duration:240, easing:"ease-out" });
+    }catch(e){}
+  }
+  new MutationObserver(ms=>{ if(!on()) return; for(const m of ms){
+      if(m.type === "childList") m.addedNodes.forEach(n=>{ if(n.nodeType === 1) requestAnimationFrame(()=>{ if(isOv(n)) play(n); }); });
+      else { const n = m.target, was = (" " + (m.oldValue || "") + " ").includes(" show "); if(!was && n.classList && n.classList.contains("show")) requestAnimationFrame(()=>{ if(isOv(n)) play(n); }); } } })
+    .observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:["class"], attributeOldValue:true });
+  /* programváltás a bal oldali menüből: az új oldal a gomb felől úszik be */
+  document.addEventListener("click", e=>{ const b = e.target.closest && e.target.closest("#pageSwitch .ps-btn"); if(!b || !on() || b.classList.contains("active")) return;
+    const br = b.getBoundingClientRect();
+    setTimeout(()=>{ const L = Array.from(document.querySelectorAll(".app > *")).filter(x=> !x.matches(".hdr2,.hdr-ph,script,style") && x.offsetParent !== null && x.getBoundingClientRect().height > 0).slice(0, 4);
+      L.forEach((x, i)=>{ try{
+        if(lite()) x.animate([{ opacity:0 }, { opacity:1 }], { duration:180, easing:"ease-out" });
+        else { const r = x.getBoundingClientRect(); x.style.transformOrigin = `0px ${Math.round(br.top + br.height / 2 - r.top)}px`;
+          const a = x.animate([{ opacity:0, transform:"translateX(-34px) scale(.96)" }, { opacity:1, transform:"none" }], { duration:420, delay:i * 55, easing:"cubic-bezier(.2,.9,.25,1)", fill:"backwards" }); a.onfinish = ()=>{ x.style.transformOrigin = ""; }; }
+      }catch(_){ } }); }, 30); }, true);
 })();</script>
 </body>
 </html>
