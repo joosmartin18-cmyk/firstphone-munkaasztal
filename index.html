@@ -5306,6 +5306,43 @@
     .hdr-ctx .who-chip::before{display:none;}
   }
   @media (max-width:380px){ .hdr2 .ps-btn{font-size:10px !important;} .hdr2 .hdr-btns{gap:4px;} .hdr2 .hdr-btns .icon-btn,.hdr2 .hdr-btns .set-btn,.hdr2 .hdr-btns .fc-chip{width:30px !important;min-width:30px;height:30px !important;font-size:14px;} }
+  /* ===================== ⬆ GÖRGETÉSKOR KOMPAKT FEJLÉC (gépen) — az ikonok animálva felugranak egy lebegő sávba ===================== */
+  .hdr-ph{display:none;}
+  html.hdr-mini .hdr-ph{display:block;transition:height .35s ease;}
+  html.hdr-mini:not(.m-app) .app > .hdr2{position:fixed !important;top:10px;left:50%;z-index:55;width:min(1180px,calc(100vw - 24px));box-sizing:border-box;margin:0 !important;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:7px 10px !important;border-radius:20px;box-shadow:0 18px 44px rgba(0,0,0,.4) !important;animation:hdrDrop .42s cubic-bezier(.2,.9,.3,1.2);}
+  @keyframes hdrDrop{from{opacity:0;transform:translate(-50%,-24px) scale(.97)}to{opacity:1;transform:translateX(-50%)}}
+  html.hdr-mini:not(.m-app) .hdr2 > .topbar{display:contents !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .brand{order:1;flex:none !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .brand-mark{height:30px !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .brand-text{display:none !important;}
+  html.hdr-mini:not(.m-app) .hdr2 > .hdr-ctx{display:none !important;}
+  html.hdr-mini:not(.m-app) .hdr2 > .page-switch{order:2;flex:1 1 auto;justify-content:center !important;flex-wrap:nowrap !important;gap:4px !important;padding:0 !important;border-top:0 !important;overflow:visible !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .ps-btn{padding:5px !important;gap:0 !important;border-radius:12px !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .ps-btn .ps-t{display:none !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .ps-btn .ps-i{width:32px;height:32px;font-size:16px;border-radius:10px;}
+  html.hdr-mini:not(.m-app) .hdr2 .ps-btn.active{box-shadow:0 6px 16px color-mix(in srgb,var(--c) 45%,transparent) !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .header-right{order:3;flex:none;margin:0 !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .hdr-btns{flex-wrap:nowrap !important;gap:5px !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .hdr-btns .set-btn .gt,html.hdr-mini:not(.m-app) .hdr2 .hdr-btns .nw-t{display:none !important;}
+  html.hdr-mini:not(.m-app) .hdr2 .hdr-btns > *{transform:scale(.9);}
+  html.hdr-mini:not(.m-app) .hdr2 .fc-chip{max-width:38px;overflow:hidden;white-space:nowrap;padding:0 10px !important;}
+  html.hdr-back .app > .hdr2{animation:hdrBack .45s cubic-bezier(.2,.9,.3,1.1);}
+  @keyframes hdrBack{from{opacity:.4;transform:translateY(-12px)}to{opacity:1;transform:none}}
+  /* a ragadós oldalsávok a lebegő sáv alá csúsznak */
+  html.hdr-mini:not(.m-app) :is(.lt2 .lt-side,.lt2 .lt-scan,.td-side,.ks-side,.cs2-side,.sx-side,.tt-hero){top:78px !important;transition:top .3s ease;}
+  html.hdr-mini:not(.m-app) .tt-toc{top:calc(var(--tt-top,178px) + 70px) !important;max-height:calc(100vh - var(--tt-top,178px) - 90px) !important;}
+  html.hdr-mini.ltk:not(.m-app) .lt2 .lt-side-card{top:180px !important;}
+
+  /* ===================== 📚 TUDÁSTÁR: teljes szélesség + ⛶ teljes képernyő ===================== */
+  html:not(.m-app) body.page-tudastar .app{max-width:none !important;padding-left:28px;padding-right:28px;}
+  html:not(.m-app) body.page-tudastar .app > .hdr2{max-width:1180px;margin-left:auto !important;margin-right:auto !important;}
+  html:not(.m-app) body.page-tudastar .tt-grid{grid-template-columns:300px minmax(0,1fr) !important;}
+  .tt-fs{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);font:700 12.5px 'Inter',sans-serif;cursor:pointer;white-space:nowrap;}
+  .tt-fs:hover{border-color:var(--gold);}
+  html.tt-full body.page-tudastar .app > .hdr2,html.tt-full body.page-tudastar .app-footer,html.tt-full body.page-tudastar .ch-btn,html.tt-full .hdr-ph,html.tt-full .m-tab{display:none !important;}
+  html.tt-full body.page-tudastar .app{padding:12px 20px 30px !important;}
+  html.tt-full body.page-tudastar .tt-hero{top:8px !important;}
+  html.tt-full body.page-tudastar .tt-fs{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border-color:transparent;}
   /* ===================== 📱 MOBIL APP NÉZET (telefon, ≤ 640 px) — 2026-10 =====================
      Felül vékony, ragadós app-sáv (logó + 📷 + 🎁 + ☰), alul tab-sáv a programokkal (+ „Több” lap),
      a beosztás teljes szélességű, kompakt naptárral; a felugró ablakok alulról csúsznak fel. Gépen semmi nem változik. */
@@ -5526,7 +5563,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261023-134650";</script>
+<script>window.FP_BUILD="20261024-110956";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -14148,6 +14185,74 @@ service cloud.firestore {
   .op-drop-all{position:fixed;inset:10px;z-index:9999;border:3px dashed #f472b6;border-radius:22px;background:rgba(20,10,18,.55);display:none;align-items:center;justify-content:center;font:800 20px 'Poppins',sans-serif;color:#fff;pointer-events:none;backdrop-filter:blur(3px);}
   body.op-dragging .op-drop-all{display:flex;}
   @media (max-width:640px){ .op-card{grid-template-columns:auto minmax(0,1fr);} .op-btn{grid-column:1 / -1;text-align:center;} }
+  /* ===================== 🆕 CETLI STÚDIÓ — új elrendezés (2026-10): fent típus-galéria, balra nagy élő előnézet, jobbra az űrlap ===================== */
+  body.cl2{--tc:#d9ad46;}
+  body.cl2[data-tab="szallitas"],.cl2 .tab-btn[data-tab="szallitas"]{--tc:#4f8cff;} body.cl2[data-tab="erkezett"],.cl2 .tab-btn[data-tab="erkezett"]{--tc:#30b37a;}
+  body.cl2[data-tab="foglalo"],.cl2 .tab-btn[data-tab="foglalo"]{--tc:#d4953a;} body.cl2[data-tab="visszaaru"],.cl2 .tab-btn[data-tab="visszaaru"]{--tc:#a66bff;}
+  body.cl2[data-tab="szabad"],.cl2 .tab-btn[data-tab="szabad"]{--tc:#e0b23c;} body.cl2[data-tab="ora"],.cl2 .tab-btn[data-tab="ora"]{--tc:#22b8a6;}
+  body.cl2[data-tab="csjel"],.cl2 .tab-btn[data-tab="csjel"]{--tc:#f0703a;} body.cl2[data-tab="wolt"],.cl2 .tab-btn[data-tab="wolt"]{--tc:#00b8e0;}
+  body.cl2[data-tab="koszonet"],.cl2 .tab-btn[data-tab="koszonet"]{--tc:#3ecf8e;}
+  body.cl2 .wrap{max-width:1240px;}
+  /* fejléc: a típus színében */
+  body.cl2 .header{display:flex;align-items:center;gap:14px;padding:14px 16px !important;margin-bottom:12px;border-radius:24px;border:1px solid color-mix(in srgb,var(--tc) 40%,var(--border-soft));
+    background:radial-gradient(420px 160px at 0% 0%,color-mix(in srgb,var(--tc) 30%,transparent),transparent 70%),var(--bg-panel);transition:border-color .4s,background .4s;}
+  body.cl2 .brand{flex:1;min-width:0;}
+  body.cl2 .brand-badge{width:54px !important;height:54px !important;border-radius:17px !important;font-size:27px !important;background:color-mix(in srgb,var(--tc) 26%,var(--bg-panel2)) !important;border:1px solid color-mix(in srgb,var(--tc) 50%,transparent) !important;box-shadow:0 10px 24px color-mix(in srgb,var(--tc) 28%,transparent);}
+  body.cl2 #brandTitle{font-size:23px !important;letter-spacing:-.01em;}
+  body.cl2 #modeChip,body.cl2 #modeBtn{display:none !important;}
+  .cl-seg{display:inline-flex;gap:2px;padding:4px;border-radius:999px;background:var(--bg-panel2);border:1px solid var(--border-soft);}
+  .cl-seg button{border:0;background:transparent;color:var(--text-dim);font:700 12.5px 'Inter',sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:background .25s,color .25s;}
+  .cl-seg button small{font-weight:600;font-size:10.5px;opacity:.75;}
+  body.mode-ptouch .cl-seg [data-m="ptouch"],body.mode-postit .cl-seg [data-m="postit"]{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;box-shadow:0 6px 16px rgba(217,173,70,.35);}
+  body.no-ptouch .cl-seg{display:none !important;}
+  /* típus-galéria */
+  .cl-gal{position:relative;margin:0 0 14px;}
+  .cl-gal .tabs{display:flex !important;flex-direction:row !important;flex-wrap:nowrap;gap:8px !important;overflow-x:auto;padding:4px 2px 10px !important;margin:0 !important;background:none !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;scrollbar-width:thin;scroll-snap-type:x proximity;}
+  .cl-gal .tab-ind{display:none !important;}
+  .cl-gal .tab-btn{flex:1 0 116px !important;max-width:180px;min-height:108px;display:flex !important;flex-direction:column !important;align-items:flex-start !important;justify-content:flex-start;gap:9px !important;padding:12px !important;border-radius:20px !important;
+    border:1px solid var(--border-soft) !important;background:var(--bg-panel) !important;color:var(--text) !important;text-align:left;position:relative;overflow:hidden;scroll-snap-align:start;transition:transform .35s cubic-bezier(.34,1.56,.64,1),border-color .25s,box-shadow .25s,background .25s !important;}
+  .cl-gal .tab-btn:hover{transform:translateY(-3px) !important;border-color:color-mix(in srgb,var(--tc) 55%,transparent) !important;}
+  .cl-gal .tab-btn .tb-ic{width:42px !important;height:42px !important;border-radius:13px !important;font-size:21px !important;background:color-mix(in srgb,var(--tc) 20%,var(--bg-panel2)) !important;border:1px solid color-mix(in srgb,var(--tc) 35%,transparent) !important;transform:none !important;}
+  .cl-gal .tab-btn .tb-tx b{font-size:13px !important;line-height:1.2;} .cl-gal .tab-btn .tb-tx small{display:block !important;font-size:11px !important;color:var(--text-dim);}
+  .cl-gal .tab-btn.active{border-color:color-mix(in srgb,var(--tc) 75%,transparent) !important;background:linear-gradient(160deg,color-mix(in srgb,var(--tc) 24%,var(--bg-panel)),var(--bg-panel) 75%) !important;box-shadow:0 12px 28px color-mix(in srgb,var(--tc) 30%,transparent) !important;transform:translateY(-2px);}
+  .cl-gal .tab-btn.active .tb-ic{background:var(--tc) !important;color:#fff;box-shadow:0 6px 14px color-mix(in srgb,var(--tc) 45%,transparent);}
+  .cl-gal .tab-btn.active::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--tc);}
+  .cl-gal .tab-btn.active::before{content:"✓";position:absolute;top:10px;right:11px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:900 11px 'Inter',sans-serif;color:#fff;background:var(--tc);}
+  /* munkaterület */
+  body.cl2 .cl-shell{display:block !important;}
+  body.cl2 .cl-side{display:none !important;}
+  body.cl2 .cl-main .grid{grid-template-columns:390px minmax(0,1fr) !important;gap:18px !important;}
+  body.cl2.mode-postit .cl-main .grid{grid-template-columns:400px minmax(0,1fr) !important;}
+  body.cl2 .cl-main .grid > div:last-child{order:-1;}
+  body.cl2 .preview-outer{position:sticky !important;top:10px;padding:14px 14px 16px !important;border-radius:26px !important;border:1px solid color-mix(in srgb,var(--tc) 30%,var(--border-soft)) !important;
+    background:radial-gradient(340px 260px at 50% 30%,color-mix(in srgb,var(--tc) 14%,transparent),transparent 70%),var(--bg-panel) !important;}
+  body.cl2 .preview-outer h2{margin-bottom:10px !important;}
+  body.cl2 .pv-stage{min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 10px;border-radius:20px;
+    background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.07),transparent 65%),radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.4px) 0 0/14px 14px,var(--bg-panel2);border:1px solid var(--border-soft);}
+  body[data-theme="light"].cl2 .pv-stage{background:radial-gradient(circle at 50% 35%,#fff,transparent 70%),radial-gradient(rgba(0,0,0,.06) 1px,transparent 1.4px) 0 0/14px 14px,#efece4;}
+  body.cl2 .slip-actions{margin-top:12px !important;}
+  body.cl2 .slip-actions .btn{border-radius:14px !important;}
+  /* űrlap: számozott lépések */
+  body.cl2 .cl-main .grid > div:first-child{counter-reset:clsec;}
+  body.cl2 .cl-main .grid > div:first-child > .card:not(.op-card){border-radius:22px;}
+  body.cl2 .cl-main .grid > div:first-child > .card:not(.op-card) > h2::before{counter-increment:clsec;content:counter(clsec);display:inline-grid;place-items:center;width:24px;height:24px;margin-right:9px;border-radius:8px;
+    background:color-mix(in srgb,var(--tc) 28%,transparent);color:var(--text);font:800 12px 'Inter',sans-serif;vertical-align:1px;}
+  body.cl2 .cl-main .grid > div:first-child > .op-card{border-color:color-mix(in srgb,var(--tc) 45%,transparent) !important;}
+  body.cl2 .field input:focus,body.cl2 .field textarea:focus,body.cl2 .field select:focus{border-color:var(--tc) !important;box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 22%,transparent) !important;}
+  /* nyomtatási tippek: alul, teljes szélességben */
+  body.cl2 .cl-tips{margin:14px 0 0 !important;}
+  /* keskenyebb */
+  @media(max-width:1000px){ body.cl2 .cl-main .grid,body.cl2.mode-postit .cl-main .grid{grid-template-columns:330px minmax(0,1fr) !important;} .cl-gal .tab-btn{flex-basis:104px !important;min-height:96px;} }
+  @media(max-width:760px){
+    body.cl2 .cl-main .grid,body.cl2.mode-postit .cl-main .grid{grid-template-columns:1fr !important;}
+    body.cl2 .preview-outer{position:static !important;}
+    body.cl2 .header{padding:10px 12px !important;border-radius:20px;} body.cl2 .brand-badge{width:44px !important;height:44px !important;font-size:22px !important;} body.cl2 #brandTitle{font-size:19px !important;}
+    .cl-gal .tab-btn{flex:0 0 auto !important;min-height:0;flex-direction:row !important;align-items:center !important;padding:7px 12px 7px 7px !important;border-radius:999px !important;gap:8px !important;}
+    .cl-gal .tab-btn .tb-ic{width:30px !important;height:30px !important;font-size:15px !important;border-radius:50% !important;}
+    .cl-gal .tab-btn .tb-tx small,.cl-gal .tab-btn.active::before{display:none !important;}
+    .cl-gal .tab-btn.active::after{left:18px;right:18px;}
+    body.cl2 .pv-stage{min-height:0;padding:14px 6px;}
+  }
 </style>
 </head>
 <body data-tab="szallitas" data-app="cetli">
@@ -17739,6 +17844,23 @@ window.FP = {
 };
 if(window.parent && window.parent !== window) document.documentElement.classList.add('embedded');
 
+/* ===================== 🆕 CETLI STÚDIÓ: a típusok fentre (galéria), a tippek alulra, a mód kapcsoló szegmensként ===================== */
+(function cl2(){
+  try{
+    const b = document.body, shell = document.querySelector('#app-cetli .cl-shell'), tabs = document.getElementById('cetliTabs'); if(!shell || !tabs) return;
+    b.classList.add('cl2');
+    const gal = document.createElement('div'); gal.className = 'cl-gal'; shell.parentNode.insertBefore(gal, shell); tabs.classList.remove('vert'); gal.appendChild(tabs);
+    const tips = document.querySelector('.cl-side .info-banner'), main = document.querySelector('.cl-main'); if(tips && main){ tips.classList.add('cl-tips'); main.appendChild(tips); }
+    const meta = document.querySelector('#app-cetli .hdr-meta'), mb = document.getElementById('modeBtn');
+    if(meta && mb){ const seg = document.createElement('div'); seg.className = 'cl-seg'; seg.setAttribute('role', 'group'); seg.setAttribute('aria-label', 'Nyomtatási mód');
+      seg.innerHTML = '<button type="button" data-m="ptouch" title="62 mm szalag · Brother QL-700">🏷️ P-touch <small>62 mm</small></button><button type="button" data-m="postit" title="75×75 mm post-it · A4-es nyomtató">🟨 Post-it <small>75×75</small></button>';
+      seg.addEventListener('click', e=>{ const x = e.target.closest('[data-m]'); if(!x) return; const cur = document.body.classList.contains('mode-postit') ? 'postit' : 'ptouch'; if(cur !== x.dataset.m) mb.click(); });
+      meta.appendChild(seg); }
+    /* az aktív típus mindig látszódjon a galériában */
+    const show = ()=>{ const a = tabs.querySelector('.tab-btn.active'); if(a && a.scrollIntoView) try{ a.scrollIntoView({ block:'nearest', inline:'nearest', behavior:'smooth' }); }catch(e){} };
+    tabs.addEventListener('click', ()=> setTimeout(show, 50));
+  }catch(e){ console.warn('cl2', e); }
+})();
 <\/script>
 </body>
 </html>
@@ -24199,8 +24321,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const host = document.getElementById("cetliHost");
     if(!document.body.classList.contains("page-ext")) return;
     const top = host.getBoundingClientRect().top + window.scrollY;
-    host.style.height = Math.max(460, window.innerHeight - top - 6) + "px";
+    const tb = document.getElementById("mTab"), off = tb && getComputedStyle(tb).display !== "none" ? tb.offsetHeight : 0;
+    host.style.height = Math.max(420, window.innerHeight - top - 6 - off) + "px";
   }
+  window.fpSizeCetli = sizeCetliHost;
   function ensureCetliFrame(){
     if(cetliFrame) return;
     const host = document.getElementById("cetliHost");
@@ -26696,6 +26820,56 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const start = ()=>{ build(); setTimeout(build, 1500); setTimeout(build, 5000); };
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
   window.fpMobileMenu = openSheet;
+})();</script>
+<script>/* ===================== ⬆ görgetéskor kompakt fejléc (gépen) + 📚 Tudástár teljes képernyő ===================== */
+(function fpHdrMini(){
+  const H = document.documentElement; let mini = false, ph = null, busy = false;
+  const hdr = ()=> document.querySelector(".app > .hdr2");
+  const icons = ()=> Array.from(document.querySelectorAll(".hdr2 .ps-btn .ps-i, .hdr2 .brand-mark"));
+  function flip(fn){
+    const L = icons(), F = L.map(e=> e.getBoundingClientRect());
+    fn();
+    if(H.classList.contains("fp-lite") || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    L.forEach((e, i)=>{ const a = F[i], b = e.getBoundingClientRect(); if(!b.width || !a.width) return; const dx = a.left - b.left, dy = a.top - b.top, sc = a.width / b.width;
+      if(Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+      try{ e.animate([{ transform:`translate(${dx}px,${dy}px) scale(${sc})` }, { transform:"none" }], { duration:560, delay:i * 28, easing:"cubic-bezier(.34,1.35,.64,1)", fill:"backwards" }); }catch(er){} });
+  }
+  function set(on){
+    if(on === mini || busy || H.classList.contains("m-app")) return; const h = hdr(); if(!h) return;
+    busy = true; setTimeout(()=> busy = false, 450);
+    flip(()=>{
+      if(on){ if(!ph){ ph = document.createElement("div"); ph.className = "hdr-ph"; } ph.style.height = (h.offsetHeight + parseFloat(getComputedStyle(h).marginBottom || 0)) + "px"; h.parentNode.insertBefore(ph, h);
+        if(document.body.classList.contains("page-ext")) ph.style.height = "76px"; H.classList.add("hdr-mini"); H.classList.remove("hdr-back"); }
+      else { H.classList.remove("hdr-mini"); if(ph) ph.remove(); H.classList.add("hdr-back"); setTimeout(()=> H.classList.remove("hdr-back"), 500); }
+      mini = on;
+    });
+    setTimeout(()=>{ try{ window.fpSizeCetli && fpSizeCetli(); }catch(e){} }, 380);
+  }
+  function onY(y){ if(!mini && y > 90) set(true); else if(mini && y < 12) set(false); }
+  window.addEventListener("scroll", ()=> onY(window.scrollY || 0), { passive:true });
+  /* belső görgetősávok (pl. listák) is számítanak */
+  document.addEventListener("scroll", e=>{ const t = e.target; if(t && t.nodeType === 1 && t.scrollHeight > t.clientHeight + 200 && t.clientHeight > window.innerHeight * .5) onY(t.scrollTop); }, { capture:true, passive:true });
+  /* a Cetli generátor saját keretben görget */
+  function hookFrame(){ const f = document.querySelector("#cetliHost iframe"); if(!f || f.dataset.hm) return; try{ const w = f.contentWindow; if(!w || !w.document) return; f.dataset.hm = "1";
+      w.addEventListener("scroll", e=>{ const t = e.target, y = t === w.document || t === w.document.documentElement ? (w.scrollY || 0) : (t.scrollTop || 0); onY(y); }, { capture:true, passive:true }); }catch(e){} }
+  setInterval(hookFrame, 1500);
+  /* oldalváltáskor vissza az eredeti fejlécre */
+  document.addEventListener("click", e=>{ if(e.target.closest && e.target.closest(".ps-btn") && mini && (window.scrollY || 0) < 12) set(false); }, true);
+  window.fpHdrMini = set;
+
+  /* 📚 Tudástár: ⛶ teljes képernyő gomb */
+  function ttBtn(){ const hero = document.querySelector(".tt-hero .tt-hl"); if(!hero || hero.querySelector(".tt-fs")) return;
+    const b = document.createElement("button"); b.type = "button"; b.className = "tt-fs"; b.title = "Teljes képernyő (Esc: kilépés)"; b.innerHTML = "⛶ <span>Teljes képernyő</span>"; b.style.marginLeft = "auto";
+    hero.appendChild(b);
+    const upd = ()=>{ const on = H.classList.contains("tt-full"); b.innerHTML = on ? "✕ <span>Kilépés</span>" : "⛶ <span>Teljes képernyő</span>"; };
+    b.onclick = ()=>{ const on = !H.classList.contains("tt-full"); H.classList.toggle("tt-full", on); if(on) set(false);
+      try{ if(on && document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{}); else if(!on && document.fullscreenElement) document.exitFullscreen().catch(()=>{}); }catch(e){}
+      upd(); window.scrollTo(0, 0); };
+    document.addEventListener("fullscreenchange", ()=>{ if(!document.fullscreenElement && H.classList.contains("tt-full")){ H.classList.remove("tt-full"); upd(); } });
+    document.addEventListener("click", e=>{ const p = e.target.closest && e.target.closest(".ps-btn"); if(p && p.dataset.page !== "tudastar" && H.classList.contains("tt-full")){ H.classList.remove("tt-full"); try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(er){} upd(); } }, true);
+  }
+  const st = ()=>{ ttBtn(); setTimeout(ttBtn, 2000); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", st) : st();
 })();</script>
 </body>
 </html>
