@@ -5456,6 +5456,61 @@
   .rs-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px;}
   .rs-btns button{height:42px;padding:0 16px;border-radius:12px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:800 14px 'Inter',sans-serif;cursor:pointer;}
   .rs-btns .rs-go{background:linear-gradient(135deg,#4ee0a0,#1f9c66);color:#062114;border-color:transparent;}
+
+  /* ===================== ⬅ BAL OLDALI MENÜ (próba: Kaposvár, gépen) — a programválasztó a képernyő bal szélén ===================== */
+  html.fp-rnav:not(.m-app) body{padding-left:122px;}
+  html.fp-rnav.tt-full body{padding-left:0;} html.fp-rnav.tt-full #pageSwitch{display:none !important;}
+  html.fp-rnav #pageSwitch{position:fixed !important;left:14px;right:auto;top:50%;transform:translateY(-50%);z-index:56;display:flex !important;flex-direction:column !important;flex-wrap:nowrap !important;align-items:stretch !important;justify-content:flex-start !important;gap:3px !important;
+    width:98px !important;max-width:none !important;max-height:calc(100vh - 28px);margin:0 !important;padding:10px 8px !important;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;isolation:isolate;
+    border:1px solid rgba(240,199,102,.24) !important;border-radius:28px !important;
+    background:radial-gradient(120px 160px at 50% 0%,rgba(240,199,102,.14),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0) 40%),color-mix(in srgb,var(--bg-panel,#17171c) 93%,transparent) !important;
+    box-shadow:0 22px 54px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06) !important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);animation:rnIn .6s cubic-bezier(.2,.9,.3,1) backwards;}
+  html.fp-rnav #pageSwitch::-webkit-scrollbar{display:none;}
+  body.light-theme #pageSwitch{}
+  html.fp-rnav body.light-theme #pageSwitch{background:radial-gradient(120px 160px at 50% 0%,rgba(217,173,70,.16),transparent 70%),rgba(255,255,255,.92) !important;box-shadow:0 18px 44px rgba(60,40,10,.14) !important;border-color:rgba(217,173,70,.35) !important;}
+  html.fp-rnav #pageSwitch::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:1.5px;pointer-events:none;
+    background:conic-gradient(from var(--axa,0deg),transparent 0 64%,rgba(240,199,102,.85) 74%,#fff1bd 77%,rgba(240,199,102,.85) 80%,transparent 90%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:axRing 9s linear infinite;}
+  html.fp-rnav #pageSwitch .ps-ind{display:none !important;}
+  html.fp-rnav #pageSwitch .ps-btn{position:relative;flex:none !important;display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:center !important;gap:4px !important;width:100% !important;min-width:0;margin:0 !important;padding:8px 2px 7px !important;
+    border-radius:18px !important;border:1px solid transparent !important;background:transparent !important;color:var(--text-dim) !important;font:700 11.5px/1.15 'Inter',sans-serif !important;text-align:center;cursor:pointer;box-shadow:none !important;
+    transition:background .2s,color .2s,transform .3s cubic-bezier(.34,1.56,.64,1);animation:rnItem .5s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--k,0) * 45ms + .15s);}
+  html.fp-rnav #pageSwitch .ps-btn[hidden],html.fp-rnav #pageSwitch .ps-btn.ps-off,body.not-kap #pageSwitch .ps-btn.kaponly{display:none !important;}
+  html.fp-rnav #pageSwitch .ps-btn .ps-i{display:grid !important;place-items:center;width:42px !important;height:42px !important;border-radius:14px !important;font-size:20px !important;font-style:normal;background:color-mix(in srgb,var(--c,#d9ad46) 15%,transparent) !important;border:1px solid color-mix(in srgb,var(--c,#d9ad46) 28%,transparent);transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+  html.fp-rnav #pageSwitch .ps-btn .ps-t{display:block !important;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  html.fp-rnav #pageSwitch .ps-btn .ps-long{display:none !important;}
+  html.fp-rnav #pageSwitch .ps-btn:hover{color:var(--text) !important;background:color-mix(in srgb,var(--c,#d9ad46) 11%,transparent) !important;transform:translateX(3px);}
+  html.fp-rnav #pageSwitch .ps-btn:hover .ps-i{transform:scale(1.1) rotate(6deg);box-shadow:0 8px 18px color-mix(in srgb,var(--c,#d9ad46) 35%,transparent);}
+  html.fp-rnav #pageSwitch .ps-btn.active{color:#fff !important;background:linear-gradient(160deg,color-mix(in srgb,var(--c,#d9ad46) 82%,#fff 18%),var(--c,#d9ad46)) !important;box-shadow:0 10px 26px color-mix(in srgb,var(--c,#d9ad46) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.35) !important;text-shadow:0 1px 2px rgba(0,0,0,.25);transform:none;}
+  html.fp-rnav #pageSwitch .ps-btn.active .ps-i{background:rgba(255,255,255,.22) !important;border-color:rgba(255,255,255,.35);animation:rnPop .55s cubic-bezier(.34,1.56,.64,1);}
+  html.fp-rnav #pageSwitch .ps-btn.active::before{content:"";position:absolute;right:-6px;top:24%;bottom:24%;width:4px;border-radius:4px;background:var(--c,#d9ad46);box-shadow:0 0 12px var(--c,#d9ad46);animation:rnBar .45s cubic-bezier(.34,1.56,.64,1);}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="beosztas"]{--c:#6f7ff5;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="cetli"]{--c:#2fa3b6;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="csomag"]{--c:#c47f2c;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="kassza"]{--c:#d4a52c;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="leltar"]{--c:#2ea472;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="selejt"]{--c:#d9474a;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="specko"]{--c:#e0703a;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="teendo"]{--c:#d6589a;}
+  html.fp-rnav #pageSwitch .ps-btn[data-page="tudastar"]{--c:#8a5aa8;}
+
+  .ps-rn{display:none;}
+  html:not(.m-app):not(.fp-rnav):not(.hdr-mini) body.is-kap .ps-rn{display:inline-flex;align-items:center;gap:5px;flex:none;margin-left:6px;padding:7px 10px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--gold,#d9ad46) 55%,var(--border));background:transparent;color:var(--text-dim);font:700 12px 'Inter',sans-serif;cursor:pointer;}
+  .ps-rn:hover{color:var(--gold,#d9ad46);border-style:solid;}
+  .rn-tg{display:none;}
+  html.fp-rnav #pageSwitch .rn-tg{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:6px;padding:7px 2px 5px;border:0;border-top:1px dashed var(--border,#2b2b33);background:transparent;color:var(--text-faint,#6c6c78);font:700 10px/1.15 'Inter',sans-serif;cursor:pointer;border-radius:0 0 16px 16px;}
+  html.fp-rnav #pageSwitch .rn-tg:hover{color:var(--gold,#d9ad46);}
+  html.fp-rnav #pageSwitch .rn-tg i{font-style:normal;font-size:14px;}
+  @keyframes rnIn{from{opacity:0;transform:translate(-46px,-50%)}to{opacity:1;transform:translate(0,-50%)}}
+  @keyframes rnItem{from{opacity:0;transform:translateX(-20px) scale(.92)}to{opacity:1;transform:none}}
+  @keyframes rnPop{0%{transform:scale(.75) rotate(-10deg)}60%{transform:scale(1.14) rotate(4deg)}100%{transform:none}}
+  @keyframes rnBar{from{transform:scaleY(0);opacity:0}to{transform:none;opacity:1}}
+  /* a görgetéskor lebegő fejléc és a chat gomb ne lógjon a menü alá */
+  html.fp-rnav.hdr-mini:not(.m-app) .app > .hdr2{left:calc(122px + (100vw - 122px) / 2);width:auto;max-width:calc(100vw - 154px);gap:14px;padding:7px 12px !important;}
+  html.fp-lite #pageSwitch::after{animation-iteration-count:infinite !important;}
+  @media (prefers-reduced-motion:reduce){ html.fp-rnav:not(.fp-anim-full) #pageSwitch,html.fp-rnav:not(.fp-anim-full) #pageSwitch *,html.fp-rnav:not(.fp-anim-full) #pageSwitch::after{animation:none !important;} }
+  @media print{ html.fp-rnav #pageSwitch{display:none !important;} html.fp-rnav body{padding-left:0 !important;} }
+  @media (max-height:640px){ html.fp-rnav #pageSwitch .ps-btn .ps-i{width:34px !important;height:34px !important;font-size:16px !important;} html.fp-rnav #pageSwitch .ps-btn{padding:5px 2px !important;font-size:10.5px !important;} }
   /* ===================== ⬆ GÖRGETÉSKOR KOMPAKT FEJLÉC (gépen) — az ikonok animálva felugranak egy lebegő sávba ===================== */
   .hdr-ph{display:none;}
   html.hdr-mini .hdr-ph{display:block;transition:height .35s ease;}
@@ -5713,7 +5768,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-195844";</script>
+<script>window.FP_BUILD="20261024-220726";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -20141,6 +20196,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   window.fpRateOnNow = ()=>{ try{ return rateOn(); }catch(e){ return true; } };
   function fpApplyFeats(){
     document.body.classList.toggle("not-kap", !/^kaposv[aá]r/i.test((state.settings.location || "").trim()));
+    document.body.classList.toggle("is-kap", /^kaposv[aá]r/i.test((state.settings.location || "").trim()));
     Object.values(FEATS).forEach(L=> L.forEach(([k])=> document.body.classList.toggle("ft-off-" + k, !ftOn(k))));
     try{ const fp = childFP(); if(fp && fp.setFeats) fp.setFeats(CETLI_FT.filter(k=> !ftOn(k))); }catch(e){}
   }
@@ -27764,6 +27820,38 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* másik gépről jött változás (felhő) */
   setInterval(()=>{ if(!root || !document.body.classList.contains("page-specko")) return; const r = localStorage.getItem(KEY) || ""; if(r && r !== lastRaw && !root.contains(document.activeElement)){ lastRaw = r; D = load(); L = loadL(); draw(); } }, 4000);
   window.fpSpeckoOpen = ()=>{ mount(); D = load(); L = loadL(); lastRaw = localStorage.getItem(KEY) || ""; draw(); };
+})();</script>
+<script>/* ===================== ⬅ bal oldali menü — próba Kaposvárnál (gépen). A programválasztót kiveszi a fejlécből, és a bal szélre teszi; vissza is tehető. ===================== */
+(function fpRightNav(){
+  const H = document.documentElement, KEY = "firstphone_rnav";
+  let home = null, next = null, busy = false;
+  const off = ()=>{ try{ return localStorage.getItem(KEY) === "off"; }catch(e){ return false; } };
+  const want = ()=> !!document.body && document.body.classList.contains("is-kap") && !off() && !H.classList.contains("m-app") && !H.classList.contains("fp-scanonly");
+  function ui(ps){
+    if(!ps.querySelector(".rn-tg")){ const b = document.createElement("button"); b.type = "button"; b.className = "rn-tg"; b.title = "A menü vissza felülre (a fejlécbe)"; b.innerHTML = "<i>⬆</i>Menü felülre";
+      b.onclick = e=>{ e.stopPropagation(); try{ localStorage.setItem(KEY, "off"); }catch(_){ } apply(); try{ (window.toast || window.fpNotice || (()=>{}))("⬆ A menü visszakerült felülre. A ⬅ Balra gombbal bármikor újra oldalra teheted."); }catch(_){ } }; ps.appendChild(b); }
+    if(!ps.querySelector(".ps-rn")){ const r = document.createElement("button"); r.type = "button"; r.className = "ps-rn"; r.title = "Próba: a menü a bal oldalra kerül"; r.innerHTML = "⬅ Balra";
+      r.onclick = e=>{ e.stopPropagation(); try{ localStorage.removeItem(KEY); }catch(_){ } apply(); }; ps.appendChild(r); }
+  }
+  function apply(){
+    if(busy) return; const ps = document.getElementById("pageSwitch"); if(!ps) return; busy = true;
+    try{
+      ui(ps);
+      const on = want();
+      if(on && !H.classList.contains("fp-rnav")){
+        if(ps.parentNode !== document.body){ home = ps.parentNode; next = ps.nextSibling; document.body.appendChild(ps); }
+        ps.querySelectorAll(".ps-btn").forEach((b, k)=> b.style.setProperty("--k", k));
+        H.classList.add("fp-rnav");
+      } else if(!on && H.classList.contains("fp-rnav")){
+        H.classList.remove("fp-rnav");
+        if(home && ps.parentNode === document.body) home.insertBefore(ps, next && next.parentNode === home ? next : null);
+      }
+    }finally{ busy = false; }
+    try{ window.fpSizeCetli && setTimeout(fpSizeCetli, 60); }catch(e){}
+  }
+  const start = ()=>{ apply(); new MutationObserver(apply).observe(document.body, { attributes:true, attributeFilter:["class"] }); new MutationObserver(apply).observe(H, { attributes:true, attributeFilter:["class"] }); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
+  window.fpRightNav = apply;
 })();</script>
 </body>
 </html>
