@@ -4315,7 +4315,7 @@
   html.fp-lite body.light-theme .popup-backdrop,html.fp-lite body.light-theme .modal-backdrop,html.fp-lite body.light-theme .wl-back{background:rgba(40,32,15,.36) !important;}
   html.fp-lite .fp-note{background:rgba(28,28,32,.97) !important;}
   html.fp-lite body.light-theme .fp-note,html.fp-lite body[data-theme="light"] .fp-note{background:rgba(250,250,251,.98) !important;}
-  html.fp-lite :not(.hc-stage *):not(.tr-scene *):not(.spinner){animation-iteration-count:1 !important;}
+  html.fp-lite :not(.hc-stage *):not(.tr-scene *):not(.spinner):not(.ax-hdr):not(.ax-hdr *):not(.ax-ph):not(.ax-ph *):not(.ax-dhero):not(.ax-dhero *){animation-iteration-count:1 !important;}
   html.fp-lite{--shadow:0 4px 14px rgba(0,0,0,.28);}
   html.fp-lite body::before,html.fp-lite body::after{animation:none !important;}
 
@@ -5713,7 +5713,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-194758";</script>
+<script>window.FP_BUILD="20261024-195844";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -9309,7 +9309,7 @@ service cloud.firestore {
         const card = (ic, c, ttl, body, extra)=> `<section class="ax-dc" style="--c:${c}"><header><span class="ic">${ic}</span><h4>${ttl}</h4>${extra || ""}</header>${body}</section>`;
         const empty = t=> `<p class="ax-dempty">${t}</p>`;
         m.innerHTML = `<div class="ax-drwb" role="dialog" aria-label="Bolt adatai">
-          <div class="ax-dhero" style="--av:${avCol(shortN(x))}"><button type="button" class="ax-ib ax-detx" title="Bezárás (Esc)">${axI("x")}</button>
+          <div class="ax-dhero" style="--av:${avCol(shortN(x))}"><i class="ax-dhfx" aria-hidden="true"><s class="r1"></s><s class="r2"></s><s class="r3"></s>${[8,19,31,44,57,69,82,93].map((l, k)=> `<em style="--l:${l}%;--d:${(k * .73) % 4.2}s;--t:${3.6 + (k % 3) * .9}s;--z:${k % 2 ? 3 : 4}px"></em>`).join("")}</i><button type="button" class="ax-ib ax-detx" title="Bezárás (Esc)">${axI("x")}</button>
             <div class="ax-dhrow">${axAv(x, true)}<div class="ax-dhtx"><b>${esc(nameOf(x))}</b><small>${esc(se.address || x.addr || "")}</small></div></div>
             <div class="ax-dchips"><span class="ax-dpres ${pi.k || "off"}" data-u="${esc(x.uid)}">${pi.s ? pi.s + (pi.k === "live" ? "" : " · " + pi.t.replace(/^utoljára bent: |^nem aktív · /, "")) : "⚪ Még nem volt bent"}</span><span class="ax-dchip">✉️ ${esc(x.email || "—")}</span>${se.phone ? `<span class="ax-dchip">📞 ${esc(se.phone)}</span>` : ""}<span class="ax-dchip">💾 ${x.ms ? "mentve " + rel(x.ms) : "még nem mentett"}</span>${(()=>{ const pv = (window.__fpPres || {}).admin, v = pv && pv.view; return v && v.uid === x.uid && Date.now() - (v.t || 0) < 75000 ? `<span class="ax-dchip ax-dme">👑 ${esc(v.n || "Admin")} most bent van${v.act ? " · " + esc(v.act) : ""}</span>` : ""; })()}</span></div></div>
           <div class="ax-dtabs" role="tablist"><button type="button" class="on" data-dtab="ov">📊 Áttekintés</button><button type="button" data-dtab="set">⚙️ Beállítások</button><button type="button" data-dtab="ops">⚡ Műveletek</button><span class="ax-sp"></span><small class="ax-dtabh">${openT.length ? `🐞 ${openT.length} nyitott jegy · ` : ""}${wait.length ? `📦 ${wait.length} csomag vár` : "minden rendben"}</small></div>
@@ -10543,7 +10543,29 @@ service cloud.firestore {
     @keyframes fpHeroRing{50%{box-shadow:0 0 0 2px rgba(255,214,110,1),0 0 0 10px rgba(240,199,102,0),0 12px 30px rgba(240,170,40,.5);}}
     .ax-dhero .ax-dchip,.ax-dhero .ax-dpres{border-color:rgba(240,199,102,.35) !important;}
     .ax-drw.th-light .ax-dhero{color:#fff;}
-    @media (prefers-reduced-motion:reduce){ .ax-dhero,.ax-dhero .ax-dhtx b,.ax-dhero .ax-dhrow .ax-av.big{animation:none !important;} }
+
+    /* ✨ bolt-adatlap fejléc: jól látható animáció — forgó arany körívek, körbefutó arany keret, felszálló szikrák */
+    .ax-dhero{isolation:isolate;}
+    .ax-dhero > *:not(.ax-dhfx){position:relative;z-index:1;}
+    .ax-dhero .ax-detx{position:absolute;z-index:3;}
+    .ax-dhfx{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+    .ax-dhfx s{position:absolute;border-radius:50%;}
+    .ax-dhfx .r1{width:230px;height:230px;right:-70px;top:-118px;background:conic-gradient(from 0deg,transparent 0 55%,rgba(240,199,102,.85) 70%,#fff1bd 74%,rgba(240,199,102,.85) 78%,transparent 92%);
+      -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));animation:axSpin 6s linear infinite;}
+    .ax-dhfx .r2{width:300px;height:300px;right:-105px;top:-152px;border:1.5px dashed rgba(240,199,102,.32);animation:axSpin 22s linear infinite reverse;}
+    .ax-dhfx .r3{width:160px;height:160px;right:-35px;top:-83px;border:1px solid rgba(240,199,102,.35);animation:axPulse 3.2s ease-in-out infinite;}
+    @keyframes axSpin{to{transform:rotate(360deg)}}
+    @keyframes axPulse{0%,100%{transform:scale(.92);opacity:.35}50%{transform:scale(1.08);opacity:.9;box-shadow:0 0 22px rgba(240,199,102,.35),inset 0 0 18px rgba(240,199,102,.18)}}
+    .ax-dhfx em{position:absolute;bottom:-8px;left:var(--l);width:var(--z);height:var(--z);border-radius:50%;background:radial-gradient(circle,#fff6d0,#f0c766 55%,transparent 70%);box-shadow:0 0 8px rgba(240,199,102,.8);opacity:0;animation:axSpark var(--t) ease-in var(--d) infinite;}
+    @keyframes axSpark{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:.95}70%{opacity:.6}100%{transform:translate(14px,-150px) scale(1.1);opacity:0}}
+    .ax-dhero::after{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.5px;pointer-events:none;
+      background:conic-gradient(from var(--axa),transparent 0 62%,rgba(240,199,102,.9) 72%,#fff1bd 75%,rgba(240,199,102,.9) 78%,transparent 88%);
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:axRing 6s linear infinite;}
+    .ax-dhero{animation:fpHeroSheen 3.6s cubic-bezier(.45,0,.25,1) infinite,fpHeroFlow 9s ease-in-out infinite alternate;}
+    .ax-dhero .ax-dhtx b{animation-duration:3.6s;}
+    .ax-dhero .ax-dchip,.ax-dhero .ax-dpres{transition:transform .2s;} .ax-dhero .ax-dchip:hover,.ax-dhero .ax-dpres:hover{transform:translateY(-1px);}
+    @media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) .ax-dhfx,html:not(.fp-anim-full) .ax-dhero::after{display:none;} }
+    @media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) .ax-dhero,html:not(.fp-anim-full) .ax-dhero .ax-dhtx b,html:not(.fp-anim-full) .ax-dhero .ax-dhrow .ax-av.big{animation:none !important;} }
     .ax-dhero .ax-dhtx small{color:rgba(255,255,255,.86);}
     .ax-dhero .ax-dchip,.ax-dhero .ax-dpres{background:rgba(8,12,18,.34);border-color:rgba(255,255,255,.16);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
     .ax-dhero .ax-dpres.live{background:rgba(8,40,24,.5);border-color:rgba(120,240,180,.5);color:#9ff5c8;} .ax-dhero .ax-dpres.away{background:rgba(48,32,6,.5);border-color:rgba(255,205,110,.5);color:#ffd987;}
@@ -10589,7 +10611,12 @@ service cloud.firestore {
     .ax-ph.in .ax-phi{animation:axPhi .6s cubic-bezier(.34,1.56,.64,1) both,axBob 4.5s ease-in-out .7s infinite;} .ax-phi{animation:axBob 4.5s ease-in-out infinite;}
     @keyframes axBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-3deg)}}
     .ax-hdr .ax-hrow img{animation:axLogo 5s ease-in-out infinite;} @keyframes axLogo{0%,100%{filter:drop-shadow(0 0 0 rgba(240,199,102,0))}50%{filter:drop-shadow(0 0 10px rgba(240,199,102,.45))}}
-    @media (prefers-reduced-motion:reduce){ .ax-hdr,.ax-ph,.ax-hdr::before,.ax-ph::before,.ax-hdr::after,.ax-ph::after,.ax-ph .ax-h1,.ax-phi,.ax-hdr .ax-hrow img{animation:none !important;} }
+    @media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) .ax-hdr,html:not(.fp-anim-full) .ax-ph,html:not(.fp-anim-full) .ax-hdr::before,html:not(.fp-anim-full) .ax-ph::before,html:not(.fp-anim-full) .ax-hdr::after,html:not(.fp-anim-full) .ax-ph::after,html:not(.fp-anim-full) .ax-ph .ax-h1,html:not(.fp-anim-full) .ax-phi,html:not(.fp-anim-full) .ax-hdr .ax-hrow img{animation:none !important;} }
+    /* ⚡ könnyített módban is fusson a fejlécek animációja (könnyű: csak háttér-eltolás és forgatás) */
+    html.fp-lite .ax:not(.th-light) .ax-hdr{animation-iteration-count:1,infinite !important;}
+    html.fp-lite .ax-hdr::before,html.fp-lite .ax-ph::before,html.fp-lite .ax-hdr::after,html.fp-lite .ax-ph::after,html.fp-lite .ax-ph .ax-h1,html.fp-lite .ax-hdr .ax-hrow img,
+    html.fp-lite .ax-dhero,html.fp-lite .ax-dhero::after,html.fp-lite .ax-dhero .ax-dhtx b,html.fp-lite .ax-dhero .ax-dhrow .ax-av.big,html.fp-lite .ax-dhfx s,html.fp-lite .ax-dhfx em,html.fp-lite .ax-phi{animation-iteration-count:infinite !important;}
+    html.fp-lite .ax-ph.in .ax-phi{animation-iteration-count:1,infinite !important;}
     .ax-hrow{display:flex;align-items:center;gap:10px;padding:0 2px 10px;min-width:0;}
     .ax-brand{display:flex;align-items:center;gap:12px;padding:0;min-width:0;margin-right:auto;}
     .ax-lg{display:flex;align-items:center;flex:none;} .ax-lgi{height:48px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));}
@@ -18273,6 +18300,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function fpApplyLite(){
     const on = fpLiteOn();
     document.documentElement.classList.toggle("fp-lite", on);
+    document.documentElement.classList.toggle("fp-anim-full", fpAnimPref() === "full");
     try{
       const d = cetliFrame && cetliFrame.contentDocument;
       if(d && d.head){
