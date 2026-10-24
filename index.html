@@ -5703,7 +5703,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-174946";</script>
+<script>window.FP_BUILD="20261024-190825";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -20750,7 +20750,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* ---- felhő: dolgozónként egy dokumentum (kulcs, naptár, feliratkozás, értesítés) ---- */
   const calTokens = {}, calInfo = {}; let calStoreCfg = {}, calInfoReady = false;
   const calRnd = ()=>{ const b = new Uint8Array(18); crypto.getRandomValues(b); return Array.from(b, x=> "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[x % 62]).join(""); };
-  const calLink = (pid, ics)=>{ const C = calCloud(), t = calTokens[pid]; if(!C || !t) return ""; return `${location.origin}/cal/${C.target}/${pid}/${t}${ics ? ".ics" : ""}`; };
+  const SITE = (/\.pages\.dev$/i.test(location.hostname) ? location.origin : "https://firstphone-munkaasztal.pages.dev");
+  const calLink = (pid, ics)=>{ const C = calCloud(), t = calTokens[pid]; if(!C || !t) return ""; return `${SITE}/cal/${C.target}/${pid}/${t}${ics ? ".ics" : ""}`; };
   const calDoc = pid=> calCloud().db.collection("boltok").doc(calCloud().target).collection("cal").doc(pid);
   const calTs = v=>{ try{ if(!v) return null; if(v.toDate) return v.toDate(); const d = new Date(v.seconds ? v.seconds * 1000 : v); return isNaN(d) ? null : d; }catch(e){ return null; } };
   async function calLoadInfo(force){
@@ -20834,7 +20835,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(msg){ x.nLast = msg.title; x.nAt = new Date(); }
       try{ calDoc(p.id).set(Object.assign({ evN:x.ev, thrN:x.through }, msg ? { nLast:msg.title, nBody:msg.body, nAt:firebase.firestore.FieldValue.serverTimestamp() } : {}), { merge:true }).catch(()=>{}); }catch(e){}
       if(msg && tok && /^https?:$/.test(location.protocol)){
-        try{ fetch(`${location.origin}/cal/${C.target}/${p.id}/${tok}/notify`, { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(msg), keepalive:true }).catch(()=>{}); }catch(e){}
+        try{ fetch(`${SITE}/cal/${C.target}/${p.id}/${tok}/notify`, { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(msg), keepalive:true }).catch(()=>{}); }catch(e){}
       }
     }
     calModalDraw();
@@ -26740,7 +26741,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       + L.map(x=> `<button type="button" class="sc-it${now - x.at < 15000 && x.dev !== dev() ? " nw" : ""}" data-id="${E(x.id)}"><div class="sc-tt">${x.th ? `<img src="${x.th}" alt="" loading="lazy">` : `<span class="ic">${x.kind === "pdf" ? "📄" : "🖼️"}</span>`}${x.kind === "pdf" ? `<em>PDF</em>` : x.kind === "doc" ? `<em class="dc">📄 ${fmtL(x.fmt)}${x.np > 1 ? " · " + x.np + " old." : ""}</em>` : ""}${x.txt ? `<em class="tx" title="Az AI kiolvasta a szövegét">📝</em>` : aiRunning(x) ? `<em class="tx run" title="Az AI olvassa…">🤖</em>` : ""}</div><b>${E(x.name)}</b><small>${when(x.at)}${x.by ? " · " + E(x.by) : ""}</small><span class="sc-ttl">🕛 ma éjfélkor törlődik</span></button>`).join("")
       || (ups.length ? "" : `<div class="sc-empty"><span>📷</span><b>Még nincs fotó</b><small>${document.documentElement.classList.contains("m-app") ? "Nyomd meg lent a 📄 gombot, és fotózd le a papírt — itt és a bolt minden gépén azonnal megjelenik." : "Fotózz a telefonnal (📷 Fotózás most), vagy tölts fel egy CamScanner PDF-et — itt és a bolt minden gépén azonnal megjelenik."}</small></div>`);
   }
-  function qrDraw(){ const el = panel && panel.querySelector("#scQr"); if(!el) return; const link = location.origin + location.pathname + "?scan=1";
+  function qrDraw(){ const el = panel && panel.querySelector("#scQr"); if(!el) return; const link = (/\.pages\.dev$/i.test(location.hostname) ? location.origin + location.pathname : "https://firstphone-munkaasztal.pages.dev/") + "?scan=1";
     const go = ()=>{ try{ el.innerHTML = ""; new QRCode(el, { text:link, width:96, height:96, correctLevel:QRCode.CorrectLevel.M }); el.title = link; }catch(e){ el.innerHTML = `<small>${E(link)}</small>`; } };
     if(window.QRCode) return go();
     const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; s.onload = go; s.onerror = ()=>{ el.innerHTML = `<small class="ql">${E(link)}</small>`; }; document.head.appendChild(s); }
