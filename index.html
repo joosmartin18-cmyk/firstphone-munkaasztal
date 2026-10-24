@@ -5657,7 +5657,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-150310";</script>
+<script>window.FP_BUILD="20261024-152326";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -27183,13 +27183,20 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   /* ===================== a lap (A4) ===================== */
   const money = v=>{ const d = String(v || "").replace(/[^\d]/g, ""); return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : String(v || ""); };
+  function chipsOf(c){ const on = k=> (c.rows.find(r=> r.on && r.k === k && r.v) || {}).v || "", out = [];
+    const st = on("tarhely").match(/\d+\s*(?:GB|TB)/i); if(st) out.push(["tarhely", st[0].replace(/\s+/, " ").toUpperCase()]);
+    const sz = on("meret").match(/\d+(?:[.,]\d+)?\s*(?:"|”|col|inch)/i); if(sz) out.push(["meret", sz[0].replace(/\s*(col|inch|”)/i, '"').replace(/\s+/g, "")]);
+    const ak = (on("akku") || "").match(/\d{3,5}\s*mAh/i); if(ak) out.push(["akku", ak[0].replace(/\s*mah/i, "mAh")]);
+    if(out.length < 3){ const n = (c.name || "") + " " + on("halozat"); if(/\b5G\b/i.test(n)) out.unshift(["halo5g", "5G"]); }
+    return out.slice(0, 3); }
   function cardHTML(c, s, fsz){
-    const lg = logoFor(c), rows = c.rows.filter(r=> r.on && String(r.v || "").trim());
+    const lg = logoFor(c), rows = c.rows.filter(r=> r.on && String(r.v || "").trim()), ch = chipsOf(c);
     const base = LAY[s.per][2] * (s.scale || 1), pf = (fsz && fsz.pf) || base * 1.15; fsz = (fsz && fsz.fs) || fsz || base;
-    return `<div class="sk-card" data-id="${E(c.id)}" style="--fs:${fsz}pt;--pf:${pf}pt">${c.badge ? `<span class="sk-badge">${E(c.badge)}</span>` : ""}
+    return `<div class="sk-card" data-id="${E(c.id)}" style="--fs:${fsz}pt;--pf:${pf}pt"><div class="sk-in">${c.badge ? `<span class="sk-badge">${E(c.badge)}</span>` : ""}
       <div class="sk-top"><div class="sk-lg">${lg ? `<img src="${lg}" alt="">` : ""}</div><div class="sk-nm">${E(c.name || "Új telefon")}</div></div>
+      ${ch.length ? `<div class="sk-chips">${ch.map(([k, v])=> `<span><i>${ICO[k] || ICO.x}</i>${E(v)}</span>`).join("")}</div>` : ""}
       <div class="sk-rows">${rows.map(r=> `<div class="sk-row"><i>${ICO[r.k] || ICO.x}</i><b>${E(r.v)}</b></div>`).join("")}${c.note ? `<div class="sk-note">${E(c.note)}</div>` : ""}</div>
-      <div class="sk-pbox">${c.oldPrice ? `<div class="sk-old">${E(money(c.oldPrice))} Ft</div>` : ""}<div class="sk-price"><span class="n">${E(money(c.price) || "—")}</span><span class="c">Ft</span></div></div></div>`;
+      <div class="sk-pbox">${c.oldPrice ? `<div class="sk-old">${E(money(c.oldPrice))} Ft</div>` : ""}<div class="sk-price"><span class="n">${E(money(c.price) || "—")}</span><span class="c">Ft</span></div></div></div></div>`;
   }
   let ownLogoUrl = "";
   async function ownLogo(){ const s = D.set; if(s.ownLogo === "none") return ""; if(s.ownLogo === "custom" && s.ownLogoData) return s.ownLogoData; try{ return window.fpStoreLogo ? await fpStoreLogo("color") : ""; }catch(e){ return ""; } }
@@ -27207,38 +27214,46 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const SHEET_CSS = `
     .sk-sheet{width:210mm;height:297mm;box-sizing:border-box;padding:6mm 7mm 5mm;background:#fff;color:#111;display:flex;flex-direction:column;gap:3mm;overflow:hidden;font-family:'Inter',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .sk-sheet *{box-sizing:border-box;border-radius:0 !important;}
-    .sk-head{display:flex;align-items:flex-end;gap:4mm;min-height:8mm;padding-bottom:1.5mm;border-bottom:.35mm solid #111;}
-    .sk-head img{height:7.5mm;width:auto;max-width:60mm;object-fit:contain;}
-    .sk-head b{flex:1;font:800 4.6mm/1.1 'Poppins',Arial,sans-serif;letter-spacing:.02em;text-transform:uppercase;}
-    .sk-head span{font:700 3mm 'Inter',Arial,sans-serif;color:#555;}
-    .sk-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-template-rows:repeat(var(--rows),minmax(0,1fr));gap:3mm;}
-    .sk-card{position:relative;display:flex;flex-direction:column;min-height:0;min-width:0;border:.3mm solid #111;background:#fff;font-size:var(--fs);overflow:hidden;}
-    .sk-top{position:relative;padding:3mm 2.4mm 2.4mm;text-align:center;}
-    .sk-top::after{content:"";position:absolute;left:50%;bottom:0;width:12mm;height:.8mm;margin-left:-6mm;background:#111;}
+    .sk-head{display:flex;align-items:center;gap:4mm;min-height:9mm;}
+    .sk-head img{height:8mm;width:auto;max-width:60mm;object-fit:contain;}
+    .sk-head b{flex:1;display:flex;align-items:center;gap:3mm;font:900 5.4mm/1 'Poppins',Arial,sans-serif;letter-spacing:.01em;text-transform:uppercase;}
+    .sk-head b::after{content:"";flex:1;height:.6mm;background:repeating-linear-gradient(90deg,#111 0 2.2mm,transparent 2.2mm 3.4mm);}
+    .sk-head span{padding:1.2mm 2.6mm;border:.4mm solid #111;font:800 3mm 'Poppins',Arial,sans-serif;letter-spacing:.04em;}
+    .sk-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-template-rows:repeat(var(--rows),minmax(0,1fr));gap:3.2mm;}
+    .sk-card{position:relative;display:flex;min-height:0;min-width:0;font-size:var(--fs);border:.4mm solid #111;background:#fff;}
+    .sk-in{position:relative;flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:#fff;overflow:hidden;}
+    .sk-in::before{content:"";position:absolute;left:0;top:0;width:1.6mm;height:15mm;background:#111;}
+    .sk-in::after{content:"";position:absolute;z-index:3;top:-4.6mm;right:-4.6mm;width:9.2mm;height:9.2mm;background:#111;transform:rotate(45deg);}
+    .sk-top{padding:3.2mm 3mm 1.6mm 4mm;text-align:center;}
     .sk-lg{height:var(--lh);display:flex;align-items:center;justify-content:center;}
     .sk-lg img{max-height:100%;max-width:100%;object-fit:contain;}
     .sk-lg:empty{display:none;}
-    .sk-nm{margin-top:1.8mm;font:800 .82em/1.2 'Poppins',Arial,sans-serif;letter-spacing:.03em;text-transform:uppercase;overflow-wrap:anywhere;color:#222;}
-    .sk-rows{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:2mm 0 1.4mm;overflow:hidden;}
-    .sk-row{display:grid;grid-template-columns:1.75em minmax(0,1fr);column-gap:1.8mm;align-items:center;padding:.5mm 2.4mm;}
-    .sk-row:nth-child(even){background:#f2f2f2;}
-    .sk-row i{display:grid;place-items:center;width:1.75em;height:1.75em;border:.25mm solid #111;color:#111;background:#fff;}
-    .sk-row i svg{width:72%;height:72%;display:block;}
+    .sk-nm{margin-top:1.6mm;font:800 .8em/1.2 'Poppins',Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;overflow-wrap:anywhere;color:#111;}
+    .sk-chips{display:flex;justify-content:center;gap:1.2mm;padding:.6mm 2.2mm 1.8mm;}
+    .sk-chips span{flex:0 1 auto;min-width:0;display:flex;align-items:center;justify-content:center;gap:.7mm;padding:1mm 1.2mm;border:.35mm solid #111;font:900 .78em/1 'Poppins',Arial,sans-serif;white-space:nowrap;letter-spacing:-.01em;}
+    .sk-chips i{width:1.05em;height:1.05em;flex:none;} .sk-chips i svg{width:100%;height:100%;display:block;}
+    .sk-rows{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:.4mm 0 1mm;overflow:hidden;border-top:.35mm solid #111;}
+    .sk-row{display:grid;grid-template-columns:1.7em minmax(0,1fr);column-gap:1.8mm;align-items:center;padding:.45mm 2.4mm;}
+    .sk-row + .sk-row{border-top:.18mm dotted #9a9a9a;}
+    .sk-row i{display:grid;place-items:center;width:1.7em;height:1.7em;background:#111;color:#fff;}
+    .sk-row i svg{width:68%;height:68%;display:block;}
     .sk-row b{display:block;font:700 .95em/1.22 'Inter',Arial,sans-serif;overflow-wrap:anywhere;}
-    .sk-note{margin:1mm 2.4mm 0;padding:1mm 1.6mm;border:.3mm dashed #111;font:800 .9em/1.25 'Inter',Arial,sans-serif;text-align:center;}
+    .sk-note{margin:1mm 2.4mm 0;padding:1mm 1.6mm;border:.35mm dashed #111;font:800 .9em/1.25 'Inter',Arial,sans-serif;text-align:center;}
     .sk-pbox{padding:0 2mm 2mm;}
-    .sk-old{text-align:center;font:800 .95em 'Poppins',Arial,sans-serif;color:#666;text-decoration:line-through;padding-bottom:.6mm;}
-    .sk-price{display:flex;align-items:baseline;justify-content:center;gap:1.2mm;padding:1.6mm 1mm 1.8mm;border:.7mm solid #111;color:#111;font-size:var(--pf);}
-    .sk-price .n{font:900 2.35em/1 'Poppins',Arial,sans-serif;letter-spacing:-.02em;white-space:nowrap;}
-    .sk-price .c{font:800 1em 'Poppins',Arial,sans-serif;}
-    .sk-badge{position:absolute;top:0;right:0;z-index:2;padding:.9mm 2.2mm;background:#111;color:#fff;font:900 .74em 'Poppins',Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase;}
+    .sk-old{text-align:right;padding:0 1mm .6mm;font:800 .95em 'Poppins',Arial,sans-serif;color:#555;text-decoration:line-through;}
+    .sk-price{position:relative;display:flex;align-items:baseline;justify-content:center;gap:1.2mm;padding:1.4mm 2mm 1.6mm;color:#111;font-size:var(--pf);background:#fff;border:.8mm solid #111;overflow:hidden;}
+    .sk-price::before{content:"";position:absolute;left:-2.6mm;bottom:-2.6mm;width:5.2mm;height:5.2mm;background:#111;transform:rotate(45deg);}
+    .sk-price .n{font:900 2.3em/1 'Poppins',Arial,sans-serif;letter-spacing:-.025em;white-space:nowrap;}
+    .sk-price .c{font:800 .95em 'Poppins',Arial,sans-serif;padding-right:.6mm;}
+    .sk-badge{position:absolute;top:2.4mm;left:0;z-index:2;padding:.9mm 2.4mm .9mm 2.6mm;background:#111;color:#fff;font:900 .72em 'Poppins',Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;}
+    .sk-badge ~ .sk-top{padding-top:7mm;}
     .sk-foot{font:600 2.6mm/1.3 'Inter',Arial,sans-serif;color:#555;text-align:center;}
     .sk-empty{grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;border:.5mm dashed #bbb;color:#888;font:700 5mm 'Inter',sans-serif;}`;
   function fit(host){ const fs = {}, s = D.set, base = LAY[s.per][2] * (s.scale || 1);
     host.querySelectorAll(".sk-card").forEach(el=>{ let f = base, pf = base * 1.15; const rw = el.querySelector(".sk-rows"), pr = el.querySelector(".sk-price"), n = el.querySelector(".sk-price .n");
       el.style.setProperty("--fs", f + "pt"); el.style.setProperty("--pf", pf + "pt");
-      const cu = el.querySelector(".sk-price .c"); const over = ()=> pr && (pr.scrollWidth > pr.clientWidth + 1 || (n && cu && n.offsetWidth + cu.offsetWidth + 14 > pr.clientWidth - 8)); let g = 50; while(g-- > 0 && pf > 7 && over()){ pf = Math.round((pf - .5) * 100) / 100; el.style.setProperty("--pf", pf + "pt"); }
-      g = 80; while(g-- > 0 && f > 6 && (rw.scrollHeight > rw.clientHeight + 2 || el.scrollHeight > el.clientHeight + 4)){ f = Math.round((f - .25) * 100) / 100; el.style.setProperty("--fs", f + "pt"); }
+      const cu = el.querySelector(".sk-price .c"); const over = ()=> pr && (pr.scrollWidth > pr.clientWidth + 1 || (n && cu && n.offsetWidth + cu.offsetWidth + 10 > pr.clientWidth - 6)); let g = 50; while(g-- > 0 && pf > 7 && over()){ pf = Math.round((pf - .5) * 100) / 100; el.style.setProperty("--pf", pf + "pt"); }
+      g = 80; while(g-- > 0 && f > 6 && (rw.scrollHeight > rw.clientHeight + 2 || rw.clientHeight < rw.scrollHeight || (el.querySelector(".sk-in").scrollHeight > el.querySelector(".sk-in").clientHeight + 3) || [...el.querySelectorAll(".sk-chips span")].some(x=> x.scrollWidth > x.clientWidth + 1) || (el.querySelector(".sk-chips") && el.querySelector(".sk-chips").scrollWidth > el.querySelector(".sk-chips").clientWidth + 1))){ f = Math.round((f - .25) * 100) / 100; el.style.setProperty("--fs", f + "pt"); }
       fs[el.dataset.id] = { fs:f, pf }; });
     return fs; }
   let lastFs = {};
