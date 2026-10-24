@@ -5050,7 +5050,7 @@
   .hdr2 .ps-btn.active{color:#fff !important;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 85%,#fff 15%),var(--c)) !important;border-color:transparent !important;box-shadow:0 8px 20px color-mix(in srgb,var(--c) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.35);text-shadow:0 1px 2px rgba(0,0,0,.25);}
   .hdr2 .ps-btn.active .ps-i{background:rgba(255,255,255,.22);}
   .hdr2 .ps-btn[data-page="beosztas"]{--c:#6f7ff5;} .hdr2 .ps-btn[data-page="cetli"]{--c:#2fa3b6;} .hdr2 .ps-btn[data-page="leltar"]{--c:#2ea472;} .hdr2 .ps-btn[data-page="kassza"]{--c:#d4a52c;}
-  .hdr2 .ps-btn[data-page="csomag"]{--c:#c47f2c;} .hdr2 .ps-btn[data-page="selejt"]{--c:#d9474a;} .hdr2 .ps-btn[data-page="tudastar"]{--c:#8a5aa8;} .hdr2 .ps-btn[data-page="teendo"]{--c:#d6589a;}
+  .hdr2 .ps-btn[data-page="csomag"]{--c:#c47f2c;} .hdr2 .ps-btn[data-page="selejt"]{--c:#d9474a;} .hdr2 .ps-btn[data-page="tudastar"]{--c:#8a5aa8;} .hdr2 .ps-btn[data-page="teendo"]{--c:#d6589a;} .hdr2 .ps-btn[data-page="specko"]{--c:#e0703a;} .m-tab [data-p="specko"],.m-apps [data-p="specko"]{--c:#e0703a;}
   .hdr2 .ps-btn .ps-long{display:inline !important;}
   @media (max-width:899px){
     .hdr2{padding:10px 10px 8px;border-radius:20px;}
@@ -5306,6 +5306,68 @@
     .hdr-ctx .who-chip::before{display:none;}
   }
   @media (max-width:380px){ .hdr2 .ps-btn{font-size:10px !important;} .hdr2 .hdr-btns{gap:4px;} .hdr2 .hdr-btns .icon-btn,.hdr2 .hdr-btns .set-btn,.hdr2 .hdr-btns .fc-chip{width:30px !important;min-width:30px;height:30px !important;font-size:14px;} }
+  /* ===================== 📱 SPECKÓ (külön program) ===================== */
+  .sk-page{display:none;}
+  body.page-specko .sk-page{display:block;}
+  body.page-specko #tabs, body.page-specko #autoAdvanceBanner, body.page-specko #mainPanel, body.page-specko #settingsPanel{display:none !important;}
+  .sk-page{position:relative;}
+  .sk-hero{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;margin-bottom:14px;}
+  .sk-hic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,rgba(240,199,102,.3),rgba(79,179,196,.2));border:1px solid rgba(217,173,70,.45);}
+  .sk-ht{flex:1;min-width:220px;} .sk-ht h2{margin:0;font:800 21px 'Poppins',sans-serif;} .sk-ht p{margin:2px 0 0;font-size:13px;color:var(--text-dim);}
+  .sk-hb{display:flex;gap:8px;flex-wrap:wrap;}
+  .sk-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);font:700 13.5px 'Inter',sans-serif;cursor:pointer;white-space:nowrap;}
+  .sk-btn:hover{border-color:var(--gold);} .sk-btn.pri{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border-color:transparent;box-shadow:0 8px 20px rgba(217,173,70,.3);} .sk-btn.ghost{color:var(--text-dim);}
+  .sk-wrap{display:grid;grid-template-columns:400px minmax(0,1fr);gap:16px;align-items:start;}
+  .sk-side{position:sticky;top:14px;padding:10px;max-height:calc(100vh - 28px);overflow:auto;scrollbar-width:thin;}
+  html.hdr-mini:not(.m-app) .sk-side{top:78px;max-height:calc(100vh - 92px);}
+  .sk-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--bg-cell);margin-bottom:10px;}
+  .sk-tabs button{border:0;background:transparent;color:var(--text-dim);font:700 12.5px 'Inter',sans-serif;padding:9px 4px;border-radius:10px;cursor:pointer;}
+  .sk-tabs button.on{background:var(--bg-panel);color:var(--text);box-shadow:0 4px 12px rgba(0,0,0,.2);} .sk-tabs small{opacity:.7;}
+  .sk-list{display:flex;flex-direction:column;gap:6px;}
+  .sk-li{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel2);cursor:pointer;}
+  .sk-li.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,var(--bg-panel2));}
+  .sk-th{width:64px;height:30px;flex:none;display:grid;place-items:center;background:#fff;border-radius:6px;overflow:hidden;font-size:15px;color:#999;}
+  .sk-th img{max-width:100%;max-height:100%;object-fit:contain;}
+  .sk-lt{flex:1;min-width:0;} .sk-lt b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .sk-lt small{font-size:11.5px;color:var(--text-dim);}
+  .sk-ord{display:flex;flex-direction:column;gap:2px;} .sk-ord button{width:22px;height:16px;border:0;border-radius:4px;background:var(--bg-cell);color:var(--text-dim);font-size:8px;cursor:pointer;}
+  .sk-add{width:100%;margin:8px 0;padding:10px;border-radius:12px;border:1px dashed var(--border);background:transparent;color:var(--text);font:700 13px 'Inter',sans-serif;cursor:pointer;} .sk-add.sm{padding:8px;margin:6px 0 0;}
+  .sk-hint{padding:14px;border-radius:12px;border:1px dashed var(--border);color:var(--text-dim);font-size:13px;text-align:center;}
+  .sk-ed{margin-top:6px;padding:12px;border-radius:16px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--border));background:var(--bg-panel2);}
+  .sk-edh{display:flex;align-items:center;gap:8px;margin-bottom:8px;} .sk-edh b{flex:1;font:800 14px 'Poppins',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sk-del{border:1px solid var(--border);background:transparent;color:#e2585a;border-radius:10px;padding:5px 9px;font:700 12px 'Inter',sans-serif;cursor:pointer;}
+  .sk-f{display:flex;flex-direction:column;gap:5px;margin:0 0 10px;min-width:0;} .sk-f > label{font:700 12px 'Inter',sans-serif;color:var(--text-dim);} .sk-f > label i{font-style:normal;font-weight:500;opacity:.8;}
+  .sk-f input[type=text],.sk-f textarea{width:100%;box-sizing:border-box;padding:9px 11px;border-radius:10px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:600 14px 'Inter',sans-serif;}
+  .sk-f input.big{font:800 20px 'Poppins',sans-serif;}
+  .sk-f2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .sk-sm{font-size:11px;color:var(--text-dim);font-weight:500;}
+  .sk-lrow{display:flex;align-items:center;gap:6px;} .sk-mini{display:inline-flex;align-items:center;height:30px;padding:0 9px;border-radius:9px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:700 12px 'Inter',sans-serif;cursor:pointer;}
+  .sk-rowsed{display:flex;flex-direction:column;gap:5px;}
+  .sk-re{display:grid;grid-template-columns:18px 20px 108px minmax(0,1fr) 24px;gap:5px;align-items:center;}
+  .sk-re.off{opacity:.5;} .sk-re i{width:18px;height:18px;color:var(--text-dim);} .sk-re i svg{width:100%;height:100%;}
+  .sk-re input[type=text]{padding:7px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:600 12.5px 'Inter',sans-serif;min-width:0;width:100%;box-sizing:border-box;}
+  .sk-re input.lbl{color:var(--text-dim);font-size:11.5px;}
+  .sk-re button{width:24px;height:24px;border:0;border-radius:6px;background:transparent;color:var(--text-faint,#777);cursor:pointer;}
+  .sk-seg{display:flex;gap:3px;padding:3px;border-radius:12px;background:var(--bg-cell);} .sk-seg button{flex:1;border:0;background:transparent;color:var(--text-dim);font:700 12.5px 'Inter',sans-serif;padding:8px 4px;border-radius:9px;cursor:pointer;} .sk-seg button.on{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;}
+  .sk-cols{display:flex;gap:6px;align-items:center;flex-wrap:wrap;} .sk-cols button{width:30px;height:30px;border:2px solid var(--border);cursor:pointer;} .sk-cols button.on{outline:2px solid var(--gold);outline-offset:2px;} .sk-cols input{width:38px;height:30px;padding:0;border:0;background:none;}
+  .sk-tg label{display:flex;align-items:center;gap:8px;font:600 13px 'Inter',sans-serif;color:var(--text) !important;}
+  .sk-up{display:flex;align-items:center;gap:8px;margin-top:6px;padding:8px;border-radius:10px;border:1px dashed var(--border);cursor:pointer;font:700 12.5px 'Inter',sans-serif;} .sk-up img{height:28px;background:#fff;padding:2px;}
+  .sk-drop{display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:14px;border:1.5px dashed color-mix(in srgb,var(--gold) 55%,var(--border));background:color-mix(in srgb,var(--gold) 6%,transparent);cursor:pointer;font-size:14px;} .sk-drop small{font-size:12px;color:var(--text-dim);line-height:1.4;}
+  .sk-logos{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .sk-lo{display:grid;grid-template-columns:110px minmax(0,1fr) 26px;grid-template-rows:auto auto;gap:3px 8px;align-items:center;padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel2);}
+  .sk-lo.ask{border-color:#f0953a;} .sk-lim{grid-row:1/3;height:44px;display:grid;place-items:center;background:#fff;border-radius:6px;overflow:hidden;} .sk-lim img{max-width:100%;max-height:100%;object-fit:contain;}
+  .sk-lo input{padding:7px 9px;border-radius:8px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:700 13px 'Inter',sans-serif;min-width:0;} .sk-lo small{font-size:11px;color:var(--text-dim);} .sk-lo button{grid-row:1/3;grid-column:3;width:26px;height:26px;border:0;background:transparent;color:var(--text-dim);cursor:pointer;}
+  .sk-pv{min-width:0;padding:10px;border-radius:18px;background:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 10px,transparent 10px 20px),var(--bg-cell);border:1px solid var(--border);overflow:hidden;}
+  .sk-pvh{display:flex;align-items:center;gap:10px;margin:0 4px 10px;flex-wrap:wrap;} .sk-pvh b{font:800 14px 'Poppins',sans-serif;} .sk-pages{font-size:12px;color:var(--text-dim);} .sk-pvh small{margin-left:auto;font-size:11.5px;color:var(--text-dim);}
+  .sk-pvi{transform-origin:0 0;display:flex;flex-direction:column;gap:16px;}
+  .sk-pvi .sk-sheet{box-shadow:0 12px 40px rgba(0,0,0,.45);}
+  .sk-pvi .sk-card{cursor:pointer;transition:outline-color .2s;outline:2mm solid transparent;outline-offset:1mm;}
+  .sk-pvi .sk-card:hover{outline-color:rgba(217,173,70,.45);} .sk-pvi .sk-card.sel{outline-color:#d9ad46;}
+  .sk-busy{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(6,6,10,.5);} .sk-busy[hidden]{display:none;}
+  .sk-busy span{padding:14px 20px;border-radius:14px;background:var(--bg-panel);border:1px solid var(--border);font:700 14px 'Inter',sans-serif;}
+  .sk-page.drag .sk-pv{outline:3px dashed var(--gold);}
+  html:not(.m-app) body.page-specko .app{max-width:1400px;}
+  @media (max-width:980px){ .sk-wrap{grid-template-columns:1fr;} .sk-side{position:static;max-height:none;} }
+  @media (max-width:520px){ .sk-re{grid-template-columns:18px 18px 82px minmax(0,1fr) 22px;} .sk-hb{width:100%;} .sk-hb .sk-btn{flex:1;justify-content:center;padding:0 8px;} }
   /* ===================== ⬆ GÖRGETÉSKOR KOMPAKT FEJLÉC (gépen) — az ikonok animálva felugranak egy lebegő sávba ===================== */
   .hdr-ph{display:none;}
   html.hdr-mini .hdr-ph{display:block;transition:height .35s ease;}
@@ -5563,7 +5625,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-130252";</script>
+<script>window.FP_BUILD="20261024-134305";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -5573,7 +5635,7 @@
   const CFG = { apiKey:"AIzaSyA5RFVunlrXqX1NalKdQcbjUMoFhYCveM0", authDomain:"firstphone-munkaasztal.firebaseapp.com", projectId:"firstphone-munkaasztal",
     storageBucket:"firstphone-munkaasztal.firebasestorage.app", messagingSenderId:"992346625761", appId:"1:992346625761:web:fad4af05009a20574fc9a0" };
   /* ezek a bolt közös adatai — a többi (téma, animáció, utolsó oldal, nyomtatási mód) gépenként marad */
-  const SYNC = ["firstphone_beosztas_tervezo_v2","firstphone_leltar_last","firstphone_leltar_prog","firstphone_leltar_by","firstphone_leltar_sig","firstphone_leltar_hist",
+  const SYNC = ["firstphone_beosztas_tervezo_v2","firstphone_specko","firstphone_specko_logos","firstphone_leltar_last","firstphone_leltar_prog","firstphone_leltar_by","firstphone_leltar_sig","firstphone_leltar_hist",
     "firstphone_kassza","firstphone_csomag","firstphone_csomag_logo","firstphone_selejt","firstphone_termekek","firstphone_admin_msg","firstphone_admin_news","firstphone_news_seen","firstphone_admin_cfg","firstphone_admin_docs","firstphone_docs_dl"];
   const MSG_KEY = "firstphone_admin_msg", NEWS_KEY = "firstphone_admin_news", NSEEN_KEY = "firstphone_news_seen", ACFG_KEY = "firstphone_admin_cfg";
   const DOCS_KEY = "firstphone_admin_docs", DDL_KEY = "firstphone_docs_dl", ST_KEY = "firstphone_beosztas_tervezo_v2";
@@ -10921,6 +10983,7 @@ service cloud.firestore {
     <button type="button" class="ps-btn" data-page="csomag" title="Csomag"><i class="ps-i">📦</i> <span class="ps-t">Csomag</span></button>
     <button type="button" class="ps-btn" data-page="selejt" title="Selejt"><i class="ps-i">🗑️</i> <span class="ps-t">Selejt</span></button>
     <button type="button" class="ps-btn" data-page="teendo" title="Teendők — közös to-do lista"><i class="ps-i">✅</i> <span class="ps-t">Teendők</span></button>
+    <button type="button" class="ps-btn kaponly" data-page="specko" title="Speckó — telefon-adatlapok A4-re"><i class="ps-i">📱</i> <span class="ps-t">Speckó</span></button>
     <button type="button" class="ps-btn" data-page="tudastar" title="Tudástár — Segédlet, Kézikönyv, Üzletek"><i class="ps-i">📚</i> <span class="ps-t">Tudástár</span></button>
   </div>
   <script>/* egységes fejléc: a felső sáv és a programválasztó egy panelben (mint az adminnál) */
@@ -11164,6 +11227,8 @@ service cloud.firestore {
     </div>
     <button type="button" class="tt-top" id="ttTopBtn" title="Vissza a tetejére">⬆</button>
   </div>
+
+  <div class="sk-page" id="skPage"></div>
 
   <div class="td-page" id="tdPage">
     <section class="panel td-top">
@@ -19846,6 +19911,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     return logoCache[k];
   }
   /* a bolti logó stílusában bármilyen felirat (pl. az admin konzol fejlécéhez: „FirstPhone Admin”) */
+  window.fpStoreLogo = v=> getLogoDataUrl(v);
   window.fpLogoFor = txt=>{ const k = "color|" + txt; if(!logoCache[k]) logoCache[k] = composeLogo("color", txt); return logoCache[k]; };
   let brandedFor = null;
   async function refreshHeaderLogo(){
@@ -19878,12 +19944,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     { k:"kassza",   i:"💰", t:"Kassza", d:"címletek, pénz hátul, kasszajelentés" },
     { k:"csomag",   i:"📦", t:"Csomag", d:"GLS / Posta / DPD nyilvántartás, futár" },
     { k:"selejt",   i:"🗑️", t:"Selejt", d:"mai selejt, Excel, cetli" },
-    { k:"teendo",   i:"✅", t:"Teendők", d:"közös to-do lista, határidő, pipálás" }
+    { k:"teendo",   i:"✅", t:"Teendők", d:"közös to-do lista, határidő, pipálás" },
+    { k:"specko",   i:"📱", t:"Speckó", d:"telefon-adatlapok A4-re, Wordből, logókkal" }
   ];
   /* amit az admin minden boltnál (vagy ennél a boltnál) kikapcsolt, azt a bolt sem kapcsolhatja vissza */
   const admOff = (kind, k)=>{ try{ const c = window.fpAdminCfg ? window.fpAdminCfg() : null; return !!(c && c[kind] && c[kind][k] === false); }catch(e){ return false; } };
   window.fpAdmOff = admOff;
-  const modOnIn = (set, k)=> k === "tudastar" || (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false));
+  const isKapSet = set=> /^kaposv[aá]r/i.test(String((set && set.location) || "").trim());
+  const modOnIn = (set, k)=> k === "tudastar" || (k === "specko" ? isKapSet(set) : true) && (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false));
   const modOn = k=> modOnIn(state.settings, k);
   window.fpModOn = modOn;
   /* funkciók programonként — minden bolt mindent kap (a P-touch nyomtatás csak Kaposváron), itt kapcsolhatók ki egyenként */
@@ -20153,7 +20221,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       return `
       <div class="set-q"><span class="qn">${setStep+1}</span><div><h3>Milyen programokat használtok?</h3><p>Pipáld ki, melyik oldalak kellenek a boltban — a többi eltűnik a felső menüből (az adatai megmaradnak, bármikor visszakapcsolhatod). A <b>📚 Tudástár</b> mindig elérhető.</p></div></div>
       <div class="apps-bar"><button type="button" data-all="1">✓ Mind</button><button type="button" data-all="0">Csak a Tudástár</button><span class="cnt">${on} / ${APPS.length} program bekapcsolva</span></div>
-      <div class="apps-grid" id="setApps">${APPS.map(a=>{ const o = modOnIn(sd, a.k), ad = admOff("mods", a.k); return `<button type="button" class="app-card${o ? " on" : ""}${ad ? " lock adm" : ""}" data-k="${a.k}" role="checkbox" aria-checked="${o}"${ad ? ` title="Az admin kikapcsolta" aria-disabled="true"` : ""}><span class="ai">${a.i}</span><span class="at"><b>${a.t}</b><small>${ad ? "🔒 az admin kikapcsolta" : a.d}</small></span><span class="ck">${ad ? "🔒" : "✓"}</span></button>`; }).join("")}
+      <div class="apps-grid" id="setApps">${APPS.filter(a=> a.k !== "specko" || isKapSet(sd)).map(a=>{ const o = modOnIn(sd, a.k), ad = admOff("mods", a.k); return `<button type="button" class="app-card${o ? " on" : ""}${ad ? " lock adm" : ""}" data-k="${a.k}" role="checkbox" aria-checked="${o}"${ad ? ` title="Az admin kikapcsolta" aria-disabled="true"` : ""}><span class="ai">${a.i}</span><span class="at"><b>${a.t}</b><small>${ad ? "🔒 az admin kikapcsolta" : a.d}</small></span><span class="ck">${ad ? "🔒" : "✓"}</span></button>`; }).join("")}
         <div class="app-card on lock" title="Mindig be van kapcsolva"><span class="ai">📚</span><span class="at"><b>Tudástár</b><small>Segédlet és Kézikönyv — mindig elérhető</small></span><span class="ck">🔒</span></div></div>
       <div class="apps-bar" style="margin-top:16px"><b style="font-size:13.5px;color:var(--text)">🧩 Funkciók programonként</b><span class="cnt">kattints egy funkcióra a ki- / bekapcsoláshoz</span></div>
       <div class="ft-groups" id="setFeats">${Object.entries(FEATS).filter(([a])=> modOnIn(sd, a)).map(([a, L])=>{ const A = APPS.find(x=> x.k === a); return `<div class="ft-grp"><div class="ft-gh">${A ? A.i + " " + A.t : a}</div><div class="ft-chips">${L.map(([k, ic, t])=> `<button type="button" class="ft-chip${ftOnIn(sd, k) ? " on" : ""}${admOff("feats", k) ? " adm" : ""}" data-f="${k}" role="checkbox" aria-checked="${ftOnIn(sd, k)}"${admOff("feats", k) ? ` title="Az admin kikapcsolta" aria-disabled="true"` : ""}><i>${admOff("feats", k) ? "🔒" : ftOnIn(sd, k) ? "✓" : ""}</i>${ic} ${t}</button>`).join("")}</div></div>`; }).join("")}</div>
@@ -24317,6 +24385,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     csomag:   { title:"Csomag nyilvántartó", sub:"GLS · Magyar Posta · beolvasás, futár, havi összesítő" },
     selejt:   { title:"Selejt", sub:"Mai selejt · darab, ok · Excel letöltés · cetli" },
     teendo:   { title:"Teendők", sub:"Közös to-do lista · dolgozónként vagy mindkettőnek · határidővel" },
+    specko: { title:"Speckó", sub:"Telefon-adatlapok A4-re · Wordből · nagy betűk, nagy ár" },
     tudastar: { title:"Tudástár", sub:"Segédlet · Kézikönyv · Üzletek elérhetősége" }
   };
   let activePage = "beosztas";
@@ -24400,6 +24469,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     document.body.classList.toggle("page-selejt", page === "selejt");
     if(page === "selejt" && typeof sxRender === "function") sxRender();
     document.body.classList.toggle("page-tudastar", page === "tudastar");
+    document.body.classList.toggle("page-specko", page === "specko");
+    if(page === "specko" && window.fpSpeckoOpen) fpSpeckoOpen();
     if(page === "tudastar" && window.ttShow) ttShow();
     document.body.classList.toggle("page-teendo", page === "teendo");
     if(page === "teendo" && typeof renderTodos === "function") renderTodos();
@@ -26888,6 +26959,382 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   const st = ()=>{ ttBtn(); setTimeout(ttBtn, 2000); };
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", st) : st();
+})();</script>
+<script>/* ===================== 📱 SPECKÓ — telefon-adatlapok A4-re (külön program, 2026-10) =====================
+   A Word-dokumentumból (.docx / .rtf) kiolvassa a telefonokat (név, adatok, ár, logó), minden átírható és bővíthető.
+   Logó-könyvtár: a feltöltött logókat a név alapján magától a megfelelő telefonhoz teszi (a fájlnévből, vagy 🤖 AI-val a képről).
+   A lap: nagy, jól olvasható betűk, nagy ár, szögletes (nem lekerekített) kártyák; nyomtatás és PDF. */
+(function fpSpecko(){
+  const KEY = "firstphone_specko", LKEY = "firstphone_specko_logos";
+  const E = t=> String(t == null ? "" : t).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const note = m=>{ try{ (window.fpNotice || window.toast || console.log)(m); }catch(e){} };
+  const uid = ()=> Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  /* ---- a sorok (a Word-dokumentum ikonjainak sorrendjében) ---- */
+  const FIELDS = [["halozat","Hálózat"],["os","Rendszer"],["kezeles","Kezelés"],["kijelzo","Kijelző"],["meret","Képernyő"],["cpu","Processzor"],["tarhely","Tárhely / RAM"],["memkartya","Memóriakártya"],["sim","SIM"],["kamera","Kamera"],["wifi","Wi-Fi"],["radio","FM rádió"],["akku","Akkumulátor"]];
+  const LBL = Object.fromEntries(FIELDS);
+  /* saját rajzolású, egyszerű ikonok (nem márkajelzések) */
+  const P = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+  const ICO = {
+    halozat:`<svg viewBox="0 0 24 24" ${P}><path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5v6h-5zM12.5 12v6M10 15h5"/></svg>`,
+    os:`<svg viewBox="0 0 24 24" ${P}><rect x="7" y="2.5" width="10" height="19"/><path d="M11 18.5h2"/></svg>`,
+    kezeles:`<svg viewBox="0 0 24 24" ${P}><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V12m0-1a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4.8 16a1.6 1.6 0 0 1 2.4-2.1L9 15.5"/></svg>`,
+    kijelzo:`<svg viewBox="0 0 24 24" ${P}><rect x="2.5" y="4" width="19" height="12.5"/><path d="M9 20.5h6M12 16.5v4"/></svg>`,
+    meret:`<svg viewBox="0 0 24 24" ${P}><rect x="6" y="2.5" width="12" height="19"/><path d="M3 6v12M2 7l1-1 1 1M2 17l1 1 1-1"/></svg>`,
+    cpu:`<svg viewBox="0 0 24 24" ${P}><rect x="6" y="6" width="12" height="12"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 3v3M12 3v3M15 3v3M9 18v3M12 18v3M15 18v3M3 9h3M3 12h3M3 15h3M18 9h3M18 12h3M18 15h3"/></svg>`,
+    tarhely:`<svg viewBox="0 0 24 24" ${P}><rect x="2.5" y="7" width="19" height="9"/><path d="M5 16v3M9 16v3M13 16v3M17 16v3M6 10h3v3H6zM11 10h3v3h-3zM16 10h2"/></svg>`,
+    memkartya:`<svg viewBox="0 0 24 24" ${P}><path d="M7 2.5h8l3 3v16H7z"/><path d="M10 2.5v4M12.5 2.5v4M15 3v3.5"/></svg>`,
+    sim:`<svg viewBox="0 0 24 24" ${P}><path d="M4 4h6l3 3v13H4z"/><path d="M12 4h5l3 3v13h-4"/><path d="M6.5 11h4v5h-4z"/></svg>`,
+    kamera:`<svg viewBox="0 0 24 24" ${P}><path d="M3 7.5h4l1.5-2.5h7L17 7.5h4V19H3z"/><circle cx="12" cy="13" r="3.6"/></svg>`,
+    wifi:`<svg viewBox="0 0 24 24" ${P}><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19" r=".9" fill="currentColor"/></svg>`,
+    radio:`<svg viewBox="0 0 24 24" ${P}><rect x="3" y="8" width="18" height="12"/><circle cx="9" cy="14" r="3"/><path d="M15 12h3M15 15h3M6 8l11-5"/></svg>`,
+    akku:`<svg viewBox="0 0 24 24" ${P}><rect x="2.5" y="7" width="17" height="10"/><path d="M21.5 10.5v3M5.5 10v4M8.5 10v4M11.5 10v4"/></svg>`,
+    x:`<svg viewBox="0 0 24 24" ${P}><path d="M12 5v14M5 12h14"/></svg>`
+  };
+  const ACC = [["#111111","Fekete"],["#c8961e","FirstPhone arany"],["#1f5fd6","Kék"],["#c62828","Piros"],["#1e8a52","Zöld"],["#6b3fd1","Lila"]];
+  const LAY = { 8:[4,2,13,13] };   /* oszlop, sor, alap betűméret (pt), logó magasság (mm) */
+  const DEF_SET = { per:8, scale:1, labels:false, accent:"#111111", priceColor:"#111111", ownLogo:"store", ownLogoData:"", title:"Készülékeink", footer:"Az árak forintban értendők, az ÁFA-t tartalmazzák. A változtatás jogát fenntartjuk.", priceLbl:"Ár", date:true, icons:true };
+  let D = load(), L = loadL(), sel = null, tab = "cards", root = null, dirty = 0, lastRaw = "";
+  function load(){ try{ const o = JSON.parse(localStorage.getItem(KEY) || "null"); if(o && Array.isArray(o.cards)) return { cards:o.cards, set:Object.assign({}, DEF_SET, o.set || {}, { per:8 }) }; }catch(e){} return { cards:[], set:Object.assign({}, DEF_SET) }; }
+  function loadL(){ try{ const a = JSON.parse(localStorage.getItem(LKEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+  function save(){ try{ const s = JSON.stringify(D); localStorage.setItem(KEY, s); lastRaw = s; }catch(e){ note("⚠ Nem sikerült menteni (túl nagy?) — próbálj kisebb logókat."); } }
+  function saveL(){ try{ localStorage.setItem(LKEY, JSON.stringify(L)); }catch(e){ note("⚠ A logók nem fértek el — törölj párat."); } }
+  /* ---- név → logó párosítás ---- */
+  const fold = t=> String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\+/g, " plus ").replace(/[^a-z0-9]+/g, " ").trim();
+  const NOISE = new Set(["samsung","apple","xiaomi","motorola","honor","huawei","nokia","oppo","realme","sony","google","5g","4g","ds","lte","dual","sim","kartyafuggetlen","fuggetlen","gb","tb","logo","logó","png","jpg"]);
+  function keyOf(name){ const t = fold(String(name || "").replace(/\d+\s*\/\s*\d+\s*(gb|tb)?/ig, " ").replace(/\b\d+\s*(gb|tb|mah|mp|mpx|hz)\b/ig, " "));
+    return t.split(" ").filter(w=> w && !NOISE.has(w) && w !== "sm" && !/^[a-z]{1,2}\d{3,4}[a-z]*$/.test(w) && !/^\d{3,}$/.test(w)).join(" "); }
+  function logoFor(c){
+    if(c.logo) return c.logo;
+    const nt = fold(c.name).split(" "); let best = null, bl = 0;
+    L.forEach(l=>{ const k = fold(l.key || l.name).split(" ").filter(Boolean); if(!k.length) return; if(k.every(t=> nt.includes(t)) && k.join(" ").length > bl){ best = l; bl = k.join(" ").length; } });
+    return best ? best.data : "";
+  }
+  /* ---- kép kicsinyítése (a Word logói óriásiak) ---- */
+  function shrink(src, maxW, maxH){ return new Promise(res=>{ const im = new Image(); im.onload = ()=>{ const k = Math.min(1, maxW / im.width, maxH / im.height), c = document.createElement("canvas"); c.width = Math.max(1, Math.round(im.width * k)); c.height = Math.max(1, Math.round(im.height * k));
+      const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(im, 0, 0, c.width, c.height);
+      /* üres szél levágása */
+      try{ const d = x.getImageData(0, 0, c.width, c.height).data; let t = c.height, b = -1, l = c.width, r = -1;
+        for(let y = 0; y < c.height; y++) for(let xx = 0; xx < c.width; xx++){ const i = (y * c.width + xx) * 4; if(d[i + 3] > 20 && (d[i] < 235 || d[i + 1] < 235 || d[i + 2] < 235)){ if(y < t) t = y; if(y > b) b = y; if(xx < l) l = xx; if(xx > r) r = xx; } }
+        if(r > l && b > t){ const p = 2, cc = document.createElement("canvas"); cc.width = r - l + 1 + p * 2; cc.height = b - t + 1 + p * 2; cc.getContext("2d").drawImage(c, l - p, t - p, cc.width, cc.height, 0, 0, cc.width, cc.height); res(cc.toDataURL("image/png")); return; } }catch(e){}
+      res(c.toDataURL("image/png")); }; im.onerror = ()=> res(""); im.src = src; }); }
+  const fileURL = f=> new Promise((res, rej)=>{ const r = new FileReader(); r.onload = ()=> res(r.result); r.onerror = ()=> rej(r.error); r.readAsDataURL(f); });
+  const u8url = (u8, type)=> new Promise(res=>{ const r = new FileReader(); r.onload = ()=> res(r.result); r.readAsDataURL(new Blob([u8], { type:type || "image/png" })); });
+
+  /* ===================== Word betöltése: .rtf és .docx → sorok/cellák → telefonok ===================== */
+  function parseRTF(buf){
+    const s = new TextDecoder("latin1").decode(new Uint8Array(buf)), n = s.length, dec = new TextDecoder("windows-1250");
+    const SKIP = new Set(["fonttbl","colortbl","stylesheet","info","listtable","listoverridetable","rsidtbl","generator","xmlnstbl","themedata","colorschememapping","latentstyles","datastore","pgdsctbl","mmathPr","defchp","defpap","nonshppict","header","footer","headerl","headerr","footerl","footerr","headerf","footerf","fldinst","bkmkstart","bkmkend","picprop","blipuid","pnseclvl","listtext","shpinst","do","lsdlockedexcept","wgrffmtfilter","ftnsep","ftnsepc","aftnsep","aftnsepc","pntext","pntxta","pntxtb","userprops","docvar","private","filetbl","revtbl","xmlopen","xmlclose","fldrslt_x"]);
+    let st = { skip:false, pict:false, png:false, jpg:false, uc:1 }; const stack = []; let pend = false, hex = [], pw = 0;
+    let cur = { t:"", imgs:[] }, cells = [], rows = [];
+    const re = /\\([a-zA-Z]+)(-?\d+)? ?/y;
+    let i = 0;
+    while(i < n){
+      const c = s.charCodeAt(i);
+      if(c === 123){ stack.push(Object.assign({}, st)); i++; pend = false; continue; }
+      if(c === 125){ if(st.pict && (st.png || st.jpg) && !st.skip && hex.length){ cur.imgs.push({ w:pw, hex:hex.join(""), jpg:st.jpg }); } if(st.pict) hex = []; st = stack.pop() || st; i++; continue; }
+      if(c === 92){
+        re.lastIndex = i; const m = re.exec(s);
+        if(m){ const w = m[1], a = m[2]; i = re.lastIndex;
+          if(w === "shppict") pend = false; else if(pend || SKIP.has(w)){ st.skip = true; pend = false; }
+          if(st.skip) continue;
+          if(w === "pict"){ st.pict = true; pw = 0; }
+          else if(w === "pngblip") st.png = true; else if(w === "jpegblip") st.jpg = true;
+          else if(w === "picwgoal") pw = +a;
+          else if(w === "par" || w === "line"){ if(!st.pict) cur.t += "\n"; }
+          else if(w === "tab"){ if(!st.pict) cur.t += " "; }
+          else if(w === "cell" || w === "nestcell"){ cells.push(cur); cur = { t:"", imgs:[] }; }
+          else if(w === "row" || w === "nestrow"){ rows.push(cells); cells = []; }
+          else if(w === "u"){ cur.t += String.fromCharCode(((+a) + 65536) % 65536); i += st.uc; }
+          else if(w === "uc") st.uc = +a;
+          else if(w === "bin"){ i += +a; }
+          continue; }
+        const nx = s[i + 1];
+        if(nx === "*"){ pend = true; i += 2; continue; }
+        if(nx === "'"){ if(!st.skip && !st.pict) cur.t += dec.decode(new Uint8Array([parseInt(s.substr(i + 2, 2), 16)])); i += 4; continue; }
+        if(!st.skip && !st.pict) cur.t += nx === "~" ? " " : nx === "-" || nx === "_" ? "" : nx;
+        i += 2; continue;
+      }
+      if(c === 13 || c === 10){ i++; continue; }
+      if(st.pict){ let j = i; while(j < n){ const d = s.charCodeAt(j); if(d === 123 || d === 125 || d === 92) break; j++; } if(!st.skip && (st.png || st.jpg)) hex.push(s.slice(i, j).replace(/\s+/g, "")); i = j; continue; }
+      if(!st.skip) cur.t += s[i];
+      i++;
+    }
+    if(cells.length) rows.push(cells);
+    return rows.map(r=> r.map(x=> ({ t:x.t.replace(/\s+/g, " ").trim(), imgs:x.imgs.map(im=> ({ big:im.w > 3000, get:()=> { const h = im.hex, u = new Uint8Array(h.length >> 1); for(let k = 0; k < u.length; k++) u[k] = parseInt(h.substr(k * 2, 2), 16); return u8url(u, im.jpg ? "image/jpeg" : "image/png"); } })) })));
+  }
+  async function parseDOCX(buf){
+    if(!window.JSZip) await new Promise((res, rej)=>{ const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"; sc.onload = res; sc.onerror = ()=> rej(new Error("A Word-olvasó nem töltődött be — ellenőrizd az internetet.")); document.head.appendChild(sc); });
+    const z = await JSZip.loadAsync(buf), xml = await z.file("word/document.xml").async("string"), relx = z.file("word/_rels/document.xml.rels") ? await z.file("word/_rels/document.xml.rels").async("string") : "";
+    const rel = {}; relx.replace(/<Relationship [^>]*Id="([^"]+)"[^>]*Target="([^"]+)"/g, (m, id, t)=>{ rel[id] = "word/" + t.replace(/^\.?\//, ""); });
+    const doc = new DOMParser().parseFromString(xml, "application/xml"), W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+    const rows = [];
+    Array.from(doc.getElementsByTagNameNS(W, "tr")).forEach(tr=>{ if(tr.getElementsByTagNameNS(W, "tbl").length) return; /* csak a legbelső sorok */
+      const cells = Array.from(tr.getElementsByTagNameNS(W, "tc")).map(tc=>{ const t = Array.from(tc.getElementsByTagNameNS(W, "p")).map(p=> Array.from(p.getElementsByTagNameNS(W, "t")).map(x=> x.textContent).join("")).join("\n");
+        const imgs = Array.from(tc.getElementsByTagName("*")).filter(e=> e.localName === "blip").map(b=>{ const id = b.getAttribute("r:embed") || b.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "embed"), path = rel[id];
+          const ext = tc.getElementsByTagName("*"); let cx = 0; for(const e of ext){ if(e.localName === "extent"){ cx = +e.getAttribute("cx") || 0; break; } }
+          return { big:cx > 1500000, get:async ()=>{ const f = path && z.file(path); if(!f) return ""; const u = await f.async("uint8array"); return u8url(u, /\.jpe?g$/i.test(path) ? "image/jpeg" : "image/png"); } }; });
+        return { t:t.replace(/\s+/g, " ").trim(), imgs }; });
+      rows.push(cells); });
+    return rows;
+  }
+  /* sorokból telefonok: logó-sor → név → adatsorok (3 cellás sorok, a Word ikonjainak sorrendjében) → „Ár: …” */
+  async function rowsToCards(rows){
+    const out = []; let c = null, si = 0;
+    const fin = ()=>{ if(c && (c.name || c.price || c.rows.some(r=> r.v))){ c.rows = c.rows.filter(r=> r.v || FIELDS.some(f=> f[0] === r.k)); out.push(c); } c = null; };
+    const start = ()=>{ fin(); c = { id:uid(), name:"", price:"", oldPrice:"", badge:"", logo:"", rows:FIELDS.map(([k, l])=> ({ k, l, v:"", on:true })), _logo:null }; si = 0; };
+    for(const r of rows){
+      const txt = r.map(x=> x.t).filter(Boolean).join(" ").trim(), big = r.flatMap(x=> x.imgs).find(im=> im.big);
+      if(big){ start(); c._logo = big; continue; }
+      if(/^[áÁ]r\s*[:.]?/.test(txt) || /\d[\d .]*\s*ft\b/i.test(txt) && r.length < 3 && !/gb|mah/i.test(txt)){ if(!c) start(); const m = txt.replace(/^[áÁ]r\s*[:.]?\s*/, "").match(/[\d][\d .,]*/); c.price = m ? m[0].replace(/[ .,]/g, "") : txt; fin(); continue; }
+      if(r.length >= 3){ if(!c) start(); const v = r.map(x=> x.t).filter(Boolean).join(" ").trim(); if(si < c.rows.length) c.rows[si].v = v; else if(v) c.rows.push({ k:"x" + si, l:"", v, on:true }); si++; continue; }
+      if(txt){ if(!c || (si > 0 && c.name)) start(); if(!c.name) c.name = txt; else c.name += " " + txt; }
+    }
+    fin();
+    for(const x of out){ x.rows.forEach(r=>{ if(!r.v) r.on = false; });
+      if(x._logo){ try{ const u = await x._logo.get(); const sm = u ? await shrink(u, 700, 240) : ""; if(sm){ const k = keyOf(x.name) || x.name; if(!L.some(l=> fold(l.key) === fold(k))) L.push({ id:uid(), key:k, data:sm, src:"word" }); } }catch(e){} }
+      delete x._logo; }
+    saveL();
+    return out;
+  }
+  async function importFile(f){
+    const nm = f.name || "", low = nm.toLowerCase();
+    if(/\.doc$/.test(low)){ note("⚠ A régi .doc formátumot nem tudom olvasni — Wordben: Fájl → Mentés másként → Word-dokumentum (.docx), és azt töltsd be."); return; }
+    if(!/\.(rtf|docx)$/.test(low)){ note("⚠ Word-dokumentumot (.docx vagy .rtf) tölts be."); return; }
+    busy(true, "Word-dokumentum olvasása…");
+    try{ const buf = await f.arrayBuffer(); const rows = /\.rtf$/.test(low) ? parseRTF(buf) : await parseDOCX(buf);
+      const cards = await rowsToCards(rows);
+      if(!cards.length){ note("⚠ Nem találtam telefont a dokumentumban (táblázatos speckó kell, „Ár: …” sorral)."); busy(false); return; }
+      const rep = !D.cards.length || confirm(`${cards.length} telefont találtam a dokumentumban.\n\nOK = lecseréli a mostani lapot\nMégse = hozzáadja a mostaniakhoz`);
+      D.cards = rep ? cards : D.cards.concat(cards); sel = D.cards[0] ? D.cards[0].id : null; save(); draw();
+      note(`📄 Beolvasva: ${cards.length} telefon${L.length ? ` · ${L.length} logó a könyvtárban` : ""} — minden átírható, és bármit hozzáírhatsz.`);
+    }catch(e){ note("⚠ Nem sikerült beolvasni: " + ((e && e.message) || e)); }
+    busy(false);
+  }
+  /* ===================== logó-könyvtár: feltöltés + felismerés ===================== */
+  const generic = n=> !n || /^(img|image|kep|kép|photo|foto|screenshot|kepernyokep|logo|untitled|nevtelen|dsc|pxl|whatsapp)[\s_-]*\d*$/i.test(fold(n).replace(/ /g, "")) || /^\d+$/.test(n);
+  async function aiName(dataUrl){
+    try{ const u = window.firebase && firebase.auth && firebase.auth().currentUser; if(!u) return ""; const t = await u.getIdToken();
+      const r = await fetch("/api/ocr", { method:"POST", headers:{ "content-type":"application/json", authorization:"Bearer " + t }, body:JSON.stringify({ img:(await toJpegB64(dataUrl)) }) });
+      const j = await r.json().catch(()=> ({})); if(!r.ok || !j.ok) return ""; return String(j.text || j.title || "").split("\n").map(x=> x.trim()).filter(Boolean).join(" ").slice(0, 60); }catch(e){ return ""; } }
+  function toJpegB64(src){ return new Promise(res=>{ const im = new Image(); im.onload = ()=>{ const c = document.createElement("canvas"), k = Math.min(1, 1200 / im.width); c.width = Math.round(im.width * k) + 40; c.height = Math.round(im.height * k) + 40; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 20, 20, c.width - 40, c.height - 40); res(c.toDataURL("image/jpeg", .9).split(",")[1]); }; im.src = src; }); }
+  async function addLogos(files){
+    busy(true, "Logók feldolgozása…"); let n = 0, ask = 0;
+    for(const f of Array.from(files || [])){ if(!/^image\//.test(f.type) && !/\.(png|jpe?g|webp|gif|svg)$/i.test(f.name)) continue;
+      const raw = await fileURL(f), data = await shrink(raw, 700, 240); if(!data) continue;
+      let k = f.name.replace(/\.[a-z0-9]+$/i, "").replace(/[_]+/g, " ").replace(/\blog[oó]\b/ig, "").trim();
+      if(generic(k)){ busy(true, "🤖 Melyik telefon logója? — felismerés…"); const a = await aiName(data); k = a ? keyOf(a) || a : ""; }
+      else k = keyOf(k) || k;
+      if(!k) ask++;
+      L.push({ id:uid(), key:k, data, src:"up" }); n++; }
+    saveL(); busy(false); tab = "logos"; draw();
+    note(n ? `🖼️ ${n} logó feltöltve${ask ? ` — ${ask}-nál írd be, melyik telefoné` : " — a lapon magától a megfelelő telefonhoz került"}.` : "⚠ Képfájlt tölts fel (PNG, JPG).");
+  }
+  /* ===================== a lap (A4) ===================== */
+  const money = v=>{ const d = String(v || "").replace(/[^\d]/g, ""); return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : String(v || ""); };
+  function cardHTML(c, s, fsz){
+    const lg = logoFor(c), rows = c.rows.filter(r=> r.on && String(r.v || "").trim());
+    const base = LAY[s.per][2] * (s.scale || 1), pf = (fsz && fsz.pf) || base * 1.15; fsz = (fsz && fsz.fs) || fsz || base;
+    return `<div class="sk-card${LAY[s.per][0] <= 2 ? " wide" : ""}" data-id="${E(c.id)}" style="--fs:${fsz}pt;--pf:${pf}pt">${c.badge ? `<span class="sk-badge">${E(c.badge)}</span>` : ""}
+      <div class="sk-top"><div class="sk-lg">${lg ? `<img src="${lg}" alt="">` : ""}</div><div class="sk-nm">${E(c.name || "Új telefon")}</div></div>
+      <div class="sk-rows">${rows.map(r=> `<div class="sk-row${s.labels ? "" : " nl"}">${s.icons ? `<i>${ICO[r.k] || ICO.x}</i>` : ""}<span>${s.labels && (r.l || LBL[r.k]) ? `<small>${E(r.l || LBL[r.k])}</small>` : ""}<b>${E(r.v)}</b></span></div>`).join("")}${c.note ? `<div class="sk-note">${E(c.note)}</div>` : ""}</div>
+      ${c.oldPrice ? `<div class="sk-old">${E(money(c.oldPrice))} Ft</div>` : ""}<div class="sk-price">${s.priceLbl ? `<span class="l">${E(s.priceLbl)}</span>` : ""}<span class="n">${E(money(c.price) || "—")}</span><span class="c">Ft</span></div></div>`;
+  }
+  let ownLogoUrl = "";
+  async function ownLogo(){ const s = D.set; if(s.ownLogo === "none") return ""; if(s.ownLogo === "custom" && s.ownLogoData) return s.ownLogoData; try{ return window.fpStoreLogo ? await fpStoreLogo("color") : ""; }catch(e){ return ""; } }
+  function sheetsHTML(fs){
+    const s = D.set, [cols, rows, , lh] = LAY[s.per] || LAY[8], per = cols * rows, pages = [];
+    const d = new Date(), ds = `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, "0")}. ${String(d.getDate()).padStart(2, "0")}.`;
+    const cards = D.cards.length ? D.cards : [];
+    for(let i = 0; i < Math.max(1, Math.ceil(cards.length / per)); i++){ const part = cards.slice(i * per, i * per + per);
+      pages.push(`<div class="sk-sheet" style="--cols:${cols};--rows:${rows};--lh:${lh}mm;--ac:${E(s.accent)};--pc:${E(s.priceColor || s.accent)}">
+        <div class="sk-head">${ownLogoUrl ? `<img src="${ownLogoUrl}" alt="">` : ""}<b>${E(s.title || "")}</b>${s.date ? `<span>${ds}</span>` : ""}</div>
+        <div class="sk-grid">${part.map(c=> cardHTML(c, s, (fs && fs[c.id]) || LAY[s.per][2] * (s.scale || 1))).join("")}${part.length ? "" : `<div class="sk-empty">Tölts be egy Word-dokumentumot, vagy adj hozzá telefont.</div>`}</div>
+        ${s.footer ? `<div class="sk-foot">${E(s.footer)}</div>` : ""}</div>`); }
+    return pages.join("");
+  }
+  const SHEET_CSS = `
+    .sk-sheet{width:210mm;height:297mm;box-sizing:border-box;padding:6mm 7mm 5mm;background:#fff;color:#111;display:flex;flex-direction:column;gap:3.5mm;overflow:hidden;font-family:'Inter',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .sk-sheet *{box-sizing:border-box;border-radius:0 !important;}
+    .sk-head{display:flex;align-items:center;gap:4mm;min-height:8mm;padding-bottom:1.5mm;border-bottom:.8mm solid var(--ac);}
+    .sk-head img{height:7.5mm;width:auto;max-width:60mm;object-fit:contain;}
+    .sk-head b{flex:1;font:800 6mm/1.1 'Poppins',Arial,sans-serif;letter-spacing:-.01em;}
+    .sk-head span{font:700 3.2mm 'Inter',Arial,sans-serif;color:#555;}
+    .sk-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-template-rows:repeat(var(--rows),minmax(0,1fr));gap:3.5mm;}
+    .sk-card{position:relative;display:flex;flex-direction:column;min-height:0;min-width:0;border:.55mm solid #111;background:#fff;font-size:var(--fs);overflow:hidden;}
+    .sk-top{padding:2.6mm 2.4mm 2mm;text-align:center;border-bottom:.35mm solid #111;border-top:1.6mm solid var(--ac);}
+    .sk-lg{height:var(--lh);display:flex;align-items:center;justify-content:center;}
+    .sk-lg img{max-height:100%;max-width:100%;object-fit:contain;}
+    .sk-lg:empty{display:none;}
+    .sk-nm{margin-top:1.6mm;font:800 1.08em/1.18 'Poppins',Arial,sans-serif;letter-spacing:-.005em;overflow-wrap:anywhere;}
+    .sk-rows{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:.9mm;padding:1.6mm 2.4mm;overflow:hidden;}
+    .sk-row{display:grid;grid-template-columns:1.45em minmax(0,1fr);column-gap:1.6mm;align-items:center;}
+    .sk-row:not(:has(i)){grid-template-columns:minmax(0,1fr);}
+    .sk-row i{display:block;width:1.45em;height:1.45em;color:#111;}
+    .sk-row i svg{width:100%;height:100%;display:block;}
+    .sk-row small{display:block;font:700 .6em/1.15 'Inter',Arial,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#666;}
+    .sk-row b{display:block;font:700 .95em/1.2 'Inter',Arial,sans-serif;overflow-wrap:anywhere;}
+    .sk-note{margin-top:.6mm;padding:1mm 1.6mm;background:#f1f1f1;border-left:1mm solid var(--ac);font:700 .9em/1.25 'Inter',Arial,sans-serif;}
+    .sk-old{text-align:center;font:800 .95em 'Poppins',Arial,sans-serif;color:#777;text-decoration:line-through;padding:.6mm 0 0;}
+    /* nyomtatóbarát ár: nincs teli fekete sáv, csak vastag vonal és nagy, fekete számok */
+    .sk-price{display:flex;align-items:baseline;justify-content:center;gap:1.4mm;padding:1.6mm 2mm 2mm;background:#fff;color:var(--pc);border-top:.7mm solid #111;font-size:var(--pf);}
+    .sk-card.wide .sk-row span{display:grid;grid-template-columns:minmax(26mm,34%) minmax(0,1fr);column-gap:2mm;align-items:baseline;}
+    .sk-card.wide .sk-row small{font-size:.72em;}
+    .sk-card.wide .sk-rows{gap:.4mm;}
+    .sk-price .l{font:800 .7em 'Inter',Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#555;}
+    .sk-price .n{font:900 2.35em/1 'Poppins',Arial,sans-serif;letter-spacing:-.02em;white-space:nowrap;}
+    .sk-price .c{font:800 1.05em 'Poppins',Arial,sans-serif;}
+    .sk-badge{position:absolute;top:1.6mm;left:0;z-index:2;padding:.8mm 2.2mm;background:var(--ac);color:#fff;font:900 .78em 'Poppins',Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase;}
+    .sk-foot{font:600 2.7mm/1.3 'Inter',Arial,sans-serif;color:#555;text-align:center;}
+    .sk-empty{grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;border:.5mm dashed #bbb;color:#888;font:700 5mm 'Inter',sans-serif;}`;
+  /* ---- betűméret: amekkora belefér (a sorok ne lógjanak ki) ---- */
+  function fit(host){ const fs = {}, s = D.set, base = LAY[s.per][2] * (s.scale || 1);
+    host.querySelectorAll(".sk-card").forEach(el=>{ let f = base, pf = base * 1.15; const rw = el.querySelector(".sk-rows"), pr = el.querySelector(".sk-price"), n = el.querySelector(".sk-price .n");
+      el.style.setProperty("--fs", f + "pt"); el.style.setProperty("--pf", pf + "pt");
+      let g = 40; while(g-- > 0 && pf > 7 && pr && pr.scrollWidth > pr.clientWidth + 1){ pf = Math.round((pf - .5) * 100) / 100; el.style.setProperty("--pf", pf + "pt"); }
+      g = 80; while(g-- > 0 && f > 6 && (rw.scrollHeight > rw.clientHeight + 2 || el.scrollHeight > el.clientHeight + 4)){ f = Math.round((f - .25) * 100) / 100; el.style.setProperty("--fs", f + "pt"); }
+      fs[el.dataset.id] = { fs:f, pf }; });
+    return fs; }
+  let lastFs = {};
+  /* ===================== felület ===================== */
+  function busy(on, t){ const b = root && root.querySelector(".sk-busy"); if(!b) return; b.hidden = !on; if(t) b.querySelector("span").textContent = t; }
+  function draw(){
+    if(!root) return;
+    const s = D.set, c = D.cards.find(x=> x.id === sel);
+    root.querySelector(".sk-tabs").innerHTML = [["cards","📱 Telefonok",D.cards.length],["look","🎨 Megjelenés",""],["logos","🖼️ Logók",L.length]].map(([k, t, n])=> `<button type="button" data-tab="${k}" class="${tab === k ? "on" : ""}">${t}${n !== "" ? ` <small>${n}</small>` : ""}</button>`).join("");
+    const P = root.querySelector(".sk-panel");
+    if(tab === "cards"){
+      P.innerHTML = `<div class="sk-list">${D.cards.map((x, i)=> `<div class="sk-li${x.id === sel ? " on" : ""}" data-sel="${E(x.id)}"><span class="sk-th">${logoFor(x) ? `<img src="${logoFor(x)}" alt="">` : "📱"}</span><span class="sk-lt"><b>${E(x.name || "Új telefon")}</b><small>${x.price ? money(x.price) + " Ft" : "nincs ár"}${x.badge ? " · " + E(x.badge) : ""}</small></span><span class="sk-ord"><button type="button" data-up="${i}" title="Előre">▲</button><button type="button" data-dn="${i}" title="Hátra">▼</button></span></div>`).join("") || `<div class="sk-hint">Még nincs telefon. Tölts be egy Word-dokumentumot (fent), vagy adj hozzá egyet kézzel.</div>`}</div>
+        <button type="button" class="sk-add" data-a="add">➕ Új telefon</button>
+        ${c ? editorHTML(c) : ""}`;
+    } else if(tab === "look"){
+      P.innerHTML = `<div class="sk-f"><label>Méret</label><small class="sk-sm">📏 A kártyák mérete olyan, mint a Wordben: 8 telefon egy A4-es lapon (4 × 2). A betűk mindig akkorák, amekkora belefér — a címkék kikapcsolásával még nagyobbak.</small></div>
+        <div class="sk-f"><label>Betűméret <b>${Math.round((s.scale || 1) * 100)}%</b></label><input type="range" min="0.7" max="1.5" step="0.05" value="${s.scale || 1}" data-set="scale"><small class="sk-sm">Ha valami nem fér ki, magától kisebbre veszi.</small></div>
+        <div class="sk-f"><label>Szín (fejléc, csík, kiemelés)</label><div class="sk-cols">${ACC.map(([v, t])=> `<button type="button" data-acc="${v}" title="${t}" style="background:${v}" class="${s.accent === v ? "on" : ""}"></button>`).join("")}<input type="color" value="${E(s.accent)}" data-set="accent" title="Saját szín"></div></div>
+        <div class="sk-f"><label>Ár színe</label><div class="sk-cols">${ACC.map(([v, t])=> `<button type="button" data-pcol="${v}" title="${t}" style="background:${v}" class="${(s.priceColor || s.accent) === v ? "on" : ""}"></button>`).join("")}<input type="color" value="${E(s.priceColor || s.accent)}" data-set="priceColor" title="Saját szín"></div></div>
+        <div class="sk-f sk-tg"><label><input type="checkbox" data-chk="labels"${s.labels ? " checked" : ""}> Címkék a sorok felett (pl. „KIJELZŐ”)</label><label><input type="checkbox" data-chk="icons"${s.icons ? " checked" : ""}> Ikonok a sorok előtt</label><label><input type="checkbox" data-chk="date"${s.date ? " checked" : ""}> Dátum a lap tetején</label></div>
+        <div class="sk-f"><label>Saját logó a lap tetején</label><div class="sk-seg">${[["store","🏬 Bolt logója"],["custom","⬆ Saját"],["none","Nincs"]].map(([k, t])=> `<button type="button" data-own="${k}" class="${s.ownLogo === k ? "on" : ""}">${t}</button>`).join("")}</div>
+          ${s.ownLogo === "custom" ? `<label class="sk-up">${s.ownLogoData ? `<img src="${s.ownLogoData}" alt="">` : "⬆"} Saját logó feltöltése<input type="file" accept="image/*" hidden data-file="own"></label>` : ""}</div>
+        <div class="sk-f"><label>Cím a lap tetején</label><input type="text" data-set="title" value="${E(s.title)}" placeholder="pl. Készülékeink"></div>
+        <div class="sk-f"><label>Ár felirata</label><input type="text" data-set="priceLbl" value="${E(s.priceLbl)}" placeholder="pl. Ár"></div>
+        <div class="sk-f"><label>Lábléc (apró betű alul)</label><textarea data-set="footer" rows="2">${E(s.footer)}</textarea></div>`;
+    } else {
+      P.innerHTML = `<label class="sk-drop">🖼️ <b>Logók feltöltése</b><small>Sima logóképek (PNG/JPG), akár többet is egyszerre. A fájl nevéből — vagy ha az nem mond semmit, 🤖 AI-val a képről — felismeri, melyik telefoné, és magától odateszi.</small><input type="file" accept="image/*" multiple hidden data-file="logos"></label>
+        <div class="sk-logos">${L.map(l=>{ const used = D.cards.filter(c=> !c.logo && logoFor(c) === l.data).length; return `<div class="sk-lo${l.key ? "" : " ask"}"><span class="sk-lim"><img src="${l.data}" alt=""></span><input type="text" value="${E(l.key)}" data-lkey="${E(l.id)}" placeholder="Melyik telefon? pl. Galaxy A57"><small>${l.key ? (used ? `✓ ${used} telefonnál` : "nincs ilyen a lapon") : "❓ írd be a telefon nevét"}${l.src === "word" ? " · a Wordből" : ""}</small><button type="button" data-ldel="${E(l.id)}" title="Törlés">✕</button></div>`; }).join("") || `<div class="sk-hint">Még nincs logó. A Word-dokumentum betöltésekor a benne lévő logók is ide kerülnek.</div>`}</div>`;
+    }
+    preview();
+  }
+  function editorHTML(c){
+    return `<div class="sk-ed"><div class="sk-edh"><b>✏️ ${E(c.name || "Új telefon")}</b><button type="button" class="sk-del" data-a="delcard">🗑 Törlés</button></div>
+      <div class="sk-f"><label>Név (a logó alatt mindig ott van)</label><input type="text" data-c="name" value="${E(c.name)}" placeholder="pl. Samsung Galaxy A57 5G 128GB"></div>
+      <div class="sk-f2"><div class="sk-f"><label>Ár (Ft)</label><input type="text" inputmode="numeric" class="big" data-c="price" value="${E(money(c.price))}" placeholder="132 900"></div><div class="sk-f"><label>Régi ár <i>nem kötelező</i></label><input type="text" inputmode="numeric" data-c="oldPrice" value="${E(money(c.oldPrice))}" placeholder="149 900"></div></div>
+      <div class="sk-f2"><div class="sk-f"><label>Kiemelés <i>pl. AKCIÓ, ÚJ</i></label><input type="text" data-c="badge" value="${E(c.badge)}" maxlength="18"></div><div class="sk-f"><label>Logó ennél a telefonnál</label><div class="sk-lrow"><span class="sk-th">${logoFor(c) ? `<img src="${logoFor(c)}" alt="">` : "—"}</span><label class="sk-mini">⬆ Saját<input type="file" accept="image/*" hidden data-file="card"></label>${c.logo ? `<button type="button" class="sk-mini" data-a="nologo">✕</button>` : ""}</div></div></div>
+      <div class="sk-f"><label>Adatok <small class="sk-sm">— pipa: látszik a lapon · bármit átírhatsz vagy hozzáírhatsz</small></label>
+        <div class="sk-rowsed">${c.rows.map((r, i)=> `<div class="sk-re${r.on ? "" : " off"}"><input type="checkbox" data-ron="${i}"${r.on ? " checked" : ""} title="Látszik a lapon"><i>${ICO[r.k] || ICO.x}</i><input type="text" class="lbl" data-rl="${i}" value="${E(r.l || LBL[r.k] || "")}" placeholder="Címke"><input type="text" class="val" data-rv="${i}" value="${E(r.v)}" placeholder="Érték"><button type="button" data-rdel="${i}" title="Sor törlése">✕</button></div>`).join("")}</div>
+        <button type="button" class="sk-add sm" data-a="addrow">➕ Saját sor (pl. Garancia: 3 év)</button></div>
+      <div class="sk-f"><label>Megjegyzés a kártya aljára <i>nem kötelező</i></label><input type="text" data-c="note" value="${E(c.note || "")}" placeholder="pl. Ajándék tok + fólia!"></div></div>`;
+  }
+  let pvT = null;
+  function preview(){ clearTimeout(pvT); pvT = setTimeout(async ()=>{ if(!root) return; ownLogoUrl = await ownLogo();
+      const pv = root.querySelector(".sk-pv"), inner = root.querySelector(".sk-pvi");
+      inner.innerHTML = sheetsHTML(); await new Promise(r=> requestAnimationFrame(r)); lastFs = fit(inner);
+      const w = pv.clientWidth - 8, sc = Math.min(1, w / 793.7); inner.style.transform = `scale(${sc})`; inner.style.width = "793.7px";
+      const n = inner.querySelectorAll(".sk-sheet").length; inner.style.marginBottom = (-(1 - sc) * (1122.5 * n + 16 * (n - 1))) + "px";
+      root.querySelector(".sk-pages").textContent = `${n} oldal · ${D.cards.length} telefon`;
+      inner.querySelectorAll(".sk-card").forEach(el=>{ el.classList.toggle("sel", el.dataset.id === sel); el.onclick = ()=>{ sel = el.dataset.id; tab = "cards"; draw(); }; });
+    }, 60); }
+  /* ===================== nyomtatás / PDF ===================== */
+  function printDoc(){
+    return `<!doctype html><html><head><meta charset="utf-8"><title>Speckó</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@500;600;700;800&display=swap"><style>@page{size:A4;margin:0;}html,body{margin:0;padding:0;background:#fff;}.sk-sheet{page-break-after:always;break-after:page;}.sk-sheet:last-child{page-break-after:auto;}${SHEET_CSS}</style></head><body>${sheetsHTML(lastFs)}</body></html>`; }
+  async function doPrint(){
+    if(!D.cards.length){ note("Előbb adj hozzá telefont."); return; }
+    ownLogoUrl = await ownLogo();
+    const f = document.createElement("iframe"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;"; document.body.appendChild(f);
+    f.srcdoc = printDoc(); f.onload = ()=>{ const w = f.contentWindow; (w.document.fonts ? w.document.fonts.ready : Promise.resolve()).then(()=> setTimeout(()=>{ try{ w.focus(); w.print(); }catch(e){} setTimeout(()=> f.remove(), 60000); }, 300)); };
+  }
+  function pdfFrom(pages){ const enc = new TextEncoder(), parts = [], offs = []; let len = 0; const put = x=>{ const u = typeof x === "string" ? enc.encode(x) : x; parts.push(u); len += u.length; };
+    const obj = (n, body)=>{ offs[n] = len; put(n + " 0 obj\n"); body(); put("\nendobj\n"); }, N = pages.length;
+    put("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n"); obj(1, ()=> put("<< /Type /Catalog /Pages 2 0 R >>")); obj(2, ()=> put(`<< /Type /Pages /Kids [${pages.map((_, i)=> (3 + i * 3) + " 0 R").join(" ")}] /Count ${N} >>`));
+    pages.forEach((pg, i)=>{ const o = 3 + i * 3, W = 595.28, H = 841.89, cs = `q ${W} 0 0 ${H} 0 0 cm /Im0 Do Q`;
+      obj(o, ()=> put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /XObject << /Im0 ${o + 1} 0 R >> >> /Contents ${o + 2} 0 R >>`));
+      obj(o + 1, ()=>{ put(`<< /Type /XObject /Subtype /Image /Width ${pg.w} /Height ${pg.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${pg.u8.length} >>\nstream\n`); put(pg.u8); put("\nendstream"); });
+      obj(o + 2, ()=> put(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`)); });
+    const xr = len, cnt = 3 + N * 3; put(`xref\n0 ${cnt}\n0000000000 65535 f \n` + offs.slice(1, cnt).map(o=> String(o).padStart(10, "0") + " 00000 n \n").join("")); put(`trailer\n<< /Size ${cnt} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);
+    return new Blob(parts, { type:"application/pdf" }); }
+  async function doPdf(){
+    if(!D.cards.length){ note("Előbb adj hozzá telefont."); return; }
+    busy(true, "PDF készítése…");
+    try{ if(!window.html2canvas) await new Promise((res, rej)=>{ const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+      ownLogoUrl = await ownLogo();
+      const box = document.createElement("div"); box.style.cssText = "position:fixed;left:-10000px;top:0;width:793.7px;background:#fff;"; box.innerHTML = `<style>${SHEET_CSS}</style>` + sheetsHTML(lastFs); document.body.appendChild(box);
+      try{ await document.fonts.ready; }catch(e){}
+      const pages = [];
+      for(const sh of box.querySelectorAll(".sk-sheet")){ const cv = await html2canvas(sh, { scale:2.5, backgroundColor:"#fff", useCORS:true, logging:false }); const u = cv.toDataURL("image/jpeg", .92), bin = atob(u.split(",")[1]), u8 = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); pages.push({ u8, w:cv.width, h:cv.height }); }
+      box.remove();
+      const b = pdfFrom(pages), a = document.createElement("a"), d = new Date(); a.href = URL.createObjectURL(b); a.download = `FirstPhone_specko_${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}.pdf`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=> URL.revokeObjectURL(a.href), 5000);
+      note("⬇ A speckó PDF letöltve.");
+    }catch(e){ note("⚠ Nem sikerült a PDF: " + ((e && e.message) || e)); }
+    busy(false);
+  }
+  /* ===================== események ===================== */
+  function bind(){
+    root.addEventListener("click", async e=>{
+      const t = e.target.closest("button, [data-sel]"); if(!t || !root.contains(t)) return;
+      const c = D.cards.find(x=> x.id === sel), d = t.dataset;
+      if(d.tab){ tab = d.tab; draw(); return; }
+      if(d.top === "print"){ doPrint(); return; } if(d.top === "pdf"){ doPdf(); return; }
+      if(d.top === "clear"){ if(D.cards.length && confirm("Biztosan törlöd az összes telefont a lapról? (A logók megmaradnak.)")){ D.cards = []; sel = null; save(); draw(); } return; }
+      if(d.up != null || d.dn != null){ e.stopPropagation(); const i = +(d.up != null ? d.up : d.dn), j = d.up != null ? i - 1 : i + 1; if(j < 0 || j >= D.cards.length) return; [D.cards[i], D.cards[j]] = [D.cards[j], D.cards[i]]; save(); draw(); return; }
+      if(d.sel){ sel = sel === d.sel ? null : d.sel; draw(); return; }
+      if(d.a === "add"){ const n = { id:uid(), name:"", price:"", oldPrice:"", badge:"", logo:"", note:"", rows:FIELDS.map(([k, l])=> ({ k, l, v:"", on:true })) }; D.cards.push(n); sel = n.id; save(); draw(); setTimeout(()=>{ const i = root.querySelector('[data-c="name"]'); if(i) i.focus(); }, 80); return; }
+      if(d.a === "delcard" && c){ if(!confirm(`Törlöd: ${c.name || "Új telefon"}?`)) return; D.cards = D.cards.filter(x=> x !== c); sel = null; save(); draw(); return; }
+      if(d.a === "addrow" && c){ c.rows.push({ k:"x" + uid(), l:"", v:"", on:true }); save(); draw(); setTimeout(()=>{ const L2 = root.querySelectorAll(".sk-re .lbl"); if(L2.length) L2[L2.length - 1].focus(); }, 60); return; }
+      if(d.a === "nologo" && c){ c.logo = ""; save(); draw(); return; }
+      if(d.rdel != null && c){ c.rows.splice(+d.rdel, 1); save(); draw(); return; }
+      if(d.per){ D.set.per = +d.per; save(); draw(); return; }
+      if(d.acc){ D.set.accent = d.acc; save(); draw(); return; }
+      if(d.pcol){ D.set.priceColor = d.pcol; save(); draw(); return; }
+      if(d.own){ D.set.ownLogo = d.own; save(); draw(); return; }
+      if(d.ldel){ L = L.filter(l=> l.id !== d.ldel); saveL(); draw(); return; }
+    });
+    root.addEventListener("input", e=>{
+      const t = e.target, d = t.dataset, c = D.cards.find(x=> x.id === sel);
+      if(d.c && c){ c[d.c] = /price|oldPrice/i.test(d.c) ? t.value.replace(/[^\d]/g, "") : t.value; save(); preview(); const li = root.querySelector(`.sk-li[data-sel="${c.id}"]`); if(li){ li.querySelector("b").textContent = c.name || "Új telefon"; li.querySelector("small").textContent = c.price ? money(c.price) + " Ft" : "nincs ár"; } if(d.c === "name" && root.querySelector(".sk-edh b")) root.querySelector(".sk-edh b").textContent = "✏️ " + (c.name || "Új telefon"); return; }
+      if(d.rv != null && c){ c.rows[+d.rv].v = t.value; if(t.value && !c.rows[+d.rv].on){ c.rows[+d.rv].on = true; const ck = root.querySelector(`[data-ron="${d.rv}"]`); if(ck){ ck.checked = true; ck.closest(".sk-re").classList.remove("off"); } } save(); preview(); return; }
+      if(d.rl != null && c){ c.rows[+d.rl].l = t.value; save(); preview(); return; }
+      if(d.set){ D.set[d.set] = d.set === "scale" ? +t.value : t.value; if(d.set === "scale"){ const b = t.parentNode.querySelector("label b"); if(b) b.textContent = Math.round(t.value * 100) + "%"; } save(); preview(); return; }
+      if(d.lkey){ const l = L.find(x=> x.id === d.lkey); if(l){ l.key = t.value; saveL(); preview(); } return; }
+    });
+    root.addEventListener("change", async e=>{
+      const t = e.target, d = t.dataset, c = D.cards.find(x=> x.id === sel);
+      if(d.ron != null && c){ c.rows[+d.ron].on = t.checked; t.closest(".sk-re").classList.toggle("off", !t.checked); save(); preview(); return; }
+      if(d.chk){ D.set[d.chk] = t.checked; save(); preview(); return; }
+      if(d.lkey){ draw(); return; }
+      if(d.c === "price" || d.c === "oldPrice"){ t.value = money(t.value); return; }
+      if(d.file){ const fs = Array.from(t.files || []); t.value = ""; if(!fs.length) return;
+        if(d.file === "word"){ importFile(fs[0]); return; }
+        if(d.file === "logos"){ addLogos(fs); return; }
+        const u = await shrink(await fileURL(fs[0]), 900, 320); if(!u) return;
+        if(d.file === "own"){ D.set.ownLogoData = u; save(); draw(); return; }
+        if(d.file === "card" && c){ c.logo = u; save(); draw(); note("🖼️ Saját logó beállítva ennél a telefonnál."); return; } }
+    });
+    root.addEventListener("dragover", e=>{ e.preventDefault(); root.classList.add("drag"); });
+    root.addEventListener("dragleave", e=>{ if(e.target === root) root.classList.remove("drag"); });
+    root.addEventListener("drop", e=>{ e.preventDefault(); root.classList.remove("drag"); const fs = Array.from(e.dataTransfer.files || []); if(!fs.length) return;
+      const w = fs.find(f=> /\.(rtf|docx|doc)$/i.test(f.name)); if(w) importFile(w); const im = fs.filter(f=> /^image\//.test(f.type)); if(im.length) addLogos(im); });
+    window.addEventListener("resize", ()=>{ if(document.body.classList.contains("page-specko")) preview(); });
+  }
+  function mount(){
+    root = document.getElementById("skPage"); if(!root || root.dataset.on) return; root.dataset.on = "1";
+    root.innerHTML = `<section class="panel sk-hero"><div class="sk-hic">📱</div><div class="sk-ht"><h2>Speckó</h2><p>Telefon-adatlapok A4-re — Wordből beolvasva, szabadon szerkeszthető, nagy betűkkel, nagy árral.</p></div>
+        <div class="sk-hb"><label class="sk-btn pri">📄 Word betöltése<input type="file" accept=".docx,.rtf,.doc,application/rtf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden data-file="word"></label><button type="button" class="sk-btn" data-top="print">🖨️ Nyomtatás</button><button type="button" class="sk-btn" data-top="pdf">⬇ PDF</button><button type="button" class="sk-btn ghost" data-top="clear" title="Minden telefon törlése a lapról">🗑</button></div></section>
+      <div class="sk-wrap"><aside class="panel sk-side"><div class="sk-tabs"></div><div class="sk-panel"></div></aside>
+        <main class="sk-pv"><div class="sk-pvh"><b>👁 Előnézet</b><span class="sk-pages"></span><small>Kattints egy kártyára a szerkesztéshez</small></div><div class="sk-pvi"></div></main></div>
+      <div class="sk-busy" hidden><i></i><span>…</span></div><style>${SHEET_CSS}</style>`;
+    bind(); if(!sel && D.cards[0]) sel = D.cards[0].id; draw();
+  }
+  /* másik gépről jött változás (felhő) */
+  setInterval(()=>{ if(!root || !document.body.classList.contains("page-specko")) return; const r = localStorage.getItem(KEY) || ""; if(r && r !== lastRaw && !root.contains(document.activeElement)){ lastRaw = r; D = load(); L = loadL(); draw(); } }, 4000);
+  window.fpSpeckoOpen = ()=>{ mount(); D = load(); L = loadL(); lastRaw = localStorage.getItem(KEY) || ""; draw(); };
 })();</script>
 </body>
 </html>
