@@ -5385,6 +5385,20 @@
   .sk-mcol .sk-del{margin-top:4px;}
   .sk-re{grid-template-columns:20px 34px minmax(0,1fr) 28px;gap:6px;}
   .sk-re.nw{animation:skPop .3s ease;}
+  .sk-adds{display:grid;grid-template-columns:1fr 1fr;gap:6px;} .sk-adds .sk-add{margin:8px 0;}
+  .sk-net{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);} .sk-net small{flex:1;min-width:180px;}
+  .sk-mini.net{height:36px;padding:0 12px;border-color:color-mix(in srgb,#4fb3c4 55%,var(--border));background:color-mix(in srgb,#4fb3c4 12%,var(--bg-panel));}
+  .sk-audm{width:min(760px,100%);} .sk-mb1{padding:14px 16px 18px;overflow:auto;} .sk-mb1 > p{margin:0 0 12px;line-height:1.45;}
+  .sk-aud{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;}
+  .sk-aud button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,transform .15s;}
+  .sk-aud button:hover{border-color:var(--gold);transform:translateY(-1px);} .sk-aud b{font:800 14px 'Poppins',sans-serif;} .sk-aud small{font-size:11.5px;color:var(--text-dim);} .sk-aud button.ghost{border-style:dashed;background:transparent;}
+  .sk-pk.sk-found{width:min(640px,94%);max-height:calc(100% - 24px);}
+  .sk-fl{display:flex;flex-direction:column;gap:4px;max-height:min(52vh,440px);overflow:auto;padding-right:2px;}
+  .sk-fi{display:grid;grid-template-columns:20px 26px minmax(0,1fr);gap:8px;align-items:center;padding:7px 9px;border-radius:10px;border:1px solid var(--border);background:var(--bg-panel2);cursor:pointer;font:600 13px 'Inter',sans-serif;}
+  .sk-fi i{width:22px;height:22px;color:var(--text);} .sk-fi i svg{width:100%;height:100%;} .sk-fi small{display:block;font-size:11px;font-weight:500;color:var(--text-dim);} .sk-fi.du{opacity:.55;cursor:default;}
+  .sk-alt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;} .sk-alt small{color:var(--text-dim);font-size:11.5px;}
+  .sk-pkb{display:flex;justify-content:flex-end;gap:8px;} .sk-pk > small.sk-sm{margin-top:-6px;}
+  .sk-spin{width:26px;height:26px;margin:6px auto;border-radius:50%;border:3px solid var(--border);border-top-color:var(--gold);animation:skSpin .8s linear infinite;} @keyframes skSpin{to{transform:rotate(360deg)}}
   .sk-mod .sk-rowsed{max-height:min(50vh,470px);overflow:auto;padding:2px 4px 2px 2px;scrollbar-width:thin;}
   .sk-re.dup{animation:skDup 1.4s ease;} @keyframes skDup{0%,60%{background:color-mix(in srgb,#f0953a 30%,transparent);box-shadow:0 0 0 2px #f0953a;}100%{background:transparent;box-shadow:none;}}
   .sk-re{border-radius:10px;} .sk-nl.warn{color:#f0953a;font-weight:700;}
@@ -5661,7 +5675,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-155120";</script>
+<script>window.FP_BUILD="20261024-174007";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -27034,16 +27048,31 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     szin:`<svg viewBox="0 0 24 24" ${P}><path d="M12 3a9 9 0 1 0 0 18c1.3 0 1.8-1 1.4-2-.5-1.2.2-2.5 1.6-2.5H17a4 4 0 0 0 4-4C21 7 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></svg>`,
     halo5g:`<svg viewBox="0 0 24 24" ${P}><path d="M12 10v11M8.5 21h7M12 10l-4 11M12 10l4 11"/><path d="M8 6.5a5.5 5.5 0 0 1 8 0M5.5 4a9 9 0 0 1 13 0"/></svg>`,
     hang:`<svg viewBox="0 0 24 24" ${P}><path d="M4 9.5h4l5-4.5v14l-5-4.5H4z"/><path d="M16.5 9a4.5 4.5 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11"/></svg>`,
+    anc:`<svg viewBox="0 0 24 24" ${P}><path d="M3 12h2.5l2-4.5 3 9 3-11 3 9 1.5-2.5H21"/><path d="M4.5 19.5l15-15"/></svg>`,
+    ido:`<svg viewBox="0 0 24 24" ${P}><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>`,
+    tok:`<svg viewBox="0 0 24 24" ${P}><path d="M4 9.5a3.5 3.5 0 0 1 3.5-3.5h9A3.5 3.5 0 0 1 20 9.5V15a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M4 11h16"/><circle cx="12" cy="15" r=".9" fill="currentColor"/></svg>`,
+    ter:`<svg viewBox="0 0 24 24" ${P}><circle cx="12" cy="12" r="2.4"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></svg>`,
+    sziv:`<svg viewBox="0 0 24 24" ${P}><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7a4.3 4.3 0 0 1 7.5 2.8C19.5 15.4 12 20 12 20z"/><path d="M6 12.5h3l1.4-2.4 2.2 4.6 1.4-2.2H18"/></svg>`,
+    hallas:`<svg viewBox="0 0 24 24" ${P}><path d="M6.5 9.5a5.5 5.5 0 0 1 11 0c0 3.2-3.2 4.2-3.2 7.2a3.3 3.3 0 0 1-6.1 1.7"/><path d="M9.5 10a2.5 2.5 0 0 1 5 0c0 1.4-1.2 1.9-1.7 3"/></svg>`,
+    forditas:`<svg viewBox="0 0 24 24" ${P}><path d="M3 5.5h9M7.5 3.5v2M5 5.5c.6 3 2.6 5.4 6 6.8M10 5.5c-.6 3-2.6 5.4-6 6.8"/><path d="M12.5 20.5l4-9.5 4 9.5M14 17h5"/></svg>`,
+    keres:`<svg viewBox="0 0 24 24" ${P}><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>`,
+    mic:`<svg viewBox="0 0 24 24" ${P}><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></svg>`,
+    fej:`<svg viewBox="0 0 24 24" ${P}><path d="M4.5 15v-3a7.5 7.5 0 0 1 15 0v3"/><path d="M4.5 14h3v6.5h-1.5a1.5 1.5 0 0 1-1.5-1.5zM19.5 14h-3v6.5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>`,
     x:`<svg viewBox="0 0 24 24" ${P}><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>`
   };
   const ICON_NAMES = { halozat:"Hálózat", os:"Rendszer", kezeles:"Kezelés", kijelzo:"Kijelző", meret:"Képernyő", cpu:"Processzor", tarhely:"Tárhely / RAM", memkartya:"Memóriakártya", sim:"SIM", kamera:"Kamera", wifi:"Wi-Fi", radio:"FM rádió", akku:"Akkumulátor",
-    garancia:"Garancia", nfc:"NFC", bt:"Bluetooth", toltes:"Töltés", viz:"Víz- és porállóság", ujj:"Ujjlenyomat", suly:"Súly / méret", szin:"Szín", halo5g:"5G / hálózat", hang:"Hangszóró", x:"Egyéb" };
+    garancia:"Garancia", nfc:"NFC", bt:"Bluetooth", toltes:"Töltés", viz:"Víz- és porállóság", ujj:"Ujjlenyomat", suly:"Súly / méret", szin:"Szín", halo5g:"5G / hálózat", hang:"Hangzás", anc:"Zajszűrés", ido:"Üzemidő", tok:"Töltőtok", ter:"Térhangzás", sziv:"Pulzusmérés", hallas:"Hallás", forditas:"Élő fordítás", keres:"Keresés (Find My)", mic:"Mikrofon", fej:"Fülhallgató", x:"Egyéb" };
   /* 🔎 mi ez? — a beírt szövegből kitalálja, és hozzáillő ikont ad */
-  const RULES = [["garancia",/garanci|jótáll|jotall/i],["akku",/\bmah\b|akku|akkumul|battery/i],["toltes",/\d\s*w\b|töltés|toltes|gyorstölt|vezeték nélküli tölt|charg/i],["kamera",/\bmp(x)?\b|kamera|camera|megapix/i],
+  const RULES = [["garancia",/garanci|jótáll|jotall/i],["akku",/\bmah\b|akku|akkumul|battery/i],["keres",/find ?my|keresés|kereses|lokátor|lokator|helymeghat/i],["hang",/veszteségmentes|vesztesegmentes|lossless/i],
+    ["fej",/fülilleszt|fulilleszt|fülhallgató|fulhallgato|fejhallgató|fejhallgato|ear ?tip/i],["tok",/tokkal|töltőtok|toltotok|\btok\b|\btokon\b|smart case|\bcase\b/i],
+    ["toltes",/\d\s*w\b|töltés|toltes|töltő|tolto|gyorstölt|magsafe|\bqi2?\b|usb-?c|charg/i],["ido",/\d+(?:[.,]\d+)?\s*óra|\d+\s*ora\b|üzemidő|uzemido|zenehallgat|lejátszás/i],
+    ["mic",/mikrofon|microphone|hangszigetel|beszélgetés|beszelgetes|voice isolation/i],["anc",/zajszűr|zajszur|noise|\banc\b|átengedés|atengedes|transparen|adaptív hang|adaptiv hang/i],
+    ["ter",/térhang|terhang|spatial|atmos/i],["sziv",/pulzus|szívritmus|szivritmus|heart/i],["hallas",/hallás|hallas|hallókészülék|hearing/i],["forditas",/fordítás|forditas|translat/i],
+    ["kamera",/\bmp(x)?\b|kamera|camera|megapix/i],
     ["wifi",/wi-?fi|802\.11|wlan/i],["nfc",/\bnfc\b/i],["bt",/bluetooth|\bbt\s*\d/i],["halo5g",/\b5g\b|\b4g\b|lte|volte/i],["radio",/rádió|radio|\bfm\b/i],["memkartya",/memóriakárty|memoriakarty|micro\s?sd|bővíthető|bovitheto|\bsd\b/i],
-    ["tarhely",/\d\s*(gb|tb)\b|\bram\b|tárhely|tarhely/i],["cpu",/ghz|core|mag\(ok\)|\bmag\b|processzor|snapdragon|dimensity|exynos|helio|bionic|tensor|chip/i],["meret",/\d+\s*x\s*\d+|\d+[.,]\d+\s*("|”|col|inch|hüvelyk)/i],
+    ["tarhely",/\d\s*(gb|tb)\b|\bram\b|tárhely|tarhely/i],["cpu",/ghz|core|mag\(ok\)|\bmag\b|magos|processzor|snapdragon|dimensity|exynos|helio|bionic|tensor|chip/i],["meret",/\d+\s*x\s*\d+|\d+[.,]\d+\s*("|”|col|inch|hüvelyk)/i],
     ["kijelzo",/amoled|oled|lcd|ips|retina|kijelző|kijelzo|\d+\s*hz\b/i],["sim",/\bsim\b|dual|hybrid|esim|kártyafüggetlen|kartyafuggetlen|független/i],["os",/android|\bios\b|harmony|rendszer|one ?ui|miui|hyperos/i],
-    ["kezeles",/érintő|erinto|touch/i],["viz",/\bip\s?6\d|vízálló|vizallo|porálló|poralló/i],["ujj",/ujjlenyomat|arcfelismer|face ?id|fingerprint/i],["suly",/\d\s*g\b|súly|suly|\bmm\b|méret/i],["szin",/fekete|fehér|feher|kék|kek|zöld|zold|lila|piros|ezüst|ezust|arany|szürke|szurke|rózsaszín|szín|szin|color|black|white|blue|green|silver|gold/i],["hang",/hangszóró|hangszoro|sztereó|sztereo|dolby|audio|jack/i]];
+    ["kezeles",/érintő|erinto|érintés|erintes|touch|vezérl|vezerl|nyomásérzékel|nyomaserzekel|digital crown|\bgomb/i],["viz",/\bip\s?[4-6]\d|vízálló|vizallo|porálló|poralló|izzadság|izzadsag/i],["ujj",/ujjlenyomat|arcfelismer|face ?id|fingerprint/i],["suly",/\d\s*g\b|súly|suly|\bmm\b|méret/i],["szin",/fekete|fehér|feher|kék|kek|zöld|zold|lila|piros|ezüst|ezust|arany|szürke|szurke|rózsaszín|szín|szin|narancs|csillagfény|color|black|white|blue|green|silver|gold/i],["hang",/hangszóró|hangszoro|sztereó|sztereo|dolby|audio|jack/i]];
   const detect = v=>{ const t = String(v || ""); if(/^kártyafüggetlen|^kartyafuggetlen/i.test(t.trim())) return "halozat"; for(const [k, re] of RULES) if(re.test(t)) return k; return "x"; };
 
   const ACC = [["#111111","Fekete"],["#c8961e","FirstPhone arany"],["#1f5fd6","Kék"],["#c62828","Piros"],["#1e8a52","Zöld"],["#6b3fd1","Lila"]];
@@ -27208,10 +27237,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       .replace(/^(octa|hexa|quad|deca)[- ]?core\b[\s,]*/i, (x, n)=> ({ octa:"8", hexa:"6", quad:"4", deca:"10" })[n.toLowerCase()] + " magos, ")
       .replace(/(\d)\s*[x×]\s*(\d)/g, "$1 × $2")
       .replace(/(\d)\s*("|”)\s+(?=\d)/, "$1$2 · ")
-      .replace(/\s*,\s*(?=\S)/g, ", ");
+      .replace(/([^\d\s])\s*,\s*(?=\S)/g, "$1, ");
     if(k === "tarhely"){ const m = v.match(/^(\d+ (?:GB|TB)),?\s*[;/+]?\s*(\d+ GB)$/i); if(m) v = `${m[1]} · ${m[2]} RAM`; }
     if(k === "sim"){ v = v.replace(/\bsim\b/gi, "SIM"); if(!/SIM/.test(v) && v.length < 16) v += " SIM"; }
-    return v.replace(/,\s*$/, "").replace(/(\d)\s+(GB|TB|MB|MP|GHz|MHz|Hz|mAh|W|év|hónap)\b/g, "$1\u00a0$2");
+    return v.replace(/,\s*$/, "").replace(/(\d)\s+(GB|TB|MB|MP|GHz|MHz|Hz|mAh|W|év|hónap|óra|perc|g|mm)(?![\wáéíóöőúüű])/g, "$1\u00a0$2");
   }
   const normV = t=> String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "");
   const nums = t=> (String(t || "").match(/\d+(?:[.,]\d+)?/g) || []).map(x=> x.replace(",", "."));
@@ -27220,6 +27249,131 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const nv = normV(v), k = detect(v), nn = nums(v); if(!nv) return null;
     return c.rows.find((r, i)=> i !== skip && r.v && (normV(r.v) === nv || normV(pretty(r)) === nv || (k !== "x" && r.k === k && nn.length && nn.every(n=> nums(r.v).includes(n))))) || null;
   }
+  /* 🎧 AirPods — az Apple hivatalos műszaki adatlapjai alapján (2026. október: AirPods 4 / 4 ANC, 5, 5 vezeték nélküli tokkal, Pro 2, Pro 3, Max, Max 2) */
+  const AUDIO = [
+    { id:"ap5w", name:"Apple AirPods 5 vezeték nélküli töltőtokkal", sub:"H2 · zajszűrés · IP57 · 22 óra · Qi", keys:["airpods 5"], need:/vezetek nelkuli|wireless|toltotok/, rows:[
+      ["anc","Zajszűrés, átengedés, adaptív hang"],["cpu","Apple H2 chip"],["ter","Térhangzás fejkövetéssel"],["mic","Beszélgetésérzékelés, hangszigetelés"],
+      ["kezeles","Nyomógomb, hangerő-csúsztatás"],["ido","Akár 7 óra zene (zajszűréssel 5 óra)"],["tok","Tokkal együtt akár 22 óra (zajszűréssel)"],["toltes","USB-C, Qi és Apple Watch töltő"],
+      ["keres","Find My, hangszóró a tokon"],["viz","IP57 víz- és porálló"],["forditas","Élő fordítás (béta)"],["bt","Bluetooth 5.3"],["suly","4,3 g fülhallgatónként", false]] },
+    { id:"ap5", name:"Apple AirPods 5", sub:"H2 · zajszűrés · IP57 · 20 óra · USB-C", keys:["airpods 5"], not:/vezetek nelkuli|wireless|toltotok/, rows:[
+      ["anc","Zajszűrés, átengedés, adaptív hang"],["cpu","Apple H2 chip"],["ter","Térhangzás fejkövetéssel"],["mic","Beszélgetésérzékelés, hangszigetelés"],
+      ["kezeles","Nyomógombos vezérlés a száron"],["ido","Akár 6 óra zene (zajszűréssel 4 óra)"],["tok","Tokkal együtt akár 20 óra (zajszűréssel)"],["toltes","USB-C töltés, 5 perc ≈ 1 óra zene"],
+      ["viz","IP57 víz- és porálló"],["forditas","Élő fordítás (béta)"],["bt","Bluetooth 5.3"],["suly","4,3 g fülhallgatónként", false]] },
+    { id:"app3", name:"Apple AirPods Pro 3", sub:"H2 · zajszűrés · pulzusmérés · IP57 · 24 óra", keys:["airpods pro 3"], rows:[
+      ["anc","Zajszűrés, átengedés, adaptív hang"],["cpu","Apple H2 chip"],["sziv","Pulzusmérés edzés közben"],["hallas","Hallásteszt, hallásvédelem"],["ter","Térhangzás fejkövetéssel"],
+      ["mic","Beszélgetésérzékelés, hangszigetelés"],["kezeles","Nyomógomb, hangerő-csúsztatás"],["ido","Akár 8 óra zenehallgatás"],["tok","Tokkal együtt akár 24 óra"],
+      ["toltes","MagSafe, Qi, Apple Watch töltő, USB-C"],["keres","Find My, hangszóró a tokon"],["viz","IP57 víz- és porálló"],["forditas","Élő fordítás (béta)"],["bt","Bluetooth 5.3"],
+      ["fej","5 méretű fülilleszték (XXS–L)", false]] },
+    { id:"app2", name:"Apple AirPods Pro 2 (USB-C)", sub:"H2 · zajszűrés · IP54 · 30 óra · MagSafe", keys:["airpods pro 2"], rows:[
+      ["anc","Zajszűrés, átengedés, adaptív hang"],["cpu","Apple H2 chip"],["hallas","Hallásteszt, hallásvédelem"],["ter","Térhangzás fejkövetéssel"],["mic","Beszélgetésérzékelés, hangszigetelés"],
+      ["kezeles","Nyomógomb, hangerő-csúsztatás"],["ido","Akár 6 óra zenehallgatás"],["tok","Tokkal együtt akár 30 óra"],["toltes","MagSafe, Qi, Apple Watch töltő, USB-C"],
+      ["keres","Find My, hangszóró a tokon"],["viz","IP54 víz- és porálló"],["forditas","Élő fordítás (béta)"],["bt","Bluetooth 5.3"],["fej","4 méretű fülilleszték (XS–L)", false]] },
+    { id:"ap4anc", name:"Apple AirPods 4 aktív zajszűréssel", sub:"H2 · zajszűrés · IP54 · 30 óra · Qi", keys:["airpods 4"], need:/\banc\b|zajszur|noise/, rows:[
+      ["anc","Zajszűrés, átengedés, adaptív hang"],["cpu","Apple H2 chip"],["ter","Térhangzás fejkövetéssel"],["mic","Beszélgetésérzékelés, hangszigetelés"],
+      ["kezeles","Nyomógombos vezérlés a száron"],["ido","Akár 5 óra zene (zajszűréssel 4 óra)"],["tok","Tokkal együtt akár 30 óra (zajszűréssel 20 óra)"],["toltes","USB-C, Qi és Apple Watch töltő"],
+      ["keres","Find My, hangszóró a tokon"],["viz","IP54 víz- és porálló"],["forditas","Élő fordítás (béta)"],["bt","Bluetooth 5.3"],["suly","4,3 g fülhallgatónként", false]] },
+    { id:"ap4", name:"Apple AirPods 4", sub:"H2 · IP54 · 30 óra · USB-C", keys:["airpods 4"], not:/\banc\b|zajszur|noise/, rows:[
+      ["cpu","Apple H2 chip"],["ter","Térhangzás fejkövetéssel"],["mic","Hangszigetelés hívásokhoz"],["kezeles","Nyomógombos vezérlés a száron"],
+      ["ido","Akár 5 óra zenehallgatás"],["tok","Tokkal együtt akár 30 óra"],["toltes","USB-C töltés, 5 perc ≈ 1 óra zene"],["viz","IP54 víz- és porálló"],["bt","Bluetooth 5.3"],["suly","4,3 g fülhallgatónként", false]] },
+    { id:"apmax2", name:"Apple AirPods Max 2", sub:"H2 · fejhallgató · zajszűrés · 20 óra", keys:["airpods max 2"], rows:[
+      ["anc","Zajszűrés (1,5× erősebb), átengedés, adaptív hang"],["cpu","Apple H2 chip (fülkagylónként)"],["ter","Térhangzás fejkövetéssel"],["mic","Beszélgetésérzékelés, 9 mikrofon"],
+      ["kezeles","Digital Crown és üzemmódváltó gomb"],["ido","Akár 20 óra zenehallgatás"],["toltes","USB-C töltés, 5 perc ≈ 1,5 óra zene"],["hang","Veszteségmentes hang USB-C kábellel"],
+      ["tok","Smart Case tok (kíméli az akkut)"],["forditas","Élő fordítás (béta)"],["bt","Bluetooth 5.3"],["suly","386,2 g"],["szin","Éjfekete, csillagfény, kék, lila, narancs"]] },
+    { id:"apmax", name:"Apple AirPods Max (USB-C)", sub:"H1 · fejhallgató · zajszűrés · 20 óra", keys:["airpods max"], not:/\bmax 2\b/, rows:[
+      ["anc","Zajszűrés, átengedés mód"],["cpu","Apple H1 chip (fülkagylónként)"],["ter","Térhangzás fejkövetéssel"],["mic","9 mikrofon (8 a zajszűréshez)"],
+      ["kezeles","Digital Crown és zajszabályzó gomb"],["ido","Akár 20 óra zenehallgatás"],["toltes","USB-C töltés, 5 perc ≈ 1,5 óra zene"],["hang","Veszteségmentes hang USB-C kábellel"],
+      ["tok","Smart Case tok (kíméli az akkut)"],["bt","Bluetooth 5.0"],["suly","384,8 g"],["szin","Éjfekete, csillagfény, kék, lila, narancs"]] }
+  ];
+  const foldA = t=> " " + String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim() + " ";
+  function audioMatch(name){ const f = foldA(name); let best = null;
+    for(const A of AUDIO){ const hit = A.keys.filter(k=> f.includes(" " + k + " ")); if(!hit.length) continue; if(A.need && !A.need.test(f)) continue; if(A.not && A.not.test(f)) continue;
+      const sc = Math.max(...hit.map(k=> k.length)) + (A.need ? 5 : 0); if(!best || sc > best.sc) best = { A, sc }; }
+    return best ? best.A : null; }
+  const audioRows = A=> A.rows.map(([k, v, on])=> ({ k, v, on:on !== false, auto:false, l:ICON_NAMES[k] || "" }));
+  function openAudioPick(fillId){
+    let m = root.querySelector(".sk-mod"); if(!m){ m = document.createElement("div"); m.className = "sk-mod"; root.appendChild(m); m.addEventListener("click", e=>{ if(e.target === m) closeMod(); }); }
+    if(!fillId) sel = null;
+    m.innerHTML = `<div class="sk-mc sk-audm" role="dialog" aria-label="AirPods kiválasztása"><div class="sk-mh"><span class="sk-th">🎧</span><b>${fillId ? "Melyik AirPods ez?" : "Új AirPods a lapra"}</b><button type="button" class="sk-x" data-a="close" title="Bezárás (Esc)">✕</button></div>
+      <div class="sk-mb1"><p class="sk-sm">Válaszd ki a típust — minden adatát kitöltöm az <b>Apple hivatalos adatlapja</b> alapján. Az árat és a logót utána adhatod meg (a logót a 🖼️ Logók fülön a név alapján magától odateszi).</p>
+      <div class="sk-aud">${AUDIO.map(A=> `<button type="button" data-aud="${A.id}"${fillId ? ` data-for="${E(fillId)}"` : ""}><b>${E(A.name.replace(/^Apple /, ""))}</b><small>${E(A.sub)}</small></button>`).join("")}
+      ${fillId ? "" : `<button type="button" data-aud="custom" class="ghost"><b>Egyéb fülhallgató</b><small>üresen — te írod be az adatait</small></button>`}</div></div></div>`;
+    document.addEventListener("keydown", escMod, true);
+  }
+  /* 🌐 kiegészítés az internetről: telefon → GSMArena (a saját /api/specs végpontunkon át), AirPods → az Apple-adatok fent */
+  const API = /\.pages\.dev$/.test(location.hostname) ? "" : "https://firstphone-munkaasztal.pages.dev";
+  let FOUND = [];
+  function gsmItems(d, name){
+    const S = d.spec || {}, R = d.rows || [], out = [], add = (k, v, on)=>{ v = String(v || "").replace(/\s+/g, " ").trim(); if(v) out.push({ k, v, on }); };
+    const row = re=> (R.find(r=> re.test(r[1] || "")) || [])[2] || "", all = R.map(r=> r[2]).join("\n");
+    const noPar = t=> String(t || "").replace(/\s*\([^)]*\)/g, "").trim();
+    const cut = (t, n)=> String(t || "").split(/,\s*/).filter(p=> p && !/upgrade|major|nits|ratio|screen-to-body|cm2/i.test(p)).slice(0, n).join(", ");
+    if(S.os) add("os", cut(noPar(S.os), 2));
+    if(S.displaytype) add("kijelzo", cut(S.displaytype, 2));
+    const inch = (String(S.displaysize || "").match(/([\d.]+)\s*inch/i) || [])[1], res = String(S.displayresolution || "").match(/(\d{3,4})\s*x\s*(\d{3,4})/) || [];
+    if(inch) add("meret", `${inch}"${res[1] ? ` ${res[1]} x ${res[2]}` : ""}`);
+    const chip = noPar(S.chipset).replace(/\b(SM|MT|MSM|SDM)[-\w]*\d[-\w]*\b/g, "").replace(/^(Qualcomm|Mediatek|MediaTek|Samsung|Unisoc)\s+/i, "").replace(/\s+/g, " ").trim();
+    const cores = (String(S.cpu || "").match(/^(Octa|Hexa|Quad|Deca)[- ]core/i) || [])[0];
+    if(chip || cores) add("cpu", [cores, chip].filter(Boolean).join(", "));
+    const mm = String(S.internalmemory || "").split(/,\s*/)[0].match(/(\d+\s*(?:GB|TB))\s+(\d+\s*GB)\s*RAM/i); if(mm) add("tarhely", `${mm[1]} · ${mm[2]} RAM`, false);
+    if(S.memoryslot) add("memkartya", /^no/i.test(S.memoryslot) ? "Nem bővíthető" : S.memoryslot.replace(/\(dedicated slot\)/i, "(külön hely)").replace(/\(uses shared SIM slot\)/i, "(közös a SIM-hellyel)"));
+    if(S.sim) add("sim", /dual sim|2 nano|nano-sim \+ nano|nano-sim, nano/i.test(S.sim) ? "Dual SIM" + (/esim/i.test(S.sim) ? " + eSIM" : "") : noPar(S.sim).replace(/\s+or\s+.*/i, ""));
+    const mp = t=> (String(t || "").match(/(\d+(?:\.\d+)?)\s*MP/gi) || []).map(x=> parseFloat(x)), m1 = mp(S.cam1modules), m2 = mp(S.cam2modules);
+    if(m1.length) add("kamera", `${m1.join("+")} MP${m2.length ? ` · előlap ${m2[0]} MP` : ""}`);
+    if(S.wlan) add("wifi", cut(S.wlan, 3));
+    if(S.radio) add("radio", /^no/i.test(S.radio) ? "Nem" : "FM rádió");
+    if(S.batdescription1) add("akku", noPar(S.batdescription1).replace(/,?\s*(non-)?removable/i, ""));
+    if(/\b5G\b/.test(S.nettech || "")) add("halo5g", "5G hálózat", !/\b5g\b/i.test(name || ""));
+    if(/^yes/i.test(S.nfc || "")) add("nfc", "NFC – érintéses fizetés");
+    if(S.bluetooth){ const b = (String(S.bluetooth).match(/^\s*([\d.]+)/) || [])[1]; add("bt", "Bluetooth " + (b || noPar(S.bluetooth).split(",")[0])); }
+    const chp = String(row(/^charging$/i)).split(/[\n,]+/).map(s=> s.trim()).filter(s=> /\d+(\.\d+)?\s*W\b/i.test(s)).slice(0, 2)
+      .map(s=> s.replace(/\s*\([^)]*\)/g, "").replace(/reverse wireless/i, "fordított vezeték nélküli").replace(/wireless/i, "vezeték nélküli").replace(/wired/i, "vezetékes").replace(/magnetic/i, "mágneses").replace(/\s+PD.*$/i, ""));
+    if(chp.length) add("toltes", chp.join(", ") + " töltés");
+    const ip = (all.match(/\bIP[4-6]\d\b/) || [])[0]; if(ip) add("viz", ip + " por- és vízálló");
+    const sen = String(S.sensors || ""), fp = sen.match(/Fingerprint\s*\(([^)]*)\)/i);
+    if(fp){ const how = fp[1].split(/,\s*/).map(x=> ({ "under display":"kijelzőbe épített", "ultrasonic":"ultrahangos", "optical":"optikai", "side-mounted":"oldalsó", "rear-mounted":"hátoldali", "front-mounted":"előlapi" })[x.trim().toLowerCase()]).filter(Boolean); add("ujj", "Ujjlenyomat-olvasó" + (how.length ? ` (${how.join(", ")})` : "")); }
+    else if(/fingerprint/i.test(sen)) add("ujj", "Ujjlenyomat-olvasó");
+    if(/face id/i.test(sen)) add("ujj", "Face ID arcfelismerés");
+    const wg = (String(S.weight || "").match(/([\d.]+)\s*g\b/) || [])[1], dm = String(S.dimensions || "").match(/([\d.]+)\s*x\s*([\d.]+)\s*x\s*([\d.]+)\s*mm/) || [];
+    if(wg) add("suly", `${wg} g${dm[1] ? ` · ${dm[1]} × ${dm[2]} × ${dm[3]} mm` : ""}`, false);
+    if(S.colors) add("szin", "Színek: " + noPar(S.colors), false);
+    return out;
+  }
+  const pkBox = ()=> root.querySelector(".sk-mod .sk-pick");
+  function pkMsg(html){ const pk = pkBox(); if(!pk) return; pk.hidden = false; pk.innerHTML = `<div class="sk-pk">${html}</div>`; }
+  async function getJ(u){ let r; try{ r = await fetch(u); }catch(e){ throw new Error("Nincs kapcsolat a szerverrel — ez csak a weboldalon működik (firstphone-munkaasztal.pages.dev), és kell hozzá internet."); }
+    let j = null; try{ j = await r.json(); }catch(e){} if(!j || !j.ok) throw new Error((j && j.error) || "A szerver most nem válaszolt — próbáld újra pár perc múlva."); return j; }
+  async function enrich(gsmId){
+    const c = D.cards.find(x=> x.id === sel); if(!c) return;
+    const nm = String(c.name || "").trim();
+    if(nm.length < 2){ hint("Előbb írd be a nevét (pl. Galaxy A57 vagy AirPods Pro 3) — az alapján keresem meg.", true); const i = root.querySelector('.sk-mod [data-c="name"]'); if(i) i.focus(); return; }
+    const A = gsmId ? null : audioMatch(nm);
+    if(A){ showFound(c, { name:A.name, from:"Apple hivatalos műszaki adatlap" }, A.rows.map(([k, v, on])=> ({ k, v, on }))); return; }
+    if(!gsmId && /airpods/i.test(nm)){ openAudioPick(c.id); return; }
+    pkMsg(`<b>🌐 Keresés az interneten…</b><small class="sk-sm">${E(nm)}</small><div class="sk-spin"></div>`);
+    try{
+      let alt = [];
+      if(!gsmId){ const r1 = await getJ(API + "/api/specs?q=" + encodeURIComponent(nm));
+        if(!r1.list || !r1.list.length) throw new Error(`Nem találtam ilyen telefont: „${nm}”. Nézd meg, jól van-e írva a neve (pl. „Galaxy A57”).`);
+        gsmId = r1.list[0].id; alt = r1.list.slice(1, 6); }
+      const r2 = await getJ(API + "/api/specs?id=" + encodeURIComponent(gsmId));
+      if(sel !== c.id) return;
+      showFound(c, { name:r2.name || nm, from:"GSMArena", alt }, gsmItems(r2, nm));
+    }catch(e){ pkMsg(`<b>⚠ Nem sikerült</b><p class="sk-sm">${E((e && e.message) || e)}</p><button type="button" class="sk-mini" data-a="pkx">Bezár</button>`); }
+  }
+  function showFound(c, src, items){
+    FOUND = items.map(it=>{ const v = String(it.v || "").trim(), du = dupOf(c, v), same = !du && it.k !== "x" && c.rows.some(r=> r.on && r.v && r.k === it.k);
+      return { k:it.k, v, du, same, on:!du && !same && it.on !== false }; }).filter(x=> x.v);
+    FOUND.sort((a, b)=> (a.du ? 2 : a.on ? 0 : 1) - (b.du ? 2 : b.on ? 0 : 1));
+    const nNew = FOUND.filter(x=> !x.du).length;
+    pkMsg(`<b>🌐 ${E(src.name)}</b><small class="sk-sm">Forrás: ${E(src.from)} · ${nNew ? "pipáld ki, mi kerüljön a lapra" : "minden adata már rajta van a lapon 👍"}</small>
+      <div class="sk-fl">${FOUND.map((x, i)=> `<label class="sk-fi${x.du ? " du" : ""}"><input type="checkbox" data-fnd="${i}"${x.on ? " checked" : ""}${x.du ? " disabled" : ""}><i>${ICO[x.k] || ICO.x}</i><span>${E(pretty({ k:x.k, v:x.v, l:ICON_NAMES[x.k] }))}${x.du ? `<small>✓ már rajta van</small>` : x.same ? `<small>van már ${E(String(ICON_NAMES[x.k] || "ilyen").toLowerCase())} sor — ha bepipálod, ez is odakerül</small>` : ""}</span></label>`).join("")}</div>
+      ${src.alt && src.alt.length ? `<div class="sk-alt"><small>Nem ez a telefon?</small>${src.alt.map(a=> `<button type="button" class="sk-mini" data-gsm="${E(a.id)}">${E(a.name)}</button>`).join("")}</div>` : ""}
+      <div class="sk-pkb"><button type="button" class="sk-mini" data-a="pkx">Mégse</button>${nNew ? `<button type="button" class="sk-mini pri" data-a="fndok">➕ Hozzáadás a laphoz</button>` : ""}</div>`);
+    const pk = pkBox(); if(pk) pk.firstElementChild.classList.add("sk-found");
+  }
+  function applyFound(){ const c = D.cards.find(x=> x.id === sel), pk = pkBox(); if(!c || !pk) return; let n = 0;
+    pk.querySelectorAll("[data-fnd]:checked").forEach(cb=>{ const x = FOUND[+cb.dataset.fnd]; if(!x || x.du || dupOf(c, x.v)) return; c.rows.push({ k:x.k, v:x.v, on:true, auto:false, l:ICON_NAMES[x.k] || "" }); n++; });
+    save(); drawMod(); preview(); hint(n ? `✓ ${n} új adat került a lapra az internetről. Amit nem kérsz, a pipával kikapcsolhatod.` : "Nem jelöltél ki semmit.", !n); }
   function cardHTML(c, s, fsz){
     const lg = logoFor(c), seen = new Set(), rows = [];
     for(const r of c.rows){ if(!r.on) continue; const t = pretty(r); if(!t) continue; const n = normV(t); if(seen.has(n)) continue; seen.add(n); rows.push([r.k, t]); }
@@ -27295,8 +27449,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     root.querySelector(".sk-tabs").innerHTML = [["cards","📱 Telefonok",D.cards.length],["logos","🖼️ Logók",L.length]].map(([k, t, n])=> `<button type="button" data-tab="${k}" class="${tab === k ? "on" : ""}">${t} <small>${n}</small></button>`).join("");
     const P = root.querySelector(".sk-panel");
     if(tab === "cards"){
-      P.innerHTML = `<div class="sk-list">${D.cards.map((x, i)=> `<div class="sk-li" data-open="${E(x.id)}" title="Kattints a szerkesztéshez"><span class="sk-th">${logoFor(x) ? `<img src="${logoFor(x)}" alt="">` : "📱"}</span><span class="sk-lt"><b>${E(x.name || "Új telefon")}</b><small>${x.price ? money(x.price) + " Ft" : "nincs ár"}${x.badge ? " · " + E(x.badge) : ""} · ${x.rows.filter(r=> r.on && r.v).length} adat</small></span><span class="sk-ord"><button type="button" data-up="${i}" title="Előre">▲</button><button type="button" data-dn="${i}" title="Hátra">▼</button></span><button type="button" class="sk-edb" data-open="${E(x.id)}" title="Szerkesztés">✏️</button></div>`).join("") || `<div class="sk-hint">Még nincs telefon. Tölts be egy Word-dokumentumot (fent), vagy adj hozzá egyet.</div>`}</div>
-        <button type="button" class="sk-add" data-a="add">➕ Új telefon</button>`;
+      P.innerHTML = `<div class="sk-list">${D.cards.map((x, i)=> `<div class="sk-li" data-open="${E(x.id)}" title="Kattints a szerkesztéshez"><span class="sk-th">${logoFor(x) ? `<img src="${logoFor(x)}" alt="">` : /airpods|buds|fülhallgató|fejhallgató/i.test(x.name || "") ? "🎧" : "📱"}</span><span class="sk-lt"><b>${E(x.name || "Új telefon")}</b><small>${x.price ? money(x.price) + " Ft" : "nincs ár"}${x.badge ? " · " + E(x.badge) : ""} · ${x.rows.filter(r=> r.on && r.v).length} adat</small></span><span class="sk-ord"><button type="button" data-up="${i}" title="Előre">▲</button><button type="button" data-dn="${i}" title="Hátra">▼</button></span><button type="button" class="sk-edb" data-open="${E(x.id)}" title="Szerkesztés">✏️</button></div>`).join("") || `<div class="sk-hint">Még nincs telefon. Tölts be egy Word-dokumentumot (fent), vagy adj hozzá egyet.</div>`}</div>
+        <div class="sk-adds"><button type="button" class="sk-add" data-a="add">➕ Új telefon</button><button type="button" class="sk-add" data-a="addaudio">🎧 Új AirPods</button></div>`;
     } else {
       P.innerHTML = `<div class="sk-f"><label>Logó a lap tetején</label><div class="sk-seg">${[["store","🏬 Bolt logója"],["custom","⬆ Saját"],["none","Nincs"]].map(([k, t])=> `<button type="button" data-own="${k}" class="${s.ownLogo === k ? "on" : ""}">${t}</button>`).join("")}</div>
           ${s.ownLogo === "custom" ? `<label class="sk-up">${s.ownLogoData ? `<img src="${s.ownLogoData}" alt="">` : "⬆"} Saját logó feltöltése<input type="file" accept="image/*" hidden data-file="own"></label>` : ""}</div>
@@ -27310,7 +27464,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function rowHTML(r, i){ return `<div class="sk-re${r.on ? "" : " off"}" data-ri="${i}"><input type="checkbox" data-ron="${i}"${r.on ? " checked" : ""} title="Látszik a lapon"><button type="button" class="sk-ico" data-ico="${i}" title="${E(ICON_NAMES[r.k] || "Egyéb")} — kattints a másik ikonhoz">${ICO[r.k] || ICO.x}</button><input type="text" class="val" data-rv="${i}" value="${E(r.v)}" placeholder="pl. 5000 mAh"><button type="button" data-rdel="${i}" title="Törlés">✕</button></div>`; }
   function drawMod(){
     const c = D.cards.find(x=> x.id === sel), m = root.querySelector(".sk-mod"); if(!m) return; if(!c){ closeMod(); return; }
-    m.innerHTML = `<div class="sk-mc" role="dialog" aria-label="Telefon szerkesztése"><div class="sk-mh"><span class="sk-th">${logoFor(c) ? `<img src="${logoFor(c)}" alt="">` : "📱"}</span><b>${E(c.name || "Új telefon")}</b><button type="button" class="sk-x" data-a="close" title="Bezárás (Esc)">✕</button></div>
+    m.innerHTML = `<div class="sk-mc" role="dialog" aria-label="Telefon szerkesztése"><div class="sk-mh"><span class="sk-th">${logoFor(c) ? `<img src="${logoFor(c)}" alt="">` : /airpods|buds|fülhallgató|fejhallgató/i.test(c.name || "") ? "🎧" : "📱"}</span><b>${E(c.name || "Új telefon")}</b><button type="button" class="sk-x" data-a="close" title="Bezárás (Esc)">✕</button></div>
       <div class="sk-mb"><div class="sk-mcol">
         <div class="sk-f"><label>Név (a logó alatt mindig ott van)</label><input type="text" data-c="name" value="${E(c.name)}" placeholder="pl. Samsung Galaxy A57 5G 128GB"></div>
         <div class="sk-f2"><div class="sk-f"><label>Ár (Ft)</label><input type="text" inputmode="numeric" class="big" data-c="price" value="${E(money(c.price))}" placeholder="132 900"></div><div class="sk-f"><label>Régi ár <i>ha akciós</i></label><input type="text" inputmode="numeric" data-c="oldPrice" value="${E(money(c.oldPrice))}" placeholder="149 900"></div></div>
@@ -27318,7 +27472,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         <div class="sk-f"><label>Megjegyzés a kártya aljára <i>nem kötelező</i></label><input type="text" data-c="note" value="${E(c.note || "")}" placeholder="pl. Ajándék tok + fólia!"></div>
         <button type="button" class="sk-del" data-a="delcard">🗑 Telefon törlése a lapról</button></div>
       <div class="sk-mcol"><div class="sk-f"><label>Adatok <small class="sk-sm">— az ikont magától választja a szövegből; rákattintva cserélhető</small></label><div class="sk-rowsed">${c.rows.map(rowHTML).join("")}</div></div>
-        <div class="sk-new"><span class="sk-ico" data-nico>${ICO.x}</span><input type="text" data-new placeholder="Új adat — pl. Garancia 3 év, NFC, 25W gyorstöltés…" enterkeyhint="done"><button type="button" class="sk-mini pri" data-a="addrow">➕ Hozzáad</button></div><small class="sk-sm sk-nl">${NL_HINT}</small></div></div>
+        <div class="sk-new"><span class="sk-ico" data-nico>${ICO.x}</span><input type="text" data-new placeholder="Új adat — pl. Garancia 3 év, NFC, 25W gyorstöltés…" enterkeyhint="done"><button type="button" class="sk-mini pri" data-a="addrow">➕ Hozzáad</button></div><small class="sk-sm sk-nl">${NL_HINT}</small>
+        <div class="sk-net"><button type="button" class="sk-mini net" data-a="enrich">🌐 Kiegészítés az internetről</button><small class="sk-sm">a név alapján megkeresi és felajánlja a hiányzó adatokat (telefon: GSMArena · AirPods: Apple)</small></div></div></div>
       <div class="sk-mf"><span class="sk-sm">Minden azonnal mentődik, és a lapon is látszik.</span><button type="button" class="sk-btn pri" data-a="close">✓ Kész</button></div>
       <div class="sk-pick" hidden></div></div>`;
   }
@@ -27387,6 +27542,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(d.top === "clear"){ if(D.cards.length && confirm("Biztosan törlöd az összes telefont a lapról? (A logók megmaradnak.)")){ D.cards = []; sel = null; save(); draw(); } return; }
       if(d.up != null || d.dn != null){ e.stopPropagation(); const i = +(d.up != null ? d.up : d.dn), j = d.up != null ? i - 1 : i + 1; if(j < 0 || j >= D.cards.length) return; [D.cards[i], D.cards[j]] = [D.cards[j], D.cards[i]]; save(); draw(); return; }
       if(d.open){ openMod(d.open); return; }
+      if(d.a === "addaudio"){ openAudioPick(); return; }
+      if(d.aud){ if(d.aud === "custom"){ const n = { id:uid(), name:"", price:"", oldPrice:"", badge:"", logo:"", note:"", rows:[] }; D.cards.push(n); save(); draw(); openMod(n.id); return; }
+        const A = AUDIO.find(x=> x.id === d.aud); if(!A) return;
+        if(d.for){ const c2 = D.cards.find(x=> x.id === d.for); if(!c2) return; sel = c2.id; drawMod(); showFound(c2, { name:A.name, from:"Apple hivatalos műszaki adatlap" }, A.rows.map(([k, v, on])=> ({ k, v, on }))); return; }
+        const n = { id:uid(), name:A.name, price:"", oldPrice:"", badge:"", logo:"", note:"", rows:audioRows(A) }; D.cards.push(n); save(); draw(); openMod(n.id); setTimeout(()=>{ const i = root.querySelector('.sk-mod [data-c="price"]'); if(i) i.focus(); }, 90); note(`🎧 ${A.name} — minden adata kitöltve. Írd be az árát!`); return; }
+      if(d.a === "enrich"){ enrich(); return; }
+      if(d.gsm){ enrich(d.gsm); return; }
+      if(d.a === "fndok"){ applyFound(); return; }
       if(d.a === "add"){ const n = { id:uid(), name:"", price:"", oldPrice:"", badge:"", logo:"", note:"", rows:[] }; D.cards.push(n); save(); draw(); openMod(n.id); return; }
       if(d.a === "close"){ closeMod(); return; }
       if(d.a === "delcard" && c){ if(!confirm(`Törlöd: ${c.name || "Új telefon"}?`)) return; D.cards = D.cards.filter(x=> x !== c); sel = null; save(); closeMod(); return; }
