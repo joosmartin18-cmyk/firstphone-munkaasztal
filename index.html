@@ -5495,7 +5495,7 @@
   html.fp-rnav #pageSwitch .ps-btn[data-page="tudastar"]{--c:#8a5aa8;}
 
   .ps-rn{display:none;}
-  html:not(.m-app):not(.fp-rnav):not(.hdr-mini) body.is-kap .ps-rn{display:inline-flex;align-items:center;gap:5px;flex:none;margin-left:6px;padding:7px 10px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--gold,#d9ad46) 55%,var(--border));background:transparent;color:var(--text-dim);font:700 12px 'Inter',sans-serif;cursor:pointer;}
+  html:not(.m-app):not(.fp-rnav):not(.hdr-mini) body .ps-rn{display:inline-flex;align-items:center;gap:5px;flex:none;margin-left:6px;padding:7px 10px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--gold,#d9ad46) 55%,var(--border));background:transparent;color:var(--text-dim);font:700 12px 'Inter',sans-serif;cursor:pointer;}
   .ps-rn:hover{color:var(--gold,#d9ad46);border-style:solid;}
   .rn-tg{display:none;}
   html.fp-rnav #pageSwitch .rn-tg{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:6px;padding:7px 2px 5px;border:0;border-top:1px dashed var(--border,#2b2b33);background:transparent;color:var(--text-faint,#6c6c78);font:700 10px/1.15 'Inter',sans-serif;cursor:pointer;border-radius:0 0 16px 16px;}
@@ -5551,6 +5551,30 @@
   @keyframes rnItemR{from{opacity:0;transform:translateX(18px) scale(.9)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){ html.fp-rnav:not(.fp-anim-full) #fpTools,html.fp-rnav:not(.fp-anim-full) #fpTools *,html.fp-rnav:not(.fp-anim-full) #fpTools::after{animation:none !important;} }
   @media print{ html.fp-rnav #fpTools{display:none !important;} html.fp-rnav body{padding-right:0 !important;} }
+
+  /* 🖥️ kinézet-választó */
+  .lay-back{position:fixed;inset:0;z-index:99994;display:grid;place-items:center;padding:16px;background:rgba(6,6,10,.66);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:layF .2s ease;}
+  .lay-back.out{animation:layF .18s ease reverse forwards;} @keyframes layF{from{opacity:0}to{opacity:1}}
+  .lay-card{width:min(760px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:20px;border-radius:24px;background:var(--bg-panel,#17171c);border:1px solid color-mix(in srgb,var(--gold,#d9ad46) 40%,var(--border,#2b2b33));box-shadow:0 30px 80px rgba(0,0,0,.5);color:var(--text,#ecece8);}
+  .lay-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;} .lay-h > span{font-size:30px;line-height:1;} .lay-h div{flex:1;min-width:0;}
+  .lay-h h2{margin:0 0 4px;font:800 20px 'Poppins',sans-serif;} .lay-h p{margin:0;font-size:13px;color:var(--text-dim,#9c9ca6);line-height:1.45;}
+  .lay-x{width:36px;height:36px;flex:none;border-radius:50%;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;cursor:pointer;}
+  .lay-g{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .lay-opt{display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:18px;border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;}
+  .lay-opt:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--gold,#d9ad46) 70%,var(--border,#2b2b33));}
+  .lay-opt.on{border-color:var(--gold,#d9ad46);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold,#d9ad46) 22%,transparent);}
+  .lay-opt b{font:800 15px 'Poppins',sans-serif;} .lay-opt b em{font-style:normal;font-size:11px;color:var(--gold,#d9ad46);margin-left:6px;} .lay-opt small{font-size:12px;color:var(--text-dim,#9c9ca6);line-height:1.4;}
+  .lay-pv{position:relative;display:block;height:120px;border-radius:12px;background:#0f0f13;border:1px solid var(--border,#2b2b33);overflow:hidden;}
+  body.light-theme .lay-pv{background:#efede6;}
+  .lay-pv i{position:absolute;display:flex;gap:4px;border-radius:6px;} .lay-pv i s{display:block;border-radius:4px;background:color-mix(in srgb,var(--gold,#d9ad46) 55%,transparent);}
+  .lay-pv.old .h{left:8px;right:8px;top:8px;height:18px;background:rgba(255,255,255,.08);justify-content:flex-end;align-items:center;padding:0 5px;} .lay-pv.old .h s{width:10px;height:10px;}
+  .lay-pv.old .m{left:8px;right:8px;top:30px;height:14px;justify-content:center;align-items:center;} .lay-pv.old .m s{width:22px;height:8px;background:rgba(255,255,255,.18);} .lay-pv.old .m s:first-child{background:#6f7ff5;}
+  .lay-pv.old .c,.lay-pv.new .c{left:8px;right:8px;top:50px;bottom:8px;background:rgba(255,255,255,.05);}
+  .lay-pv.new .l{left:6px;top:8px;bottom:8px;width:18px;flex-direction:column;align-items:center;padding-top:5px;background:rgba(255,255,255,.08);} .lay-pv.new .l s{width:10px;height:10px;background:rgba(255,255,255,.2);} .lay-pv.new .l s:first-child{background:#6f7ff5;}
+  .lay-pv.new .r{right:6px;top:30px;bottom:30px;width:14px;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.08);} .lay-pv.new .r s{width:8px;height:8px;}
+  .lay-pv.new .t{left:30px;right:26px;top:8px;height:14px;background:rgba(255,255,255,.08);}
+  .lay-pv.new .c{left:30px;right:26px;top:26px;}
+  @media (max-width:560px){ .lay-g{grid-template-columns:1fr;} }
   /* ===================== ⬆ GÖRGETÉSKOR KOMPAKT FEJLÉC (gépen) — az ikonok animálva felugranak egy lebegő sávba ===================== */
   .hdr-ph{display:none;}
   html.hdr-mini .hdr-ph{display:block;transition:height .35s ease;}
@@ -5808,7 +5832,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-222351";</script>
+<script>window.FP_BUILD="20261024-223007";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -20237,10 +20261,28 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function fpApplyFeats(){
     document.body.classList.toggle("not-kap", !/^kaposv[aá]r/i.test((state.settings.location || "").trim()));
     document.body.classList.toggle("is-kap", /^kaposv[aá]r/i.test((state.settings.location || "").trim()));
+    document.body.classList.toggle("lay-new", fpLayout() === "new");
     Object.values(FEATS).forEach(L=> L.forEach(([k])=> document.body.classList.toggle("ft-off-" + k, !ftOn(k))));
     try{ const fp = childFP(); if(fp && fp.setFeats) fp.setFeats(CETLI_FT.filter(k=> !ftOn(k))); }catch(e){}
   }
   window.fpApplyFeats = fpApplyFeats;
+  /* 🖥️ kinézet: „old” = klasszikus (felül a menüsor), „new” = oldalsávos (bal: programok, jobb: eszközök). Boltonként, a felhővel szinkronizálva.
+     Ha még nem választott: Kaposvár az új (ott volt a próba), a többi bolt a klasszikus. */
+  function fpLayout(){ const v = state.settings.layout; return v === "new" || v === "old" ? v : (/^kaposv[aá]r/i.test((state.settings.location || "").trim()) ? "new" : "old"); }
+  window.fpLayoutGet = fpLayout;
+  window.fpLayoutPick = function(){
+    if(document.querySelector(".lay-back")) return;
+    const cur = fpLayout(), b = document.createElement("div"); b.className = "lay-back";
+    const card = (k, t, d, pv)=> `<button type="button" class="lay-opt${cur === k ? " on" : ""}" data-lay="${k}"><span class="lay-pv ${k}">${pv}</span><b>${t}${cur === k ? ` <em>✓ most ez van</em>` : ""}</b><small>${d}</small></button>`;
+    b.innerHTML = `<div class="lay-card" role="dialog" aria-label="Kinézet választása"><div class="lay-h"><span>🖥️</span><div><h2>Melyik kinézet legyen a boltban?</h2><p>A bolt <b>minden gépén</b> ez lesz (a felhővel együtt mentődik). Telefonon mindig a telefonos nézet marad. Bármikor visszaválthatod.</p></div><button type="button" class="lay-x" data-lay="x" title="Bezárás">✕</button></div>
+      <div class="lay-g">${card("old", "Klasszikus", "Felül a fejléc a gombokkal, alatta a programok sora — a megszokott.", `<i class="h"><s></s><s></s><s></s></i><i class="m"><s></s><s></s><s></s><s></s><s></s></i><i class="c"></i>`)}
+        ${card("new", "Új, oldalsávos", "Bal oldalt a programok, jobb oldalt a gombok, felül egy tiszta sor — több hely, animált megnyitás.", `<i class="l"><s></s><s></s><s></s><s></s></i><i class="t"></i><i class="c"></i><i class="r"><s></s><s></s><s></s></i>`)}</div></div>`;
+    b.addEventListener("click", e=>{ const x = e.target.closest("[data-lay]"); if(!x && e.target !== b) return; const v = x ? x.dataset.lay : "x";
+      if(v === "old" || v === "new"){ if(v !== cur){ state.settings.layout = v; saveState(); fpApplyFeats(); try{ window.fpRightNav && fpRightNav(); }catch(_){} toast(v === "new" ? "🖥️ Új, oldalsávos kinézet bekapcsolva — a bolt minden gépén." : "🖥️ Klasszikus kinézet — a bolt minden gépén."); } }
+      b.classList.add("out"); setTimeout(()=> b.remove(), 180); });
+    document.addEventListener("keydown", function esc(e){ if(e.key === "Escape"){ document.removeEventListener("keydown", esc); if(b.isConnected){ b.classList.add("out"); setTimeout(()=> b.remove(), 180); } } });
+    document.body.appendChild(b);
+  };
   const SET_STEPS = [
     { key:"place",  icon:"📍", title:"Hely" },
     { key:"data",   icon:"🏢", title:"Adatok" },
@@ -27876,12 +27918,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const tipHide = ()=>{ if(tip){ tip._tok = 0; tip.classList.remove("on"); } };
   window.fpTipHide = tipHide;
   const off = ()=>{ try{ return localStorage.getItem(KEY) === "off"; }catch(e){ return false; } };
-  const want = ()=> !!document.body && document.body.classList.contains("is-kap") && !off() && !H.classList.contains("m-app") && !H.classList.contains("fp-scanonly");
+  const want = ()=> !!document.body && document.body.classList.contains("lay-new") && !H.classList.contains("m-app") && !H.classList.contains("fp-scanonly");
   function ui(ps){
-    if(!ps.querySelector(".rn-tg")){ const b = document.createElement("button"); b.type = "button"; b.className = "rn-tg"; b.title = "A menü vissza felülre (a fejlécbe)"; b.innerHTML = "<i>⬆</i>Menü felülre";
-      b.onclick = e=>{ e.stopPropagation(); try{ localStorage.setItem(KEY, "off"); }catch(_){ } apply(); try{ (window.toast || window.fpNotice || (()=>{}))("⬆ A menü visszakerült felülre. A ⬅ Balra gombbal bármikor újra oldalra teheted."); }catch(_){ } }; ps.appendChild(b); }
-    if(!ps.querySelector(".ps-rn")){ const r = document.createElement("button"); r.type = "button"; r.className = "ps-rn"; r.title = "Próba: a menü a bal oldalra kerül"; r.innerHTML = "⬅ Balra";
-      r.onclick = e=>{ e.stopPropagation(); try{ localStorage.removeItem(KEY); }catch(_){ } apply(); }; ps.appendChild(r); }
+    if(!ps.querySelector(".rn-tg")){ const b = document.createElement("button"); b.type = "button"; b.className = "rn-tg"; b.title = "Kinézet: klasszikus vagy új, oldalsávos"; b.innerHTML = "<i>🖥️</i>Kinézet";
+      b.onclick = e=>{ e.stopPropagation(); window.fpLayoutPick && fpLayoutPick(); }; ps.appendChild(b); }
+    if(!ps.querySelector(".ps-rn")){ const r = document.createElement("button"); r.type = "button"; r.className = "ps-rn"; r.title = "Kinézet választása: klasszikus vagy új, oldalsávos"; r.innerHTML = "🖥️ Új kinézet";
+      r.onclick = e=>{ e.stopPropagation(); window.fpLayoutPick && fpLayoutPick(); }; ps.appendChild(r); }
   }
   function apply(){
     if(busy) return; const ps = document.getElementById("pageSwitch"); if(!ps) return; busy = true;
