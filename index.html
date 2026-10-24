@@ -5388,7 +5388,7 @@
   .sk-adds{display:grid;grid-template-columns:1fr 1fr;gap:6px;} .sk-adds .sk-add{margin:8px 0;}
   .sk-net{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);} .sk-net small{flex:1;min-width:180px;}
   .sk-mini.net{height:36px;padding:0 12px;border-color:color-mix(in srgb,#4fb3c4 55%,var(--border));background:color-mix(in srgb,#4fb3c4 12%,var(--bg-panel));}
-  .sk-audm{width:min(760px,100%);} .sk-mb1{padding:14px 16px 18px;overflow:auto;} .sk-mb1 > p{margin:0 0 12px;line-height:1.45;}
+  .sk-audm{width:min(760px,100%);} .sk-mb1{flex:1;min-height:0;padding:14px 16px 18px;overflow:auto;} .sk-mb1 > p{margin:0 0 12px;line-height:1.45;}
   .sk-aud{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;}
   .sk-aud button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);cursor:pointer;text-align:left;transition:border-color .15s,transform .15s;}
   .sk-aud button:hover{border-color:var(--gold);transform:translateY(-1px);} .sk-aud b{font:800 14px 'Poppins',sans-serif;} .sk-aud small{font-size:11.5px;color:var(--text-dim);} .sk-aud button.ghost{border-style:dashed;background:transparent;}
@@ -5418,6 +5418,34 @@
   .sk-pkg button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 4px;border-radius:12px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);cursor:pointer;font:700 11px 'Inter',sans-serif;}
   .sk-pkg button svg{width:22px;height:22px;} .sk-pkg button.on,.sk-pkg button:hover{border-color:var(--gold);color:var(--gold);}
   @media (max-width:760px){ .sk-mod{padding:0;place-items:end stretch;} .sk-mc{width:100%;max-height:94vh;border-radius:22px 22px 0 0;} .sk-mb{grid-template-columns:1fr;padding:12px;} .sk-mf{padding-bottom:calc(12px + env(safe-area-inset-bottom));} }
+
+  /* ——— felugró ablak méretezése: gépen kitölti a képernyő magasságát, csak az adatlista görget; telefonon teljes képernyő ——— */
+  .sk-mod{z-index:9000;}
+  body:has(.sk-mod) .ch-btn,html.m-app body:has(.sk-mod) .m-tab{display:none !important;}
+  .sk-busy{z-index:9500;}
+  .sk-mod > .sk-mc:not(.sk-audm){width:min(1140px,100%);height:min(900px,calc(100vh - 40px));height:min(900px,calc(100dvh - 40px));max-height:none;}
+  .sk-mod > .sk-mc.sk-audm{max-height:calc(100dvh - 40px);}
+  .sk-mc > .sk-mb{display:grid;grid-template-columns:minmax(290px,370px) minmax(0,1fr);gap:20px;overflow:hidden;padding:14px 16px;}
+  .sk-mc > .sk-mb > .sk-mcol{min-height:0;overflow:auto;scrollbar-width:thin;}
+  .sk-mc > .sk-mb > .sk-mcol:last-child{display:flex;flex-direction:column;overflow:hidden;}
+  .sk-mc > .sk-mb > .sk-mcol:last-child > .sk-f:first-child{flex:1;min-height:0;display:flex;flex-direction:column;margin:0;}
+  .sk-mod .sk-rowsed{flex:1;min-height:0;max-height:none;overflow:auto;}
+  .sk-mc > .sk-mb > .sk-mcol:last-child > .sk-new,.sk-mc > .sk-mb > .sk-mcol:last-child > .sk-nl,.sk-mc > .sk-mb > .sk-mcol:last-child > .sk-net{flex:none;}
+  .sk-re{align-items:start;} .sk-re > input[type=checkbox]{margin-top:10px;} .sk-re > button:last-child{margin-top:4px;}
+  .sk-re textarea.val{display:block;width:100%;min-width:0;box-sizing:border-box;min-height:36px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font:600 14px/1.35 'Inter',sans-serif;resize:none;overflow:hidden;field-sizing:content;}
+  .sk-re textarea.val:focus{outline:none;border-color:var(--gold);}
+  @media (max-width:760px){
+    .sk-mod{padding:0;place-items:stretch;}
+    .sk-mod > .sk-mc:not(.sk-audm),.sk-mod > .sk-mc.sk-audm{width:100%;height:100vh;height:100dvh;max-height:none;border-radius:0;border:0;}
+    .sk-mc > .sk-mh{padding-top:calc(12px + env(safe-area-inset-top));}
+    .sk-mc > .sk-mb{display:block;overflow:auto;padding:12px;}
+    .sk-mc > .sk-mb > .sk-mcol,.sk-mc > .sk-mb > .sk-mcol:last-child{overflow:visible;display:block;}
+    .sk-mc > .sk-mb > .sk-mcol + .sk-mcol{margin-top:14px;}
+    .sk-mod .sk-rowsed{overflow:visible;}
+    .sk-mf{padding-bottom:calc(12px + env(safe-area-inset-bottom));}
+    .sk-pk.sk-found{width:calc(100% - 20px);}
+  }
+  @media (max-height:520px) and (min-width:761px){ .sk-mc > .sk-mb{overflow:auto;} .sk-mc > .sk-mb > .sk-mcol:last-child{overflow:visible;} .sk-mod .sk-rowsed{min-height:160px;} }
   /* ===================== ⬆ GÖRGETÉSKOR KOMPAKT FEJLÉC (gépen) — az ikonok animálva felugranak egy lebegő sávba ===================== */
   .hdr-ph{display:none;}
   html.hdr-mini .hdr-ph{display:block;transition:height .35s ease;}
@@ -5675,7 +5703,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-174007";</script>
+<script>window.FP_BUILD="20261024-174946";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -27461,7 +27489,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     preview();
   }
   /* ✏️ felugró szerkesztő egy telefonhoz */
-  function rowHTML(r, i){ return `<div class="sk-re${r.on ? "" : " off"}" data-ri="${i}"><input type="checkbox" data-ron="${i}"${r.on ? " checked" : ""} title="Látszik a lapon"><button type="button" class="sk-ico" data-ico="${i}" title="${E(ICON_NAMES[r.k] || "Egyéb")} — kattints a másik ikonhoz">${ICO[r.k] || ICO.x}</button><input type="text" class="val" data-rv="${i}" value="${E(r.v)}" placeholder="pl. 5000 mAh"><button type="button" data-rdel="${i}" title="Törlés">✕</button></div>`; }
+  function rowHTML(r, i){ return `<div class="sk-re${r.on ? "" : " off"}" data-ri="${i}"><input type="checkbox" data-ron="${i}"${r.on ? " checked" : ""} title="Látszik a lapon"><button type="button" class="sk-ico" data-ico="${i}" title="${E(ICON_NAMES[r.k] || "Egyéb")} — kattints a másik ikonhoz">${ICO[r.k] || ICO.x}</button><textarea class="val" data-rv="${i}" rows="1" placeholder="pl. 5000 mAh">${E(r.v)}</textarea><button type="button" data-rdel="${i}" title="Törlés">✕</button></div>`; }
+  const grow = t=>{ if(!t || (window.CSS && CSS.supports && CSS.supports("field-sizing", "content"))) return; t.style.height = "auto"; t.style.height = (t.scrollHeight + 2) + "px"; };
   function drawMod(){
     const c = D.cards.find(x=> x.id === sel), m = root.querySelector(".sk-mod"); if(!m) return; if(!c){ closeMod(); return; }
     m.innerHTML = `<div class="sk-mc" role="dialog" aria-label="Telefon szerkesztése"><div class="sk-mh"><span class="sk-th">${logoFor(c) ? `<img src="${logoFor(c)}" alt="">` : /airpods|buds|fülhallgató|fejhallgató/i.test(c.name || "") ? "🎧" : "📱"}</span><b>${E(c.name || "Új telefon")}</b><button type="button" class="sk-x" data-a="close" title="Bezárás (Esc)">✕</button></div>
@@ -27476,6 +27505,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         <div class="sk-net"><button type="button" class="sk-mini net" data-a="enrich">🌐 Kiegészítés az internetről</button><small class="sk-sm">a név alapján megkeresi és felajánlja a hiányzó adatokat (telefon: GSMArena · AirPods: Apple)</small></div></div></div>
       <div class="sk-mf"><span class="sk-sm">Minden azonnal mentődik, és a lapon is látszik.</span><button type="button" class="sk-btn pri" data-a="close">✓ Kész</button></div>
       <div class="sk-pick" hidden></div></div>`;
+    requestAnimationFrame(()=> m.querySelectorAll("textarea[data-rv]").forEach(grow));
   }
   function openMod(id){ sel = id; let m = root.querySelector(".sk-mod"); if(!m){ m = document.createElement("div"); m.className = "sk-mod"; root.appendChild(m); m.addEventListener("click", e=>{ if(e.target === m) closeMod(); }); }
     drawMod(); document.addEventListener("keydown", escMod, true); setTimeout(()=>{ const i = m.querySelector(D.cards.find(x=> x.id === id).name ? "[data-new]" : '[data-c="name"]'); if(i) i.focus(); }, 60); preview(); }
@@ -27489,7 +27519,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const el = root.querySelector(`.sk-re[data-ri="${i}"]`); if(el){ el.classList.remove("dup"); void el.offsetWidth; el.classList.add("dup"); el.scrollIntoView({ block:"nearest" }); }
       hint(msg, true); const ni = root.querySelector("[data-new]"); if(ni){ ni.focus({ preventScroll:true }); ni.select(); } return; }
     c.rows.push({ k:detect(v), v, on:true, auto:true }); save(); inp.value = ""; const box = root.querySelector(".sk-rowsed"); box.insertAdjacentHTML("beforeend", rowHTML(c.rows[c.rows.length - 1], c.rows.length - 1));
-    const ni = root.querySelector("[data-nico]"); if(ni) ni.innerHTML = ICO.x; box.lastElementChild.classList.add("nw"); box.lastElementChild.scrollIntoView({ block:"nearest" }); hint(""); inp.focus(); preview(); }
+    const ni = root.querySelector("[data-nico]"); if(ni) ni.innerHTML = ICO.x; box.lastElementChild.classList.add("nw"); grow(box.lastElementChild.querySelector("textarea")); box.lastElementChild.scrollIntoView({ block:"nearest" }); hint(""); inp.focus(); preview(); }
   let pvT = null;
   function preview(){ clearTimeout(pvT); pvT = setTimeout(async ()=>{ if(!root) return; ownLogoUrl = await ownLogo();
       const pv = root.querySelector(".sk-pv"), inner = root.querySelector(".sk-pvi");
@@ -27563,7 +27593,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(d.own){ D.set.ownLogo = d.own; save(); draw(); return; }
       if(d.ldel){ L = L.filter(l=> l.id !== d.ldel); saveL(); draw(); return; }
     });
-    root.addEventListener("keydown", e=>{ if(e.key === "Enter" && e.target.matches("[data-new]")){ e.preventDefault(); addRow(); } });
+    root.addEventListener("keydown", e=>{ if(e.key === "Enter" && e.target.matches("[data-new]")){ e.preventDefault(); addRow(); } if(e.key === "Enter" && e.target.matches("textarea[data-rv]")){ e.preventDefault(); const i = root.querySelector("[data-new]"); if(i) i.focus(); } });
+    root.addEventListener("input", e=>{ if(e.target.matches("textarea[data-rv]")) grow(e.target); });
     root.addEventListener("input", e=>{
       const t = e.target, d = t.dataset, c = D.cards.find(x=> x.id === sel);
       if(d.c && c){ c[d.c] = /price|oldPrice/i.test(d.c) ? t.value.replace(/[^\d]/g, "") : t.value; save(); preview(); if(d.c === "name"){ const b = root.querySelector(".sk-mh b"); if(b) b.textContent = c.name || "Új telefon"; } return; }
