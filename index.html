@@ -5713,7 +5713,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261024-192801";</script>
+<script>window.FP_BUILD="20261024-194758";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -6319,14 +6319,16 @@
     const by = {};
     const get = uid=> by[uid] || (by[uid] = { uid, email:"", loc:"", place:"", addr:"", ms:0, wait:null, sx:null, kv:{} });
     /* 1) a boltok névjegye (ha már belépett az új változattal) */
-    try{ const snap = await S.db.collection("boltok").get(); snap.docs.forEach(d=>{ const m = d.data() || {}; const it = get(d.id); Object.assign(it, { email:m.email || "", loc:m.loc || "", place:m.place || "", addr:m.addr || "", ms:m.ms || 0, msMeta:m.ms || 0 }); }); }catch(e){ var metaErr = e; }
+    try{ const snap = await S.db.collection("boltok").get(); snap.docs.forEach(d=>{ const m = d.data() || {}; const it = get(d.id); Object.assign(it, { email:m.email || "", loc:m.loc || "", place:m.place || "", addr:m.addr || "", ms:m.ms || 0, msMeta:m.ms || 0 }); if(m.email) it.own = true; }); }catch(e){ var metaErr = e; }
     /* 2) minden bolt mentett adata — így az is látszik, amelyik még nem küldött névjegyet */
     let groupErr = null;
     try{
       const g = await S.db.collectionGroup("kv").get();
       g.docs.forEach(d=>{ const uid = d.ref.parent.parent && d.ref.parent.parent.id; if(!uid) return; const it = get(uid); it.kv[d.id] = d.data();
         /* utolsó mentés: csak a bolt saját mentései számítanak (az admin üzenetei / beállításai nem) */
-        const dd = d.data() || {}, ms = dd.n || 0; if(dd.by !== "admin" && !NOSEED.includes(d.id) && ms > (it.ms0 || 0)) it.ms0 = ms; });
+        const dd = d.data() || {}, ms = dd.n || 0; if(dd.by !== "admin" && !NOSEED.includes(d.id) && ms > (it.ms0 || 0)) it.ms0 = ms;
+        /* a bolt SAJÁT mentése (nem az admin felületről): ettől számít „belépett”-nek */
+        if(!dd.a && dd.by !== "admin" && !NOSEED.includes(d.id) && !d.id.includes("__")) it.own = true; });
     }catch(e){ groupErr = e; }
     if(groupErr && metaErr) throw groupErr;
     const val = (it, k)=>{ const d = it.kv[k]; if(!d || d.del) return null; if(!d.parts) return d.v == null ? null : String(d.v);
@@ -6358,6 +6360,8 @@
       const keep = withMail.length ? withMail : [g.slice().sort((a, b)=> (b.ms || 0) - (a.ms || 0))[0]];
       g.forEach(x=>{ if(!keep.includes(x)) x.orph = true; }); });
     out.forEach(it=>{ if(!it.email && !it.loc) it.orph = true; });
+    /* csak az admin felületről mentett (próba) adat, a bolt maga még sosem lépett be → nem „belépett”, hanem törölhető régi adat */
+    out.forEach(it=>{ if(!it.own){ it.adm = true; it.orph = true; } });
     return out.sort((a, b)=> (a.loc || a.email || a.uid).localeCompare(b.loc || b.email || b.uid, "hu"));
   }
   function ago(ms){ if(!ms) return "még nem mentett"; const m = Math.round((Date.now() - ms) / 60000); return m < 1 ? "épp most" : m < 60 ? m + " perce" : m < 1440 ? Math.round(m / 60) + " órája" : Math.round(m / 1440) + " napja"; }
@@ -9482,7 +9486,7 @@ service cloud.firestore {
       let armO = null;
       function drawOrph(){
         const box = $(".ax-orph"); box.hidden = !orph.length;
-        $(".ax-orl").innerHTML = `<div class="ax-tblw"><table class="ax-tbl"><thead><tr><th>Bolt (az adatok alapján)</th><th>Utolsó mentés</th><th>Azonosító</th><th></th></tr></thead><tbody>` + orph.map(x=> `<tr><td><b>${esc(nameOf(x))}</b><br><small>${esc([x.place, x.addr].filter(Boolean).join(" · "))}</small></td><td>${ago(x.ms)}</td><td><span class="ax-tid">${esc(String(x.uid).slice(0, 10))}…</span></td><td style="text-align:right;white-space:nowrap"><button type="button" class="ax-btn sm" data-ou="${esc(x.uid)}" data-oa="open">Adatok</button> <button type="button" class="ax-btn sm danger" data-ou="${esc(x.uid)}" data-oa="del">${armO === x.uid ? "⚠ Biztosan törlöd?" : "Törlés"}</button></td></tr>`).join("") + `</tbody></table></div>`;
+        $(".ax-orl").innerHTML = `<div class="ax-tblw"><table class="ax-tbl"><thead><tr><th>Bolt (az adatok alapján)</th><th>Utolsó mentés</th><th>Azonosító</th><th></th></tr></thead><tbody>` + orph.map(x=> `<tr><td><b>${esc(nameOf(x))}</b>${x.adm ? ` <span class="ax-b o" title="Ezt csak az admin felületről mentették (próba) — a bolt maga még nem lépett be. Törlés után a bolt az elejéről kezd.">🧪 csak admin-próba · még nem lépett be</span>` : ""}<br><small>${esc([x.place, x.addr].filter(Boolean).join(" · "))}</small></td><td>${ago(x.ms)}</td><td><span class="ax-tid">${esc(String(x.uid).slice(0, 10))}…</span></td><td style="text-align:right;white-space:nowrap"><button type="button" class="ax-btn sm" data-ou="${esc(x.uid)}" data-oa="open">Adatok</button> <button type="button" class="ax-btn sm danger" data-ou="${esc(x.uid)}" data-oa="del">${armO === x.uid ? "⚠ Biztosan törlöd?" : "Törlés"}</button></td></tr>`).join("") + `</tbody></table></div>`;
       }
       b.addEventListener("click", async e=>{ const o = e.target.closest("[data-ou]"); if(!o) return; e.stopPropagation(); const u = o.dataset.ou, x = orph.find(y=> y.uid === u); if(!x) return;
         if(o.dataset.oa === "open"){ detail(u); return; }
@@ -10564,6 +10568,28 @@ service cloud.firestore {
     .ax-hdr{position:relative;z-index:30;margin-bottom:18px;padding:12px 16px 10px;border-radius:24px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,0) 45%),color-mix(in srgb,var(--ax-panel) 88%,transparent);border:1px solid var(--ax-line);box-shadow:0 14px 40px rgba(0,0,0,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:axHdr .5s cubic-bezier(.2,.8,.2,1) both;}
     .ax.th-light .ax-hdr{background:rgba(255,255,255,.86);box-shadow:0 14px 40px rgba(60,40,10,.08);}
     @keyframes axHdr{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+    /* ✨ admin fejlécek: animált FirstPhone (fekete-arany) — úszó arany fény, végigfutó csillogás, körbefutó arany keret */
+    @property --axa{syntax:"<angle>";inherits:false;initial-value:0deg;}
+    .ax-hdr,.ax-ph{isolation:isolate;}
+    .ax:not(.th-light) .ax-hdr{background:radial-gradient(520px 170px at 8% 0%,rgba(240,199,102,.17),transparent 70%),radial-gradient(460px 200px at 96% 120%,rgba(240,160,40,.12),transparent 70%),linear-gradient(120deg,#0e0e12,#17130a 45%,#1e170a 70%,#0e0e12);
+      background-size:180% 180%,180% 180%,300% 300%;border-color:rgba(240,199,102,.22);animation:axHdr .5s cubic-bezier(.2,.8,.2,1) both,axGlow 16s ease-in-out infinite alternate;}
+    @keyframes axGlow{0%{background-position:0% 0%,100% 100%,0% 50%}50%{background-position:40% 20%,60% 80%,60% 50%}100%{background-position:100% 0%,0% 100%,100% 50%}}
+    .ax-hdr::before,.ax-ph::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;
+      background:linear-gradient(115deg,transparent 36%,rgba(255,226,154,.09) 45%,rgba(255,255,255,.15) 50%,rgba(255,226,154,.09) 55%,transparent 64%) -160% 0/230% 100% no-repeat;animation:axSheen 7s cubic-bezier(.45,0,.25,1) infinite;}
+    .ax-ph::before{animation-delay:1.2s;}
+    @keyframes axSheen{0%,48%{background-position:-160% 0}100%{background-position:160% 0}}
+    .ax-hdr::after,.ax-ph::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:1.5px;pointer-events:none;
+      background:conic-gradient(from var(--axa),transparent 0 62%,rgba(240,199,102,.85) 72%,#fff1bd 75%,rgba(240,199,102,.85) 78%,transparent 88%);
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:axRing 8s linear infinite;}
+    .ax-ph::after{animation-duration:10s;opacity:.85;}
+    @keyframes axRing{to{--axa:360deg}}
+    .ax:not(.th-light) .ax-ph .ax-h1{background:linear-gradient(100deg,#fff 0%,#fff 40%,#ffe29a 48%,#f0b43a 52%,#fff 60%,#fff 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:fpHeroTitle 7s cubic-bezier(.45,0,.25,1) 1.2s infinite;}
+    .ax.th-light .ax-ph .ax-h1{background:linear-gradient(100deg,#1b1508 0%,#1b1508 40%,#c88a12 48%,#e0a52a 52%,#1b1508 60%,#1b1508 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:fpHeroTitle 7s cubic-bezier(.45,0,.25,1) 1.2s infinite;}
+    .ax-ph.in .ax-phi{animation:axPhi .6s cubic-bezier(.34,1.56,.64,1) both,axBob 4.5s ease-in-out .7s infinite;} .ax-phi{animation:axBob 4.5s ease-in-out infinite;}
+    @keyframes axBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(-3deg)}}
+    .ax-hdr .ax-hrow img{animation:axLogo 5s ease-in-out infinite;} @keyframes axLogo{0%,100%{filter:drop-shadow(0 0 0 rgba(240,199,102,0))}50%{filter:drop-shadow(0 0 10px rgba(240,199,102,.45))}}
+    @media (prefers-reduced-motion:reduce){ .ax-hdr,.ax-ph,.ax-hdr::before,.ax-ph::before,.ax-hdr::after,.ax-ph::after,.ax-ph .ax-h1,.ax-phi,.ax-hdr .ax-hrow img{animation:none !important;} }
     .ax-hrow{display:flex;align-items:center;gap:10px;padding:0 2px 10px;min-width:0;}
     .ax-brand{display:flex;align-items:center;gap:12px;padding:0;min-width:0;margin-right:auto;}
     .ax-lg{display:flex;align-items:center;flex:none;} .ax-lgi{height:48px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));}
