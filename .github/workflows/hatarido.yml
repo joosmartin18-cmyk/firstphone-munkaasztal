@@ -1,0 +1,15 @@
+# ⏰ FirstPhone Munkaasztal — határidő-emlékeztetők (tartalék időzítő)
+# A boltok nyitott Munkaasztala magától is szól a szervernek; ez csak biztosíték, ha épp egyik bolt sincs megnyitva.
+# A szerver dönti el, kinek mikor menjen jelzés (napi 3×, a műszakon belül) — többször hívva sem küld duplán.
+name: Határidő-emlékeztetők
+on:
+  schedule:
+    - cron: "*/20 5-19 * * *"
+  workflow_dispatch:
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Szólunk a szervernek
+        run: curl -fsS -m 60 -X POST -H "content-type: application/json" -d '{}' https://firstphone-munkaasztal.pages.dev/cal/_tick || true

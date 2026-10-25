@@ -6,3 +6,5 @@ README.md
 .nojekyll
 node_modules
 .wrangler
+.github
+.github/*
