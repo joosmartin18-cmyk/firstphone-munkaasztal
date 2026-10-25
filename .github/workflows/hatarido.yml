@@ -13,4 +13,5 @@ jobs:
     steps:
       - name: Szólunk a szervernek
         run: |
-          curl -sS -m 60 -X POST -H "content-type: application/json" -d '{}' https://firstphone-munkaasztal.pages.dev/cal/_tick || true
+          curl -sS -m 60 -X POST -H "content-type: application/json" -d '{}' https://firstphone-munkaasztal.pages.dev/cal/_tick | tee valasz.json
+          grep -q '"ok":true' valasz.json
