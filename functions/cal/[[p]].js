@@ -7,6 +7,8 @@
      GET  /cal/{bolt}/{dolgozó}/{kulcs}/manifest     → a főképernyőre tett „app” leírója (iPhone-on így kap értesítést)
      POST /cal/{bolt}/{dolgozó}/{kulcs}/push         → a telefon értesítési címének mentése / törlése
      POST /cal/{bolt}/{dolgozó}/{kulcs}/notify       → értesítés küldése (a Munkaasztal hívja, ha új hónap jön vagy változik)
+     POST /cal/{bolt}/{dolgozó}/{kulcs}/done         → ⏰ „✓ Elküldtem” — a mai határidő (beosztás / jelenléti / zárások) kész
+     POST /cal/_tick  { uid? }                       → ⏰ határidő-emlékeztetők kiküldése (napi 3×, a 3. sürgős) — többször hívható
    A kulcs nélkül (vagy rossz kulccsal) semmit nem ad ki. A web push saját kulcspárja (VAPID) első használatkor
    készül, és a Firestore-ban marad (fpsys/vapid) — a böngészők nem olvashatják. Ugyanazt a FIREBASE_SA titkot használja. */
 const enc = new TextEncoder();
@@ -46,7 +48,7 @@ async function fsGet(sa, path, fields) {
   const f = (await r.json()).fields || {}; return Object.fromEntries(Object.entries(f).map(([k, v]) => [k, unfv(v)]));
 }
 async function fsPatch(sa, path, data, opt) {
-  const q = Object.keys(data).map(k => "updateMask.fieldPaths=" + encodeURIComponent(k)).concat(opt && opt.create ? ["currentDocument.exists=false"] : []).join("&");
+  const q = Object.keys(data).map(k => "updateMask.fieldPaths=" + encodeURIComponent(k)).concat(opt && opt.create ? ["currentDocument.exists=false"] : []).concat(opt && opt.ut ? ["currentDocument.updateTime=" + encodeURIComponent(opt.ut)] : []).join("&");
   const r = await fetch(fsBase(sa) + path + "?" + q, { method: "PATCH", headers: { authorization: "Bearer " + await accessToken(sa), "content-type": "application/json" },
     body: JSON.stringify({ fields: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, fv(v)])) }) });
   if (!r.ok) { const e = new Error("Firestore " + r.status); e.status = r.status; throw e; }
@@ -87,12 +89,12 @@ async function wpEncrypt(payload, p256dh, auth) {
   const rs = new Uint8Array([0, 0, 16, 0]);
   return cat(salt, rs, new Uint8Array([asPub.length]), asPub, ct);
 }
-async function wpSend(sa, sub, payload, origin) {
+async function wpSend(sa, sub, payload, origin, hd) {
   const v = await vapid(sa), u = new URL(sub.endpoint), now = Math.floor(Date.now() / 1000);
   const h = b64uStr(JSON.stringify({ typ: "JWT", alg: "ES256" })) + "." + b64uStr(JSON.stringify({ aud: u.origin, exp: now + 50 * 60, sub: origin }));
   const sig = await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, v.key, enc.encode(h));
   const body = await wpEncrypt(payload, sub.keys.p256dh, sub.keys.auth);
-  const r = await fetch(sub.endpoint, { method: "POST", headers: { authorization: `vapid t=${h}.${b64u(sig)}, k=${v.pub}`, "content-encoding": "aes128gcm", "content-type": "application/octet-stream", ttl: "86400", urgency: "normal" }, body });
+  const r = await fetch(sub.endpoint, { method: "POST", headers: { authorization: `vapid t=${h}.${b64u(sig)}, k=${v.pub}`, "content-encoding": "aes128gcm", "content-type": "application/octet-stream", ttl: String((hd && hd.ttl) || 86400), urgency: (hd && hd.urgency) || "normal" }, body });
   return r.status;
 }
 
@@ -138,12 +140,14 @@ function awayIcs(A, emp) {
 const VTZ = ["BEGIN:VTIMEZONE", "TZID:Europe/Budapest", "BEGIN:DAYLIGHT", "TZOFFSETFROM:+0100", "TZOFFSETTO:+0200", "TZNAME:CEST", "DTSTART:19700329T020000", "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU", "END:DAYLIGHT",
   "BEGIN:STANDARD", "TZOFFSETFROM:+0200", "TZOFFSETTO:+0100", "TZNAME:CET", "DTSTART:19701025T030000", "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU", "END:STANDARD", "END:VTIMEZONE"].join("\r\n");
 /* értesítés egy dolgozó telefonjaira (iPhone → a saját oldalán át a Naptár app, máshol → Google Naptár, azon a napon) */
-async function pushTo(sa, path, doc, base, origin, title, body, day, tag) {
+async function pushTo(sa, path, doc, base, origin, title, body, day, tag, ex) {
   const L = (doc.push || []).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
   if (!L.length) return { sent: 0, subs: 0, codes: [] };
   day = /^\d{4}-\d{2}-\d{2}$/.test(String(day || "")) ? day : budaToday(); const [yy, mm, dd] = day.split("-").map(Number);
   const subs = String(doc.subAll || doc.sub || "").split(","), gUrl = `https://calendar.google.com/calendar/r/day/${yy}/${mm}/${dd}`, aUrl = `${base}?open=cal&d=${day}`;
   const res = await Promise.all(L.map(s => { const apple = /push\.apple\.com/i.test(s.endpoint), go = apple ? aUrl : (subs.includes("google") || !subs.includes("apple") ? gUrl : aUrl);
+    if (ex) return wpSend(sa, s, JSON.stringify({ title, body, url: ex.url || go, tag, urgent: ex.urgent ? 1 : 0, act: ex.act || "", d: ex.d || "", k: ex.k || "", step: ex.step || 0 }), origin,
+      { urgency: ex.urgent ? "high" : "normal", ttl: 6 * 3600 }).catch(() => 0);
     return wpSend(sa, s, JSON.stringify({ title, body, url: go, tag }), origin).catch(() => 0); }));
   const keep = L.filter((s, i) => res[i] !== 404 && res[i] !== 410);
   if (keep.length !== L.length) await fsPatch(sa, path, { push: keep.map(x => JSON.stringify(x)), pushN: keep.length }).catch(() => {});
@@ -151,6 +155,98 @@ async function pushTo(sa, path, doc, base, origin, title, body, day, tag) {
 }
 const HU_MA = ["jan.", "febr.", "márc.", "ápr.", "máj.", "jún.", "júl.", "aug.", "szept.", "okt.", "nov.", "dec."], HU_DA = ["v", "h", "k", "sze", "cs", "p", "szo"];
 const fdHu = k => { const [y, m, d] = k.split("-").map(Number); return `${HU_MA[m - 1]} ${d}. (${HU_DA[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]})`; };
+/* ---- ⏰ határidő-emlékeztetők (beosztás / jelenléti ív / zárások elküldése) ----
+   A bolt Munkaasztala a határidők napjait a boltok/{bolt}/cal/_duty dokumentumba írja (dl: „nap|kulcs|ikon|mi|mit”).
+   Határidő-napon aki aznap dolgozik és kért 🔔 értesítést, napi 3× kap jelzést a saját műszakján belül
+   (kezdés +30 perc · a műszak közepe · vége előtt 1,5 órával — ez a 3. már 🔴 sürgős). Ha bárki jelzi, hogy
+   elküldte (✓ Elküldtem — az értesítésen, a saját oldalán vagy a boltban), többször nem kérdezi.
+   Ki indítja: a bolt nyitott Munkaasztala (pár percenként), a dolgozó oldala, és ha van, egy időzített hívás. */
+async function fsGetRaw(sa, path, fields) {
+  const q = (fields || []).map(f => "mask.fieldPaths=" + encodeURIComponent(f)).join("&");
+  const r = await fetch(fsBase(sa) + path + (q ? "?" + q : ""), { headers: { authorization: "Bearer " + await accessToken(sa) } });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error("Firestore " + r.status);
+  const j = await r.json(), f = j.fields || {};
+  return { ut: j.updateTime, f: Object.fromEntries(Object.entries(f).map(([k, v]) => [k, unfv(v)])) };
+}
+const budaMin = () => { const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Budapest", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date());
+  const g = t => +((p.find(x => x.type === t) || {}).value || 0); return g("hour") * 60 + g("minute"); };
+const hmMin = t => { const m = /(\d{1,2}):(\d{2})/.exec(String(t || "")); return m ? +m[1] * 60 + +m[2] : null; };
+/* a 3 jelzés ideje (percben, éjféltől) a dolgozó aznapi műszakjához igazítva */
+function dutySlots(ts, te) {
+  let s = hmMin(ts), e = hmMin(te); if (s == null || e == null || e <= s) { s = 9 * 60; e = 19 * 60; }
+  const a = s + 30, c = Math.max(e - 90, a + 90), b = Math.round((a + c) / 2);
+  return [a, b, c];
+}
+const parseO = v => { try { const o = JSON.parse(v || "{}"); return o && typeof o === "object" && !Array.isArray(o) ? o : {}; } catch (e) { return {}; } };
+const dutyLines = dl => String(dl || "").split("\n").map(l => l.split("|")).filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x[0] || "") && /^[a-z]{2,8}$/.test(x[1] || ""));
+/* a régi (7 napnál régebbi) bejegyzések törlése, hogy ne nőjön a dokumentum */
+function dutyPrune(st, today) { const lim = new Date(Date.parse(today + "T00:00:00Z") - 7 * 864e5).toISOString().slice(0, 10);
+  Object.keys(st).forEach(k => { if (k.slice(0, 10) < lim) delete st[k]; }); return st; }
+function dutyMsg(step, ic, t, x) {
+  const what = String(x || t || "").trim();
+  if (step >= 3) return { title: `🔴 SÜRGŐS: ${t} — még nincs elküldve!`, body: `Ma a határidő, és még senki nem jelezte, hogy elküldte ${what}. Kérlek, küldd el MOST! Utána nyomd meg: ✓ Elküldtem.`, urgent: true };
+  if (step === 2) return { title: `❓ Elküldted már? ${ic} ${t}`, body: `Ma van a határidő (${what}). Ha már elküldted, nyomd meg: ✓ Elküldtem — és többet nem kérdezem.` };
+  return { title: `${ic} Ma kell elküldeni: ${t}`, body: `Ma te dolgozol — ne felejtsd el elküldeni ${what}! Ha megvan, nyomd meg: ✓ Elküldtem. (Napközben még 2× rákérdezek.)` };
+}
+async function dutyTick(sa, uid, origin, opt) {
+  opt = opt || {};
+  const path = `boltok/${uid}/cal/_duty`, raw = await fsGetRaw(sa, path, ["dl", "st", "off"]);
+  if (!raw || raw.f.off) return { uid, skip: raw ? "off" : "none" };
+  const today = budaToday(), nm = budaMin(), now = Date.now();
+  const items = dutyLines(raw.f.dl).filter(x => x[0] === today);
+  if (!items.length) return { uid, n: 0 };
+  const st = parseO(raw.f.st), open = items.filter(([d, k]) => !(st[d + "|" + k] || {}).done);
+  if (!open.length) return { uid, n: 0, done: true };
+  if (!opt.force && open.every(([d, k]) => +((st[d + "|" + k] || {}).nx || 0) > now)) return { uid, n: 0, wait: true };
+  const docs = await fsList(sa, `boltok/${uid}/cal`, ["name", "t", "ev", "push", "sub", "subAll"]);
+  const work = docs.filter(x => !String(x.id).startsWith("_") && x.t && (x.push || []).length).map(x => {
+    const L = String(x.ev || "").split("\n").map(l => l.split("|")).filter(a => a[0] === today && !a[5]);
+    return L.length ? { x, ts: L.map(a => a[1]).sort()[0], te: L.map(a => a[2]).sort().pop() } : null; }).filter(Boolean);
+  const out = [];
+  for (const [d, k, ic, t, xx] of open) {
+    const key = d + "|" + k, S = st[key] = Object.assign({ n: {} }, st[key] || {}); S.n = S.n || {};
+    let nx = Infinity;
+    for (const w of work) {
+      const sl = dutySlots(w.ts, w.te), due = sl.filter(m => m <= nm).length, have = +S.n[w.x.id] || 0;
+      if (due > have) { S.n[w.x.id] = due; out.push({ w, d, k, step: due, m: dutyMsg(due, ic || "📤", t || "Elküldés", xx) }); }
+      const nxt = sl.find(m => m > nm); if (nxt != null) nx = Math.min(nx, nxt);
+    }
+    S.nx = nx === Infinity ? now + 6 * 3600e3 : now + (nx - nm) * 60000 - 30000;
+  }
+  /* előbb lefoglaljuk (ha közben egy másik hívás már elküldte, a Firestore elutasítja → itt nem küldünk újra) */
+  try { await fsPatch(sa, path, { st: JSON.stringify(dutyPrune(st, today)) }, { ut: raw.ut }); } catch (e) { return { uid, n: 0, race: true }; }
+  let sent = 0;
+  for (const o of out) {
+    const base = `${origin}/cal/${uid}/${o.w.x.id}/${o.w.x.t}`;
+    const r = await pushTo(sa, `boltok/${uid}/cal/${o.w.x.id}`, o.w.x, base, origin, o.m.title, o.m.body, o.d, "fp-duty-" + o.d + "-" + o.k,
+      { url: `${base}?duty=${encodeURIComponent(o.d + "|" + o.k)}`, urgent: !!o.m.urgent, act: base + "/done", d: o.d, k: o.k, step: o.step }).catch(() => ({ sent: 0 }));
+    sent += r.sent || 0;
+  }
+  return { uid, n: out.length, sent };
+}
+/* ✓ Elküldtem — a dolgozó (értesítésről / saját oldaláról) */
+async function dutyDone(sa, uid, d, k, who, src, undo) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(d || "")) || !/^[a-z]{2,8}$/.test(String(k || ""))) return { ok: false, error: "hibás" };
+  const path = `boltok/${uid}/cal/_duty`;
+  for (let i = 0; i < 4; i++) {
+    const raw = await fsGetRaw(sa, path, ["st"]), st = parseO(raw && raw.f.st), key = d + "|" + k;
+    const S = st[key] = Object.assign({ n: {} }, st[key] || {});
+    if (S.done && !undo) return { ok: true, by: S.done, already: true };
+    if (undo) { delete S.done; delete S.at; delete S.src; S.nx = 0; } else { S.done = String(who || "valaki").slice(0, 60); S.at = Date.now(); S.src = src || "tel"; }
+    try { await fsPatch(sa, path, { st: JSON.stringify(dutyPrune(st, budaToday())) }, raw ? { ut: raw.ut } : { create: true }); return { ok: true, by: S.done || "" }; }
+    catch (e) { await new Promise(r => setTimeout(r, 150 + 200 * i)); }
+  }
+  return { ok: false, error: "ütközés — próbáld újra" };
+}
+/* a dolgozó oldalán: a mai határidők (ha ma dolgozik, vagy az értesítésből jött) */
+async function dutyFor(sa, uid, ev) {
+  const raw = await fsGetRaw(sa, `boltok/${uid}/cal/_duty`, ["dl", "st", "off"]).catch(() => null);
+  if (!raw || raw.f.off) return [];
+  const today = budaToday(), st = parseO(raw.f.st);
+  const works = String(ev || "").split("\n").some(l => { const a = l.split("|"); return a[0] === today && !a[5]; });
+  return dutyLines(raw.f.dl).filter(x => x[0] === today).map(([d, k, ic, t, x]) => { const S = st[d + "|" + k] || {}; return { d, k, ic: ic || "📤", t: t || "", x: x || "", done: S.done || "", at: S.at || 0, works }; });
+}
 /* POST /cal/_out — a hívó bolt „másik boltból jött” helyettesítői → a saját boltjuk megkapja (+ 🔔 a dolgozónak) */
 async function handleOut(request, sa, origin) {
   const idToken = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
@@ -239,6 +335,11 @@ function page(o) {
       <span>${isT ? "" : `${I.wd.charAt(0).toUpperCase() + I.wd.slice(1)}, ${HU_M[I.m - 1]} ${I.d}. · `}${esc(PART[nx[3]] || "")}</span>${nx[5] ? `<em>🔁 Helyettesítés: FirstPhone ${esc(nx[5])}</em>` : nx[4] ? `<em>👥 Veled: ${esc(nx[4])}</em>` : ""}<i>${isT ? "☀️" : "📅"}</i></div>`; })()
     : `<div class="hero none"><small>Következő műszak</small><b>Most nincs</b><span>Ha jön az új beosztás, itt látod — és szól a telefonod.</span><i>🌙</i></div>`;
   const cnt = all.filter(x => x[0].slice(0, 7) === today.slice(0, 7)).length;
+  /* ⏰ mai határidő (beosztás / jelenléti ív / zárások elküldése) — ✓ Elküldtem */
+  const hhmm = ms => { try { return new Intl.DateTimeFormat("hu-HU", { timeZone: "Europe/Budapest", hour: "2-digit", minute: "2-digit" }).format(new Date(ms)); } catch (e) { return ""; } };
+  const dutyHtml = (o.duty || []).map(x => `<div class="du${x.done ? " ok" : ""}"${x.works ? "" : " data-nw hidden"} data-dk="${esc(x.d + "|" + x.k)}"><div class="du-h"><i>${esc(x.ic)}</i><div><small>${x.done ? "Kész" : "⏰ Ma kell elküldeni"}</small><b>${esc(x.t)}</b></div></div>
+    ${x.done ? `<p class="du-ok">✓ Elküldve${x.done ? " — " + esc(x.done) : ""}${x.at ? " · " + esc(hhmm(x.at)) : ""}. Köszi! Többet nem kérdezem.</p>`
+      : `<p>Ma a határidő: ${esc(x.x || x.t)}. Ha elküldted, nyomd meg — és többet nem kérdezem.</p><button type="button" class="b p du-b" data-d="${esc(x.d)}" data-k="${esc(x.k)}"><i>✓</i><span>Igen, elküldtem<small>a mai dolgozóknak sem szól többet</small></span></button><div class="st du-s"></div>`}</div>`).join("");
   return `<!doctype html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
 <title>${esc(o.name || "Beosztás")} · FirstPhone</title><link rel="manifest" href="${esc(o.base)}/manifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Beosztás"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#111116">
@@ -279,6 +380,13 @@ a.b small,button.b small{display:block;font-weight:500;color:var(--dim);font-siz
 li.hl{outline:2px solid var(--gold);animation:hl 1.2s ease 2;} @keyframes hl{50%{transform:scale(1.03);}}
 .oc{border-color:rgba(245,179,0,.6);background:linear-gradient(135deg,rgba(245,179,0,.16),var(--card) 70%);} .oc p{margin:0;color:#d6d6de;font-size:14px;}
 .nt{font-size:14.5px;color:#dcdce4;}
+.du{position:relative;margin:0 0 14px;padding:15px 15px 14px;border-radius:22px;background:linear-gradient(135deg,rgba(239,90,90,.22),var(--card) 75%);border:1px solid rgba(239,90,90,.55);animation:duIn .45s cubic-bezier(.2,.9,.3,1.2);}
+.du.ok{background:linear-gradient(135deg,rgba(63,208,138,.18),var(--card) 75%);border-color:rgba(63,208,138,.5);animation:none;}
+.du-h{display:flex;align-items:center;gap:12px;} .du-h i{font-style:normal;font-size:30px;width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:rgba(0,0,0,.25);flex:none;}
+.du:not(.ok) .du-h i{animation:duP 1.6s ease-in-out infinite;} .du-h small{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#ff9b9b;} .du.ok .du-h small{color:#5fe0a2;}
+.du-h b{display:block;font-size:18px;line-height:1.2;} .du p{margin:10px 0 0;font-size:14px;color:#dcdce4;} .du p.du-ok{color:#7fe8b4;font-weight:700;}
+@keyframes duIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:none}} @keyframes duP{0%,100%{transform:scale(1)}50%{transform:scale(1.1) rotate(-6deg)}}
+@media (prefers-reduced-motion:reduce){.du,.du-h i{animation:none !important;}}
 /* alsó tab-sáv */
 .tb{position:fixed;left:0;right:0;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(3,1fr);padding:6px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(20,20,27,.86);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);border-top:1px solid rgba(255,255,255,.07);}
 .tb button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;border:0;background:none;color:var(--dim);font:700 11px system-ui,-apple-system,sans-serif;cursor:pointer;}
@@ -288,7 +396,7 @@ li.hl{outline:2px solid var(--gold);animation:hl 1.2s ease 2;} @keyframes hl{50%
 <div class="top"><img src="/cal-icon.png" alt=""><div><h1>${first ? "Szia, " + esc(first) + "! 👋" : esc(o.name || "Beosztás")}</h1><small>${esc(o.shop ? o.shop + " · " : "FirstPhone · ")}${esc(nm || "a te műszakjaid")}</small></div></div>
 <section class="pg on" data-pg="m">
 <div class="card oc" id="oc" hidden><h2>📅 Az értesítésből jöttél</h2><p id="ocx"></p><a class="b p" id="ob" href="#"><i>📅</i><span>Megnyitás a naptárban<small id="obs">azon a napon</small></span></a></div>
-${hero}
+${dutyHtml}${hero}
 <div class="card" id="cal"><div class="mh"><button type="button" id="mp" aria-label="Előző hónap">‹</button><b id="ml"></b><button type="button" id="mn" aria-label="Következő hónap">›</button></div>
 <div class="wk"><span>H</span><span>K</span><span>Sze</span><span>Cs</span><span>P</span><span>Szo</span><span>V</span></div><div class="gr" id="gr"></div><div class="dsel" id="ds" hidden></div>
 <div class="lg"><span><i></i>dolgozol${cnt ? " · ebben a hónapban " + cnt + " nap" : ""}</span><span><i class="b"></i>helyettesítés</span></div></div>
@@ -339,6 +447,14 @@ ${hero}
 (function(){
   var BASE=${JSON.stringify(o.base)}, KEY=${JSON.stringify(o.vapid || "")};
   var nb=document.getElementById('nb'), nx=document.getElementById('nx'), ns=document.getElementById('ns'), nt=document.getElementById('nt');
+  /* ⏰ „✓ Igen, elküldtem” (iPhone-on az értesítésen nincs gomb — ide jön) */
+  try{ var dq=new URLSearchParams(location.search).get('duty'); if(dq){ var de=document.querySelector('.du[data-dk="'+dq.replace(/"/g,'')+'"]'); if(de){ de.hidden=false; try{ de.scrollIntoView({block:'start'}); }catch(e){} } try{ history.replaceState(null,'',location.pathname); }catch(e){} } }catch(e){}
+  Array.prototype.forEach.call(document.querySelectorAll('.du-b'),function(b){ b.onclick=function(){ var box=b.closest('.du'), s=box.querySelector('.du-s'); b.disabled=true; s.className='st du-s'; s.textContent='Mentés…';
+    fetch(BASE+'/done',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({d:b.dataset.d,k:b.dataset.k,src:'page'})}).then(function(r){ return r.json(); }).then(function(j){
+      if(!j.ok) throw new Error(j.error||'hiba'); box.classList.add('ok'); box.querySelector('.du-h small').textContent='Kész';
+      var p=box.querySelector('p'); p.className='du-ok'; p.textContent='✓ Elküldve'+(j.by?' — '+j.by:'')+'. Köszi! Többet nem kérdezem.'; b.remove(); s.remove();
+      try{ navigator.serviceWorker && navigator.serviceWorker.getRegistration('/cal/').then(function(r){ if(r) r.getNotifications().then(function(L){ L.forEach(function(n){ if(n.data&&n.data.k===b.dataset.k) n.close(); }); }); }); }catch(e){}
+    }).catch(function(e){ b.disabled=false; s.className='st du-s err'; s.textContent='Nem sikerült: '+e.message+' — próbáld újra.'; }); }; });
   var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   var standalone=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
   function st(t,c){ ns.textContent=t; ns.className='st'+(c?' '+c:''); }
@@ -385,11 +501,24 @@ export async function onRequest(context) {
     if (!sa0 || !sa0.private_key) return json({ ok: false, error: "nosa" }, 503);
     try { return await handleOut(request, sa0, new URL(request.url).origin); } catch (e) { return json({ ok: false, error: String((e && e.message) || e) }, 502); }
   }
+  if (seg.length <= 2 && seg[0] === "_tick") {
+    let sa0; try { sa0 = JSON.parse(env.FIREBASE_SA || ""); } catch (e) { sa0 = null; }
+    if (!sa0 || !sa0.private_key) return json({ ok: false, error: "nosa" }, 503);
+    const origin = new URL(request.url).origin;
+    let b = {}; if (request.method === "POST") b = await request.json().catch(() => ({}));
+    const one = String(b.uid || seg[1] || "");
+    try {
+      if (one) { if (!/^[A-Za-z0-9]{6,64}$/.test(one)) return json({ ok: false, error: "uid" }, 400); return json(Object.assign({ ok: true }, await dutyTick(sa0, one, origin))); }
+      const shops = await fsList(sa0, "boltok", ["loc"]), res = [];
+      for (const x of shops.slice(0, 40)) res.push(await dutyTick(sa0, x.id, origin).catch(e => ({ uid: x.id, error: String((e && e.message) || e) })));
+      return json({ ok: true, res: res.filter(r => r.n || r.error) });
+    } catch (e) { return json({ ok: false, error: String((e && e.message) || e) }, 502); }
+  }
   if (seg.length < 3 || seg.length > 4) return txt("Hiányos naptár link.", 404);
   let [uid, emp, tok, act] = seg; const isIcs = /\.ics$/i.test(tok); tok = tok.replace(/\.ics$/i, "");
-  if (!/^[A-Za-z0-9]{6,64}$/.test(uid) || !/^[A-Za-z0-9_-]{2,40}$/.test(emp) || !/^[A-Za-z0-9]{16,64}$/.test(tok) || (act && !/^(push|notify|manifest)$/.test(act)) || (act && isIcs)) return txt("Hibás naptár link.", 404);
+  if (!/^[A-Za-z0-9]{6,64}$/.test(uid) || !/^[A-Za-z0-9_-]{2,40}$/.test(emp) || !/^[A-Za-z0-9]{16,64}$/.test(tok) || (act && !/^(push|notify|manifest|done)$/.test(act)) || (act && isIcs)) return txt("Hibás naptár link.", 404);
   const M = request.method;
-  if (act === "push" || act === "notify") { if (M !== "POST") return txt("POST kell", 405); }
+  if (act === "push" || act === "notify" || act === "done") { if (M !== "POST") return txt("POST kell", 405); }
   else if (M !== "GET" && M !== "HEAD") return txt("GET kell", 405);
   let sa; try { sa = JSON.parse(env.FIREBASE_SA || ""); } catch (e) { sa = null; }
   if (!sa || !sa.private_key) return txt("A naptár szolgáltatás nincs beállítva.", 503);
@@ -427,6 +556,11 @@ export async function onRequest(context) {
       await fsPatch(sa, path, { push: R.map(x => JSON.stringify(x)), pushN: R.length, pushAt: new Date() });
       return json({ ok: true, n: R.length });
     }
+    if (act === "done") {
+      const b = await request.json().catch(() => ({}));
+      const bolt = b.src === "bolt";
+      return json(await dutyDone(sa, uid, b.d, b.k, bolt ? (String(b.by || "").replace(/[<>|\n]/g, " ").trim().slice(0, 40) ? String(b.by).replace(/[<>|\n]/g, " ").trim().slice(0, 40) + " (a boltból)" : "a bolt (Munkaasztal)") : d.name, bolt ? "bolt" : b.src === "page" ? "oldal" : "értesítés", !!b.undo));
+    }
     if (act === "notify") {
       const b = await request.json().catch(() => ({}));
       const title = b.test ? "🔔 Próba értesítés" : String(b.title || "").slice(0, 90), body = b.test ? "Így szól, ha jön az új havi beosztás, vagy változik a tiéd — koppints rá, és megnyílik a naptárad." : String(b.body || "").slice(0, 400);
@@ -439,7 +573,9 @@ export async function onRequest(context) {
     let ev = String(d.ev || "");
     try { const A = await awayOf(sa, uid, d.name); if (A.length) ev = ev.split("\n").filter(Boolean).concat(A.map(x => [x.d, x.ts, x.te, x.p, "", x.at].join("|"))).sort().join("\n"); } catch (e) {}
     let shop = ""; try { const sh = await fsGet(sa, "boltok/" + uid, ["loc", "place"]); if (sh && sh.loc) shop = "FirstPhone " + sh.loc + (sh.place ? " " + String(sh.place).split(/[,(]/)[0].trim() : ""); } catch (e) {}
-    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk, shop }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
+    let duty = []; try { duty = await dutyFor(sa, uid, d.ev); } catch (e) {}
+    if (duty.some(x => !x.done)) context.waitUntil(dutyTick(sa, uid, url.origin).catch(() => {}));
+    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk, shop, duty }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
   } catch (e) {
     return txt("Hiba: " + String((e && e.message) || e), 502);
   }
