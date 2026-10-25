@@ -12,4 +12,5 @@ jobs:
     timeout-minutes: 3
     steps:
       - name: Szólunk a szervernek
-        run: curl -fsS -m 60 -X POST -H "content-type: application/json" -d '{}' https://firstphone-munkaasztal.pages.dev/cal/_tick || true
+        run: |
+          curl -sS -m 60 -X POST -H "content-type: application/json" -d '{}' https://firstphone-munkaasztal.pages.dev/cal/_tick || true
