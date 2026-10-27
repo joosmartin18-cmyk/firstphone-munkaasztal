@@ -1,5 +1,5 @@
-/* FirstPhone Fotó — offline-gyors indulás: az app és a Firebase fájljai a telefonon maradnak (verzió: 20261027-155044) */
-const V = "fp-foto-20261027-155044", SDK = "fp-foto-sdk-10.12.2";
+/* FirstPhone Fotó — offline-gyors indulás: az app és a Firebase fájljai a telefonon maradnak (verzió: 20261027-162315) */
+const V = "fp-foto-20261027-162315", SDK = "fp-foto-sdk-10.12.2";
 const SHELL = ["/scan/", "/scan/manifest.webmanifest", "/scan/icon-180.png", "/scan/icon-192.png"];
 const LIBS = ["firebase-app-compat.js", "firebase-auth-compat.js", "firebase-firestore-compat.js"].map(f => "https://www.gstatic.com/firebasejs/10.12.2/" + f);
 self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(Promise.all([
