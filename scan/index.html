@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="hu" class="fp-scanonly m-app">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0c0c0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FP Fotó">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>FirstPhone Fotó</title>
+<link rel="manifest" href="/scan/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/scan/icon-180.png">
+<link rel="icon" href="/scan/icon-180.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+<script>window.FP_BUILD="20261027-155044";</script>
+<script>/* ===== 🤖 automatikus hibanapló: a böngészőben előforduló hibák (a bolt nem lát belőle semmit) → az admin a 🐞 Hibajegyeknél látja ===== */
+(function(){
+  var Q = window.__fpErrQ = [], seen = {}, n = 0;
+  var noise = /ResizeObserver loop|^Script error\.?$|Failed to fetch|Load failed|NetworkError|AbortError|The operation was aborted|cancelled|Non-Error promise rejection|chrome-extension|moz-extension|safari-extension|_AutofillCallbackHandler|webkit-masked-url/i;
+  function push(m, src, st){ m = String(m || "").slice(0, 300); if(!m || noise.test(m) || noise.test(src || "") || n >= 25) return; var k = m + "|" + (src || ""); if(seen[k]) return; seen[k] = 1; n++;
+    var pg = ""; try{ pg = localStorage.getItem("firstphone_active_page") || ""; }catch(e){}
+    Q.push({ m:m, src:String(src || "").slice(0, 120), st:String(st || "").slice(0, 900), pg:pg, at:Date.now(), w:window.innerWidth }); if(window.__fpErrFlush) try{ window.__fpErrFlush(); }catch(e){} }
+  window.addEventListener("error", function(e){ if(!e) return; if(e.target && e.target !== window && (e.target.src || e.target.href)) return; var f = (e.filename || "").split("/").pop().split("?")[0];
+    push(e.message || (e.error && e.error.message), f + (e.lineno ? ":" + e.lineno + ":" + (e.colno || 0) : ""), e.error && e.error.stack); });
+  window.addEventListener("unhandledrejection", function(e){ var r = e && e.reason; push((r && (r.code ? r.code + ": " : "") + (r.message || "")) || String(r), "promise", r && r.stack); });
+  window.fpErrReport = push;
+})();
+</script>
+<style>
+:root{color-scheme:dark;--bg:#0c0c0f;--bg-panel:#17171c;--bg-panel2:#1e1e25;--bg-cell:#1f1f27;--border:#2b2b33;--text:#ececf1;--text-dim:#9c9ca6;--gold:#d9ad46;--red:#e2585a;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:15px/1.45 'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+button,input,select,textarea{font:inherit;}
+#fpSplash{position:fixed;inset:0;z-index:3300;display:grid;place-items:center;background:var(--bg);text-align:center;padding:24px;transition:opacity .25s;}
+#fpSplash.out{opacity:0;pointer-events:none;}
+#fpSplash .ic{display:block;font-size:54px;animation:spB 1.4s ease-in-out infinite;} #fpSplash b{display:block;margin-top:8px;font-size:22px;font-weight:800;}
+#fpSplash small{display:block;margin-top:6px;color:var(--text-dim);font-size:14px;max-width:320px;}
+#fpSplash .bar{width:160px;height:4px;margin:16px auto 0;border-radius:4px;background:#24242c;overflow:hidden;} #fpSplash .bar i{display:block;width:40%;height:100%;border-radius:4px;background:linear-gradient(90deg,#f5b300,#30b37a);animation:spL 1.1s ease-in-out infinite;}
+@keyframes spB{50%{transform:translateY(-6px) rotate(-6deg)}} @keyframes spL{from{transform:translateX(-110%)}to{transform:translateX(260%)}}
+/* belépés */
+#fcLogin{position:fixed;inset:0;z-index:3200;display:flex;align-items:center;justify-content:center;padding:calc(18px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));background:radial-gradient(500px 300px at 90% -10%,rgba(245,179,0,.14),transparent 70%),var(--bg);overflow:auto;}
+.lg{width:min(400px,100%);}
+.lg .hd{display:flex;align-items:center;gap:12px;margin-bottom:18px;} .lg .hd img{width:52px;height:52px;border-radius:14px;flex:none;} .lg .hd b{display:block;font-size:22px;font-weight:850;line-height:1.1;} .lg .hd small{display:block;color:var(--text-dim);font-size:13px;margin-top:3px;}
+.lg .card{padding:16px;border-radius:20px;background:var(--bg-panel);border:1px solid var(--border);margin-bottom:12px;}
+.lg h2{margin:0 0 4px;font-size:15px;font-weight:800;} .lg p{margin:0 0 12px;color:var(--text-dim);font-size:13.5px;}
+.lg label{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin:10px 0 5px;}
+.lg input{width:100%;height:50px;padding:0 14px;border-radius:14px;border:1px solid var(--border);background:var(--bg-panel2);color:var(--text);font-size:17px;outline:none;}
+.lg input:focus{border-color:#f5b300;box-shadow:0 0 0 3px rgba(245,179,0,.18);}
+.lg input.code{font:800 22px ui-monospace,Menlo,monospace;letter-spacing:.12em;text-align:center;text-transform:lowercase;}
+.lg .go{width:100%;height:52px;margin-top:14px;border:0;border-radius:15px;background:linear-gradient(135deg,#f5b300,#e08a00);color:#1b1404;font-weight:850;font-size:16.5px;cursor:pointer;}
+.lg .go:disabled{opacity:.6;} .lg .go.sec{background:var(--bg-panel2);color:var(--text);border:1px solid var(--border);}
+.lg .err{min-height:20px;margin-top:10px;color:#ff7b7b;font-size:13.5px;font-weight:600;} .lg .or{text-align:center;color:var(--text-dim);font-size:12px;margin:4px 0 12px;}
+.lg .ft{text-align:center;color:#6f6f7c;font-size:12px;margin-top:6px;}
+/* értesítés */
+#toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translate(-50%,-140%);z-index:9999;max-width:calc(100vw - 24px);padding:11px 16px;border-radius:14px;background:rgba(30,30,38,.96);border:1px solid var(--border);color:var(--text);font-size:14px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.45);transition:transform .3s cubic-bezier(.2,1.2,.4,1);pointer-events:none;}
+#toast.on{transform:translate(-50%,0);}
+.sc-out{width:auto !important;height:36px !important;padding:0 12px !important;border-radius:99px !important;font-size:12.5px !important;font-weight:800;white-space:nowrap;display:inline-flex !important;align-items:center;gap:4px;}
+/* 📷 a Munkaasztal mobil Fotók stílusa */
+  /* ===================== 📷 FOTÓK mobilon: teljes képernyő, alul kamera-dokk ===================== */
+  .sc-sh,.sc-ml{display:none;} .sc-eb i{font-style:normal;}
+  html.m-app .sc-back{padding:0 !important;align-items:stretch !important;justify-content:stretch !important;background:var(--bg,#0c0c0f) !important;}
+  html.m-app .sc-back > .sc-c{width:100% !important;max-width:none !important;height:100% !important;max-height:none !important;margin:0 !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;display:flex;flex-direction:column;overflow-y:auto !important;-webkit-overflow-scrolling:touch;padding:0 0 calc(120px + env(safe-area-inset-bottom)) !important;animation:mUp .3s cubic-bezier(.2,.9,.3,1) !important;}
+  html.m-app .sc-back.sc-pick > .sc-c{padding-bottom:calc(84px + env(safe-area-inset-bottom)) !important;}
+  html.m-app .sc-c > .sc-h{position:sticky;top:0;z-index:5;margin:0 !important;padding:calc(10px + env(safe-area-inset-top)) 14px 10px !important;background:color-mix(in srgb,var(--bg-panel,#17171c) 88%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border,#2b2b33);}
+  html.m-app .sc-c > .sc-h .ic{width:36px !important;height:36px !important;font-size:18px !important;}
+  html.m-app .sc-c > .sc-h b{font-size:17px !important;} html.m-app .sc-c > .sc-h small{font-size:11.5px !important;}
+  html.m-app .sc-c > :not(.sc-h):not(.sc-top){margin-left:12px !important;margin-right:12px !important;}
+  html.m-app .sc-c > .sc-del{margin-top:10px !important;padding:8px 12px !important;border-radius:14px !important;gap:8px !important;}
+  html.m-app .sc-c > .sc-del small{display:none !important;} html.m-app .sc-c > .sc-del b{font-size:12.5px !important;} html.m-app .sc-c > .sc-del i{font-size:16px !important;}
+  html.m-app .sc-c > .sc-tools{margin-top:10px !important;gap:8px !important;}
+  html.m-app .sc-c .sc-q{min-height:42px;font-size:16px !important;border-radius:14px !important;}
+  html.m-app .sc-c .sc-flt{overflow-x:auto;flex-wrap:nowrap !important;scrollbar-width:none;}
+  html.m-app .sc-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important;margin-top:10px !important;}
+  html.m-app .sc-it{border-radius:18px !important;padding:6px 6px 9px !important;}
+  html.m-app .sc-it .sc-tt{height:auto !important;aspect-ratio:3 / 4;border-radius:13px !important;}
+  html.m-app .sc-it b{font-size:12.5px !important;padding:0 3px;} html.m-app .sc-it small{padding:0 3px;}
+  html.m-app .sc-empty{padding:28px 16px !important;}
+  /* kamera-dokk alul: 🖼️ Kép · ( 📄 Dokumentum ) · 📂 Feltöltés */
+  html.m-app #scPanel .sc-top{position:fixed !important;left:0;right:0;bottom:0;z-index:6;display:grid !important;grid-template-columns:1fr auto 1fr !important;align-items:end;gap:8px !important;margin:0 !important;padding:12px 18px calc(12px + env(safe-area-inset-bottom)) !important;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--bg-panel,#17171c) 92%,transparent) 26%);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--border,#2b2b33);}
+  html.m-app #scPanel .sc-top .sc-qr{display:none !important;}
+  html.m-app #scPanel .sc-big{display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:flex-end !important;gap:6px !important;min-height:0 !important;height:auto !important;padding:4px 0 0 !important;border:0 !important;background:none !important;box-shadow:none !important;grid-column:auto !important;text-align:center;cursor:pointer;}
+  html.m-app #scPanel .sc-big > span{display:block !important;} html.m-app #scPanel .sc-big b,html.m-app #scPanel .sc-big small{display:none !important;}
+  html.m-app #scPanel .sc-big .sc-sh{display:block;font:800 11.5px 'Inter',sans-serif;font-style:normal;color:var(--text-dim,#9c9ca6);}
+  html.m-app #scPanel .sc-big > i{width:52px !important;height:52px !important;border-radius:18px !important;font-size:24px !important;display:grid !important;place-items:center;margin:0 !important;background:var(--bg-panel2,#1e1e25) !important;border:1px solid var(--border,#2b2b33);font-style:normal;}
+  html.m-app #scPanel .sc-big.img{order:1;} html.m-app #scPanel .sc-big.cam{order:2;} html.m-app #scPanel .sc-big.up{order:3;}
+  html.m-app #scPanel .sc-big.cam > i{width:78px !important;height:78px !important;border-radius:50% !important;font-size:32px !important;background:linear-gradient(145deg,#4ee0a0,#1f9c66) !important;border:4px solid color-mix(in srgb,var(--bg-panel,#17171c) 60%,#fff 40%) !important;box-shadow:0 10px 28px rgba(48,179,122,.45),0 0 0 6px rgba(48,179,122,.18);}
+  html.m-app #scPanel .sc-big.cam .sc-sh{color:var(--text,#ecece8);}
+  html.m-app #scPanel .sc-big:active > i{transform:scale(.92);}
+  html.m-app #scPanel .sc-big.pulse > i{animation:scPulse 1.2s ease-in-out 3;}
+  body.light-theme.m-x{} html.m-app body.light-theme .sc-back{background:#f4f2ec !important;}
+  /* szerkesztő: teljes képernyő, ikonos eszközsor alul */
+  html.m-app .sc-ed{padding:0 !important;background:#000 !important;}
+  html.m-app .sc-edc{width:100% !important;height:100% !important;max-height:none !important;border-radius:0 !important;border:0 !important;}
+  html.m-app .sc-edh{padding:calc(8px + env(safe-area-inset-top)) 12px 8px !important;}
+  html.m-app .sc-edh small{white-space:normal;line-height:1.3;}
+  html.m-app .sc-edb{padding:8px !important;}
+  html.m-app .sc-edf{display:flex !important;flex-wrap:wrap !important;gap:6px !important;padding:8px 10px calc(10px + env(safe-area-inset-bottom)) !important;}
+  html.m-app .sc-edf .sp{display:none !important;}
+  html.m-app .sc-edf .sc-eb{flex:1 1 0 !important;min-width:0;flex-direction:column !important;gap:3px !important;padding:8px 2px 7px !important;border-radius:14px !important;font:700 10.5px/1.15 'Inter',sans-serif !important;white-space:normal !important;text-align:center;}
+  html.m-app .sc-edf .sc-eb i{font-size:19px;line-height:1;} html.m-app .sc-edf .sc-eb .sc-ml{display:inline;}
+  html.m-app .sc-edf .sc-eb.pri{order:9;flex:1 1 100% !important;flex-direction:row !important;justify-content:center;padding:14px 10px !important;font-size:15px !important;border-radius:16px !important;}
+  html.m-app .sc-edf > .sc-eseg{order:-2;flex:1 1 100%;display:grid !important;grid-template-columns:repeat(3,1fr);}
+  html.m-app .sc-edf > .sc-eseg button{padding:9px 4px !important;font-size:12px !important;}
+  html.m-app .sc-edf .sc-aitg{flex:1 1 0 !important;min-width:0;flex-direction:column;justify-content:center;gap:3px !important;padding:6px 2px !important;border-radius:14px !important;font-size:10.5px !important;white-space:normal;text-align:center;}
+  html.m-app .sc-edf .sc-efmt{order:8;flex:1 1 100%;margin:0 !important;justify-content:center;}
+  html.m-app .sc-edf .sc-efmt .sc-eseg{flex:1;display:grid;grid-template-columns:repeat(3,1fr);}
+  html.m-app .sc-edf .sc-efmt > span{display:none !important;}
+  /* nézegető: teljes képernyő, a gombok alul */
+  html.m-app .sc-view{padding:0 !important;}
+  html.m-app .sc-vc{width:100% !important;height:100% !important;max-height:none !important;border-radius:0 !important;border:0 !important;padding-bottom:calc(66px + env(safe-area-inset-bottom));}
+  html.m-app .sc-vc:has(.sc-vf){padding-bottom:calc(108px + env(safe-area-inset-bottom));}
+  html.m-app .sc-vh{position:relative;padding:calc(10px + env(safe-area-inset-top)) 56px 8px 14px !important;gap:2px 8px !important;}
+  html.m-app .sc-vh .sc-vn{flex:1 1 100% !important;font-size:16px !important;}
+  html.m-app .sc-vh > small{flex:1 1 100%;}
+  html.m-app .sc-va{position:fixed !important;left:0;right:0;bottom:0;z-index:5;display:flex !important;flex-wrap:wrap !important;gap:6px !important;margin:0 !important;max-width:none !important;padding:8px 10px calc(10px + env(safe-area-inset-bottom)) !important;background:var(--bg-panel,#17171c);border-top:1px solid var(--border,#2b2b33);box-shadow:0 -10px 30px rgba(0,0,0,.3);}
+  html.m-app .sc-va > button{flex:1 1 0 !important;min-width:0 !important;height:auto !important;min-height:50px;display:flex !important;flex-direction:column !important;align-items:center;justify-content:center;gap:2px;padding:6px 2px !important;border-radius:14px !important;font:700 17px/1 'Inter',sans-serif !important;}
+  html.m-app .sc-va > button[hidden]{display:none !important;}
+  html.m-app .sc-va > button .sc-ml{display:block;font-size:10.5px;font-weight:700;}
+  html.m-app .sc-va > button.dlf,html.m-app .sc-va > .sc-vai,html.m-app .sc-va > [data-v="docify"]{font-size:12.5px !important;}
+  html.m-app .sc-va > .sc-vf{flex:1 1 100% !important;order:-1;display:grid !important;grid-template-columns:repeat(3,1fr);margin:0 !important;}
+  html.m-app .sc-va > .sc-vf button{height:32px !important;}
+  html.m-app .sc-va > [data-v="x"]{position:fixed !important;top:calc(10px + env(safe-area-inset-top));right:10px;width:38px !important;height:38px !important;min-height:0 !important;flex:none !important;border-radius:50% !important;font-size:15px !important;}
+  html.m-app .sc-txt{max-height:48% !important;}
+
+</style>
+</head>
+<body>
+<div id="fpSplash"><div><span class="ic">📷</span><b>FirstPhone Fotó</b><small id="fpSplashTx">Indul…</small><div class="bar"><i></i></div></div></div>
+<div id="toast"></div>
+<script>
+/* ===================== FirstPhone Fotó — könnyű külön app a telefonos fotózáshoz =====================
+   A Munkaasztal 📷 Fotók részét tölti be (ugyanaz a kód), de csak azt: pár száz KB a teljes oldal helyett.
+   Belépés: a gép QR-kódjával (jelszó nélkül), a gépen látható kóddal, vagy a bolt nevével és jelszavával. */
+(function(){
+  var t = null; window.toast = window.fpNotice = function(m){ var el = document.getElementById("toast"); if(!el) return; el.textContent = String(m || ""); el.classList.add("on"); clearTimeout(t); t = setTimeout(function(){ el.classList.remove("on"); }, 3600); };
+  window.fpSound = function(){};
+  window.fpWhoName = function(){ try{ return localStorage.getItem("fp_scan_who") || ""; }catch(e){ return ""; } };
+  var libs = {};
+  window.fpLoadLib = function(k, urls, ok){ if(ok()) return Promise.resolve(); if(libs[k]) return libs[k];
+    return (libs[k] = (async function(){ for(var i = 0; i < urls.length; i++){ try{ await new Promise(function(res, rej){ var s = document.createElement("script"); s.src = urls[i]; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); if(ok()) return; }catch(e){} } libs[k] = null; throw new Error("Nem tudtam betölteni: " + k); })()); };
+  window.fpPdfjs = function(){ return fpLoadLib("pdfjs", ["https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js", "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"], function(){ return !!(window.pdfjsLib && window.pdfjsLib.getDocument); }).then(function(){
+    if(!pdfjsLib.GlobalWorkerOptions.workerSrc) pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; }); };
+  if("serviceWorker" in navigator && /^https:$/.test(location.protocol)){ window.addEventListener("load", function(){ navigator.serviceWorker.register("/scan/sw.js", { scope:"/scan/" }).catch(function(){}); }); }
+})();
+</script>
+<script>
+/* boltok (belépés boltnévvel) — a Munkaasztalból */
+(function(){
+const FP_STORES = [{"id":"BGYT","label":"Balassagyarmat TESCO","location":"Balassagyarmat","detail":"TESCO","address":"2660 Balassagyarmat, Mikszáth Kálmán út 56.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"BCST","label":"Békéscsaba TESCO","location":"Békéscsaba","detail":"TESCO","address":"5600 Békéscsaba, Szarvasi út 68.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"BONT","label":"Bonyhád TESCO","location":"Bonyhád","detail":"TESCO","address":"7150 Bonyhád, Völgység u. 8.","hours":[{"closed":false,"open":"09:00","close":"19:00"},{"closed":false,"open":"09:00","close":"19:00"},{"closed":false,"open":"09:00","close":"19:00"},{"closed":false,"open":"09:00","close":"19:00"},{"closed":false,"open":"09:00","close":"19:00"},{"closed":false,"open":"09:00","close":"19:00"},{"closed":false,"open":"09:00","close":"17:00"}]},{"id":"DUNP","label":"Budapest XIII – Duna Plaza","location":"Budapest Duna Plaza","detail":"2. emelet","address":"1138 Budapest XIII., Váci út 178. 2 em.","hours":[{"closed":false,"open":"10:00","close":"20:00"},{"closed":false,"open":"10:00","close":"20:00"},{"closed":false,"open":"10:00","close":"20:00"},{"closed":false,"open":"10:00","close":"20:00"},{"closed":false,"open":"10:00","close":"20:00"},{"closed":false,"open":"10:00","close":"20:00"},{"closed":false,"open":"10:00","close":"18:00"}]},{"id":"PESTT","label":"Budapest XVII – Pesti út TESCO","location":"Budapest Pesti út","detail":"TESCO","address":"1173 Budapest XVII., Pesti út 5-7.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"18:00"}]},{"id":"CEGT","label":"Cegléd TESCO","location":"Cegléd","detail":"TESCO","address":"2700 Cegléd, Malomtó szél 29-30.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"DEBP","label":"Debrecen Pláza – Mobil Pláza","location":"Debrecen Pláza","detail":"Mobil Pláza, földszint","address":"4026 Debrecen, Péterfia út 18. Debrecen Plaza fszt.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"10:00","close":"18:00"}]},{"id":"DEBT","label":"Debrecen TESCO","location":"Debrecen","detail":"TESCO","address":"4031 Debrecen, Kishegyesi út 1-11.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"DEBF","label":"Debrecen FORUM","location":"Debrecen Fórum","detail":"1. emelet","address":"4024 Debrecen, Csapó utca 30. 1 em.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"10:00","close":"18:00"}]},{"id":"DUKET","label":"Dunakeszi TESCO","location":"Dunakeszi","detail":"TESCO","address":"2120 Dunakeszi, Fóti út 120.","hours":[{"closed":false,"open":"10:00","close":"19:00"},{"closed":false,"open":"10:00","close":"19:00"},{"closed":false,"open":"10:00","close":"19:00"},{"closed":false,"open":"10:00","close":"19:00"},{"closed":false,"open":"10:00","close":"19:00"},{"closed":false,"open":"10:00","close":"19:00"},{"closed":false,"open":"09:00","close":"17:00"}]},{"id":"EGRT","label":"Eger TESCO","location":"Eger","detail":"TESCO","address":"3300 Eger, Rákóczi út 100.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"GYONT","label":"Gyöngyös TESCO","location":"Gyöngyös","detail":"TESCO","address":"3200 Gyöngyös, Vásár út 2.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"GYORP","label":"Győr Plaza","location":"Győr Plaza","detail":"","address":"9024 Győr, Vasvári Pál u. 1-A","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"10:00","close":"18:00"}]},{"id":"HBOSZ","label":"Hajdúböszörmény","location":"Hajdúböszörmény","detail":"","address":"4220 Hajdúböszörmény, Kossuth Lajos u. 5.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"HSZOT","label":"Hajdúszoboszló TESCO","location":"Hajdúszoboszló","detail":"TESCO","address":"4200 Hajdúszoboszló, Kabai útfél 0228/2 hrsz.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"18:00"}]},{"id":"HMVT","label":"Hódmezővásárhely TESCO","location":"Hódmezővásárhely","detail":"TESCO","address":"6800 Hódmezővásárhely, Hódtó u. 17-19.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"KAPT","label":"Kaposvár TESCO","location":"Kaposvár","detail":"Tesco üzletsor","address":"7400 Kaposvár, Berzsenyi u. 13. TESCO üzletsor","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"KARC","label":"Karcag","location":"Karcag","detail":"","address":"5300 Karcag, Kossuth tér 15.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"KAZB","label":"Kazincbarcika","location":"Kazincbarcika","detail":"","address":"3700 Kazincbarcika, Egressy Béni út 22.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"KECA","label":"Kecskemét Auchan","location":"Kecskemét","detail":"Auchan","address":"6000 Kecskemét, Dunaföldvári út 2.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"18:00"}]},{"id":"KISV","label":"Kisvárda","location":"Kisvárda","detail":"Belváros","address":"4600 Kisvárda, Flórián tér 1.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"KISVT","label":"Kisvárda TESCO","location":"Kisvárda","detail":"TESCO","address":"4600 Kisvárda, Városmajor u. 72.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"KOML","label":"Komló","location":"Komló","detail":"","address":"7300 Komló, Kossuth Lajos utca 99.","hours":[{"closed":false,"open":"09:00","close":"18:00"},{"closed":false,"open":"10:00","close":"18:00"},{"closed":false,"open":"10:00","close":"18:00"},{"closed":false,"open":"10:00","close":"18:00"},{"closed":false,"open":"09:00","close":"18:00"},{"closed":true,"open":"09:00","close":"17:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"MSZT","label":"Mátészalka TESCO","location":"Mátészalka","detail":"TESCO","address":"4700 Mátészalka, Alkotmány út 1/A.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"MISA","label":"Miskolc Auchan Borsod (Észak)","location":"Miskolc","detail":"Auchan Borsod (Észak)","address":"3527 Miskolc, József Attila utca 87.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"NYBAT","label":"Nyírbátor","location":"Nyírbátor","detail":"","address":"4300 Nyírbátor, Szabadság tér 25.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"NYIRT","label":"Nyíregyháza TESCO","location":"Nyíregyháza","detail":"TESCO","address":"4400 Nyíregyháza, Pazonyi út 36.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"NYIRP","label":"Nyíregyháza Pláza","location":"Nyíregyháza Pláza","detail":"NyírPlaza, földszint","address":"4400 Nyíregyháza, Szegfű út 75. NyírPlaza fszt.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"10:00","close":"18:00"}]},{"id":"NYIRF","label":"Nyíregyháza Belváros","location":"Nyíregyháza Belváros","detail":"","address":"4400 Nyíregyháza, Zrínyi Ilona u. 9.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"NYIRK","label":"Nyíregyháza Korzó","location":"Nyíregyháza Korzó","detail":"Korzó B (Spar) épület, földszint","address":"4400 Nyíregyháza, Nagy Imre tér 1. Korzó B (Spar) épület fszt.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"10:00","close":"18:00"}]},{"id":"SOPT","label":"Sopron TESCO","location":"Sopron","detail":"TESCO","address":"9400 Sopron, Ipar krt. 30.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"SZEGA","label":"Szeged Auchan","location":"Szeged","detail":"Auchan","address":"6728 Szeged, Zápor út 4.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}],"note":"A firstphone.hu üzletlistájában (2026.10.17.) ez az üzlet már nem szerepel — kérlek ellenőrizd az adatokat."},{"id":"SZOLT","label":"Szolnok TESCO","location":"Szolnok","detail":"TESCO","address":"5000 Szolnok, Téglagyár út 30.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"SZOMT","label":"Szombathely TESCO","location":"Szombathely","detail":"TESCO","address":"9700 Szombathely, Zanati út 70.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"TISZT","label":"Tiszaújváros TESCO","location":"Tiszaújváros","detail":"TESCO","address":"3580 Tiszaújváros, Örösi út 1/A.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"VACT","label":"Vác TESCO","location":"Vác","detail":"TESCO","address":"2600 Vác, Deres út 2.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]},{"id":"VASN","label":"Vásárosnamény","location":"Vásárosnamény","detail":"","address":"4800 Vásárosnamény, Kossuth út 2.","hours":[{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"17:00"},{"closed":false,"open":"09:00","close":"13:00"},{"closed":true,"open":"09:00","close":"17:00"}]},{"id":"ZEGT","label":"Zalaegerszeg TESCO","location":"Zalaegerszeg","detail":"TESCO","address":"8900 Zalaegerszeg, Sport u. 1.","hours":[{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"20:00"},{"closed":false,"open":"09:00","close":"19:00"}]}];
+  const fpNormName = t=> String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
+  /* a boltok belépő e-mail címe (a @firstphone.hu előtti rész) → bolt */
+  const FP_LOGIN = {"balassagyarmat": "BGYT", "bekescsaba": "BCST", "bonyhad": "BONT", "dunaplaza": "DUNP", "bp.pestiut": "PESTT", "cegled": "CEGT", "debrecen.plaza": "DEBP", "debrecen.tesco": "DEBT", "debrecen.forum": "DEBF", "dunakeszi.tesco": "DUKET", "eger": "EGRT", "gyongyos": "GYONT", "gyor": "GYORP", "hajduboszormeny": "HBOSZ", "hajduszoboszlo": "HSZOT", "hodmezovasarhely": "HMVT", "kaposvar": "KAPT", "karcag": "KARC", "kazincbarcika": "KAZB", "kecskemet.auchan": "KECA", "kisvarda": "KISV", "kisvarda.tesco": "KISVT", "komlo": "KOML", "mateszalka": "MSZT", "miskolc.auchan": "MISA", "nyirbator": "NYBAT", "nyiregyhaza.tesco": "NYIRT", "nyiregyhaza.plaza": "NYIRP", "nyiregyhaza": "NYIRF", "nyiregyhaza.korzo": "NYIRK", "sopron": "SOPT", "szolnok": "SZOLT", "szombathely": "SZOMT", "tiszaujvaros": "TISZT", "vac": "VACT", "vasarosnameny": "VASN", "varosnameny": "VASN", "zalaegerszeg": "ZEGT"};
+  window.FP_LOGIN = FP_LOGIN;
+  const FP_LOGIN_N = Object.fromEntries(Object.entries(FP_LOGIN).map(([k, v])=> [fpNormName(k), k]));
+  /* beírt boltnév → a bolt belépő neve (pl. „Debrecen Fórum” → debrecen.forum) */
+  window.fpLoginFor = function(typed){
+    const raw = String(typed || "").toLowerCase().trim(); if(!raw) return "";
+    if(FP_LOGIN[raw]) return raw;
+    const n = fpNormName(raw); if(FP_LOGIN_N[n]) return FP_LOGIN_N[n];
+    let id = "";
+    try{ const s = (window.FP_SHOPS || []).find(s=> fpNormName(s.n) === n || fpNormName(s.c) === n); if(s) id = s.id; }catch(e){}
+    if(!id){ const st = fpStoreFromEmail(raw + "@x"); if(st) id = st.id; }
+    if(!id) return "";
+    const k = Object.keys(FP_LOGIN).find(k=> FP_LOGIN[k] === id); return k || "";
+  };
+  function fpStoreFromEmail(email){
+    const lp = String(email || "").split("@")[0].toLowerCase();
+    if(FP_LOGIN[lp]){ const st = FP_STORES.find(x=> x.id === FP_LOGIN[lp]); if(st) return st; }
+    const local = fpNormName(lp); if(!local) return null;
+    if(FP_LOGIN_N[local]){ const st = FP_STORES.find(x=> x.id === FP_LOGIN[FP_LOGIN_N[local]]); if(st) return st; }
+    const S = FP_STORES.map(x=> ({ x, id:fpNormName(x.id), label:fpNormName(x.label), loc:fpNormName(x.location), det:fpNormName(x.detail) }));
+    let hit = S.filter(z=> z.label === local || z.id === local); if(hit.length === 1) return hit[0].x;
+    hit = S.filter(z=> z.loc === local); if(hit.length === 1) return hit[0].x;
+    if(hit.length > 1){ const t = hit.filter(z=> z.det === "tesco"); if(t.length === 1) return t[0].x; }
+    hit = S.filter(z=> local.startsWith(z.loc) && z.det && (z.det.includes(local.slice(z.loc.length)) && local.length > z.loc.length)); if(hit.length === 1) return hit[0].x;
+    hit = S.filter(z=> z.label.startsWith(local) && local.length >= 4); if(hit.length === 1) return hit[0].x;
+    return null;
+  }
+
+  window.fpStoreFromEmail = fpStoreFromEmail;
+
+})();
+</script>
+<script>/* ===================== 📷 Fotók és szkennelt dokumentumok (minden bolt) =====================
+   Telefonnal lefotózod (vagy CamScannerből feltöltöd a képet / PDF-et) → a bolt minden gépén azonnal megjelenik.
+   Felhő: boltok/{uid}/scan/{id} (adatok + kis előnézet), a fájl darabokban: boltok/{uid}/scan/{id}/p/{n} */
+(function(){
+  const CH = 700000, MAXPDF = 8 * 1024 * 1024, SEEN = "fp_scan_seen";
+  const E = t=> String(t == null ? "" : t).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const note = m=>{ try{ (window.fpNotice || window.toast || console.log)(m); }catch(e){} };
+  const snd = (k, v)=>{ try{ window.fpSound && fpSound(k, v || .45); }catch(e){} };
+  const isKap = ()=> true; /* 2026-10-19: minden bolt megkapta */
+  const shopNm = ()=>{ try{ if(window.fpScanShop) return window.fpScanShop; const s = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"); const l = ((s && s.settings && s.settings.location) || "").trim(); return l ? "FirstPhone " + l : "FirstPhone"; }catch(e){ return "FirstPhone"; } };
+  const dev = ()=>{ try{ return localStorage.getItem("firstphone_device_id") || ""; }catch(e){ return ""; } };
+  const p2 = n=> String(n).padStart(2, "0");
+  const when = ms=>{ const d = new Date(ms), t = new Date(), y = new Date(); y.setDate(t.getDate() - 1); const hm = p2(d.getHours()) + ":" + p2(d.getMinutes());
+    if(d.toDateString() === t.toDateString()) return "ma " + hm; if(d.toDateString() === y.toDateString()) return "tegnap " + hm; return `${d.getFullYear()}.${p2(d.getMonth() + 1)}.${p2(d.getDate())}. ${hm}`; };
+  const kb = n=> n >= 1048576 ? (n / 1048576).toFixed(1).replace(".", ",") + " MB" : Math.max(1, Math.round(n / 1024)) + " KB";
+  let fk = "all"; const upDoc = ()=>{ try{ return localStorage.getItem("fp_scan_updoc") === "1"; }catch(e){ return false; } };
+  const kindOk = x=> fk === "all" || (fk === "img" ? (x.kind || "img") === "img" : x.kind === fk);
+  let S = null, uid = "", col = null, items = [], unsub = null, btn = null, panel = null, q = "", started = 0, ups = [], viewing = null, vtx = null;
+  const who = ()=>{ try{ return (window.fpWhoName && fpWhoName()) || ""; }catch(e){ return ""; } };
+  /* ---------- kép tömörítése: max 2200 px, JPEG; előnézet 360 px ---------- */
+  function loadImg(file){ return new Promise((res, rej)=>{ const u = URL.createObjectURL(file), im = new Image(); im.onload = ()=> res({ im, u }); im.onerror = ()=>{ URL.revokeObjectURL(u); rej(new Error("A képet nem tudom megnyitni (" + (file.type || file.name) + ")")); }; im.src = u; }); }
+  function toJpeg(im, max, qq){ const IW = im.naturalWidth || im.width, IH = im.naturalHeight || im.height, k = Math.min(1, max / Math.max(IW, IH)), c = document.createElement("canvas"); c.width = Math.max(1, Math.round(IW * k)); c.height = Math.max(1, Math.round(IH * k));
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); return { url:c.toDataURL("image/jpeg", qq), w:c.width, h:c.height }; }
+  const b64 = buf=>{ let s = "", u = new Uint8Array(buf); for(let i = 0; i < u.length; i += 32768) s += String.fromCharCode.apply(null, u.subarray(i, i + 32768)); return btoa(s); };
+  async function pdfThumb(buf){ try{ const L = window.pdfjsLib; if(!L) return ""; const d = await L.getDocument({ data:new Uint8Array(buf.slice(0)) }).promise, pg = await d.getPage(1), v = pg.getViewport({ scale:1 }), k = 360 / Math.max(v.width, v.height), vv = pg.getViewport({ scale:k });
+      const c = document.createElement("canvas"); c.width = vv.width; c.height = vv.height; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); await pg.render({ canvasContext:x, viewport:vv }).promise; return c.toDataURL("image/jpeg", .7); }catch(e){ return ""; } }
+
+  /* ===================== 📄 dokumentum felismerése, kiegyenesítése és javítása (mint a CamScanner) ===================== */
+  function srcCanvas(im, max){ const W = im.naturalWidth || im.width, H = im.naturalHeight || im.height, k = Math.min(1, max / Math.max(W, H)), c = document.createElement("canvas"); c.width = Math.max(1, Math.round(W * k)); c.height = Math.max(1, Math.round(H * k)); const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height); return c; }
+  function otsu(g){ const h = new Float64Array(256); for(let i = 0; i < g.length; i++) h[g[i]]++; const N = g.length; let sum = 0; for(let i = 0; i < 256; i++) sum += i * h[i];
+    let sB = 0, wB = 0, best = 0, t = 128; for(let i = 0; i < 256; i++){ wB += h[i]; if(!wB) continue; const wF = N - wB; if(!wF) break; sB += i * h[i]; const mB = sB / wB, mF = (sum - sB) / wF, v = wB * wF * (mB - mF) * (mB - mF); if(v > best){ best = v; t = i; } } return t; }
+  /* a papír: a legnagyobb világos (vagy ha az egész világos: a legnagyobb sötétebb-hátterű) folt → 4 sarok */
+  function segQuad(src){
+    const W = src.width, H = src.height, k = Math.min(1, 320 / Math.max(W, H)), w = Math.max(8, Math.round(W * k)), h = Math.max(8, Math.round(H * k));
+    const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.drawImage(src, 0, 0, w, h);
+    const d = x.getImageData(0, 0, w, h).data, g = new Uint8Array(w * h);
+    for(let i = 0, j = 0; j < g.length; i += 4, j++) g[j] = (d[i] * 299 + d[i + 1] * 587 + d[i + 2] * 114) / 1000;
+    const b = new Uint8Array(g.length); for(let y = 0; y < h; y++) for(let x2 = 0; x2 < w; x2++){ let s = 0, n = 0; for(let dy = -2; dy <= 2; dy++){ const yy = y + dy; if(yy < 0 || yy >= h) continue; for(let dx = -2; dx <= 2; dx++){ const xx = x2 + dx; if(xx < 0 || xx >= w) continue; s += g[yy * w + xx]; n++; } } b[y * w + x2] = s / n; }
+    const t = otsu(b), full = { pts:[[W * .03, H * .03], [W * .97, H * .03], [W * .97, H * .97], [W * .03, H * .97]], auto:false };
+    const comp = bright=>{ const lab = new Int32Array(w * h), st = new Int32Array(w * h); let best = null, id = 0;
+      for(let p = 0; p < w * h; p++){ if(lab[p] || (bright ? b[p] <= t : b[p] > t)) continue; id++; let sp = 0, n = 0, tl = [1e9, 0, 0], br = [-1e9, 0, 0], tr = [-1e9, 0, 0], bl = [1e9, 0, 0], edge = 0; st[sp++] = p; lab[p] = id;
+        while(sp){ const q = st[--sp], qx = q % w, qy = (q - qx) / w; n++; if(qx === 0 || qy === 0 || qx === w - 1 || qy === h - 1) edge++;
+          const s1 = qx + qy, s2 = qx - qy; if(s1 < tl[0]) tl = [s1, qx, qy]; if(s1 > br[0]) br = [s1, qx, qy]; if(s2 > tr[0]) tr = [s2, qx, qy]; if(s2 < bl[0]) bl = [s2, qx, qy];
+          const nb = [qx > 0 ? q - 1 : -1, qx < w - 1 ? q + 1 : -1, qy > 0 ? q - w : -1, qy < h - 1 ? q + w : -1];
+          for(const r of nb){ if(r < 0 || lab[r] || (bright ? b[r] <= t : b[r] > t)) continue; lab[r] = id; st[sp++] = r; } }
+        if(!best || n > best.n) best = { n, edge, q:[tl, tr, br, bl].map(v=> [v[1] / k, v[2] / k]) }; }
+      return best; };
+    let C = comp(true);
+    const area = q=>{ let a = 0; for(let i = 0; i < 4; i++){ const [x1, y1] = q[i], [x2, y2] = q[(i + 1) % 4]; a += x1 * y2 - x2 * y1; } return Math.abs(a / 2); };
+    const ok = C2=> C2 && C2.n > w * h * .12 && C2.n < w * h * .97 && area(C2.q) > W * H * .12 && C2.edge < (w + h) * 1.2;
+    if(!ok(C)){ const C2 = comp(false); if(ok(C2) && C2.n < w * h * .9) C = C2; else if(!C || !(C.n > w * h * .12)) return full; }
+    if(!ok(C)) return full;
+    /* kicsit kifelé toljuk, hogy a lap széle is benne legyen */
+    const cx = C.q.reduce((a, p)=> a + p[0], 0) / 4, cy = C.q.reduce((a, p)=> a + p[1], 0) / 4;
+    return { pts:C.q.map(([px, py])=> [Math.max(0, Math.min(W, cx + (px - cx) * 1.01)), Math.max(0, Math.min(H, cy + (py - cy) * 1.01))]), auto:true };
+  }
+  /* 📐 a lap széleinek keresése: élek (színes is) → Hough-egyenesek → a legnagyobb, minden oldalán éllel alátámasztott négyszög.
+     Ha így nem megy: a régi módszer (legnagyobb világos folt), végül a teljes kép. */
+  function edgeQuad(src){
+    const W = src.width, H = src.height, k = Math.min(1, 420 / Math.max(W, H)), w = Math.max(16, Math.round(W * k)), h = Math.max(16, Math.round(H * k)), N = w * h;
+    const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(src, 0, 0, w, h);
+    const d = x.getImageData(0, 0, w, h).data, ch = [new Float32Array(N), new Float32Array(N), new Float32Array(N)]; c.width = c.height = 0;
+    for(let j = 0, i = 0; j < N; j++, i += 4){ ch[0][j] = d[i]; ch[1][j] = d[i + 1]; ch[2][j] = d[i + 2]; }
+    const bl = ch.map(a=> boxBlur(boxBlur(a, w, h, 1), w, h, 1));
+    const mag = new Float32Array(N), ang = new Float32Array(N);
+    for(let y = 1; y < h - 1; y++) for(let x2 = 1; x2 < w - 1; x2++){ const j = y * w + x2; let bm = 0, bgx = 0, bgy = 0;
+      for(let q = 0; q < 3; q++){ const a = bl[q]; const gx = a[j - w + 1] + 2 * a[j + 1] + a[j + w + 1] - a[j - w - 1] - 2 * a[j - 1] - a[j + w - 1], gy = a[j + w - 1] + 2 * a[j + w] + a[j + w + 1] - a[j - w - 1] - 2 * a[j - w] - a[j - w + 1], m = gx * gx + gy * gy; if(m > bm){ bm = m; bgx = gx; bgy = gy; } }
+      mag[j] = Math.sqrt(bm); ang[j] = Math.atan2(bgy, bgx); }
+    const srt = Float32Array.from(mag).sort(), thr = Math.max(30, srt[Math.floor(N * .85)]);
+    /* vékony élek: csak a gradiens irányában helyi maximum */
+    const E = new Uint8Array(N);
+    for(let y = 1; y < h - 1; y++) for(let x2 = 1; x2 < w - 1; x2++){ const j = y * w + x2, m = mag[j]; if(m < thr) continue; const dx = Math.round(Math.cos(ang[j])), dy = Math.round(Math.sin(ang[j]));
+      if(m >= mag[j + dy * w + dx] && m >= mag[j - dy * w - dx]) E[j] = 1; }
+    const NT = 180, D = Math.ceil(Math.hypot(w, h)), NR = 2 * D + 1, acc = new Float32Array(NT * NR), cs = new Float32Array(NT), sn = new Float32Array(NT);
+    for(let t = 0; t < NT; t++){ cs[t] = Math.cos(t * Math.PI / NT); sn[t] = Math.sin(t * Math.PI / NT); }
+    for(let y = 1; y < h - 1; y++) for(let x2 = 1; x2 < w - 1; x2++){ const j = y * w + x2; if(!E[j]) continue; let t0 = Math.round(((ang[j] % Math.PI) + Math.PI) % Math.PI / Math.PI * NT);
+      for(let dt = -5; dt <= 5; dt++){ const t = (t0 + dt + NT) % NT, r = Math.round(x2 * cs[t] + y * sn[t]) + D; acc[t * NR + r] += 1; } }
+    /* csúcsok (helyi maximumok) */
+    const minV = Math.min(w, h) * .14, peaks = [];
+    for(let t = 0; t < NT; t++) for(let r = 1; r < NR - 1; r++){ const v = acc[t * NR + r]; if(v < minV) continue; let mx = true;
+      for(let dt = -4; dt <= 4 && mx; dt++){ const tt = t + dt; for(let dr = -6; dr <= 6; dr++){ if(!dt && !dr) continue; let T = tt, R = r + dr; if(T < 0){ T += NT; R = 2 * D - R; } else if(T >= NT){ T -= NT; R = 2 * D - R; } if(R < 0 || R >= NR) continue; const u = acc[T * NR + R]; if(u > v || (u === v && (dt < 0 || (dt === 0 && dr < 0)))){ mx = false; break; } } }
+      if(mx) peaks.push({ t, r:r - D, v }); }
+    peaks.sort((a, b)=> b.v - a.v);
+    const L = peaks.slice(0, 24).map(p=> ({ c:cs[p.t], s:sn[p.t], r:p.r, th:p.t * 180 / NT }));
+    const hor = L.filter(l=> Math.abs(l.th - 90) < 38), ver = L.filter(l=> l.th < 52 || l.th > 128);
+    const inter = (a, b)=>{ const det = a.c * b.s - a.s * b.c; if(Math.abs(det) < 1e-6) return null; return [(a.r * b.s - a.s * b.r) / det, (a.c * b.r - a.r * b.c) / det]; };
+    /* egy oldal alátámasztása: a szakasz mentén hány ponton van él (±1 px) */
+    const sup = (p, q)=>{ const len = Math.hypot(q[0] - p[0], q[1] - p[1]), n = Math.max(2, Math.round(len)); let hit = 0, inn = 0;
+      for(let i = 0; i <= n; i++){ const X = Math.round(p[0] + (q[0] - p[0]) * i / n), Y = Math.round(p[1] + (q[1] - p[1]) * i / n); if(X < 2 || Y < 2 || X >= w - 2 || Y >= h - 2) continue; inn++;
+        let f = 0; for(let dy = -1; dy <= 1 && !f; dy++) for(let dx = -1; dx <= 1; dx++) if(E[(Y + dy) * w + X + dx]){ f = 1; break; } hit += f; }
+      return { s:inn ? hit / inn : 0, f:inn / (n + 1) }; };
+    let best = null;
+    const yAt = l=> (l.r - l.c * w / 2) / (l.s || 1e-6), xAt = l=> (l.r - l.s * h / 2) / (l.c || 1e-6);
+    for(let i = 0; i < hor.length; i++) for(let i2 = i + 1; i2 < hor.length; i2++){ let A = hor[i], B = hor[i2]; if(yAt(A) > yAt(B)) [A, B] = [B, A]; if(yAt(B) - yAt(A) < h * .18) continue;
+      for(let j = 0; j < ver.length; j++) for(let j2 = j + 1; j2 < ver.length; j2++){ let C = ver[j], D2 = ver[j2]; if(xAt(C) > xAt(D2)) [C, D2] = [D2, C]; if(xAt(D2) - xAt(C) < w * .18) continue;
+        const q = [inter(A, C), inter(A, D2), inter(B, D2), inter(B, C)]; if(q.some(p=> !p || p[0] < -w * .12 || p[1] < -h * .12 || p[0] > w * 1.12 || p[1] > h * 1.12)) continue;
+        let ar = 0, cv = true; for(let e = 0; e < 4; e++){ const [x1, y1] = q[e], [x2, y2] = q[(e + 1) % 4], [x3, y3] = q[(e + 2) % 4]; ar += x1 * y2 - x2 * y1; if((x2 - x1) * (y3 - y2) - (y2 - y1) * (x3 - x2) <= 0) cv = false; }
+        ar = Math.abs(ar) / 2; if(!cv || ar < w * h * .15) continue;
+        const S = [0, 1, 2, 3].map(e=> sup(q[e], q[(e + 1) % 4])); const IN = S.filter(z=> z.f > .25); if(IN.length < 3 || IN.some(z=> z.s < .26)) continue;
+        const ms = S.reduce((a, z)=> a + z.s * z.f, 0) / S.reduce((a, z)=> a + z.f, 0); if(ms < .6 || IN.filter(z=> z.s < .5).length > 1) continue;
+        const sc = ar / (w * h) * (.4 + ms);
+        if(!best || sc > best.sc) best = { sc, q, ms }; } }
+    if(!best) return null;
+    const cx = best.q.reduce((a, p)=> a + p[0], 0) / 4, cy = best.q.reduce((a, p)=> a + p[1], 0) / 4;
+    /* egy hajszállal befelé, hogy az asztal széle ne látsszon */
+    return { pts:best.q.map(([px, py])=> [Math.max(0, Math.min(W, (cx + (px - cx) * .993) / k)), Math.max(0, Math.min(H, (cy + (py - cy) * .993) / k))]), auto:true, ms:best.ms };
+  }
+  function detectQuad(src){ let e = null; try{ e = edgeQuad(src); }catch(er){} return e || segQuad(src); }
+  /* 4 pont → 4 pont: homográfia (kimenet → forrás) */
+  function homog(dst, src){ const A = [], B = [];
+    for(let i = 0; i < 4; i++){ const [u, v] = dst[i], [x, y] = src[i]; A.push([u, v, 1, 0, 0, 0, -u * x, -v * x]); B.push(x); A.push([0, 0, 0, u, v, 1, -u * y, -v * y]); B.push(y); }
+    for(let c = 0; c < 8; c++){ let p = c; for(let r = c + 1; r < 8; r++) if(Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r; [A[c], A[p]] = [A[p], A[c]]; [B[c], B[p]] = [B[p], B[c]];
+      for(let r = 0; r < 8; r++){ if(r === c) continue; const f = A[r][c] / A[c][c]; for(let k = c; k < 8; k++) A[r][k] -= f * A[c][k]; B[r] -= f * B[c]; } }
+    return B.map((v, i)=> v / A[i][i]); }
+  function warp(src, q, maxOut){
+    const dd = (a, b)=> Math.hypot(a[0] - b[0], a[1] - b[1]);
+    let ow = Math.max(dd(q[0], q[1]), dd(q[3], q[2])), oh = Math.max(dd(q[0], q[3]), dd(q[1], q[2])); const k = Math.min(1, maxOut / Math.max(ow, oh)); ow = Math.max(8, Math.round(ow * k)); oh = Math.max(8, Math.round(oh * k));
+    const Hm = homog([[0, 0], [ow, 0], [ow, oh], [0, oh]], q), [a, b2, c, d, e, f, g, h] = Hm;
+    const sw = src.width, sh = src.height, sd = src.getContext("2d").getImageData(0, 0, sw, sh).data;
+    const out = document.createElement("canvas"); out.width = ow; out.height = oh; const ox = out.getContext("2d"), od = ox.createImageData(ow, oh), O = od.data;
+    for(let v = 0; v < oh; v++){ for(let u = 0; u < ow; u++){ const z = g * u + h * v + 1, X = (a * u + b2 * v + c) / z, Y = (d * u + e * v + f) / z;
+        const x0 = Math.max(0, Math.min(sw - 2, X | 0)), y0 = Math.max(0, Math.min(sh - 2, Y | 0)), fx = Math.max(0, Math.min(1, X - x0)), fy = Math.max(0, Math.min(1, Y - y0)), o = (v * ow + u) * 4;
+        const i00 = (y0 * sw + x0) * 4, i10 = i00 + 4, i01 = i00 + sw * 4, i11 = i01 + 4;
+        for(let ch = 0; ch < 3; ch++) O[o + ch] = (sd[i00 + ch] * (1 - fx) + sd[i10 + ch] * fx) * (1 - fy) + (sd[i01 + ch] * (1 - fx) + sd[i11 + ch] * fx) * fy;
+        O[o + 3] = 255; } }
+    ox.putImageData(od, 0, 0); return out; }
+  /* javítás (2026-10): a papír színe és árnyéka csatornánként kiszámolva → fehér papír, valódi színek,
+     a halvány írás (pl. hőpapír blokk) magától erősebb, a betűk élesítve — „bw”: éles fekete-fehér, „orig”: csak kiegyenesítve */
+  function boxBlur(a, w, h, r){ const t = new Float32Array(a.length), o = new Float32Array(a.length), n = 2 * r + 1;
+    for(let y = 0; y < h; y++){ const row = y * w; let s = 0; for(let k = -r; k <= r; k++) s += a[row + Math.min(w - 1, Math.max(0, k))];
+      for(let x = 0; x < w; x++){ t[row + x] = s / n; s += a[row + Math.min(w - 1, x + r + 1)] - a[row + Math.max(0, x - r)]; } }
+    for(let x = 0; x < w; x++){ let s = 0; for(let k = -r; k <= r; k++) s += t[Math.min(h - 1, Math.max(0, k)) * w + x];
+      for(let y = 0; y < h; y++){ o[y * w + x] = s / n; s += t[Math.min(h - 1, y + r + 1) * w + x] - t[Math.max(0, y - r) * w + x]; } }
+    return o; }
+  function gridMorph(a, w, h, dil){ const o = new Float32Array(a.length);
+    for(let y = 0; y < h; y++) for(let x = 0; x < w; x++){ let v = a[y * w + x];
+      for(let dy = -1; dy <= 1; dy++){ const Y = y + dy; if(Y < 0 || Y >= h) continue; for(let dx = -1; dx <= 1; dx++){ const X = x + dx; if(X < 0 || X >= w) continue; const q = a[Y * w + X]; if(dil ? q > v : q < v) v = q; } }
+      o[y * w + x] = v; } return o; }
+  /* a papír (háttér) becslése: kis blokkok legvilágosabb pontja → „zárás” (a szöveg kiesik) → simítás → teljes méret */
+  function paperBg(cv){
+    const w = cv.width, h = cv.height, hw = Math.max(1, w >> 1), hh = Math.max(1, h >> 1);
+    const hc = document.createElement("canvas"); hc.width = hw; hc.height = hh; const hx = hc.getContext("2d"); hx.imageSmoothingQuality = "medium"; hx.drawImage(cv, 0, 0, hw, hh);
+    const d = hx.getImageData(0, 0, hw, hh).data, B = Math.max(3, Math.round(Math.max(hw, hh) / 200)), gw = Math.ceil(hw / B), gh = Math.ceil(hh / B), G = gw * gh;
+    const M = [new Float32Array(G), new Float32Array(G), new Float32Array(G)], Ly = new Float32Array(G), HN = hw * hh;
+    /* előbb kicsit elmossuk (3×3), hogy a zaj ne emelje meg a „legvilágosabb pontot” (főleg sötét / árnyékos fotón) */
+    const C3 = [0, 1, 2].map(c=>{ const a = new Float32Array(HN); for(let j = 0; j < HN; j++) a[j] = d[j * 4 + c]; return boxBlur(a, hw, hh, 1); });
+    for(let y = 0; y < hh; y++){ const gy = ((y / B) | 0) * gw; for(let x = 0; x < hw; x++){ const j = y * hw + x, g = gy + ((x / B) | 0), r = C3[0][j], gg = C3[1][j], bb = C3[2][j], l = r * .299 + gg * .587 + bb * .114;
+      if(l > Ly[g]) Ly[g] = l; if(r > M[0][g]) M[0][g] = r; if(gg > M[1][g]) M[1][g] = gg; if(bb > M[2][g]) M[2][g] = bb; } }
+    const srt = Float32Array.from(Ly).sort(), ref = Math.max(40, srt[Math.floor(G * .95)]);
+    const img = hx.createImageData(gw, gh), o = img.data;
+    for(let c = 0; c < 3; c++){ let a = gridMorph(gridMorph(M[c], gw, gh, true), gw, gh, false); a = gridMorph(gridMorph(a, gw, gh, true), gw, gh, false);
+      const cs = Float32Array.from(a).sort(), fl = Math.max(12, cs[Math.floor(G * .95)] * .3);
+      for(let g = 0; g < G; g++) if(a[g] < fl) a[g] = fl;
+      a = boxBlur(a, gw, gh, 1);
+      for(let g = 0; g < G; g++) o[g * 4 + c] = Math.max(1, Math.min(255, a[g])); }
+    for(let g = 0; g < G; g++) o[g * 4 + 3] = 255;
+    const gc = document.createElement("canvas"); gc.width = gw; gc.height = gh; gc.getContext("2d").putImageData(img, 0, 0);
+    const bc = document.createElement("canvas"); bc.width = w; bc.height = h; const bx = bc.getContext("2d"); bx.imageSmoothingEnabled = true; bx.imageSmoothingQuality = "high";
+    bx.drawImage(gc, 0, 0, gw * B * 2, gh * B * 2);
+    const bg = bx.getImageData(0, 0, w, h).data; hc.width = hc.height = gc.width = gc.height = bc.width = bc.height = 0;   /* vászonmemória vissza (iPhone) */
+    return { bg, ref }; }
+  function enhance(cv, mode, qa){
+    if(mode === "orig") return cv;
+    const w = cv.width, h = cv.height, N = w * h, x = cv.getContext("2d"), id = x.getImageData(0, 0, w, h), p = id.data, col = mode !== "bw";
+    /* 1) fehéregyensúly + árnyék eltüntetése: minden csatorna osztva a papír színével (Y = világosság, cr / cb = szín) */
+    const Y = new Float32Array(N), cr = col ? new Float32Array(N) : null, cb = col ? new Float32Array(N) : null, amp = new Uint8Array(N), hist = new Uint32Array(384);
+    { const { bg, ref } = paperBg(cv);
+      for(let j = 0, i = 0; j < N; j++, i += 4){ const r = p[i] * 255 / bg[i], g = p[i + 1] * 255 / bg[i + 1], b = p[i + 2] * 255 / bg[i + 2], l = r * .299 + g * .587 + b * .114;
+        Y[j] = l; if(col){ cr[j] = r - l; cb[j] = b - l; } hist[l > 383 ? 383 : l | 0]++;
+        const bl2 = bg[i] * .299 + bg[i + 1] * .587 + bg[i + 2] * .114; amp[j] = Math.max(10, Math.min(40, 10 * ref / (bl2 || 1))); } }   /* árnyékban a zaj is erősebb (×1…×4) */
+    /* 2) a papír csúcsa és zaja (bal oldali félszélesség) → fehér pont; fekete pont = a legsötétebb írás */
+    let pk = 160; for(let v = 160, mx = -1; v < 384; v++) if(hist[v] > mx){ mx = hist[v]; pk = v; }
+    let lo = pk; while(lo > 0 && hist[lo] > hist[pk] * .5) lo--; const sig = Math.max(2.5, (pk - lo) / 1.18);
+    const wp = Math.max(150, pk - Math.max(8, 2.4 * sig));
+    let ink = 0; for(let v = 0; v < wp * .78; v++) ink += hist[v];
+    let bp = 0; if(ink > N * .0015){ let s = 0, lim = ink * .03; for(let v = 0; v < 384; v++){ s += hist[v]; if(s >= lim){ bp = v; break; } } }
+    bp = Math.min(bp, wp - 70);
+    const faded = bp > 70;   /* halvány írás (hőpapír, ceruza) → erősebb görbe */
+    /* 3) zajos részek simítása (csak ahol nincs él) */
+    { const b1 = boxBlur(Y, w, h, 1); for(let j = 0; j < N; j++){ const sl = sig * amp[j] / 10; if(sl < 3.5) continue; const dd = Y[j] - b1[j], lim = 2.2 * sl; if(dd > -lim && dd < lim) Y[j] = b1[j]; } }
+    const bz = qa && qa.blur ? Math.max(0, Math.min(1.2, (qa.blur - .2) / .2)) : 0;   /* elmosódott fotó → erősebb, szélesebb élesítés */
+    const r = Math.max(1, Math.round(Math.max(w, h) / 1500)) + (bz > .6 ? 1 : 0), bl = boxBlur(Y, w, h, r), amt = (mode === "bw" ? 1.3 : faded ? 1.2 : .95) * (1 + bz * .8);
+    const gam = mode === "bw" ? 1 : faded ? 1.7 : 1.3 - bz * .12;
+    /* színzaj ellen: a szín 5×5-ös átlaga — a pecsét / toll színe megmarad, a pöttyök eltűnnek */
+    const cR = col ? boxBlur(cr, w, h, 2) : null, cB = col ? boxBlur(cb, w, h, 2) : null;
+    for(let j = 0, i = 0; j < N; j++, i += 4){
+      const sl = sig * amp[j] / 10, th = Math.max(2, sl * .9), wpl = Math.max(150, pk - Math.max(8, 2.4 * sl)), k = 1 / Math.max(40, wpl - bp);
+      let dl = Y[j] - bl[j]; if(dl > -th && dl < th) dl = 0; dl *= amt;
+      let t = (Y[j] + dl - bp) * k; t = t <= 0 ? 0 : t >= 1 ? 1 : t;
+      if(!col){ let v = (t - .6) / .32; v = v < 0 ? 0 : v > 1 ? 1 : v; v = 255 * v * v * (3 - 2 * v); p[i] = p[i + 1] = p[i + 2] = v; continue; }
+      /* világosság: élesítve + tónusgörbe; szín: a simított színkülönbség, a gyenge színt (zajt) elnyomjuk, a valódit kicsit élénkítjük */
+      const L = 255 * Math.pow(t, gam), sc0 = L / Math.max(1, Y[j]);
+      const dr = cR[j], db = cB[j], dg = -(dr * .299 + db * .114) / .587, cm = Math.sqrt(dr * dr + db * db), cn = 2.2 * sl + 3;
+      const cf = (cm < cn ? (cm / cn) * (cm / cn) : 1.18) * Math.min(1.6, Math.max(.6, sc0));
+      const R = L + dr * cf, G = L + dg * cf, B = L + db * cf;
+      p[i] = R < 0 ? 0 : R > 255 ? 255 : R; p[i + 1] = G < 0 ? 0 : G > 255 ? 255 : G; p[i + 2] = B < 0 ? 0 : B > 255 ? 255 : B; }
+    /* 4) magányos pöttyök (zaj) eltüntetése a fehér papíron */
+    const Lm = new Uint8Array(N); for(let j = 0, i = 0; j < N; j++, i += 4) Lm[j] = (p[i] * .299 + p[i + 1] * .587 + p[i + 2] * .114) < 200 ? 1 : 0;
+    for(let y = 1; y < h - 1; y++) for(let x2 = 1; x2 < w - 1; x2++){ const j = y * w + x2; if(!Lm[j]) continue;
+      const n = Lm[j - w - 1] + Lm[j - w] + Lm[j - w + 1] + Lm[j - 1] + Lm[j + 1] + Lm[j + w - 1] + Lm[j + w] + Lm[j + w + 1];
+      if(n <= 1){ const i = j * 4; p[i] = p[i + 1] = p[i + 2] = 255; } }
+    x.putImageData(id, 0, 0); return cv; }
+  /* 🔍 mennyire éles / világos a fotó (a figyelmeztetéshez): Crété-Roffet-féle elmosódottság 0 (éles) … 1 (nagyon elmosódott) */
+  function quality(cv){
+    const k = Math.min(1, 1200 / Math.max(cv.width, cv.height)), w = Math.max(8, Math.round(cv.width * k)), h = Math.max(8, Math.round(cv.height * k));
+    const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(cv, 0, 0, w, h);
+    const d = x.getImageData(0, 0, w, h).data, N = w * h, F = new Float32Array(N); let lum = 0; c.width = c.height = 0;
+    for(let j = 0, i = 0; j < N; j++, i += 4){ F[j] = d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114; }
+    const sr = Float32Array.from(F).sort(); lum = sr[Math.floor(N * .9)];
+    let sF = 0, sV = 0, tF = 0, tV = 0; const R = 4;
+    for(let y = 0; y < h; y++){ const o = y * w; let s = 0; for(let q = -R; q <= R; q++) s += F[o + Math.min(w - 1, Math.max(0, q))]; let pb = s / (2 * R + 1);
+      for(let x2 = 1; x2 < w; x2++){ s += F[o + Math.min(w - 1, x2 + R)] - F[o + Math.max(0, x2 - R - 1)]; const b = s / (2 * R + 1), dF = Math.abs(F[o + x2] - F[o + x2 - 1]), dB = Math.abs(b - pb); pb = b; if(dF < 3) continue; sF += dF; sV += Math.max(0, dF - dB); } }
+    for(let x2 = 0; x2 < w; x2++){ let s = 0; for(let q = -R; q <= R; q++) s += F[Math.min(h - 1, Math.max(0, q)) * w + x2]; let pb = s / (2 * R + 1);
+      for(let y = 1; y < h; y++){ s += F[Math.min(h - 1, y + R) * w + x2] - F[Math.max(0, y - R - 1) * w + x2]; const b = s / (2 * R + 1), dF = Math.abs(F[y * w + x2] - F[(y - 1) * w + x2]), dB = Math.abs(b - pb); pb = b; if(dF < 3) continue; tF += dF; tV += Math.max(0, dF - dB); } }
+    const bH = sF ? (sF - sV) / sF : 1, bV = tF ? (tF - tV) / tF : 1;
+    return { blur:Math.round(Math.max(bH, bV) * 1000) / 1000, lum:Math.round(lum) }; }
+  /* 📕 dokumentum mentési formátum (PDF / JPG / PNG) — a választás megmarad ezen az eszközön */
+  const FMTS = [["pdf","📕 PDF"],["jpg","🖼️ JPG"],["png","PNG"]];
+  const fmtGet = ()=>{ try{ const v = localStorage.getItem("fp_scan_fmt"); return FMTS.some(f=> f[0] === v) ? v : "pdf"; }catch(e){ return "pdf"; } };
+  const fmtSet = v=>{ try{ localStorage.setItem("fp_scan_fmt", v); }catch(e){} };
+  const fmtL = v=> (v || "pdf").toUpperCase();
+  /* JPEG-ekből PDF (oldalanként egy kép, A4 szélességre) — külső könyvtár nélkül */
+  function jpgsToPdf(pages){
+    const enc = new TextEncoder(), parts = [], offs = []; let len = 0;
+    const put = x=>{ const u = typeof x === "string" ? enc.encode(x) : x; parts.push(u); len += u.length; };
+    const obj = (n, body)=>{ offs[n] = len; put(n + " 0 obj\n"); body(); put("\nendobj\n"); };
+    const N = pages.length, kids = pages.map((_, i)=> (3 + i * 3) + " 0 R").join(" ");
+    put("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
+    obj(1, ()=> put("<< /Type /Catalog /Pages 2 0 R >>"));
+    obj(2, ()=> put(`<< /Type /Pages /Kids [${kids}] /Count ${N} >>`));
+    pages.forEach((pg, i)=>{ const o = 3 + i * 3, W = 595.28, H = Math.round(W * pg.h / pg.w * 100) / 100;
+      const cs = `q ${W} 0 0 ${H} 0 0 cm /Im0 Do Q`;
+      obj(o, ()=> put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /XObject << /Im0 ${o + 1} 0 R >> >> /Contents ${o + 2} 0 R >>`));
+      obj(o + 1, ()=>{ put(`<< /Type /XObject /Subtype /Image /Width ${pg.w} /Height ${pg.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${pg.u8.length} >>\nstream\n`); put(pg.u8); put("\nendstream"); });
+      obj(o + 2, ()=> put(`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`)); });
+    const xref = len, cnt = 3 + N * 3;
+    put(`xref\n0 ${cnt}\n0000000000 65535 f \n` + offs.slice(1, cnt).map(o=> String(o).padStart(10, "0") + " 00000 n \n").join(""));
+    put(`trailer\n<< /Size ${cnt} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+    return new Blob(parts, { type:"application/pdf" });
+  }
+  /* oldalak egymás alá egy képbe (JPG/PNG letöltéshez, leltárhoz) */
+  async function stackImgs(blobs, mime){
+    const bm = []; for(const b of blobs) bm.push(await createImageBitmap(b));
+    if(bm.length === 1 && mime === "image/jpeg") return blobs[0];
+    let W = Math.max(...bm.map(b=> b.width)); if(bm.length > 1) W = Math.min(W, 1800);
+    const gap = bm.length > 1 ? Math.round(W * .012) : 0; let H = bm.reduce((a, b)=> a + Math.round(b.height * W / b.width), 0) + gap * (bm.length - 1);
+    const k = Math.min(1, 16000 / H, Math.sqrt(30e6 / (W * H))); const c = document.createElement("canvas"); c.width = Math.round(W * k); c.height = Math.round(H * k);
+    const x = c.getContext("2d"); x.fillStyle = "#b9b9c0"; x.fillRect(0, 0, c.width, c.height); let y = 0;
+    bm.forEach(b=>{ const h = Math.round(b.height * W / b.width * k); x.drawImage(b, 0, y, c.width, h); y += h + Math.round(gap * k); });
+    return await new Promise(r=> c.toBlob(r, mime, .88)); }
+  /* dokumentum letöltése a kért formátumban (több oldal: PDF-ben külön oldalak, képnél egymás alatt) */
+  async function docAs(it, fmt){ const P = await pagesOf(it);
+    if(fmt === "pdf"){ const pg = []; for(const b of P){ const bm = await createImageBitmap(b); pg.push({ u8:new Uint8Array(await b.arrayBuffer()), w:bm.width, h:bm.height }); } return jpgsToPdf(pg); }
+    return await stackImgs(P, fmt === "png" ? "image/png" : "image/jpeg"); }
+  /* ➕ következő oldal: kamera megnyitása (a kattintáson belül kell hívni) */
+  function pickCam(){ return new Promise(r=>{ const i = document.createElement("input"); i.type = "file"; i.accept = "image/*"; i.setAttribute("capture", "environment"); i.style.display = "none"; document.body.appendChild(i);
+    let done = false; const onF = ()=> setTimeout(()=>{ if(!i.files || !i.files.length) fin(null); }, 1500);
+    const fin = f=>{ if(done) return; done = true; window.removeEventListener("focus", onF); setTimeout(()=> i.remove(), 200); r(f || null); };
+    i.onchange = ()=> fin(i.files && i.files[0]); i.addEventListener("cancel", ()=> fin(null)); setTimeout(()=> window.addEventListener("focus", onF), 400); i.click(); }); }
+  function saveBlob(bl, name){ const u = URL.createObjectURL(bl), a = document.createElement("a"); a.href = u; a.download = name.replace(/[\\/:*?"<>|]+/g, "_"); document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=> URL.revokeObjectURL(u), 4000); }
+  function rot90(cv){ const c = document.createElement("canvas"); c.width = cv.height; c.height = cv.width; const x = c.getContext("2d"); x.translate(c.width, 0); x.rotate(Math.PI / 2); x.drawImage(cv, 0, 0); return c; }
+  /* szerkesztő: 1) sarkok igazítása  2) előnézet + szűrő + forgatás → kész vászon (vagy null, ha mégse) */
+  function docEditor(file, title, pg){ pg = pg || 1;
+    return new Promise(async res=>{
+      let im, u; try{ ({ im, u } = await loadImg(file)); }catch(e){ note("⚠ " + (e.message || e)); res(null); return; }
+      const OUTMAX = (navigator.hardwareConcurrency || 8) <= 4 ? 2000 : 2400, src = srcCanvas(im, OUTMAX + 600); URL.revokeObjectURL(u);
+      let det = detectQuad(src), q = det.pts.map(p=> p.slice()), step = 1, mode = "enh", turns = 0, out = null, fmt = fmtGet(), wk = "", wc = null, qa = null, mc = {};
+      const m = document.createElement("div"); m.className = "sc-ed"; m.innerHTML = `<div class="sc-edc" role="dialog" aria-label="Dokumentum szerkesztése"><div class="sc-edh"><span class="ic">📄</span><div><b>${E(title || "Dokumentum")}${pg > 1 ? ` <em class="sc-pgn">${pg}. oldal</em>` : ""}</b><small class="sc-edst"></small></div><button type="button" class="sc-edx" data-e="x" title="${pg > 1 ? "Ez az oldal kimarad — az eddigi oldalak elmentődnek" : "Mégse"}">✕</button></div>
+        <div class="sc-edb"><div class="sc-stg"><canvas class="sc-src"></canvas><svg class="sc-poly"><polygon></polygon></svg>${[0, 1, 2, 3].map(i=> `<span class="sc-hd" data-h="${i}"></span>`).join("")}<canvas class="sc-res" hidden></canvas></div></div>
+        <div class="sc-edf"></div></div>`;
+      document.body.appendChild(m);
+      const stg = m.querySelector(".sc-stg"), cvs = m.querySelector(".sc-src"), res2 = m.querySelector(".sc-res"), poly = m.querySelector("polygon"), svg = m.querySelector("svg"), hd = Array.from(m.querySelectorAll(".sc-hd")), foot = m.querySelector(".sc-edf"), stEl = m.querySelector(".sc-edst");
+      cvs.width = src.width; cvs.height = src.height; cvs.getContext("2d").drawImage(src, 0, 0);
+      let sc = 1;
+      const layout = ()=>{ const box = m.querySelector(".sc-edb"), bw = box.clientWidth - 24, bh = box.clientHeight - 24, cw = step === 1 ? src.width : res2.width, ch = step === 1 ? src.height : res2.height;
+        sc = Math.min(bw / cw, bh / ch); const W = Math.round(cw * sc), H = Math.round(ch * sc); stg.style.width = W + "px"; stg.style.height = H + "px"; svg.setAttribute("viewBox", `0 0 ${W} ${H}`); place(); };
+      const place = ()=>{ if(step !== 1) return; poly.setAttribute("points", q.map(p=> (p[0] * sc) + "," + (p[1] * sc)).join(" ")); hd.forEach((h, i)=>{ h.style.left = q[i][0] * sc + "px"; h.style.top = q[i][1] * sc + "px"; }); };
+      /* a kiegyenesített lapot és a stílusokat megjegyzi → a stílusváltás azonnali */
+      const render = ()=>{ const key = q.map(p=> Math.round(p[0]) + "," + Math.round(p[1])).join(";"); if(key !== wk){ wk = key; if(wc) wc.width = wc.height = 0; Object.values(mc).forEach(c=>{ if(c !== out) c.width = c.height = 0; }); wc = warp(src, q, OUTMAX); qa = quality(wc); mc = {}; }
+        if(!mc[mode]){ const c0 = document.createElement("canvas"); c0.width = wc.width; c0.height = wc.height; c0.getContext("2d").drawImage(wc, 0, 0); mc[mode] = enhance(c0, mode, qa); }
+        let c = mc[mode]; for(let i = 0; i < turns; i++) c = rot90(c); out = c; res2.width = c.width; res2.height = c.height; res2.getContext("2d").drawImage(c, 0, 0); };
+      /* 🔍 olvashatóság: elmosódott / sötét fotónál szól, és felajánlja az újrafotózást */
+      const qaInfo = ()=> !qa ? { t:"Előnézet — válassz stílust, és mentsd", k:"" }
+        : qa.blur > .4 ? { t:"⚠ Elmosódott a fotó — nem biztos, hogy minden olvasható. Ha tudod, fotózd újra (📷 Újra): tartsd stabilan, koppints a lapra a fókuszhoz.", k:"bad" }
+        : qa.lum < 85 ? { t:"⚠ Sötét volt a fotó — feljavítottam, de több fénnyel (vagy vakuval) még jobb lesz.", k:"warn" }
+        : qa.blur > .32 ? { t:"Kicsit életlen volt — élesítettem. Ha fontos, fotózd újra (📷 Újra).", k:"warn" }
+        : { t:"✓ Jól olvasható — válassz stílust, és mentsd", k:"ok" };
+      const drawFoot = ()=>{
+        const qi = qaInfo(); stEl.className = "sc-edst" + (step === 2 && qi.k ? " " + qi.k : "");
+        stEl.textContent = step === 1 ? (det.auto ? "✓ Felismertem a lapot — ha kell, húzd a sarkokat" : "Nem találtam egyértelmű lapot — húzd a 4 sarkot a lap sarkaira") : qi.t;
+        foot.innerHTML = step === 1 ? `<button type="button" class="sc-eb" data-e="auto"><i>🔄</i><span>Újrafelismerés</span></button><button type="button" class="sc-eb" data-e="full"><i>⤢</i><span>Teljes kép</span></button><span class="sp"></span><button type="button" class="sc-eb" data-e="asimg" title="Javítás nélkül, sima képként"><i>🖼️</i><span>Sima képként</span></button><button type="button" class="sc-eb pri" data-e="next"><span>Tovább →</span></button>`
+          : `<div class="sc-eseg">${[["enh","✨ Javított"],["bw","⚫ Fekete-fehér"],["orig","🎨 Eredeti színek"]].map(([k, t])=> `<button type="button" data-m="${k}" class="${mode === k ? "on" : ""}">${t}</button>`).join("")}</div><button type="button" class="sc-eb" data-e="rot" title="Forgatás 90°"><i>⟳</i><span class="sc-ml">Forgatás</span></button><button type="button" class="sc-eb${qaInfo().k === "bad" ? " hot" : ""}" data-e="retake" title="Újrafotózás — ez a fotó kimarad"><i>📷</i><span>Újra</span></button><label class="sc-aitg" title="Mentés után az AI kiolvassa a dokumentum szövegét (másolható, kereshető). A kép csak a kiolvasáshoz megy a Cloudflare AI-hoz."><input type="checkbox" data-ai${aiOn() ? " checked" : ""}><span>🤖 AI szöveg</span></label><span class="sp"></span><button type="button" class="sc-eb" data-e="back"><i>←</i><span>Sarkok</span></button><button type="button" class="sc-eb more" data-e="more" title="Lefotózod a következő oldalt is — egy dokumentum lesz, egymás alatt"><i>➕</i><span>Még egy oldal</span></button><div class="sc-efmt"><span>Mentés mint</span><div class="sc-eseg">${FMTS.map(([k, t])=> `<button type="button" data-fm="${k}" class="${fmt === k ? "on" : ""}">${t}</button>`).join("")}</div></div><button type="button" class="sc-eb pri" data-e="ok">✓ Mentés ${fmtL(fmt)}-ként${pg > 1 ? ` (${pg} oldal)` : ""}</button>`; };
+      const setStep = s=>{ step = s; cvs.hidden = s !== 1; svg.style.display = s === 1 ? "" : "none"; hd.forEach(h=> h.hidden = s !== 1); res2.hidden = s === 1; if(s === 2){ stEl.textContent = "Feldolgozás…"; setTimeout(()=>{ render(); drawFoot(); layout(); }, 30); } else { drawFoot(); layout(); } };
+      setStep(1); window.addEventListener("resize", layout);
+      let drag = -1; const pt = e=>{ const r = stg.getBoundingClientRect(); return [Math.max(0, Math.min(src.width, (e.clientX - r.left) / sc)), Math.max(0, Math.min(src.height, (e.clientY - r.top) / sc))]; };
+      stg.addEventListener("pointerdown", e=>{ if(step !== 1) return; const h = e.target.closest(".sc-hd"); let i = h ? +h.dataset.h : -1; if(i < 0){ const p = pt(e); let bd = 1e9; q.forEach((c, k)=>{ const dd = Math.hypot(c[0] - p[0], c[1] - p[1]); if(dd < bd){ bd = dd; i = k; } }); if(bd * sc > 60) return; }
+        drag = i; stg.setPointerCapture(e.pointerId); hd[i].classList.add("on"); e.preventDefault(); });
+      stg.addEventListener("pointermove", e=>{ if(drag < 0) return; q[drag] = pt(e); place(); });
+      const up = ()=>{ if(drag >= 0) hd[drag].classList.remove("on"); drag = -1; }; stg.addEventListener("pointerup", up); stg.addEventListener("pointercancel", up);
+      const close = r=>{ window.removeEventListener("resize", layout); document.removeEventListener("keydown", esc, true); m.classList.add("out");
+        /* a nagy vásznak memóriáját visszaadjuk (iPhone-on korlátos) — a mentett oldal (out) megmarad */
+        setTimeout(()=>{ m.remove(); [src, cvs, res2, wc].concat(Object.values(mc)).forEach(c=>{ if(c && c !== out) c.width = c.height = 0; }); }, 180); res(r); };
+      const esc = e=>{ if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); close(null); } }; document.addEventListener("keydown", esc, true);
+      m.addEventListener("change", e=>{ if(e.target.matches("[data-ai]")) aiSet(e.target.checked); });
+      m.addEventListener("click", e=>{ const b = e.target.closest("[data-e],[data-m],[data-fm]"); if(!b) return;
+        if(b.dataset.fm){ fmt = b.dataset.fm; fmtSet(fmt); drawFoot(); return; }
+        if(b.dataset.m){ mode = b.dataset.m; stEl.textContent = "Feldolgozás…"; setTimeout(()=>{ render(); drawFoot(); layout(); }, 20); return; }
+        const a = b.dataset.e;
+        if(a === "x") close(null);
+        if(a === "auto"){ det = detectQuad(src); q = det.pts.map(p=> p.slice()); drawFoot(); place(); }
+        if(a === "full"){ q = [[0, 0], [src.width, 0], [src.width, src.height], [0, src.height]]; place(); }
+        if(a === "next") setStep(2);
+        if(a === "back") setStep(1);
+        if(a === "rot"){ turns = (turns + 1) % 4; out = rot90(out); res2.width = out.width; res2.height = out.height; res2.getContext("2d").drawImage(out, 0, 0); layout(); }
+        if(a === "asimg") close({ asImg:true });
+        if(a === "more"){ const nx = pickCam(); close({ canvas:out, fmt, more:nx }); return; }
+        if(a === "retake"){ const nx = pickCam(); close({ retake:nx }); return; }
+        if(a === "ok") close({ canvas:out, fmt }); });
+    });
+  }
+  /* ===================== 🤖 AI: a dokumentum szövegének kiolvasása (Cloudflare Workers AI, /api/ocr) =====================
+     A képet az AI nem javítja át (az kitalálhatna betűket / számokat) — a feljavított képről KIOLVASSA a szöveget:
+     másolható, letölthető (.txt), és a keresés is megtalálja. A kiolvasott szöveg a dokumentummal együtt törlődik éjfélkor. */
+  const aiOn = ()=>{ try{ return localStorage.getItem("fp_scan_ai") !== "0"; }catch(e){ return true; } };
+  const aiSet = v=>{ try{ localStorage.setItem("fp_scan_ai", v ? "1" : "0"); }catch(e){} };
+  let aiNo = 0;
+  function aiB64(src){ const W = src.width, H = src.height, k = Math.min(1, 1800 / Math.max(W, H)), c = document.createElement("canvas"); c.width = Math.max(1, Math.round(W * k)); c.height = Math.max(1, Math.round(H * k));
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.imageSmoothingQuality = "high"; x.drawImage(src, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", .86).split(",")[1]; }
+  async function aiCall(b64, page, pages){
+    const u = window.firebase && firebase.auth && firebase.auth().currentUser; if(!u) throw new Error("A kiolvasáshoz bolti belépés kell.");
+    const t = await u.getIdToken(), r = await fetch("/api/ocr", { method:"POST", headers:{ "content-type":"application/json", authorization:"Bearer " + t }, body:JSON.stringify({ img:b64, page, pages }) });
+    const j = await r.json().catch(()=> ({})); if(!r.ok || !j.ok) throw new Error(j.error || ("HTTP " + r.status)); return j; }
+  /* automatikus név (pl. „Dokumentum ma 14:35”) → az AI címe lesz a neve; amit valaki átnevezett, azt nem bántjuk */
+  const autoName = n=> /^(Dokumentum|Fotó|PDF)( |$)/.test(String(n || "")) || /\(javított\)$/.test(String(n || "")) || /^(IMG|PXL|DSC|DCIM|Photo|Image|Screenshot|WhatsApp Image|Kép|Fénykép)[ _-]?[\d(-]/i.test(String(n || ""));
+  const aiBusy = new Set(), aiRunning = x=> !!x && (aiBusy.has(x.id) || (x.ai === "run" && Date.now() - (x.aiRunAt || 0) < 180000));
+  async function aiRun(it, srcs){
+    if(!col || !srcs || !srcs.length || aiBusy.has(it.id)) return null;
+    if(Date.now() < aiNo){ note("🤖 Az AI szövegkiolvasás még nincs bekapcsolva — a dokumentum így is el van mentve."); return null; }
+    const ref = col.doc(it.id); aiBusy.add(it.id); ref.set({ ai:"run", aiRunAt:Date.now() }, { merge:true }).catch(()=>{});
+    try{ const out = []; let title = "";
+      for(let i = 0; i < srcs.length; i++){ const j = await aiCall(aiB64(srcs[i]), i + 1, srcs.length); if(!title && j.title) title = j.title; out.push(srcs.length > 1 ? `— ${i + 1}. oldal —\n${j.text || ""}` : (j.text || "")); }
+      const txt = out.join("\n\n").trim().slice(0, 60000), patch = { ai:"ok", txt, aiT:title.slice(0, 80), aiAt:Date.now() };
+      if(title && autoName(it.name)) patch.name = title.slice(0, 80);
+      await ref.set(patch, { merge:true }); Object.assign(it, patch);
+      note(`🤖 Az AI kiolvasta a szöveget${title ? ": " + title : ""} — megnyitva a 📝 Szöveg gombbal másolhatod.`); return patch;
+    }catch(e){ const m = (e && e.message) || String(e);
+      if(m === "noai"){ aiNo = Date.now() + 10 * 60e3; ref.set({ ai:"" }, { merge:true }).catch(()=>{}); note("🤖 Az AI szövegkiolvasás még nincs bekapcsolva a Cloudflare-ben — a dokumentum így is el van mentve."); return null; }
+      ref.set({ ai:"err" }, { merge:true }).catch(()=>{}); note("🤖 Nem sikerült kiolvasni a szöveget: " + m); return null;
+    }finally{ aiBusy.delete(it.id); } }
+  /* a már elmentett fájl oldalai képként (PDF-nél az első 6 oldal) */
+  async function aiSrcOf(it, blobs){
+    if(it.kind === "pdf"){ await window.fpPdfjs(); const d = await pdfjsLib.getDocument({ data:new Uint8Array(await blobs[0].arrayBuffer()) }).promise, out = [];
+      for(let i = 1; i <= Math.min(6, d.numPages); i++){ const pg = await d.getPage(i), v = pg.getViewport({ scale:1 }), k = 1800 / Math.max(v.width, v.height), vv = pg.getViewport({ scale:k }), c = document.createElement("canvas"); c.width = Math.round(vv.width); c.height = Math.round(vv.height);
+        const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); await pg.render({ canvasContext:x, viewport:vv }).promise; out.push(c); }
+      return out; }
+    const out = []; for(const b of blobs) out.push(await createImageBitmap(b)); return out; }
+  async function upload(files, umode){
+    if(!col){ note("⚠ A feltöltéshez bolti belépés kell (felhő)."); return; }
+    for(const file of Array.from(files || [])){
+      const isPdf = /pdf/i.test(file.type) || /\.pdf$/i.test(file.name), isImg = /^image\//.test(file.type) || /\.(jpe?g|png|webp|gif|bmp|heic|heif)$/i.test(file.name);
+      if(!isPdf && !isImg){ note("⚠ Csak képet vagy PDF-et tudok feltölteni: " + file.name); continue; }
+      if(isPdf && file.size > MAXPDF){ note(`⚠ Túl nagy PDF (${kb(file.size)}) — legfeljebb 8 MB.`); continue; }
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6), up = { id, name:file.name, p:0 }; ups.push(up); draw();
+      try{
+        let data = "", th = "", w = 0, h = 0, mime = isPdf ? "application/pdf" : "image/jpeg";
+        let kind = isPdf ? "pdf" : "img", fmt = "";
+        let np = 0, aiSrc = null;
+        if(isImg && umode === "doc"){ ups = ups.filter(x=> x !== up); draw();
+          const base = file.name && !/^image\./i.test(file.name) ? file.name : "Dokumentum", pages = []; let f = file, fm = fmtGet(), plain = false;
+          while(f){ const r = await docEditor(f, base, pages.length + 1); if(!r) break; if(r.retake){ const nf = await r.retake; if(nf) f = nf; continue; } if(r.asImg){ plain = !pages.length; break; }
+            pages.push(r.canvas); fm = r.fmt || fm; if(!r.more) break; up.name = `${base} — ${pages.length} oldal kész, fotózd a következőt…`; ups.push(up); draw(); f = await r.more; ups = ups.filter(x=> x !== up); draw(); }
+          if(!pages.length && !plain) continue; ups.push(up); up.name = pages.length > 1 ? `${base} (${pages.length} oldal)` : base; draw();
+          if(pages.length){ const cv = pages[0], sm = toJpeg(cv, 360, .7); data = pages.map(c=> c.toDataURL("image/jpeg", .86).split(",")[1]).join("|"); th = sm.url; w = cv.width; h = cv.height; kind = "doc"; fmt = fm; np = pages.length; aiSrc = aiOn() ? pages.slice() : null; } }
+        if(isImg && !data){ const { im, u } = await loadImg(file); const big = toJpeg(im, 2200, .82), sm = toJpeg(im, 360, .7); URL.revokeObjectURL(u); data = big.url.split(",")[1]; th = sm.url; w = big.w; h = big.h; }
+        else if(isPdf){ const buf = await file.arrayBuffer(); data = b64(buf); th = await pdfThumb(buf); }
+        const n = Math.ceil(data.length / CH), ref = col.doc(id);
+        for(let i = 0; i < n; i++){ await ref.collection("p").doc(String(i)).set({ d:data.slice(i * CH, (i + 1) * CH) }); up.p = (i + 1) / (n + 1); draw(); }
+        const nm = (file.name && !/^image\.(jpe?g|png)$/i.test(file.name) && !file._gen ? file.name.replace(/\.[a-z0-9]+$/i, "") : "") || (isPdf ? "PDF" : kind === "doc" ? "Dokumentum" : "Fotó") + " " + when(Date.now());
+        await ref.set(Object.assign({ name:nm.slice(0, 80), kind, mime, size:Math.round(data.length * .75), w, h, th, parts:n, by:who(), dev:dev(), at:Date.now() }, fmt ? { fmt } : {}, np > 1 ? { np } : {}));
+        if(aiSrc) setTimeout(()=> aiRun({ id, name:nm.slice(0, 80) }, aiSrc), 400);
+        snd("ok"); note(fmt ? `📄 Elmentve ${fmtL(fmt)}-ként${np > 1 ? ` (${np} oldal)` : ""}: ${nm} — a bolt minden gépén látszik, a ⬇ gomb ${fmtL(fmt)}-et ad.` : `📷 Feltöltve: ${nm} — a bolt minden gépén látszik.`);
+      }catch(e){ note("⚠ Nem sikerült feltölteni: " + (e && e.message || e)); }
+      ups = ups.filter(x=> x !== up); draw();
+    }
+  }
+  const b64Blob = (b, type)=>{ const bin = atob(b), u = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); };
+  async function pagesOf(it){
+    const s = await col.doc(it.id).collection("p").get(); const P = s.docs.map(d=> [+d.id, d.data().d || ""]).sort((a, b)=> a[0] - b[0]);
+    if(P.length < (it.parts || 1)) throw new Error("A fájl még töltődik — próbáld újra pár másodperc múlva.");
+    const type = it.mime || (it.kind === "pdf" ? "application/pdf" : "image/jpeg");
+    return P.map(x=> x[1]).join("").split("|").filter(Boolean).map(b=> b64Blob(b, type));
+  }
+  async function fileOf(it){ const P = await pagesOf(it); return P.length > 1 ? await stackImgs(P, "image/jpeg") : P[0]; }
+  async function del(it){ try{ const s = await col.doc(it.id).collection("p").get(); for(const d of s.docs) await d.ref.delete(); await col.doc(it.id).delete(); note("🗑️ Törölve: " + it.name); }catch(e){ note("⚠ Nem sikerült törölni: " + (e && e.message || e)); } }
+  /* ---------- nézegető ---------- */
+  async function view(it, auto){
+    const old = document.getElementById("scView"); if(old) old.remove();
+    viewing = it.id; const m = document.createElement("div"); m.className = "sc-view" + (auto ? " auto" : ""); m.id = "scView";
+    m.innerHTML = `<div class="sc-vc" role="dialog" aria-label="${E(it.name)}"><div class="sc-vh">${auto ? `<span class="sc-new">📲 Most érkezett</span>` : ""}<input class="sc-vn" value="${E(it.name)}" maxlength="80" title="Átnevezés"><small>${it.kind === "pdf" ? "📄 PDF" : it.kind === "doc" ? "📄 Dokumentum" + (it.np > 1 ? " · " + it.np + " oldal" : "") : "🖼️ Fotó"} · ${kb(it.size || 0)} · ${when(it.at)}${it.by ? " · 👤 " + E(it.by) : ""}</small>
+      <div class="sc-va">${it.kind === "doc" ? `<div class="sc-eseg sc-vf" title="Milyen fájlként töltse le">${FMTS.map(([k, t])=> `<button type="button" data-vf="${k}" class="${(it.fmt || "pdf") === k ? "on" : ""}">${k === "png" ? "PNG" : fmtL(k)}</button>`).join("")}</div><button type="button" data-v="dl" class="dlf" title="Letöltés">⬇ ${fmtL(it.fmt)}</button>` : `<button type="button" data-v="dl" title="Letöltés">⬇<span class="sc-ml">Letöltés</span></button>`}<button type="button" data-v="rot" title="Forgatás"${it.kind === "pdf" || it.np > 1 ? " hidden" : ""}>⟳<span class="sc-ml">Forgatás</span></button><button type="button" data-v="docify" title="Dokumentumként javítás: lap felismerése, kiegyenesítés, feljavítás — újként menti"${it.kind === "pdf" || it.np > 1 ? " hidden" : ""}>✂️ Javítás</button><button type="button" data-v="ai" class="sc-vai${it.txt ? " has" : ""}" title="${it.txt ? "A kiolvasott szöveg (másolás, letöltés)" : "🤖 Az AI kiolvassa a szöveget — másolható, kereshető"}">${it.txt ? "📝 Szöveg" : aiRunning(it) ? "🤖 Olvasás…" : "🤖 Szöveg"}</button><button type="button" data-v="del" class="dl" title="Törlés">🗑<span class="sc-ml">Törlés</span></button><button type="button" data-v="x" title="Bezárás (Esc)">✕</button></div></div>
+      <div class="sc-vb">${it.th ? `<img class="sc-th" src="${it.th}" alt="">` : ""}<div class="sc-ld"><span></span>betöltés…</div></div><div class="sc-txt" hidden></div></div>`;
+    document.body.appendChild(m);
+    let url = "", blob = null, rot = 0, PGv = null, txOpen = false;
+    const close = ()=>{ m.classList.add("out"); setTimeout(()=>{ m.remove(); if(url) URL.revokeObjectURL(url); }, 200); document.removeEventListener("keydown", esc, true); viewing = null; vtx = null; };
+    /* 📝 a kiolvasott szöveg alul (másolás / .txt) */
+    const txEl = m.querySelector(".sc-txt"), aiB = m.querySelector(".sc-vai");
+    const drawTxt = ()=>{ const run = aiRunning(it);
+      if(aiB){ aiB.textContent = it.txt ? "📝 Szöveg" : run ? "🤖 Olvasás…" : "🤖 Szöveg"; aiB.classList.toggle("has", !!it.txt); aiB.classList.toggle("on", txOpen && !!it.txt); }
+      txEl.hidden = !(txOpen && it.txt) && !run;
+      txEl.innerHTML = it.txt && txOpen ? `<div class="sc-txh"><b>📝 Kiolvasott szöveg</b><small>🤖 AI — a fontos számokat (összeg, IMEI) nézd meg a képen is</small><span class="sp"></span><button type="button" data-v="cp">📋 Másolás</button><button type="button" data-v="txtdl">⬇ .txt</button><button type="button" data-v="txx" title="Elrejtés">✕</button></div><pre class="sc-txp">${E(it.txt)}</pre>`
+        : run ? `<div class="sc-txh"><span class="sc-txs"></span><b>🤖 Az AI olvassa a szöveget…</b><small>pár másodperc</small></div>` : ""; };
+    vtx = d=>{ const had = !!it.txt; Object.assign(it, d); if(!had && it.txt && document.getElementById("scView") === m) txOpen = true; drawTxt(); };
+    drawTxt();
+    const esc = e=>{ if(e.key === "Escape" && document.activeElement !== m.querySelector(".sc-vn")){ e.preventDefault(); e.stopPropagation(); close(); } };
+    document.addEventListener("keydown", esc, true);
+    const nm = m.querySelector(".sc-vn"); nm.onchange = ()=>{ const v = nm.value.trim().slice(0, 80); if(v && v !== it.name){ col.doc(it.id).set({ name:v }, { merge:true }).catch(()=>{}); it.name = v; note("✏️ Átnevezve."); } };
+    nm.onkeydown = e=>{ if(e.key === "Enter") nm.blur(); };
+    m.addEventListener("click", async e=>{ const vf = e.target.closest("[data-vf]"); if(vf){ it.fmt = vf.dataset.vf; fmtSet(it.fmt); col.doc(it.id).set({ fmt:it.fmt }, { merge:true }).catch(()=>{}); m.querySelectorAll("[data-vf]").forEach(x=> x.classList.toggle("on", x === vf)); const d = m.querySelector(".dlf"); if(d) d.textContent = "⬇ " + fmtL(it.fmt); return; }
+      const b = e.target.closest("[data-v]"); if(e.target === m){ close(); return; } if(!b) { const im = e.target.closest(".sc-img"); if(im) im.classList.toggle("zoom"); return; }
+      const v = b.dataset.v;
+      if(v === "x") close();
+      if(v === "ai"){ if(it.txt){ txOpen = !txOpen; drawTxt(); return; } if(aiRunning(it) || !blob) return;
+        b.disabled = true; it.ai = "run"; it.aiRunAt = Date.now(); txOpen = true; drawTxt();
+        try{ const src = await aiSrcOf(it, PGv || [blob]); const r = await aiRun(it, src); if(!r && it.ai === "run") it.ai = ""; }catch(er){ it.ai = ""; note("🤖 Nem sikerült: " + ((er && er.message) || er)); }
+        b.disabled = false; drawTxt(); return; }
+      if(v === "cp"){ try{ await navigator.clipboard.writeText(it.txt || ""); note("📋 A szöveg kimásolva."); }catch(er){ const pr = txEl.querySelector("pre"); if(pr){ const r = document.createRange(); r.selectNodeContents(pr); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); } note("Jelöld ki és másold (Ctrl+C)."); } return; }
+      if(v === "txtdl"){ saveBlob(new Blob(["\ufeff" + (it.txt || "")], { type:"text/plain;charset=utf-8" }), (it.name || "dokumentum") + ".txt"); return; }
+      if(v === "txx"){ txOpen = false; drawTxt(); return; }
+      if(v === "rot"){ rot = (rot + 90) % 360; const im = m.querySelector(".sc-img"); if(im) im.style.transform = `rotate(${rot}deg)`; }
+      if(v === "docify" && blob){ const f = new File([blob], (it.name || "Dokumentum") + " (javított).jpg", { type:"image/jpeg" }); close(); upload([f], "doc"); return; }
+      if(v === "dl" && blob){ const f = it.kind === "doc" ? (it.fmt || "pdf") : it.kind === "pdf" ? "pdf" : "jpg";
+        try{ const out = it.kind === "doc" ? await docAs(it, f) : blob; saveBlob(out, (it.name || "dokumentum") + "." + f); if(it.kind === "doc") note(`⬇ Letöltve ${fmtL(f)}-ként.`); }catch(er){ note("⚠ Nem sikerült a letöltés: " + (er && er.message || er)); } }
+      if(v === "del"){ if(b.dataset.arm !== "1"){ b.dataset.arm = "1"; b.textContent = "Törlöd?"; b.classList.add("arm"); setTimeout(()=>{ if(b.isConnected){ b.dataset.arm = ""; b.innerHTML = '🗑<span class="sc-ml">Törlés</span>'; b.classList.remove("arm"); } }, 3000); return; } close(); await del(it); }
+    });
+    try{ const PG = it.np > 1 ? await pagesOf(it) : null; PGv = PG; blob = PG ? PG[0] : await fileOf(it); url = URL.createObjectURL(blob); if(!m.isConnected){ URL.revokeObjectURL(url); return; }
+      const vb = m.querySelector(".sc-vb"); vb.innerHTML = PG ? `<div class="sc-pgs">${PG.map((b, i)=> `<figure><img src="${i ? URL.createObjectURL(b) : url}" alt="${i + 1}. oldal"><figcaption>${i + 1} / ${PG.length}</figcaption></figure>`).join("")}</div>` : it.kind === "pdf" ? `<iframe class="sc-pdf" src="${url}" title="${E(it.name)}"></iframe><a class="sc-open" href="${url}" target="_blank" rel="noopener">↗ Megnyitás új lapon</a>` : `<img class="sc-img" src="${url}" alt="${E(it.name)}" title="Kattints a nagyításhoz">`;
+    }catch(e){ const ld = m.querySelector(".sc-ld"); if(ld) ld.innerHTML = "⚠ " + E(e && e.message || e); }
+  }
+  /* ---------- panel ---------- */
+  function badge(){ if(!btn) return; let seen = 0; try{ seen = +(localStorage.getItem(SEEN) || 0); }catch(e){} const n = items.filter(x=> x.at > seen && x.dev !== dev()).length; btn.classList.toggle("has", !!n); btn.dataset.n = n > 9 ? "9+" : n; }
+  function markSeen(){ const mx = items.reduce((a, x)=> Math.max(a, x.at || 0), 0); try{ localStorage.setItem(SEEN, String(mx)); }catch(e){} badge(); }
+  function open(cam){
+    if(panel){ if(cam) camGo(); return; }
+    panel = document.createElement("div"); panel.className = "sc-back" + (SOLO ? " solo" : ""); panel.id = "scPanel";
+    const phone = matchMedia("(hover: none) and (pointer: coarse)").matches;
+    panel.innerHTML = `<div class="sc-c" role="dialog" aria-label="Fotók és dokumentumok"><div class="sc-h"><span class="ic">📷</span><div><b>${SOLO ? "Fotózás — " + E(shopNm()) : "Fotók és dokumentumok"}</b><small>Lefotózod → a bolt minden gépén azonnal megjelenik</small></div>${SOLO ? (window.fpScanLogout ? `<button type="button" class="sc-x sc-out" title="Kilépés — másik bolt">⎋ Kilépés</button>` : "") : `<button type="button" class="sc-x" title="Bezárás (Esc)">✕</button>`}</div>
+      <div class="sc-del"><i>🕛</i><span><b>A nap végén minden fotó és dokumentum törlődik</b><small>éjfélkor magától — ami kell, még ma mentsd le (⬇) vagy csatold (pl. a Leltárhoz)</small></span><em class="sc-dl"></em></div>
+      <div class="sc-top"><label class="sc-big cam"><input type="file" accept="image/*" capture="environment" hidden data-in="cam"><i>📄</i><span><b>Dokumentum fotózása</b><em class="sc-sh">Dokumentum</em><small>felismeri, kiegyenesíti, feljavítja · 🤖 szöveg · több oldal · PDF</small></span></label>
+        <label class="sc-big img"><input type="file" accept="image/*" capture="environment" multiple hidden data-in="pic"><i>🖼️</i><span><b>Kép fotózása</b><em class="sc-sh">Kép</em><small>sima fotó — pl. a leltárhoz · többet is választhatsz</small></span></label>
+        <label class="sc-big up"><input type="file" accept="image/*,application/pdf,.pdf,.heic,.heif" multiple hidden data-in="up"><i>📂</i><span><b>Feltöltés</b><em class="sc-sh">Feltöltés</em><small>CamScanner PDF vagy kép <em class="sc-upm">${upDoc() ? "· 📄 javítva" : ""}</em></small></span></label>
+        ${phone ? "" : `<div class="sc-qr"><div class="qr" id="scQr"></div><span><b>📱 Telefonnal</b><small>Olvasd be a telefon kamerájával — megnyílik a gyors <b>FirstPhone Fotó</b> app (jelszó nélkül), és amit ott fotózol, itt <b>azonnal</b> megjelenik.</small></span></div>`}</div>
+      <div class="sc-drop" hidden>Engedd el — feltöltöm</div>
+      <div class="sc-tools"><input type="search" class="sc-q" placeholder="🔎 Keresés (név, szöveg)…" value="${E(q)}" autocomplete="off"><div class="sc-flt">${[["all","Mind"],["doc","📄 Dokumentum"],["img","🖼️ Kép"],["pdf","PDF"]].map(([k, t])=> `<button type="button" data-f="${k}" class="${fk === k ? "on" : ""}">${t}</button>`).join("")}</div><label class="sc-tg" title="A 📂 Feltöltés gombbal feltöltött képeket is dokumentumként javítsa"><input type="checkbox" data-upd${upDoc() ? " checked" : ""}> 📄 feltöltött képek javítása</label><span class="sc-cnt"></span></div>
+      <div class="sc-grid"></div></div>`;
+    document.body.appendChild(panel);
+    panel.querySelectorAll("[data-in]").forEach(i=> i.onchange = ()=>{ const f = Array.from(i.files || []), k = i.dataset.in; i.value = ""; if(f.length) upload(f, k === "cam" ? "doc" : k === "pic" ? "img" : (upDoc() ? "doc" : "img")); });
+    panel.querySelector("[data-upd]").onchange = e=>{ try{ localStorage.setItem("fp_scan_updoc", e.target.checked ? "1" : ""); }catch(_){} const em = panel.querySelector(".sc-upm"); if(em) em.textContent = e.target.checked ? "· 📄 javítva" : ""; };
+    const qi = panel.querySelector(".sc-q"); qi.oninput = ()=>{ q = qi.value; draw(); };
+    panel.addEventListener("click", e=>{ if(SOLO && e.target.closest(".sc-out")){ try{ window.fpScanLogout && fpScanLogout(); }catch(_){} return; } if((e.target === panel && !SOLO) || e.target.closest(".sc-x")){ shut(); return; } const fb = e.target.closest("[data-f]"); if(fb){ fk = fb.dataset.f; panel.querySelectorAll("[data-f]").forEach(x=> x.classList.toggle("on", x === fb)); draw(); return; } const c = e.target.closest("[data-id]"); if(c){ const it = items.find(x=> x.id === c.dataset.id); if(it) view(it); } });
+    ["dragover","dragenter"].forEach(t=> panel.addEventListener(t, e=>{ e.preventDefault(); panel.querySelector(".sc-drop").hidden = false; }));
+    panel.addEventListener("dragleave", e=>{ if(e.target === panel.querySelector(".sc-drop")) panel.querySelector(".sc-drop").hidden = true; });
+    panel.addEventListener("drop", e=>{ e.preventDefault(); panel.querySelector(".sc-drop").hidden = true; const f = Array.from(e.dataTransfer.files || []); if(f.length) upload(f, upDoc() ? "doc" : "img"); });
+    document.addEventListener("keydown", escP, true);
+    draw(); markSeen(); qrDraw(); if(cam) camGo();
+  }
+  const escP = e=>{ if(e.key === "Escape" && panel && !SOLO && !document.getElementById("scView")){ e.preventDefault(); e.stopPropagation(); shut(); } };
+  function shut(){ if(!panel) return; const p = panel; panel = null; p.classList.add("out"); setTimeout(()=> p.remove(), 200); document.removeEventListener("keydown", escP, true); }
+  function camGo(){ const c = panel && panel.querySelector('[data-in="cam"]'); if(c){ const l = c.closest(".sc-big"); l.classList.add("pulse"); try{ c.click(); }catch(e){} } }
+  function draw(){
+    if(!panel) return; const g = panel.querySelector(".sc-grid"), f = q.trim().toLowerCase();
+    const L = items.filter(x=> kindOk(x) && (!f || String(x.name || "").toLowerCase().includes(f) || String(x.by || "").toLowerCase().includes(f) || String(x.txt || "").toLowerCase().includes(f)));
+    panel.querySelector(".sc-cnt").textContent = `${items.length} db`;
+    const now = Date.now();
+    { const dl = panel.querySelector(".sc-dl"), mid = new Date(); mid.setHours(24, 0, 0, 0); const left = Math.max(0, mid - now), h = Math.floor(left / 36e5), mi = Math.floor(left % 36e5 / 6e4);
+      if(dl) dl.textContent = items.length ? `még ${h ? h + " óra " : ""}${mi} perc · ${items.length} db` : `még ${h ? h + " óra " : ""}${mi} perc`; }
+    g.innerHTML = ups.map(u=> `<div class="sc-it up"><div class="sc-tt"><span class="sp"></span></div><b>${E(u.name)}</b><small>feltöltés… ${Math.round(u.p * 100)}%</small><i class="pb" style="width:${Math.round(u.p * 100)}%"></i></div>`).join("")
+      + L.map(x=> `<button type="button" class="sc-it${now - x.at < 15000 && x.dev !== dev() ? " nw" : ""}" data-id="${E(x.id)}"><div class="sc-tt">${x.th ? `<img src="${x.th}" alt="" loading="lazy">` : `<span class="ic">${x.kind === "pdf" ? "📄" : "🖼️"}</span>`}${x.kind === "pdf" ? `<em>PDF</em>` : x.kind === "doc" ? `<em class="dc">📄 ${fmtL(x.fmt)}${x.np > 1 ? " · " + x.np + " old." : ""}</em>` : ""}${x.txt ? `<em class="tx" title="Az AI kiolvasta a szövegét">📝</em>` : aiRunning(x) ? `<em class="tx run" title="Az AI olvassa…">🤖</em>` : ""}</div><b>${E(x.name)}</b><small>${when(x.at)}${x.by ? " · " + E(x.by) : ""}</small><span class="sc-ttl">🕛 ma éjfélkor törlődik</span></button>`).join("")
+      || (ups.length ? "" : `<div class="sc-empty"><span>📷</span><b>Még nincs fotó</b><small>${document.documentElement.classList.contains("m-app") ? "Nyomd meg lent a 📄 gombot, és fotózd le a papírt — itt és a bolt minden gépén azonnal megjelenik." : "Fotózz a telefonnal (📷 Fotózás most), vagy tölts fel egy CamScanner PDF-et — itt és a bolt minden gépén azonnal megjelenik."}</small></div>`);
+  }
+  /* 📱 QR-kód a telefonhoz: a könnyű FirstPhone Fotó app (/scan/) + egy 15 percig érvényes belépő kód → a telefonon nem kell jelszó */
+  let qrC = null, qrT = null, qrBusy = false;
+  const qrBase = ()=> (/\.pages\.dev$/i.test(location.hostname) ? location.origin : "https://firstphone-munkaasztal.pages.dev") + "/scan/";
+  async function qrCode(){
+    if(qrC && qrC.exp - Date.now() > 4 * 60 * 1000) return qrC;
+    if(qrBusy || !/^https:$/.test(location.protocol)) return qrC; qrBusy = true;
+    try{ const u = window.firebase && firebase.auth && firebase.auth().currentUser; if(!u) return null;
+      const r = await fetch("/api/qr", { method:"POST", headers:{ "content-type":"application/json", authorization:"Bearer " + await u.getIdToken() }, body:JSON.stringify({ action:"make", u:(S && S.admin) ? uid : "" }) });
+      const j = await r.json().catch(()=> ({})); if(r.ok && j.ok) qrC = { code:j.code, exp:j.exp }; }
+    catch(e){} finally{ qrBusy = false; }
+    return qrC;
+  }
+  function qrDraw(){ const el = panel && panel.querySelector("#scQr"); if(!el) return;
+    const paint = c=>{ const link = qrBase() + (c ? "#c=" + c.code : "");
+      const go = ()=>{ if(!panel || !el.isConnected) return; try{ el.innerHTML = ""; new QRCode(el, { text:link, width:120, height:120, correctLevel:QRCode.CorrectLevel.M }); el.title = link; }catch(e){ el.innerHTML = `<small>${E(link)}</small>`; }
+        const box = el.parentNode && el.parentNode.querySelector("span"), k = box && box.querySelector(".sc-qcode"); if(k) k.remove();
+        if(c && box){ const d = document.createElement("div"); d.className = "sc-qcode"; d.innerHTML = `<small>vagy a telefonon írd be:</small><b>${E(c.code.slice(0, 5) + "-" + c.code.slice(5))}</b><small>15 percig érvényes · jelszó nem kell</small>`; box.appendChild(d); } };
+      if(window.QRCode) return go();
+      const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; s.onload = go; s.onerror = ()=>{ el.innerHTML = `<small class="ql">${E(link)}</small>`; }; document.head.appendChild(s); };
+    if(qrC && qrC.exp - Date.now() > 4 * 60 * 1000) paint(qrC);
+    else { el.innerHTML = `<small class="ql">⏳</small>`; qrCode().then(c=> paint(c)); }
+    clearInterval(qrT); qrT = setInterval(()=>{ if(!panel || !el.isConnected){ clearInterval(qrT); return; } if(!qrC || qrC.exp - Date.now() < 4 * 60 * 1000){ qrC = null; qrCode().then(c=> paint(c)); } }, 60000);
+  }
+  /* ---------- élő figyelés: ha más eszközről (telefonról) jön, azonnal megnyílik ---------- */
+  function watch(){
+    if(unsub) unsub();
+    started = Date.now();
+    unsub = col.orderBy("at", "desc").limit(200).onSnapshot(snap=>{
+      const fresh = [];
+      snap.docChanges().forEach(ch=>{ const d = Object.assign({ id:ch.doc.id }, ch.doc.data());
+        if(ch.type === "removed"){ items = items.filter(x=> x.id !== d.id); if(viewing === d.id){ const v = document.getElementById("scView"); if(v) v.remove(); viewing = null; } return; }
+        if(viewing === d.id && vtx){ try{ vtx(d); }catch(e){} }
+        const i = items.findIndex(x=> x.id === d.id); if(i > -1) items[i] = d; else { items.push(d); if(ch.type === "added" && d.dev !== dev() && d.at > started) fresh.push(d); } });
+      items.sort((a, b)=> (b.at || 0) - (a.at || 0)); draw(); badge();
+      if(fresh.length){ const it = fresh.sort((a, b)=> b.at - a.at)[0]; snd("msg", .5); note(`📲 Új ${it.kind === "pdf" ? "dokumentum" : "fotó"} érkezett${it.by ? " — " + it.by : ""}: ${it.name}`);
+        if(btn){ btn.classList.remove("ring"); void btn.offsetWidth; btn.classList.add("ring"); }
+        if(!SOLO && !document.hidden && !document.querySelector(".modal-backdrop.show,.popup-backdrop.show,.sc-view")){ view(it, true); if(panel) markSeen(); } }
+    }, err=>{ console.warn("scan", err); });
+  }
+  /* 🕛 napi törlés: ami nem a mai napon készült, törlődik (megnyitáskor és éjfélkor, bármelyik bolti gépen) */
+  let cleanT = null, cleaning = false;
+  const dayStart = ()=>{ const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); };
+  async function dayClean(){
+    if(cleaning || !col || SOLO || (S && S.admin)) return; cleaning = true;
+    try{ const t0 = dayStart(); let L = [];
+      try{ const snap = await col.where("at", "<", t0).limit(100).get(); L = snap.docs.map(d=> Object.assign({ id:d.id }, d.data())); }catch(e){ L = items.filter(x=> (x.at || 0) < t0); }
+      let n = 0; for(const it of L){ try{ const s2 = await col.doc(it.id).collection("p").get(); for(const d of s2.docs) await d.ref.delete(); await col.doc(it.id).delete(); n++; }catch(e){} }
+      if(n) note(`🕛 Napi törlés: ${n} tegnapi fotó / dokumentum törölve.`);
+    }finally{ cleaning = false; }
+    clearTimeout(cleanT); const mid = new Date(); mid.setHours(24, 0, 20, 0); cleanT = setTimeout(dayClean, Math.max(60000, mid - Date.now()));
+  }
+  setInterval(()=>{ if(panel) draw(); }, 60000);
+  const SOLO = document.documentElement.classList.contains("fp-scanonly");
+  const t0w = Date.now();
+  if(SOLO){ const w = document.createElement("div"); w.className = "sc-wait"; w.innerHTML = `<div><span class="ic">📷</span><b>Fotózás</b><small class="sc-wt">Betöltés… ha kéri, lépj be a bolt nevével és a jelszóval.</small></div>`;
+    const put = ()=>{ if(!document.querySelector(".sc-wait")) document.body.appendChild(w); }; document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", put) : put();
+    setInterval(()=>{ const F = window.FP_CLOUD; const t = w.querySelector(".sc-wt"); if(!t || panel) return; if(!(F && F.user) && !document.getElementById("fcLogin") && Date.now() - t0w > 9000) t.innerHTML = 'A fotózáshoz a bolttal kell belépni (felhővel). <a href="' + location.pathname + '?scan=1" style="color:#3ecf8e;font-weight:700">Újra →</a>'; }, 2000); }
+  window.fpScanInit = function(){
+    S = window.FP_CLOUD; if(!S || !S.user || !S.db || !isKap()) return; if(btn && document.body.contains(btn)) return;
+    uid = S.target || S.user.uid; col = S.db.collection("boltok").doc(uid).collection("scan");
+    btn = document.createElement("button"); btn.type = "button"; btn.id = "scanBtn"; btn.className = "icon-btn sc-hb"; btn.title = "📷 Fotók és dokumentumok — telefonnal fotózod, itt azonnal látod"; btn.textContent = "📷";
+    const anc = document.getElementById("docBtn") || document.getElementById("bugBtn") || document.getElementById("helpBtn");
+    if(anc && anc.parentNode) anc.parentNode.insertBefore(btn, anc); else { btn.classList.add("nw-float"); document.body.appendChild(btn); }
+    btn.onclick = ()=> open(false);
+    document.documentElement.classList.add("fp-scan-on");
+    watch(); setTimeout(dayClean, 4000);
+    if(SOLO){ const w = document.querySelector(".sc-wait"); if(w) w.remove(); setTimeout(()=> open(false), 50); return; }
+    if(/#scan\b/.test(location.hash)){ try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){} setTimeout(()=> open(true), 600); }
+  };
+  window.fpScanOpen = open;
+  /* 🖼️ választás a Fotókból (pl. a Leltárhoz): bejelölöd, melyik képek kellenek → File-ként visszaadja */
+  window.fpScanPick = function(opt){
+    opt = opt || {}; if(!col){ note("⚠ A Fotókhoz bolti belépés kell."); return; }
+    const sel = new Set(); let pf = "all", busy = false;
+    const m = document.createElement("div"); m.className = "sc-back sc-pick"; document.body.appendChild(m);
+    const L = ()=> items.filter(x=> (opt.pdf !== false || x.kind !== "pdf") && (pf === "all" || (pf === "img" ? (x.kind || "img") === "img" : x.kind === pf)));
+    const draw2 = ()=>{ const A = L();
+      m.innerHTML = `<div class="sc-c"><div class="sc-h"><span class="ic">🖼️</span><div><b>${E(opt.title || "Választás a Fotókból")}</b><small>Jelöld be, melyik képek kellenek — ${E(opt.sub || "")}</small></div><button type="button" class="sc-x" data-p="x">✕</button></div>
+        <div class="sc-tools"><div class="sc-flt">${[["all","Mind"],["img","🖼️ Kép"],["doc","📄 Dokumentum"]].concat(opt.pdf === false ? [] : [["pdf","PDF"]]).map(([k, t])=> `<button type="button" data-pf="${k}" class="${pf === k ? "on" : ""}">${t}</button>`).join("")}</div><button type="button" class="sc-eb" data-p="all">${A.length && A.every(x=> sel.has(x.id)) ? "Kijelölés törlése" : "Mind kijelölése"}</button><span class="sc-cnt">${sel.size} kiválasztva</span></div>
+        <div class="sc-grid">${A.map(x=> `<button type="button" class="sc-it pk${sel.has(x.id) ? " sel" : ""}" data-pid="${E(x.id)}"><div class="sc-tt">${x.th ? `<img src="${x.th}" alt="" loading="lazy">` : `<span class="ic">${x.kind === "pdf" ? "📄" : "🖼️"}</span>`}${x.kind === "pdf" ? `<em>PDF</em>` : x.kind === "doc" ? `<em class="dc">📄</em>` : ""}<u class="ck">✓</u></div><b>${E(x.name)}</b><small>${when(x.at)}</small></button>`).join("") || `<div class="sc-empty"><span>📷</span><b>Még nincs kép a Fotókban</b><small>Fent a 📷 gombbal fotózz vagy tölts fel — utána itt kiválaszthatod.</small></div>`}</div>
+        <div class="sc-pf"><span class="sp"></span><button type="button" class="sc-eb" data-p="x">Mégse</button><button type="button" class="sc-eb pri" data-p="ok"${sel.size && !busy ? "" : " disabled"}>${busy ? "⏳ Betöltés…" : `✓ ${sel.size || ""} kép hozzáadása`}</button></div></div>`; };
+    const close = ()=>{ m.classList.add("out"); setTimeout(()=> m.remove(), 200); document.removeEventListener("keydown", esc, true); };
+    const esc = e=>{ if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); close(); } }; document.addEventListener("keydown", esc, true);
+    m.addEventListener("click", async e=>{ if(e.target === m){ close(); return; } const pfb = e.target.closest("[data-pf]"); if(pfb){ pf = pfb.dataset.pf; draw2(); return; }
+      const it = e.target.closest("[data-pid]"); if(it){ const id = it.dataset.pid; sel.has(id) ? sel.delete(id) : sel.add(id); draw2(); return; }
+      const b = e.target.closest("[data-p]"); if(!b) return; const a = b.dataset.p;
+      if(a === "x"){ close(); return; }
+      if(a === "all"){ const A = L(); if(A.every(x=> sel.has(x.id))) A.forEach(x=> sel.delete(x.id)); else A.forEach(x=> sel.add(x.id)); draw2(); return; }
+      if(a === "ok" && sel.size && !busy){ busy = true; draw2(); const files = [];
+        for(const id of sel){ const x = items.find(y=> y.id === id); if(!x) continue; try{ const bl = await fileOf(x); files.push(new File([bl], (x.name || "kep").replace(/[\\/:*?"<>|]+/g, "_") + (x.kind === "pdf" ? ".pdf" : ".jpg"), { type:bl.type })); }catch(err){ note("⚠ " + x.name + ": " + (err.message || err)); } }
+        close(); if(files.length && opt.onPick) opt.onPick(files); } });
+    draw2();
+  };
+
+  const st = document.createElement("style"); st.textContent = `
+  .sc-hb{position:relative;} .sc-hb.has::after{content:attr(data-n);position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:99px;background:#30b37a;color:#fff;font:800 10px/16px 'Inter',sans-serif;text-align:center;box-shadow:0 0 0 2px var(--bg-panel,#17171c);}
+  .sc-hb.ring{animation:scRing .9s ease 2;} @keyframes scRing{0%,100%{transform:none}20%{transform:rotate(-14deg) scale(1.1)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}}
+  .sc-back.solo{padding:0;background:#0c0c0f;-webkit-backdrop-filter:none;backdrop-filter:none;} .sc-back.solo .sc-c{width:100%;max-width:760px;height:100%;max-height:100%;border-radius:0;border:0;box-shadow:none;}
+  .sc-back.solo .sc-top{grid-template-columns:1fr;} .sc-back.solo .sc-qr{display:none !important;} .sc-back.solo .sc-big{padding:18px;} .sc-back.solo .sc-big i{width:56px;height:56px;font-size:30px;} .sc-back.solo .sc-big b{font-size:17px;} .sc-back.solo .sc-big.up{grid-column:auto;}
+  .sc-wait{position:fixed;inset:0;z-index:3100;display:grid;place-items:center;background:#0c0c0f;color:#ececf1;font-family:'Inter',sans-serif;text-align:center;padding:24px;} .sc-wait .ic{display:block;font-size:52px;animation:scRing 1.6s ease infinite;} .sc-wait b{display:block;font:800 22px 'Poppins',sans-serif;margin-top:8px;} .sc-wait small{display:block;margin-top:6px;color:#9c9ca6;font-size:14px;max-width:320px;}
+  html.fp-scanonly #fcLogin{z-index:3200;}
+  .sc-qcode{margin-top:6px;line-height:1.25;} .sc-qcode small{display:block;font-size:10.5px;color:var(--text-dim,#9c9ca6);} .sc-qcode b{display:block;font:800 17px ui-monospace,Menlo,monospace;letter-spacing:.08em;margin:2px 0;}
+  .sc-back,.sc-view{position:fixed;inset:0;z-index:3200;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,7,12,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:'Inter',sans-serif;color:var(--text,#ececf1);animation:scIn .2s ease both;}
+  .sc-back.out,.sc-view.out{opacity:0;transition:opacity .2s;} @keyframes scIn{from{opacity:0}to{opacity:1}}
+  .sc-c{position:relative;width:min(980px,100%);max-height:min(860px,calc(100vh - 32px));display:flex;flex-direction:column;border-radius:22px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden;animation:scPop .35s cubic-bezier(.2,.9,.3,1.15);}
+  @keyframes scPop{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+  .sc-h{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border,#2b2b33);background:radial-gradient(420px 120px at 0 0,rgba(48,179,122,.18),transparent 70%);}
+  .sc-h .ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:rgba(48,179,122,.16);border:1px solid rgba(48,179,122,.45);} .sc-h b{display:block;font:800 18px 'Poppins',sans-serif;} .sc-h small{display:block;font-size:12.5px;color:var(--text-dim,#9c9ca6);}
+  .sc-x{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;cursor:pointer;}
+  .sc-top{display:grid;grid-template-columns:1fr 1fr 1fr 1.25fr;gap:10px;padding:14px 18px 6px;}
+  .sc-big.img i{background:rgba(217,173,70,.2);} .sc-big.img{border-color:rgba(217,173,70,.45);} .sc-upm{font-style:normal;color:#3ecf8e;font-weight:800;}
+  .sc-flt{display:inline-flex;gap:2px;padding:3px;border-radius:11px;background:var(--bg-cell,#2a2a33);} .sc-flt button{border:0;background:transparent;color:var(--text-dim,#9c9ca6);font:800 12px 'Inter',sans-serif;padding:6px 10px;border-radius:8px;cursor:pointer;white-space:nowrap;} .sc-flt button.on{background:var(--bg-panel,#17171c);color:var(--text,#ececf1);box-shadow:inset 0 -2px 0 #30b37a;}
+  .sc-tg{display:inline-flex;align-items:center;gap:6px;font:700 12px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);white-space:nowrap;cursor:pointer;} .sc-tools{flex-wrap:wrap;}
+  .sc-tt em.dc{background:#30b37a;}
+  .sc-eb{display:inline-flex;align-items:center;gap:5px;padding:9px 14px;border-radius:12px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:800 13px 'Inter',sans-serif;cursor:pointer;white-space:nowrap;} .sc-eb:hover{border-color:#30b37a;}
+  .sc-eb.pri{background:linear-gradient(135deg,#3ecf8e,#22a06b);border-color:transparent;color:#05251a;} .sc-eb[disabled]{opacity:.45;cursor:default;}
+  body:has(.sc-ed) .ch-btn,body:has(.sc-back) .ch-btn,body:has(.sc-view) .ch-btn,body:has(.sc-ed) .fc-al,body:has(.sc-back) .fc-al{display:none !important;}
+  .sc-ed{position:fixed;inset:0;z-index:3400;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(6,7,12,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:'Inter',sans-serif;color:var(--text,#ececf1);animation:scIn .2s ease both;} .sc-ed.out{opacity:0;transition:opacity .18s;}
+  .sc-edc{width:min(1100px,100%);height:min(920px,100%);display:flex;flex-direction:column;border-radius:20px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);overflow:hidden;animation:scPop .3s cubic-bezier(.2,.9,.3,1.15);}
+  .sc-edh{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border,#2b2b33);} .sc-edh .ic{font-size:22px;} .sc-edh b{display:block;font:800 15px 'Poppins',sans-serif;} .sc-edh small{display:block;font-size:12px;color:#3ecf8e;font-weight:700;}
+  .sc-edx{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;cursor:pointer;}
+  .sc-edb{flex:1;min-height:0;display:grid;place-items:center;background:#0d0d10;padding:12px;overflow:hidden;}
+  .sc-stg{position:relative;touch-action:none;user-select:none;} .sc-stg canvas{position:absolute;inset:0;width:100%;height:100%;} .sc-stg canvas.sc-res{box-shadow:0 10px 30px rgba(0,0,0,.6);animation:scIn .3s ease;}
+  .sc-poly{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;} .sc-poly polygon{fill:rgba(48,179,122,.16);stroke:#3ecf8e;stroke-width:2.5;stroke-dasharray:8 5;animation:scDash 1s linear infinite;} @keyframes scDash{to{stroke-dashoffset:-13}}
+  .sc-hd{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:rgba(62,207,142,.25);border:3px solid #3ecf8e;box-shadow:0 0 0 3px rgba(0,0,0,.35);cursor:grab;touch-action:none;transition:transform .12s;} .sc-hd.on{transform:scale(1.35);cursor:grabbing;background:rgba(62,207,142,.5);} .sc-hd[hidden]{display:none;}
+  .sc-edf{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border-top:1px solid var(--border,#2b2b33);} .sc-edf .sp,.sc-pf .sp{flex:1;}
+  .sc-pgn{font-style:normal;font:800 11px 'Inter',sans-serif;padding:2px 8px;border-radius:99px;background:#30b37a;color:#fff;vertical-align:middle;margin-left:4px;}
+  .sc-eb.more{border-color:rgba(48,179,122,.6);color:#3ecf8e;}
+  /* 🔍 olvashatóság + 🤖 AI szöveg (2026-10) */
+  .sc-edf .sc-efmt{margin-left:auto;} .sc-edf .sc-efmt + .sc-eb.pri{margin-left:0;}
+  .sc-edh small.sc-edst.ok{color:#3ecf8e;} .sc-edh small.sc-edst.warn{color:#f0b23a;} .sc-edh small.sc-edst.bad{color:#ff7a7a;}
+  .sc-eb.hot{border-color:rgba(255,122,122,.75);color:#ff9a9a;animation:scHot 1.6s ease-in-out infinite;} @keyframes scHot{50%{box-shadow:0 0 0 5px rgba(255,122,122,.22);}}
+  .sc-aitg{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:12px;border:1px solid rgba(123,140,255,.45);background:rgba(123,140,255,.1);color:#b4bdff;font:800 12.5px 'Inter',sans-serif;cursor:pointer;user-select:none;white-space:nowrap;}
+  .sc-aitg input{accent-color:#7b8cff;width:16px;height:16px;margin:0;cursor:pointer;} .sc-aitg:has(input:not(:checked)){opacity:.6;}
+  body.light-theme .sc-aitg{color:#4651c8;background:rgba(123,140,255,.12);}
+  .sc-tt em.tx{left:auto;right:6px;background:#7b8cff;font-size:11px;} .sc-tt em.tx.run{animation:scTx 1.1s ease-in-out infinite;} @keyframes scTx{50%{opacity:.45;}}
+  .sc-va .sc-vai.has{border-color:rgba(123,140,255,.65);color:#b4bdff;} .sc-va .sc-vai.on{background:rgba(123,140,255,.2);}
+  body.light-theme .sc-va .sc-vai.has{color:#4651c8;}
+  .sc-txt{flex:none;display:flex;flex-direction:column;max-height:44%;min-height:0;border-top:1px solid var(--border,#2b2b33);background:var(--bg-panel,#17171c);animation:scIn .25s ease;}
+  .sc-txt[hidden]{display:none;}
+  .sc-txh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--border,#2b2b33);} .sc-txh b{font:800 13.5px 'Poppins',sans-serif;} .sc-txh small{font-size:11.5px;color:var(--text-dim,#9c9ca6);} .sc-txh .sp{flex:1;}
+  .sc-txh button{height:30px;padding:0 10px;border-radius:9px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:800 12px 'Inter',sans-serif;cursor:pointer;}
+  .sc-txp{margin:0;padding:10px 14px 16px;overflow:auto;min-height:0;white-space:pre-wrap;word-break:break-word;font:500 13px/1.55 ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;-webkit-user-select:text;user-select:text;}
+  .sc-txs{width:16px;height:16px;border-radius:50%;border:2px solid rgba(123,140,255,.25);border-top-color:#7b8cff;animation:scSpin .8s linear infinite;}
+  body.light-theme .sc-txt{background:#fff;} body.light-theme .sc-txh button{background:#f7f5ef;}
+  @media (max-width:560px){ .sc-txt{max-height:52%;} .sc-txh small{width:100%;order:3;} .sc-aitg{padding:8px 9px;} }
+  .sc-pgs{position:absolute;inset:0;overflow:auto;padding:14px;display:flex;flex-direction:column;align-items:center;gap:14px;} .sc-pgs figure{margin:0;width:100%;max-width:860px;} .sc-pgs img{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 6px 22px rgba(0,0,0,.4);background:#fff;} .sc-pgs figcaption{text-align:center;font:800 11.5px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);margin-top:5px;}
+  .sc-efmt{display:inline-flex;align-items:center;gap:6px;} .sc-efmt>span{font:800 11px 'Inter',sans-serif;color:var(--text-dim,#9c9ca6);text-transform:uppercase;letter-spacing:.04em;} .sc-efmt [data-fm].on{box-shadow:inset 0 -2px 0 #e5484d;}
+  .sc-vf{margin-right:2px;} .sc-va .sc-vf button{width:auto;height:30px;padding:0 9px;font:800 11.5px 'Inter',sans-serif;border:0;background:transparent;color:var(--text-dim,#9c9ca6);} .sc-va .sc-vf button.on{background:var(--bg-panel,#17171c);color:var(--text,#ececf1);} .sc-vf button.on{box-shadow:inset 0 -2px 0 #e5484d;} .sc-va .dlf{width:auto !important;padding:0 11px;font:800 12.5px 'Inter',sans-serif;}
+  @media (max-width:560px){ .sc-efmt{order:-1;width:100%;justify-content:center;} .sc-efmt>span{display:none;} .sc-va{flex-wrap:wrap;justify-content:flex-end;row-gap:6px;max-width:100%;} .sc-va button{white-space:nowrap;} .sc-vh{flex-wrap:wrap;} }
+  .sc-eseg{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:var(--bg-cell,#2a2a33);} .sc-eseg button{border:0;background:transparent;color:var(--text-dim,#9c9ca6);font:800 12.5px 'Inter',sans-serif;padding:8px 12px;border-radius:9px;cursor:pointer;} .sc-eseg button.on{background:var(--bg-panel,#17171c);color:var(--text,#ececf1);box-shadow:inset 0 -2px 0 #30b37a;}
+  .sc-pick .sc-c{max-height:min(820px,calc(100vh - 32px));} .sc-pf{display:flex;gap:8px;padding:10px 18px 14px;border-top:1px solid var(--border,#2b2b33);}
+  .sc-it.pk .ck{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;text-decoration:none;font:900 13px 'Inter',sans-serif;color:transparent;background:rgba(0,0,0,.35);border:2px solid #fff;transition:all .15s;}
+  .sc-it.pk.sel{border-color:#30b37a;box-shadow:0 0 0 3px rgba(48,179,122,.35);} .sc-it.pk.sel .ck{background:#30b37a;border-color:#30b37a;color:#fff;transform:scale(1.1);}
+  @media (max-width:760px){ .sc-top{grid-template-columns:1fr 1fr;} .sc-big.up{grid-column:1/-1;} .sc-edf .sc-eb{padding:9px 11px;font-size:12.5px;} }
+  .sc-big{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;border:1.5px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s;}
+  .sc-big:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.25);} .sc-big i{font-style:normal;font-size:26px;width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;}
+  .sc-big.cam{border-color:rgba(48,179,122,.5);} .sc-big.cam i{background:linear-gradient(135deg,#3ecf8e,#22a06b);} .sc-big.up i{background:rgba(91,149,255,.18);}
+  .sc-big b{display:block;font:800 14.5px 'Poppins',sans-serif;} .sc-big small{display:block;font-size:12px;color:var(--text-dim,#9c9ca6);}
+  .sc-big.pulse{animation:scPulse 1.4s ease 3;} @keyframes scPulse{50%{box-shadow:0 0 0 6px rgba(48,179,122,.3);}}
+  .sc-qr{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;border:1.5px dashed var(--border,#2b2b33);} .sc-qr .qr{width:120px;height:120px;flex:none;border-radius:10px;background:#fff;padding:6px;box-sizing:content-box;display:grid;place-items:center;overflow:hidden;} .sc-qr .qr img,.sc-qr .qr canvas{width:96px;height:96px;}
+  .sc-qr .qr small{color:#111;font-size:8px;word-break:break-all;} .sc-qr b{display:block;font:800 13.5px 'Poppins',sans-serif;} .sc-qr span small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);line-height:1.4;}
+  .sc-drop[hidden]{display:none !important;} .sc-drop{position:absolute;inset:70px 12px 12px;z-index:5;display:grid;place-items:center;border-radius:18px;border:2.5px dashed #30b37a;background:rgba(48,179,122,.12);font:800 18px 'Poppins',sans-serif;}
+  .sc-del{display:flex;align-items:center;gap:10px;margin:10px 18px 0;padding:9px 12px;border-radius:12px;border:1px dashed rgba(226,88,90,.55);background:rgba(226,88,90,.08);}
+  .sc-del i{font-style:normal;font-size:20px;animation:scClock 6s ease-in-out infinite;} @keyframes scClock{0%,85%,100%{transform:none}90%{transform:rotate(-14deg)}95%{transform:rotate(10deg)}}
+  .sc-del span{flex:1;min-width:0;} .sc-del b{display:block;font:800 13px 'Inter',sans-serif;color:var(--text,#ececf1);} .sc-del small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);}
+  .sc-dl{font-style:normal;flex:none;font:800 11.5px 'Inter',sans-serif;color:#ef7a7b;white-space:nowrap;} .sc-dl:empty{display:none;}
+  .sc-ttl{display:block;font:700 10px 'Inter',sans-serif;color:#ef7a7b;margin-top:1px;}
+  @media (max-width:560px){ .sc-del{margin:8px 12px 0;} .sc-dl{display:none;} }
+  .sc-tools{display:flex;align-items:center;gap:10px;padding:8px 18px;} .sc-q{flex:1;padding:9px 12px;border-radius:12px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:600 13px 'Inter',sans-serif;outline:none;} .sc-cnt{font-size:12px;font-weight:800;color:var(--text-dim,#9c9ca6);}
+  .sc-grid{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:6px 18px 18px;align-content:start;}
+  .sc-it{position:relative;display:flex;flex-direction:column;gap:4px;padding:8px;border-radius:14px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:inherit;text-align:left;cursor:pointer;overflow:hidden;transition:transform .15s,border-color .2s;animation:scCard .35s ease both;}
+  .sc-it:hover{transform:translateY(-2px);border-color:#30b37a;} @keyframes scCard{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+  .sc-it.nw{border-color:#30b37a;box-shadow:0 0 0 3px rgba(48,179,122,.25);animation:scNew 1s cubic-bezier(.34,1.56,.64,1) both;} @keyframes scNew{from{opacity:0;transform:scale(.6) rotate(-4deg)}to{opacity:1;transform:none}}
+  .sc-tt{position:relative;height:120px;border-radius:10px;background:#fff;display:grid;place-items:center;overflow:hidden;} .sc-tt img{width:100%;height:100%;object-fit:cover;} .sc-tt .ic{font-size:34px;} .sc-tt em{position:absolute;top:6px;left:6px;font-style:normal;font:800 9.5px 'Inter',sans-serif;padding:2px 6px;border-radius:6px;background:#e2585a;color:#fff;}
+  .sc-it b{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .sc-it small{font-size:11px;color:var(--text-dim,#9c9ca6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sc-it.up .sc-tt{background:var(--bg-cell,#2a2a33);} .sc-it .sp{width:28px;height:28px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#30b37a;animation:scSpin .8s linear infinite;} @keyframes scSpin{to{transform:rotate(360deg)}}
+  .sc-it .pb{position:absolute;left:0;bottom:0;height:3px;background:#30b37a;transition:width .2s;}
+  .sc-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:40px 10px;text-align:center;border:1.5px dashed var(--border,#2b2b33);border-radius:18px;} .sc-empty span{font-size:40px;} .sc-empty b{font:800 16px 'Poppins',sans-serif;} .sc-empty small{font-size:12.5px;color:var(--text-dim,#9c9ca6);max-width:420px;}
+  .sc-view{z-index:3300;} .sc-vc{width:min(1100px,100%);height:min(900px,calc(100vh - 32px));display:flex;flex-direction:column;border-radius:20px;background:var(--bg-panel,#17171c);border:1px solid var(--border,#2b2b33);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55);animation:scPop .35s cubic-bezier(.2,.9,.3,1.15);}
+  .sc-view.auto .sc-vc{border-color:#30b37a;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 4px rgba(48,179,122,.3);animation:scNew .6s cubic-bezier(.34,1.56,.64,1) both;}
+  .sc-vh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--border,#2b2b33);} .sc-vn{flex:1;min-width:140px;padding:7px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:inherit;font:800 15px 'Poppins',sans-serif;outline:none;} .sc-vn:hover,.sc-vn:focus{border-color:var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);}
+  .sc-vh small{font-size:12px;color:var(--text-dim,#9c9ca6);} .sc-new{font:800 11px 'Inter',sans-serif;padding:4px 10px;border-radius:99px;background:linear-gradient(135deg,#3ecf8e,#22a06b);color:#05251a;animation:scPulse 1.4s ease 3;}
+  .sc-va{display:flex;gap:6px;margin-left:auto;} .sc-va button{min-width:36px;height:36px;padding:0 10px;border-radius:11px;border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;cursor:pointer;font:800 14px 'Inter',sans-serif;} .sc-va button.dl:hover,.sc-va button.arm{background:#e2585a;border-color:#e2585a;color:#fff;font-size:12px;}
+  .sc-vb{position:relative;flex:1;min-height:0;display:grid;place-items:center;background:#0d0d10;overflow:auto;} .sc-th{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:blur(8px);opacity:.5;}
+  .sc-ld{position:relative;display:flex;align-items:center;gap:10px;font-weight:700;color:#ddd;} .sc-ld span{width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:#30b37a;animation:scSpin .8s linear infinite;}
+  .sc-img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 16px);max-height:calc(100% - 16px);object-fit:contain;cursor:zoom-in;transition:transform .3s;animation:scIn .3s ease;} .sc-img.zoom{position:static;max-width:none;max-height:none;margin:8px;cursor:zoom-out;} .sc-vb:has(.sc-img.zoom){display:block;}
+  .sc-pdf{width:100%;height:100%;border:0;background:#fff;} .sc-open{position:absolute;right:14px;bottom:14px;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,.65);color:#fff;font-weight:800;font-size:12.5px;text-decoration:none;}
+  body.light-theme .sc-c,body.light-theme .sc-vc{background:#fff;color:#1c1b22;} body.light-theme .sc-big,body.light-theme .sc-it{background:#f7f5ef;}
+  @media (max-width:760px){ .sc-top{grid-template-columns:1fr 1fr;} .sc-qr{display:none;} .sc-back,.sc-view{padding:0;} .sc-c,.sc-vc{border-radius:0;height:100%;max-height:100%;} .sc-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));} }
+  `; document.head.appendChild(st);
+})();
+</script>
+<script>
+(function(){
+  const CFG = { apiKey:"AIzaSyA5RFVunlrXqX1NalKdQcbjUMoFhYCveM0", authDomain:"firstphone-munkaasztal.firebaseapp.com", projectId:"firstphone-munkaasztal",
+    storageBucket:"firstphone-munkaasztal.firebasestorage.app", messagingSenderId:"992346625761", appId:"1:992346625761:web:fad4af05009a20574fc9a0" };
+  const V = "10.12.2", BASES = [`https://www.gstatic.com/firebasejs/${V}/`, `https://cdn.jsdelivr.net/npm/firebase@${V}/`];
+  const $ = s=> document.querySelector(s), E = t=> String(t == null ? "" : t).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const splash = t=>{ const x = $("#fpSplashTx"); if(x) x.textContent = t; };
+  const unsplash = ()=>{ const s = $("#fpSplash"); if(s){ s.classList.add("out"); setTimeout(()=> s.remove(), 300); } };
+  const ls = { g:k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } }, s:(k, v)=>{ try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} } };
+  function load(src){ return new Promise((res, rej)=>{ const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+  async function sdk(){
+    for(const b of BASES){ try{ await load(b + "firebase-app-compat.js"); await Promise.all([load(b + "firebase-auth-compat.js"), load(b + "firebase-firestore-compat.js")]); if(window.firebase && firebase.firestore && firebase.auth) return true; }catch(e){} }
+    return false;
+  }
+  /* a QR-kódból (…/scan/#c=kód) vagy beírt kódból: jelszó nélküli belépés */
+  const codeOf = v=> String(v || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  async function redeem(code){
+    const r = await fetch("/api/qr", { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify({ action:"redeem", code }) });
+    const j = await r.json().catch(()=> ({})); if(!r.ok || !j.ok) throw new Error(j.error || ("Hiba (" + r.status + ")"));
+    const cur = firebase.auth().currentUser;
+    if(!cur || cur.email !== j.email) await firebase.auth().signInWithCustomToken(j.token);
+    ls.s("fp_scan_t", j.t || ""); return j;
+  }
+  const toEmail = v=>{ v = String(v || "").trim(); if(v.includes("@")) return v.toLowerCase(); const n = v.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9._-]/g, ""); if(!n) return ""; if(n === "admin") return "admin@admin.com";
+    try{ const L = window.fpLoginFor && fpLoginFor(n); if(L) return L + "@firstphone.hu"; }catch(e){} return n + "@firstphone.hu"; };
+  const shopOf = email=>{ try{ const st = window.fpStoreFromEmail && fpStoreFromEmail(email); if(st) return st.label || ("FirstPhone " + st.location); }catch(e){} return String(email || "").split("@")[0]; };
+  function loginForm(msg){
+    unsplash(); let L = $("#fcLogin"); if(L) L.remove();
+    L = document.createElement("div"); L.id = "fcLogin";
+    L.innerHTML = `<div class="lg"><div class="hd"><img src="/scan/icon-180.png" alt=""><div><b>FirstPhone Fotó</b><small>Lefotózod → a bolt gépén azonnal megjelenik</small></div></div>
+      <div class="card"><h2>📱 Belépés a gép kódjával</h2><p>A bolt gépén nyisd meg a <b>📷 Fotók</b> ablakot, és olvasd be a <b>QR-kódot</b> a telefon kamerájával — vagy írd be ide az alatta lévő kódot:</p>
+        <input class="code" id="scCode" inputmode="text" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" placeholder="pl. abcde-fghjk" maxlength="14">
+        <button type="button" class="go" id="scCodeGo">Belépés kóddal →</button></div>
+      <div class="or">— vagy —</div>
+      <div class="card"><h2>🔑 Bolt neve és jelszó</h2><form id="scPw" autocomplete="on"><label for="scName">Bolt neve</label><input id="scName" name="username" autocomplete="username" placeholder="pl. Kaposvár, Eger" autocapitalize="words">
+        <label for="scPass">Jelszó</label><input id="scPass" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+        <button type="submit" class="go sec" id="scPwGo">Belépés →</button></form></div>
+      <div class="err" id="scErr">${E(msg || "")}</div><div class="ft">FirstPhone Munkaasztal · Fotó</div></div>`;
+    document.body.appendChild(L);
+    const err = t=>{ $("#scErr").textContent = t || ""; };
+    $("#scCodeGo").onclick = async ()=>{ const c = codeOf($("#scCode").value); if(c.length !== 10){ err("A kód 10 karakter (pl. abcde-fghjk)."); return; } const b = $("#scCodeGo"); b.disabled = true; b.textContent = "Belépés…"; err("");
+      try{ await redeem(c); }catch(e){ err(e.message || String(e)); } b.disabled = false; b.textContent = "Belépés kóddal →"; };
+    $("#scCode").addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); $("#scCodeGo").click(); } });
+    $("#scPw").onsubmit = async e=>{ e.preventDefault(); const em = toEmail($("#scName").value), pw = $("#scPass").value; if(!em || !pw){ err("Írd be a bolt nevét és a jelszót."); return; }
+      const b = $("#scPwGo"); b.disabled = true; b.textContent = "Belépés…"; err("");
+      try{ ls.s("fp_scan_t", null); await firebase.auth().signInWithEmailAndPassword(em, pw); }
+      catch(x){ err(/wrong-password|invalid-credential|invalid-login|user-not-found/.test(x && x.code || "") ? "Hibás bolt név vagy jelszó." : /network/.test(x && x.code || "") ? "Nincs internet — próbáld újra." : (x.message || String(x))); }
+      b.disabled = false; b.textContent = "Belépés →"; };
+  }
+  let started = false;
+  function go(u){
+    const L = $("#fcLogin"); if(L) L.remove();
+    const adm = u.email === "admin@admin.com";
+    const t = ls.g("fp_scan_t") || (adm ? "" : u.uid);
+    if(!t){ loginForm("Adminnal: a gépen nyisd meg annál a boltnál a 📷 Fotókat, és olvasd be onnan a QR-kódot."); return; }
+    window.fpScanShop = adm ? "Admin" : shopOf(u.email);
+    window.FP_CLOUD = { on:true, user:u, db:firebase.firestore(), target:t, admin:adm };
+    window.fpScanLogout = async ()=>{ ls.s("fp_scan_t", null); try{ await firebase.auth().signOut(); }catch(e){} location.replace("/scan/"); };
+    if(started) return; started = true;
+    /* 🤖 hibanapló → az admin a 🐞 Hibajegyeknél látja (ugyanúgy, mint a Munkaasztalnál) */
+    window.__fpErrFlush = async ()=>{ const Q = window.__fpErrQ || []; while(Q.length){ const x = Q.shift(); let h = 5381; const k = x.m + "|" + x.src + "|" + window.FP_BUILD; for(let i = 0; i < k.length; i++) h = ((h << 5) + h + k.charCodeAt(i)) >>> 0;
+        try{ const FV = firebase.firestore.FieldValue; await firebase.firestore().collection("boltok").doc(t).collection("err").doc("e" + h.toString(36)).set({ m:x.m, src:x.src, st:x.st, pg:"foto-app", w:x.w, b:window.FP_BUILD || "", ua:(navigator.userAgent || "").slice(0, 90), last:x.at, first:x.at, n:FV && FV.increment ? FV.increment(1) : 1 }, { merge:true }); }catch(e){} } };
+    if(!adm) setTimeout(()=> window.__fpErrFlush(), 2000);
+    unsplash(); try{ window.fpScanInit(); }catch(e){ toast("⚠ " + (e.message || e)); }
+  }
+  async function boot(){
+    splash("Kapcsolódás…");
+    if(!(await sdk())){ splash("Nincs internet — a fotózáshoz kapcsolat kell. Próbáld újra."); setTimeout(()=> location.reload(), 6000); return; }
+    firebase.initializeApp(CFG);
+    const m = /[#&]c=([a-z0-9-]{10,14})/i.exec(location.hash || "");
+    if(m){ try{ history.replaceState(null, "", location.pathname); }catch(e){} }
+    let first = true;
+    firebase.auth().onAuthStateChanged(async u=>{
+      if(first){ first = false;
+        if(m){ splash("Belépés a QR-kóddal…"); try{ const j = await redeem(codeOf(m[1])); const cu = firebase.auth().currentUser; if(cu && cu.email === j.email) go(cu); return; }catch(e){ if(!u){ loginForm(e.message || String(e)); return; } toast("⚠ " + (e.message || e)); } } }
+      if(u) go(u); else if(!started) loginForm("");
+      else location.replace("/scan/");
+    });
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
