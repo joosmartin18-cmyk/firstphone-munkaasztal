@@ -5893,7 +5893,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261027-151435";</script>
+<script>window.FP_BUILD="20261027-152218";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -6376,6 +6376,23 @@
     .bh-ans{margin-top:8px;padding:8px 10px;border-left:3px solid var(--gold,#d9ad46);border-radius:0 9px 9px 0;background:color-mix(in srgb,var(--gold,#d9ad46) 10%,transparent);font-size:12.5px;white-space:pre-wrap;}
     .bh-ans b{display:block;font-size:11.5px;margin-bottom:2px;} .bh-ans small{display:block;margin-top:3px;opacity:.7;font-size:11px;}
     .bh-id{font-family:ui-monospace,Menlo,monospace;opacity:.75;}
+  /* 🐞 válasz az admintól — értesítő ablak a boltnál */
+  .bap-back{position:fixed;inset:0;z-index:9500;display:grid;place-items:center;padding:16px;background:rgba(6,6,10,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:bapIn .25s ease;}
+  .bap-back.out{animation:bapOut .22s ease forwards;}
+  .bap{position:relative;width:min(440px,100%);max-height:calc(100vh - 32px);overflow:auto;box-sizing:border-box;padding:22px 20px 18px;border-radius:22px;background:var(--bg-panel,#17171c);color:var(--text,#f2f2f5);border:1px solid var(--border,#2b2b33);box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 3px 0 #30b37a;animation:bapPop .45s cubic-bezier(.2,1.3,.4,1);}
+  .bap-ic{position:relative;width:58px;height:58px;margin:0 auto 8px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,#ffd38a,#f0a030);box-shadow:0 10px 24px rgba(240,160,48,.35);}
+  .bap-ic i{position:absolute;right:-6px;bottom:-6px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:900 13px 'Inter',sans-serif;font-style:normal;color:#fff;background:#30b37a;box-shadow:0 0 0 3px var(--bg-panel,#17171c);animation:bapOk .6s .25s cubic-bezier(.2,1.6,.4,1) both;}
+  .bap-k{display:block;text-align:center;font:800 11px 'Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim,#9c9ca6);margin-bottom:12px;}
+  .bap-it{padding:12px 13px;border-radius:15px;background:var(--bg-panel2,rgba(127,127,127,.08));border:1px solid var(--border,#2b2b33);margin-bottom:10px;}
+  .bap-it.st-done{border-color:rgba(48,179,122,.55);background:linear-gradient(135deg,rgba(48,179,122,.13),transparent 70%);}
+  .bap-t{display:flex;align-items:center;gap:8px;} .bap-t b{font:800 12.5px 'Inter',sans-serif;} .bap-t em{margin-left:auto;font-style:normal;font:800 11.5px 'Inter',sans-serif;padding:3px 9px;border-radius:99px;background:rgba(127,127,127,.15);}
+  .bap-it.st-done .bap-t em{background:rgba(48,179,122,.2);color:#30b37a;}
+  .bap-q{margin:7px 0 8px;font-size:12.5px;line-height:1.4;color:var(--text-dim,#9c9ca6);font-style:italic;}
+  .bap-a{font-size:14px;line-height:1.45;font-weight:600;white-space:pre-wrap;}
+  .bap-b{display:flex;gap:8px;margin-top:6px;} .bap-b button{flex:1;padding:12px 14px;border-radius:13px;border:1px solid var(--border,#2b2b33);background:transparent;color:inherit;font:800 14px 'Inter',sans-serif;cursor:pointer;}
+  .bap-b .bap-ok{background:linear-gradient(135deg,#30b37a,#1f8f5f);border-color:transparent;color:#fff;}
+  @keyframes bapIn{from{opacity:0}to{opacity:1}} @keyframes bapOut{to{opacity:0}} @keyframes bapPop{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}} @keyframes bapOk{from{transform:scale(0)}to{transform:none}}
+  @media (prefers-reduced-motion:reduce){.bap-back,.bap,.bap-ic i{animation:none !important;}}
     #bugBtn.has-ans{position:relative;} #bugBtn.has-ans::after{content:attr(data-n);position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#ef5a5a;color:#fff;font:700 10px/16px 'Inter',sans-serif;text-align:center;box-shadow:0 0 0 2px var(--bg,#0c0c0f);}
     .fc-msgban > i{font-style:normal;font-size:22px;} .fc-msgban div{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;} .fc-msgban small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);margin-bottom:2px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;}
     .fc-msgban button{border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:700 12.5px 'Inter',sans-serif;padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap;}
@@ -9014,7 +9031,29 @@ service cloud.firestore {
       const bb = document.getElementById("bugBtn"); if(!bb) return; const n = L.filter(m=> m.ansAt > seen).length;
       bb.classList.toggle("has-ans", !!n); bb.dataset.n = n ? String(n) : "";
       if(bpanel && n){ lsSet(BANS, String(mx)); bb.classList.remove("has-ans"); bb.dataset.n = ""; }
+      if(!bpanel && n) setTimeout(()=>{ try{ bugAnsPop(); }catch(e){} }, live ? 300 : 2500);
     }
+    /* 🔔 az admin válaszolt (pl. megoldotta a hibajegyet) — jól látható értesítés, egyszer, akkor is, ha épp nem volt bent a bolt */
+    const BPOP = "firstphone_bug_ans_pop";
+    function bugAnsPop(){
+      if(bpanel || document.querySelector(".bap-back")) return;
+      const seen = Math.max(+(lsGet(BANS) || 0), +(lsGet(BPOP) || 0)), L = bugList().filter(m=> m.ans && m.ansAt > seen).sort((a, b)=> b.ansAt - a.ansAt);
+      if(!L.length) return;
+      if(document.querySelector(".modal-backdrop.show,.nw-back,.shift-back,.rs-back,.fc-back")){ setTimeout(()=>{ try{ bugAnsPop(); }catch(e){} }, 4000); return; }
+      const mx = L[0].ansAt; lsSet(BPOP, String(mx));
+      const b = document.createElement("div"); b.className = "bap-back";
+      b.innerHTML = `<div class="bap" role="dialog" aria-label="Válasz a bejelentésedre"><div class="bap-ic">🐞<i>✓</i></div><small class="bap-k">Válasz az admintól${L.length > 1 ? ` · ${L.length} bejelentésre` : ""}</small>
+        ${L.slice(0, 3).map(m=>{ const c = BUG_CATS[m.cat] || BUG_CATS.bug, st = BUG_ST[m.st] || BUG_ST.new;
+          return `<div class="bap-it st-${esc(m.st || "new")}"><div class="bap-t"><b>${c[0]} ${c[1]} · #${Number(m.ms || 0).toString(36).slice(-5).toUpperCase()}</b><em>${st[0]} ${st[1]}</em></div><p class="bap-q">„${esc(String(m.text || "").slice(0, 140))}${String(m.text || "").length > 140 ? "…" : ""}”</p><div class="bap-a">💬 ${esc(m.ans)}</div></div>`; }).join("")}
+        <div class="bap-b"><button type="button" class="bap-more">Bejelentéseim</button><button type="button" class="bap-ok">👍 Rendben</button></div></div>`;
+      document.body.appendChild(b); try{ window.fpSound && fpSound("msg", .7); }catch(e){}
+      try{ if("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification("🐞 Válasz a bejelentésedre", { body:String(L[0].ans).slice(0, 160), icon:"/cal-icon.png" }); }catch(e){}
+      const close = seenAll=>{ if(seenAll){ lsSet(BANS, String(mx)); const bb = document.getElementById("bugBtn"); if(bb){ bb.classList.remove("has-ans"); bb.dataset.n = ""; } } b.classList.add("out"); setTimeout(()=> b.remove(), 220); };
+      b.querySelector(".bap-ok").onclick = ()=> close(true);
+      b.querySelector(".bap-more").onclick = ()=>{ close(true); setTimeout(()=>{ try{ openBug(); const h = bpanel && bpanel.querySelector(".bug-hist"); if(h) h.scrollIntoView({ block:"start" }); }catch(e){} }, 240); };
+      b.addEventListener("click", e=>{ if(e.target === b) close(true); });
+    }
+    window.fpBugAnsPop = ()=> bugAnsPop();
     function drawBugHist(){
       if(!bpanel) return; const h = bpanel.querySelector(".bug-hist"); if(!h) return;
       const L = bugList().slice(-12).reverse();
