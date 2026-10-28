@@ -5531,6 +5531,17 @@
   html.fp-rnav #pageSwitch .ps-btn[data-page="teendo"]{--c:#d6589a;}
   html.fp-rnav #pageSwitch .ps-btn[data-page="tudastar"]{--c:#8a5aa8;}
 
+  /* alacsony ablak (pl. laptop, Safari): a bal menü és a jobb eszközsáv összébb húzódik, hogy minden gomb kiférjen — ne vágja le az alját */
+  @media (max-height:900px){
+    html.fp-rnav #pageSwitch{gap:1px !important;padding:8px 7px !important;}
+    html.fp-rnav #pageSwitch .ps-btn{padding:clamp(3px,.7vh,7px) 2px !important;gap:clamp(2px,.4vh,4px) !important;font-size:clamp(10px,1.45vh,11.5px) !important;}
+    html.fp-rnav #pageSwitch .ps-btn .ps-i{width:clamp(28px,4.6vh,42px) !important;height:clamp(28px,4.6vh,42px) !important;border-radius:12px !important;font-size:clamp(15px,2.3vh,20px) !important;}
+    html.fp-rnav #pageSwitch .rn-tg{margin-top:2px;padding:4px 2px 2px;}
+    html.fp-rnav #fpTools{padding:8px 0;}
+    html.fp-rnav #fpTools .hdr-btns{gap:clamp(3px,.6vh,7px) !important;}
+    html.fp-rnav #fpTools :is(.icon-btn,.set-btn,.fc-chip){width:clamp(38px,5.6vh,48px) !important;height:clamp(38px,5.6vh,48px) !important;font-size:clamp(16px,2.4vh,20px) !important;}
+  }
+  @media (max-height:600px){ html.fp-rnav #pageSwitch .ps-btn .ps-t{display:none !important;} html.fp-rnav #pageSwitch .rn-tg{font-size:0 !important;} }
   .ps-rn{display:none;}
   html:not(.m-app):not(.fp-rnav):not(.hdr-mini) body .ps-rn{display:inline-flex;align-items:center;gap:5px;flex:none;margin-left:6px;padding:7px 10px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--gold,#d9ad46) 55%,var(--border));background:transparent;color:var(--text-dim);font:700 12px 'Inter',sans-serif;cursor:pointer;}
   .ps-rn:hover{color:var(--gold,#d9ad46);border-style:solid;}
@@ -5920,7 +5931,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261027-162315";</script>
+<script>window.FP_BUILD="20261028-195539";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -20389,7 +20400,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       card.innerHTML = `
         <div class="who"><button type="button" class="sum-ph" data-ph="${p.id}" title="Profilkép feltöltése / módosítása">${avHtml(p)}<i>📷</i></button><span class="sum-id"><span class="sum-nm">${esc(p.name)}</span><small class="sum-sub">${stt.full ? `<b>${stt.full}</b> egész` : ""}${stt.full && stt.half ? " · " : ""}${stt.half ? `<b>${stt.half}</b> fél nap` : ""}${!stt.full && !stt.half ? "még nincs beosztva" : ""}${stt.min ? ` · <b>${Math.round(stt.min / 6) / 10 === Math.round(stt.min / 60) ? Math.round(stt.min / 60) : fmt(Math.round(stt.min / 6) / 10)}</b> óra` : ""}</small></span>${rateOn() ? `<button type="button" class="sum-rate" data-rate="1" title="Műszak értékelések ebben a hónapban — kattints az értékeléshez">⭐ ${rateAvg(p.id)}</button>` : ""}</div>
         <div class="sum-body">
-          <div class="nums"><span class="val">${dn}</span><span class="of">nap</span></div>
+          <div class="nums"><span class="val">${fmt(Math.round(dn * 2) / 2)}</span><span class="of">nap</span></div>
           <div class="sum-goal">
             <div class="sg-bar" title="${pct}% a havi célból"><i style="width:${pct}%"></i></div>
             <div class="sg-row">${gst}${editableTarget ? `<span class="sg-tg"><small>cél</small><button type="button" class="sg-b" data-tgs="-1" data-person="${p.id}" aria-label="Kevesebb">−</button><input class="target" type="number" min="0" max="31" value="${tg}" data-person="${p.id}" aria-label="Havi cél (nap)"><button type="button" class="sg-b" data-tgs="1" data-person="${p.id}" aria-label="Több">+</button></span>` : `<span class="sg-tg ro"><small>cél</small><b>${tg}</b></span>`}</div>
