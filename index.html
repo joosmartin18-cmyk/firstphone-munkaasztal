@@ -6055,12 +6055,12 @@
   html.ui-uj .app{ padding-top:12px !important; }
   html.ui-uj .hdr2{ margin-bottom:12px !important; padding-top:8px !important; padding-bottom:8px !important; }
   html.ui-uj #mainPanel{ padding:12px 16px 16px !important; }
-  html.ui-uj #calGrid{ gap:6px !important; }
-  html.ui-uj #calGrid .day-cell{ padding:6px !important; gap:4px !important; }
-  html.ui-uj #calGrid .day-cell .badge{ padding:4px 6px !important; }
-  html.ui-uj #calGrid .day-cell .badge.empty{ min-height:16px !important; height:16px !important; padding:0 !important; font-size:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid{ gap:6px !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell{ padding:6px !important; gap:4px !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge{ padding:4px 6px !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.empty{ min-height:16px !important; height:16px !important; padding:0 !important; font-size:0 !important; }
   html.ui-uj .page-switch{ border-color:var(--u4) !important; }
-  html.ui-uj #calGrid .day-cell.blank{ background:transparent !important; border-color:transparent !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.blank{ background:transparent !important; border-color:transparent !important; }
   html.ui-uj #summary{ gap:12px !important; margin-top:12px !important; }
   html.ui-uj .sum-card{ padding:12px 16px !important; }
   html.ui-uj #actionsWrap{ display:flex !important; flex-wrap:wrap !important; gap:8px !important; margin-top:12px !important; }
@@ -6312,6 +6312,59 @@
   html.ui-uj body #fcAdmin .ui-pinbtn{ width:40px !important; height:40px !important; flex:none; border-radius:10px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; display:grid !important; place-items:center; padding:0 !important; }
   html.ui-uj body #fcAdmin .ui-pinbtn svg{ width:20px; height:20px; display:block; }
   html.ui-uj body #fcAdmin .ui-grp{ flex:none; padding:16px 12px 4px; font:600 12px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint); white-space:nowrap; overflow:hidden; }
+
+  /* ===== PRÓBA 8: tartalom újratervezése — naptár rácsként, színezett műszak-csíkok, letisztult fejléc ===== */
+  html.ui-uj body{ --ov:rgba(24,24,24,.80); }
+  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ --ov:rgba(255,255,255,.84); }
+  /* fejléc: a logó a menübe költözik, itt csak az oldal címe */
+  html.ui-uj.fp-rnav:not(.m-app) .hdr2 .brand{ display:none !important; }
+  html.ui-uj.fp-rnav:not(.m-app) .hdr2 .header-title, html.ui-uj.fp-rnav:not(.m-app) #pageTitle{ font-size:24px !important; line-height:32px !important; font-weight:600 !important; letter-spacing:-.01em; }
+  html.ui-uj .ui-brand{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
+  html.ui-uj .ui-brand img{ height:22px; width:auto; max-width:150px; object-fit:contain; object-position:left center; }
+  html.ui-uj .ui-brand small{ font:500 12px/16px 'Manrope',system-ui,sans-serif; color:var(--udim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.ui-rail #pageSwitch:not(:hover):not(:focus-within) .ui-brand, html.ui-uj.ui-rail #fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-brand{ display:none; }
+  html.ui-uj .ui-navtop{ height:56px !important; }
+  /* naptár: összefüggő rács vékony vonalakkal */
+  html.ui-uj:not(.m-app) #calGrid{ gap:0 !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:12px !important; overflow:hidden !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell{ border:0 !important; border-radius:0 !important; outline:0 !important; background:var(--u1) !important; box-shadow:inset -1px -1px 0 var(--u4) !important; min-height:108px !important; padding:8px !important; display:flex !important; flex-direction:column !important; gap:4px !important; animation:none !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.weekend{ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.blank{ background:var(--u1) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell:hover{ background:var(--u3) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.today{ box-shadow:inset 0 0 0 2px var(--uacc) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.dl-day::before, html.ui-uj:not(.m-app) #calGrid .day-cell.dl-day::after{ display:none !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.dl-day:not(.today){ border:0 !important; outline:0 !important; box-shadow:inset -1px -1px 0 var(--u4) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .day-num{ font-size:13px !important; line-height:20px !important; font-weight:600 !important; color:var(--utx) !important; align-self:flex-start; min-width:24px; height:24px; display:grid !important; place-items:center; padding:0 6px; border-radius:9999px; margin:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.past .day-num{ color:var(--ufaint) !important; }
+  html.ui-uj #calGrid .day-cell.today .day-num{ background:var(--uacc) !important; color:var(--uacctx) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.weekend .day-num{ color:var(--udim) !important; }
+  /* műszak-csík: halványított személyszín, bal oldalon teli színsáv */
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge:not(.empty):not(.split), html.ui-uj:not(.m-app) #calGrid .day-cell .badge.split .half{ background-image:linear-gradient(var(--ov),var(--ov)) !important; background-size:calc(100% - 4px) 100% !important; background-position:right center !important; background-repeat:no-repeat !important; color:var(--utx) !important; border:0 !important; border-radius:6px !important; padding:6px 8px 6px 12px !important; text-align:left !important; box-shadow:none !important; text-transform:none !important; letter-spacing:0 !important; animation:none !important; width:100%; box-sizing:border-box; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge :is(.nmL,.half-time){ text-transform:none !important; letter-spacing:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge .nmL{ display:block !important; font-size:12px !important; line-height:16px !important; font-weight:600 !important; color:var(--utx) !important; text-transform:capitalize !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge .half-time{ display:block !important; font-size:12px !important; line-height:16px !important; font-weight:500 !important; color:var(--udim) !important; font-variant-numeric:tabular-nums; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge .nmS, html.ui-uj:not(.m-app) #calGrid .day-cell .badge br{ display:none !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.split{ display:flex !important; flex-direction:column !important; gap:4px !important; background:none !important; padding:0 !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.empty{ opacity:0; min-height:0 !important; height:auto !important; border:1px dashed var(--u4) !important; border-radius:6px !important; padding:4px !important; font-size:0 !important; text-align:center; transition:opacity .3s cubic-bezier(0.22,1,0.36,1); }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.empty::after{ content:"+ beosztás"; font:500 12px/16px 'Manrope',system-ui,sans-serif; color:var(--udim); }
+  html.ui-uj:not(.m-app) #calGrid .day-cell:hover .badge.empty{ opacity:1; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .dl-mark{ background:var(--u3) !important; background-image:none !important; color:var(--utx) !important; border:1px solid var(--u4) !important; border-radius:6px !important; font:600 11px/16px 'Manrope',system-ui,sans-serif !important; padding:2px 6px !important; box-shadow:none !important; margin-top:auto !important; width:auto !important; align-self:flex-start; text-shadow:none !important; }
+  html.ui-uj .cal-head, html.ui-uj #calHead{ background:none !important; }
+  /* dolgozói összesítő kártyák */
+  html.ui-uj .sum-card{ background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; padding:16px !important; }
+  html.ui-uj .sum-card .sg-bar{ height:6px !important; border-radius:9999px !important; background:var(--u3) !important; box-shadow:none !important; }
+  html.ui-uj .sum-card .sg-bar i{ background:var(--c, var(--uacc)) !important; background-image:none !important; border-radius:9999px !important; box-shadow:none !important; }
+  html.ui-uj .sum-card .nums{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:12px !important; }
+  html.ui-uj .sum-card .nums .val{ color:var(--utx) !important; font-weight:600 !important; }
+  /* általános: szekciócímek, kis címkék */
+  html.ui-uj .app h2{ font-size:18px !important; line-height:28px !important; font-weight:600 !important; }
+  html.ui-uj .app h3{ font-size:16px !important; line-height:24px !important; font-weight:600 !important; }
+  /* fülsor: aláhúzásos fülek a vastag sárga gomb helyett */
+  html.ui-uj:not(.m-app) .tabs{ background:transparent !important; border:0 !important; border-bottom:1px solid var(--u4) !important; border-radius:0 !important; padding:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-ind{ top:auto !important; bottom:-1px !important; height:2px !important; border-radius:2px !important; background:var(--uacc) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-btn{ color:var(--udim) !important; font-weight:500 !important; border-radius:0 !important; background:transparent !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-btn:hover{ color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-btn.active{ color:var(--utx) !important; font-weight:600 !important; }
+  html.ui-uj #mainPanel{ background:transparent !important; border:0 !important; padding:16px 0 0 !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -6340,11 +6393,12 @@
     var ps = document.getElementById("pageSwitch"); if(!ps) return;
     if(!ps.querySelector(".ui-navtop")){
       var top = document.createElement("div"); top.className = "ui-navtop";
-      top.innerHTML = '<button type="button" class="ui-pinbtn" aria-label="Menü rögzítése">' + ICO + '</button><b>Munkaasztal</b>';
+      top.innerHTML = '<button type="button" class="ui-pinbtn" aria-label="Menü rögzítése">' + ICO + '</button><span class="ui-brand"><img alt="FirstPhone"><small></small></span>';
       ps.insertBefore(top, ps.firstChild);
       top.querySelector("button").addEventListener("click", function(e){ e.stopPropagation(); setm(H.classList.contains("ui-pin") ? "rail" : "pin"); });
       setm(get());
     }
+    var br = ps.querySelector(".ui-brand"); if(br){ var li = document.querySelector("#logoInner img"), bs = document.getElementById("brandSub"); if(li && br.querySelector("img").getAttribute("src") !== li.getAttribute("src")) br.querySelector("img").setAttribute("src", li.getAttribute("src")); var tx = bs ? bs.textContent.trim() : ""; if(br.querySelector("small").textContent !== tx) br.querySelector("small").textContent = tx; }
     var anchor = ps.querySelector(".ui-navtop");
     G.forEach(function(g){
       var h = ps.querySelector('.ui-grp[data-g="' + g[0] + '"]');
@@ -6379,6 +6433,7 @@
   function on(){ return H.classList.contains("ui-uj"); }
   function fix(el){
     if(el.nodeType !== 1 || el.dataset.uiF) return; el.dataset.uiF = "1";
+    if(el.classList.contains("nmL") && /^[^a-záéíóöőúüű]*$/.test(el.textContent) && /[A-ZÁÉÍÓÖŐÚÜŰ]{2}/.test(el.textContent)){ el.textContent = el.textContent.toLowerCase().replace(/(^|[\s:-])([a-záéíóöőúüű])/g, function(a, b, c){ return b + c.toUpperCase(); }); }
     if(el.closest(SKIP)) return;
     var cs = getComputedStyle(el), bi = cs.backgroundImage;
     if(!bi || bi.indexOf("gradient") < 0) return;
@@ -15832,12 +15887,12 @@ service cloud.firestore {
   html.ui-uj .app{ padding-top:12px !important; }
   html.ui-uj .hdr2{ margin-bottom:12px !important; padding-top:8px !important; padding-bottom:8px !important; }
   html.ui-uj #mainPanel{ padding:12px 16px 16px !important; }
-  html.ui-uj #calGrid{ gap:6px !important; }
-  html.ui-uj #calGrid .day-cell{ padding:6px !important; gap:4px !important; }
-  html.ui-uj #calGrid .day-cell .badge{ padding:4px 6px !important; }
-  html.ui-uj #calGrid .day-cell .badge.empty{ min-height:16px !important; height:16px !important; padding:0 !important; font-size:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid{ gap:6px !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell{ padding:6px !important; gap:4px !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge{ padding:4px 6px !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.empty{ min-height:16px !important; height:16px !important; padding:0 !important; font-size:0 !important; }
   html.ui-uj .page-switch{ border-color:var(--u4) !important; }
-  html.ui-uj #calGrid .day-cell.blank{ background:transparent !important; border-color:transparent !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.blank{ background:transparent !important; border-color:transparent !important; }
   html.ui-uj #summary{ gap:12px !important; margin-top:12px !important; }
   html.ui-uj .sum-card{ padding:12px 16px !important; }
   html.ui-uj #actionsWrap{ display:flex !important; flex-wrap:wrap !important; gap:8px !important; margin-top:12px !important; }
@@ -16089,6 +16144,59 @@ service cloud.firestore {
   html.ui-uj body #fcAdmin .ui-pinbtn{ width:40px !important; height:40px !important; flex:none; border-radius:10px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; display:grid !important; place-items:center; padding:0 !important; }
   html.ui-uj body #fcAdmin .ui-pinbtn svg{ width:20px; height:20px; display:block; }
   html.ui-uj body #fcAdmin .ui-grp{ flex:none; padding:16px 12px 4px; font:600 12px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint); white-space:nowrap; overflow:hidden; }
+
+  /* ===== PRÓBA 8: tartalom újratervezése — naptár rácsként, színezett műszak-csíkok, letisztult fejléc ===== */
+  html.ui-uj body{ --ov:rgba(24,24,24,.80); }
+  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ --ov:rgba(255,255,255,.84); }
+  /* fejléc: a logó a menübe költözik, itt csak az oldal címe */
+  html.ui-uj.fp-rnav:not(.m-app) .hdr2 .brand{ display:none !important; }
+  html.ui-uj.fp-rnav:not(.m-app) .hdr2 .header-title, html.ui-uj.fp-rnav:not(.m-app) #pageTitle{ font-size:24px !important; line-height:32px !important; font-weight:600 !important; letter-spacing:-.01em; }
+  html.ui-uj .ui-brand{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
+  html.ui-uj .ui-brand img{ height:22px; width:auto; max-width:150px; object-fit:contain; object-position:left center; }
+  html.ui-uj .ui-brand small{ font:500 12px/16px 'Manrope',system-ui,sans-serif; color:var(--udim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.ui-rail #pageSwitch:not(:hover):not(:focus-within) .ui-brand, html.ui-uj.ui-rail #fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-brand{ display:none; }
+  html.ui-uj .ui-navtop{ height:56px !important; }
+  /* naptár: összefüggő rács vékony vonalakkal */
+  html.ui-uj:not(.m-app) #calGrid{ gap:0 !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:12px !important; overflow:hidden !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell{ border:0 !important; border-radius:0 !important; outline:0 !important; background:var(--u1) !important; box-shadow:inset -1px -1px 0 var(--u4) !important; min-height:108px !important; padding:8px !important; display:flex !important; flex-direction:column !important; gap:4px !important; animation:none !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.weekend{ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.blank{ background:var(--u1) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell:hover{ background:var(--u3) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.today{ box-shadow:inset 0 0 0 2px var(--uacc) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.dl-day::before, html.ui-uj:not(.m-app) #calGrid .day-cell.dl-day::after{ display:none !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.dl-day:not(.today){ border:0 !important; outline:0 !important; box-shadow:inset -1px -1px 0 var(--u4) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .day-num{ font-size:13px !important; line-height:20px !important; font-weight:600 !important; color:var(--utx) !important; align-self:flex-start; min-width:24px; height:24px; display:grid !important; place-items:center; padding:0 6px; border-radius:9999px; margin:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.past .day-num{ color:var(--ufaint) !important; }
+  html.ui-uj #calGrid .day-cell.today .day-num{ background:var(--uacc) !important; color:var(--uacctx) !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell.weekend .day-num{ color:var(--udim) !important; }
+  /* műszak-csík: halványított személyszín, bal oldalon teli színsáv */
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge:not(.empty):not(.split), html.ui-uj:not(.m-app) #calGrid .day-cell .badge.split .half{ background-image:linear-gradient(var(--ov),var(--ov)) !important; background-size:calc(100% - 4px) 100% !important; background-position:right center !important; background-repeat:no-repeat !important; color:var(--utx) !important; border:0 !important; border-radius:6px !important; padding:6px 8px 6px 12px !important; text-align:left !important; box-shadow:none !important; text-transform:none !important; letter-spacing:0 !important; animation:none !important; width:100%; box-sizing:border-box; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge :is(.nmL,.half-time){ text-transform:none !important; letter-spacing:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge .nmL{ display:block !important; font-size:12px !important; line-height:16px !important; font-weight:600 !important; color:var(--utx) !important; text-transform:capitalize !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge .half-time{ display:block !important; font-size:12px !important; line-height:16px !important; font-weight:500 !important; color:var(--udim) !important; font-variant-numeric:tabular-nums; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge .nmS, html.ui-uj:not(.m-app) #calGrid .day-cell .badge br{ display:none !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.split{ display:flex !important; flex-direction:column !important; gap:4px !important; background:none !important; padding:0 !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.empty{ opacity:0; min-height:0 !important; height:auto !important; border:1px dashed var(--u4) !important; border-radius:6px !important; padding:4px !important; font-size:0 !important; text-align:center; transition:opacity .3s cubic-bezier(0.22,1,0.36,1); }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .badge.empty::after{ content:"+ beosztás"; font:500 12px/16px 'Manrope',system-ui,sans-serif; color:var(--udim); }
+  html.ui-uj:not(.m-app) #calGrid .day-cell:hover .badge.empty{ opacity:1; }
+  html.ui-uj:not(.m-app) #calGrid .day-cell .dl-mark{ background:var(--u3) !important; background-image:none !important; color:var(--utx) !important; border:1px solid var(--u4) !important; border-radius:6px !important; font:600 11px/16px 'Manrope',system-ui,sans-serif !important; padding:2px 6px !important; box-shadow:none !important; margin-top:auto !important; width:auto !important; align-self:flex-start; text-shadow:none !important; }
+  html.ui-uj .cal-head, html.ui-uj #calHead{ background:none !important; }
+  /* dolgozói összesítő kártyák */
+  html.ui-uj .sum-card{ background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; padding:16px !important; }
+  html.ui-uj .sum-card .sg-bar{ height:6px !important; border-radius:9999px !important; background:var(--u3) !important; box-shadow:none !important; }
+  html.ui-uj .sum-card .sg-bar i{ background:var(--c, var(--uacc)) !important; background-image:none !important; border-radius:9999px !important; box-shadow:none !important; }
+  html.ui-uj .sum-card .nums{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:12px !important; }
+  html.ui-uj .sum-card .nums .val{ color:var(--utx) !important; font-weight:600 !important; }
+  /* általános: szekciócímek, kis címkék */
+  html.ui-uj .app h2{ font-size:18px !important; line-height:28px !important; font-weight:600 !important; }
+  html.ui-uj .app h3{ font-size:16px !important; line-height:24px !important; font-weight:600 !important; }
+  /* fülsor: aláhúzásos fülek a vastag sárga gomb helyett */
+  html.ui-uj:not(.m-app) .tabs{ background:transparent !important; border:0 !important; border-bottom:1px solid var(--u4) !important; border-radius:0 !important; padding:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-ind{ top:auto !important; bottom:-1px !important; height:2px !important; border-radius:2px !important; background:var(--uacc) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-btn{ color:var(--udim) !important; font-weight:500 !important; border-radius:0 !important; background:transparent !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-btn:hover{ color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tabs .tab-btn.active{ color:var(--utx) !important; font-weight:600 !important; }
+  html.ui-uj #mainPanel{ background:transparent !important; border:0 !important; padding:16px 0 0 !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -16101,6 +16209,7 @@ service cloud.firestore {
   function on(){ return H.classList.contains("ui-uj"); }
   function fix(el){
     if(el.nodeType !== 1 || el.dataset.uiF) return; el.dataset.uiF = "1";
+    if(el.classList.contains("nmL") && /^[^a-záéíóöőúüű]*$/.test(el.textContent) && /[A-ZÁÉÍÓÖŐÚÜŰ]{2}/.test(el.textContent)){ el.textContent = el.textContent.toLowerCase().replace(/(^|[\s:-])([a-záéíóöőúüű])/g, function(a, b, c){ return b + c.toUpperCase(); }); }
     if(el.closest(SKIP)) return;
     var cs = getComputedStyle(el), bi = cs.backgroundImage;
     if(!bi || bi.indexOf("gradient") < 0) return;
