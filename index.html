@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
+<meta charset="utf-8">
 <script>/* ===== 🤖 automatikus hibanapló: a böngészőben előforduló hibák (a bolt nem lát belőle semmit) → az admin a 🐞 Hibajegyeknél látja ===== */
 (function(){
   var Q = window.__fpErrQ = [], seen = {}, n = 0;
@@ -138,45 +139,7 @@
       el.querySelector(".x").onclick = function(){ el.remove(); };
       var pr = el.querySelector(".pr"); if(pr) pr.onclick = function(){
         var f = document.createElement("iframe"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
-        if(ext === "pdf") f.src = url; else f.srcdoc = '<!doctype html><html><head><style>@page{margin:8mm}html,body{margin:0}img{max-width:100%;display:block;margin:0 auto}</style><!-- PRÓBA: új kinézet (csak a proba ágon) -->
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>try{ if(localStorage.getItem("fp_ui_old") !== "1") document.documentElement.classList.add("ui-uj"); }catch(e){ document.documentElement.classList.add("ui-uj"); }</script>
-<style id="uiUjSkin">
-  html.ui-uj body:not(.light-theme):not([data-theme="light"]){
-    --bg:#000000; --bg-panel:#181818; --bg-panel2:#1F1F1F; --bg-cell:#1F1F1F; --border:#313131; --border-soft:#272727;
-    --gold:#FBAC01; --gold-light:#FFC94A; --text:#FFFFFF; --text-dim:#9B9B9B; --text-faint:#707070;
-    --glow1:transparent; --glow2:transparent; --shadow:none; --radius:16px;
-    --lg-bg:#181818; --lg-bg2:#1F1F1F; --lg-cell:#1F1F1F; --lg-border:#313131; --lg-hi:#313131; --lg-lo:#181818; --lg-sheen:transparent; --lg-blur:none;
-    --lift:none;
-  }
-  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ --gold:#B97D00; --glow1:transparent; --glow2:transparent; --lg-sheen:transparent; }
-  html.ui-uj, html.ui-uj body{ background:#000000 !important; background-image:none !important; }
-  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ background:#F4F4F4 !important; }
-  html.ui-uj .liquid-bg{ display:none !important; }
-  html.ui-uj body *:not(code):not(pre):not(kbd):not(svg):not(svg *){ font-family:'Manrope',system-ui,sans-serif !important; font-style:normal !important; }
-  html.ui-uj body *{ letter-spacing:normal; }
-  html.ui-uj h1, html.ui-uj h2, html.ui-uj h3{ font-weight:600 !important; text-wrap:balance; }
-  html.ui-uj b, html.ui-uj strong{ font-weight:600; }
-  html.ui-uj [style*="font-weight:900"], html.ui-uj [style*="font-weight:800"]{ font-weight:700 !important; }
-  html.ui-uj button, html.ui-uj .btn, html.ui-uj a{ transition-timing-function:cubic-bezier(0.22,1,0.36,1) !important; }
-  html.ui-uj button:focus-visible, html.ui-uj a:focus-visible, html.ui-uj input:focus-visible, html.ui-uj select:focus-visible{ outline:2px solid #FBAC01 !important; outline-offset:2px; }
-  html.ui-uj .btn-primary, html.ui-uj .action-btn.primary{ background:#FBAC01 !important; background-image:none !important; color:#000000 !important; box-shadow:none !important; border-color:#FBAC01 !important; }
-  html.ui-uj .ps-btn.active, html.ui-uj .pill.active{ background:#FBAC01 !important; background-image:none !important; color:#000000 !important; box-shadow:none !important; }
-  #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:rgba(24,24,24,.86); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid #313131; color:#FFFFFF; font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
-  #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
-  #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:#FFFFFF; background:#272727; border:1px solid #313131; border-radius:9999px; padding:6px 12px; cursor:pointer; }
-  @media print{ #uiUjBadge{ display:none !important; } }
-</style>
-<script>
-  document.addEventListener("DOMContentLoaded", ()=>{
-    const b = document.createElement("div"); b.id = "uiUjBadge";
-    const on = ()=> document.documentElement.classList.contains("ui-uj");
-    const draw = ()=>{ b.innerHTML = `<i>PRÓBA</i><span>${on() ? "Új kinézet" : "Régi kinézet"}</span><button type="button">${on() ? "Régi megnézése" : "Új megnézése"}</button>`; };
-    b.addEventListener("click", e=>{ if(!e.target.closest("button")) return; document.documentElement.classList.toggle("ui-uj"); try{ localStorage.setItem("fp_ui_old", on() ? "0" : "1"); }catch(_){} draw(); });
-    draw(); document.body.appendChild(b);
-  });
-</script>
-</head><body><img src="' + url + '"></body></html>';
+        if(ext === "pdf") f.src = url; else f.srcdoc = '<!doctype html><html><head><style>@page{margin:8mm}html,body{margin:0}img{max-width:100%;display:block;margin:0 auto}</style></head><body><img src="' + url + '"></body></html>';
         f.onload = function(){ setTimeout(function(){ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){ window.open(url, "_blank"); } }, 300); setTimeout(function(){ f.remove(); }, 120000); };
         document.body.appendChild(f); };
       var cp = el.querySelector(".cp"); if(cp) cp.onclick = function(){
@@ -6067,6 +6030,44 @@
   html.m-app .sc-va > [data-v="x"]{position:fixed !important;top:calc(10px + env(safe-area-inset-top));right:10px;width:38px !important;height:38px !important;min-height:0 !important;flex:none !important;border-radius:50% !important;font-size:15px !important;}
   html.m-app .sc-txt{max-height:48% !important;}
 </style>
+<!-- PRÓBA: új kinézet (csak a proba ágon) -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>try{ if(localStorage.getItem("fp_ui_old") !== "1") document.documentElement.classList.add("ui-uj"); }catch(e){ document.documentElement.classList.add("ui-uj"); }</script>
+<style id="uiUjSkin">
+  html.ui-uj body:not(.light-theme):not([data-theme="light"]){
+    --bg:#000000; --bg-panel:#181818; --bg-panel2:#1F1F1F; --bg-cell:#1F1F1F; --border:#313131; --border-soft:#272727;
+    --gold:#FBAC01; --gold-light:#FFC94A; --text:#FFFFFF; --text-dim:#9B9B9B; --text-faint:#707070;
+    --glow1:transparent; --glow2:transparent; --shadow:none; --radius:16px;
+    --lg-bg:#181818; --lg-bg2:#1F1F1F; --lg-cell:#1F1F1F; --lg-border:#313131; --lg-hi:#313131; --lg-lo:#181818; --lg-sheen:transparent; --lg-blur:none;
+    --lift:none;
+  }
+  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ --gold:#B97D00; --glow1:transparent; --glow2:transparent; --lg-sheen:transparent; }
+  html.ui-uj, html.ui-uj body{ background:#000000 !important; background-image:none !important; }
+  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ background:#F4F4F4 !important; }
+  html.ui-uj .liquid-bg{ display:none !important; }
+  html.ui-uj body *:not(code):not(pre):not(kbd):not(svg):not(svg *){ font-family:'Manrope',system-ui,sans-serif !important; font-style:normal !important; }
+  html.ui-uj body *{ letter-spacing:normal; }
+  html.ui-uj h1, html.ui-uj h2, html.ui-uj h3{ font-weight:600 !important; text-wrap:balance; }
+  html.ui-uj b, html.ui-uj strong{ font-weight:600; }
+  html.ui-uj [style*="font-weight:900"], html.ui-uj [style*="font-weight:800"]{ font-weight:700 !important; }
+  html.ui-uj button, html.ui-uj .btn, html.ui-uj a{ transition-timing-function:cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj button:focus-visible, html.ui-uj a:focus-visible, html.ui-uj input:focus-visible, html.ui-uj select:focus-visible{ outline:2px solid #FBAC01 !important; outline-offset:2px; }
+  html.ui-uj .btn-primary, html.ui-uj .action-btn.primary{ background:#FBAC01 !important; background-image:none !important; color:#000000 !important; box-shadow:none !important; border-color:#FBAC01 !important; }
+  html.ui-uj .ps-btn.active, html.ui-uj .pill.active{ background:#FBAC01 !important; background-image:none !important; color:#000000 !important; box-shadow:none !important; }
+  #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:rgba(24,24,24,.86); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid #313131; color:#FFFFFF; font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
+  #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
+  #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:#FFFFFF; background:#272727; border:1px solid #313131; border-radius:9999px; padding:6px 12px; cursor:pointer; }
+  @media print{ #uiUjBadge{ display:none !important; } }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", ()=>{
+    const b = document.createElement("div"); b.id = "uiUjBadge";
+    const on = ()=> document.documentElement.classList.contains("ui-uj");
+    const draw = ()=>{ b.innerHTML = `<i>PRÓBA</i><span>${on() ? "Új kinézet" : "Régi kinézet"}</span><button type="button">${on() ? "Régi megnézése" : "Új megnézése"}</button>`; };
+    b.addEventListener("click", e=>{ if(!e.target.closest("button")) return; document.documentElement.classList.toggle("ui-uj"); try{ localStorage.setItem("fp_ui_old", on() ? "0" : "1"); }catch(_){} draw(); });
+    draw(); document.body.appendChild(b);
+  });
+</script>
 </head>
 <body>
 <script>window.FP_BUILD="20261107-154854";</script>
