@@ -6031,7 +6031,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261107-153337";</script>
+<script>window.FP_BUILD="20261107-154001";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -9456,7 +9456,7 @@ service cloud.firestore {
               <div class="ax-col"><div class="ax-card"><div class="ax-ch"><h3>Előnézet</h3><small>így látják a boltok</small></div><div class="ax-prev"></div></div>
                 <div class="ax-card"><div class="ax-ch"><h3>Kint lévő közlemények</h3><span class="ax-sp"></span><button type="button" class="ax-btn sm danger" data-x="msgdelall">Összes visszavonása</button></div><div class="ax-mlive"></div></div></div></div></section>
             <section class="ax-pane" data-pane="sched"><div class="ax-tb">${seg("ax-scv", "scv", [["today","🕘 Napi"],["month","📅 Havi beosztás"],["wt","⏱ Munkaidő"],["hol","🎉 Ünnepnapok"],["cal","📲 Naptár"]], "today")}<div class="ax-scm"><button type="button" class="ax-ib" data-x="scprev" title="Előző">‹</button><b class="ax-scml"></b><button type="button" class="ax-ib" data-x="scnext" title="Következő">›</button><button type="button" class="ax-btn sm" data-x="scnow">Ma</button></div><span class="ax-sp"></span>
-                <div class="ax-inp">${axI("srch")}<input class="ax-in ax-scq" type="search" placeholder="Bolt vagy dolgozó" autocomplete="off"></div><button type="button" class="ax-btn pri ax-scpdf" data-x="scpdf">⬇ Letöltés <small>PDF</small></button></div>
+                <div class="ax-inp">${axI("srch")}<input class="ax-in ax-scq" type="search" placeholder="Bolt vagy dolgozó" autocomplete="off"></div><button type="button" class="ax-btn pri ax-scpdf" data-x="scpdf">⬇ PDF</button><button type="button" class="ax-btn ax-scxls" data-x="scxls" title="Formázott Excel táblázat">📊 Excel</button></div>
               <div class="ax-scf"></div><div class="ax-sct"></div></section>
             <section class="ax-pane" data-pane="train"><div class="ax-trn"></div></section>
             <section class="ax-pane" data-pane="docs"><div class="ax-card ax-drules" hidden><div class="ax-ch"><h3>⚠️ Egyszer frissíteni kell a Firestore szabályokat</h3></div><p class="ax-hint">A dokumentumokhoz új szabály kell: <b>Beállítások</b> → <b>🖥️ Admin felület</b> → <b>Firestore szabályok</b> → <b>⧉ Szabályok másolása</b> → Firebase konzol → Firestore Database → Rules → beillesztés → <b>Publish</b>. Utána frissítsd ezt az oldalt.</p><div class="ax-row"><button type="button" class="ax-btn pri" data-x="drulego">Szabályok megnyitása →</button></div></div>
@@ -10206,7 +10206,7 @@ service cloud.firestore {
         return (k === t ? "Ma · " : k === tm ? "Holnap · " : k === ye ? "Tegnap · " : "") + `${m}. ${d}., ${HU_D[(dt.getDay() + 6) % 7]}`; };
       /* ⏱ Munkaidő: dolgozónként a beosztott órák a munkaidőkerethez mérve (magyar munkaidő-naptár: ünnepek + áthelyezett munkanapok) */
       const WT_SW = { 2026:{ work:["2026-01-10","2026-08-08"], rest:["2026-01-02","2026-08-21"] } };   /* tartalék, ha a hivatalos naptár épp nem érhető el */
-      const wtCfg = ()=> Object.assign({ k:1, brk:0, d:8, wh:{}, sw:{}, st:{}, pe:{}, auto:{} }, appC.wt || {});
+      const wtCfg = ()=>{ const c = Object.assign({ k:1, brk:60, d:8, wh:{}, sw:{}, st:{}, pe:{}, auto:{} }, appC.wt || {}); if(!c.brkV){ c.brk = 60; c.brkV = 1; } return c; };
       /* egy év naptára: ünnepek + áthelyezett napok — 1. kézi módosítás, 2. automatikusan letöltött hivatalos naptár, 3. beépített */
       const wtCal = y=>{ const C = wtCfg(), A = (C.auto || {})[y], M = (C.sw || {})[y], base = new Set(huHolidays(y).map(h=> h.d));
         const hol = A && Array.isArray(A.hol) && A.hol.length ? new Set(A.hol.concat([...base].filter(d=> d.endsWith("-12-24") || d.endsWith("-12-25") || d.endsWith("-12-26")))) : base;
@@ -10333,13 +10333,98 @@ service cloud.firestore {
             c.pe = Object.assign({}, c.pe, { [key]:P }); appC.wt = c; drawSched(); await cfgPush("⏱ Dolgozó munkaidő-beállítása módosítva"); }
         };
       }
+      /* ---------- ⬇ PDF / 📊 Excel kimutatások a Beosztás minden nézetéhez ---------- */
+      const RPT = { tm:m=> m == null ? "" : `${Math.floor(m / 60)}:${p2(m % 60)}`, part:p=> p === "am" ? "DE" : p === "pm" ? "DU" : "Egész nap",
+        rq:{ off:"❌ nem tud jönni", free:"🏖️ szabadság", am:"🌅 csak DE", pm:"🌇 csak DU", want:"✋ dolgozna" }, h:v=> ({ v, u:" ó" }), nm:x=> shortN(x) };
+      const attOf = (st, k)=> (((st || {}).att || {})[k]) || [];
+      const isPresent = (st, k, pp)=> attOf(st, k).find(z=> (pp.id && z.id === pp.id) || z.name === pp.name) || null;
+      const reqOf = (st, k, id)=> ((((st || {}).reqs || {})[k]) || []).filter(r=> r.p === id).map(r=> (RPT.rq[r.t] || r.t) + (r.why ? " – " + r.why : "")).join("; ");
+      const dLong = k=>{ const [y, m, d] = k.split("-").map(Number); return `${y}. ${HU_M[m - 1]} ${d}., ${HU_D[(new Date(y, m - 1, d).getDay() + 6) % 7].toLowerCase()}`; };
+      const shopsInView = ()=>{ const q = (($(".ax-scq") || {}).value || "").trim().toLowerCase();
+        return list.slice().sort((a, c)=> shortN(a).localeCompare(shortN(c), "hu")).filter(x=> !q || shortN(x).toLowerCase().includes(q) || (((stOf(x).settings || {}).employees) || []).some(e=> String(e.name || "").toLowerCase().includes(q))); };
+      const ATT_NOTE = "Megjelenés: a műszak eleji „Ki dolgozik ma?” bejelölés alapján (2026. november 7-től rögzül).";
+      function rptToday(L, day){ const rows = []; let nOpen = 0, nP = 0, nEmpty = 0;
+        L.forEach(x=>{ const st = stOf(x), sd = schDay(st, day);
+          if(sd.closed || sd.hol){ rows.push({ k:"dim", c:[RPT.nm(x), sd.hol ? "Ünnep" : "Zárva", "", "", "", "", "", sd.hn || ""] }); return; }
+          nOpen++; const P = sd.people; if(!P.length) nEmpty++;
+          rows.push({ k:"sh", c:[RPT.nm(x), `${RPT.tm(sd.open)}–${RPT.tm(sd.close)}`, "", "", "", "", P.length ? P.length + " fő" : "", P.length ? "" : "⚠ nincs beosztva"] });
+          P.forEach(pp=>{ nP++; const a = isPresent(st, day, pp); rows.push({ ind:1, c:[pp.name, "", RPT.part(pp.part), RPT.tm(pp.from), RPT.tm(pp.to), RPT.h((pp.to - pp.from) / 60), a ? "✓ " + (a.t || "") : day <= dKey(new Date()) ? "—" : "", (pp.sub ? "helyettes" : "") + (reqOf(st, day, pp.id) ? " · kérés: " + reqOf(st, day, pp.id) : "")] }); }); });
+        return { title:"Napi beosztás", sub:dLong(day), kpis:[{ l:"Boltok", v:String(L.length) }, { l:"Nyitva", v:String(nOpen) }, { l:"Dolgozók", v:nP + " fő" }, { l:"Beosztás nélkül", v:String(nEmpty), c:nEmpty ? "r" : "" }],
+          sections:[{ title:"Beosztás boltonként", note:ATT_NOTE, cols:[{ h:"Bolt / dolgozó", w:3.2 }, { h:"Nyitvatartás", w:1.4 }, { h:"Rész", w:1.1 }, { h:"Kezdés", w:.9, al:"c" }, { h:"Vége", w:.9, al:"c" }, { h:"Óra", w:.8, al:"r" }, { h:"Megjelenés", w:1.2, al:"c" }, { h:"Megjegyzés", w:2.6 }], rows }] }; }
+      function rptMonth(L, Y, Mo){ const n = new Date(Y, Mo, 0).getDate(), secs = [], sum = [];
+        L.forEach(x=>{ const st = stOf(x), E = ((st.settings || {}).employees || []).filter(e=> e.name), rows = [], H = {};
+          for(let d = 1; d <= n; d++){ const k = `${Y}-${p2(Mo)}-${p2(d)}`, sd = schDay(st, k), dw = HU_D[(new Date(Y, Mo - 1, d).getDay() + 6) % 7];
+            if(sd.closed || sd.hol){ rows.push({ k:"dim", c:[`${Mo}. ${d}.`, dw, sd.hol ? "Ünnep" : "Zárva", "", "", sd.hn || ""] }); continue; }
+            let hrs = 0; const who = sd.people.map(pp=>{ const m = pp.to - pp.from; hrs += m; if(!pp.sub){ H[pp.id] = H[pp.id] || { m:0, f:0, h:0 }; H[pp.id].m += m; H[pp.id][pp.part === "full" ? "f" : "h"]++; } return `${pp.name} (${pp.part === "full" ? "egész" : RPT.part(pp.part)} ${RPT.tm(pp.from)}–${RPT.tm(pp.to)})`; }).join(", ");
+            const dh = (st.dayHrs || {})[k], rq = E.map(e=>{ const r = reqOf(st, k, e.id); return r ? e.name.split(" ").slice(-1)[0] + ": " + r : ""; }).filter(Boolean).join("; ");
+            rows.push({ k:who ? "" : "a", c:[`${Mo}. ${d}.`, dw, `${RPT.tm(sd.open)}–${RPT.tm(sd.close)}${dh ? " (egyedi)" : ""}`, who || "⚠ nincs beosztva", RPT.h(hrs / 60), rq ? "kérés – " + rq : ""] }); }
+          secs.push({ title:RPT.nm(x), sheet:RPT.nm(x), cols:[{ h:"Dátum", w:.9 }, { h:"Nap", w:1 }, { h:"Nyitva", w:1.4 }, { h:"Beosztva", w:6 }, { h:"Óra", w:.8, al:"r" }, { h:"Megjegyzés", w:3 }], rows, fs:16 });
+          E.forEach(e=>{ const h = H[e.id] || { m:0, f:0, h:0 }; sum.push({ c:[RPT.nm(x), e.name, h.f, h.h, RPT.h(h.m / 60)] }); }); });
+        secs.unshift({ title:"Összesítés dolgozónként", sheet:"Összesítés", cols:[{ h:"Bolt", w:2.4 }, { h:"Dolgozó", w:2.6 }, { h:"Egész nap", w:1, al:"r" }, { h:"Félnap", w:1, al:"r" }, { h:"Beosztott óra", w:1.2, al:"r" }], rows:sum });
+        return { title:"Havi beosztás", sub:`${Y}. ${HU_M[Mo - 1]} · ${L.length} bolt`, sections:secs }; }
+      function rptWT(L, Y, Mo, detail){ const C = wtCfg(), R = wtRows(L, Y, Mo), today = dKey(new Date()), n = new Date(Y, Mo, 0).getDate(), fH = v=> RPT.h(v);
+        const sumRows = [], detRows = [], shopRows = []; let tBad = 0, tLow = 0, tH = 0, tE = 0, tSch = 0, tAtt = 0;
+        const by = new Map(); R.forEach(r=>{ if(!by.has(r.x.uid)) by.set(r.x.uid, []); by.get(r.x.uid).push(r); });
+        by.forEach(rows=>{ const x = rows[0].x, st = stOf(x); let sH = 0, sE = 0, sBad = 0, sSch = 0, sAtt = 0;
+          sumRows.push({ k:"sh", c:[RPT.nm(x), "", "", "", "", "", "", "", "", "", "", "", ""] });
+          rows.forEach(r=>{ let past = 0, att = 0, full = 0, half = 0, hol = 0;
+            for(let d = 1; d <= n; d++){ const k = `${Y}-${p2(Mo)}-${p2(d)}`, sd = schDay(st, k); if(sd.closed || sd.hol) continue;
+              sd.people.filter(pp=> !pp.sub && pp.id === r.e.id).forEach(pp=>{ let mn = pp.to - pp.from; const br = r.P.brk && mn > 360 ? r.P.brk : 0; mn -= br; if(pp.part === "full") full++; else half++;
+                const a = isPresent(st, k, pp); if(k <= today){ past++; if(a) att++; }
+                if(detail) detRows.push({ c:[`${Mo}. ${d}.`, HU_D[(new Date(Y, Mo - 1, d).getDay() + 6) % 7], RPT.nm(x), r.e.name, RPT.part(pp.part), RPT.tm(pp.from), RPT.tm(pp.to), br ? br + " p" : "", fH(mn / 60), a ? "✓ " + (a.t || "") : k <= today ? "✗ nincs jelölve" : "tervezett", reqOf(st, k, r.e.id)], k:k <= today && !a ? "a" : "" }); }); }
+            const st2 = r.P.off ? "nem figyelt" : r.diff > 0.01 ? `⚠ +${(Math.round(r.diff * 10) / 10).toString().replace(".", ",")} ó túllépés` : r.diff < -8 ? `${(Math.round(r.diff * 10) / 10).toString().replace(".", ",")} ó hiányzik` : "✓ rendben";
+            const kk = r.P.off ? "dim" : r.diff > 0.01 ? "r" : r.diff < -8 ? "a" : "g"; if(kk === "r"){ tBad++; sBad++; } if(kk === "a") tLow++;
+            sH += r.hM; sE += r.expM; sSch += past; sAtt += att;
+            sumRows.push({ ind:1, k:kk, c:[r.e.name, `${r.P.d} ó${r.P.fix ? " · " + r.P.fix + " ó/hó" : ""}`, r.K + " hó", wtDays(Y, Mo), fH(r.expM), fH(r.hM), `${full} / ${half}`, past ? `${att}/${past}` : "—", fH(r.hM - r.expM), fH(r.exp), fH(r.hP), fH(r.diff), st2] }); });
+          tH += sH; tE += sE; tSch += sSch; tAtt += sAtt;
+          shopRows.push({ k:sBad ? "r" : "g", c:[RPT.nm(x), rows.length, fH(sH), fH(sE), fH(sH - sE), sSch ? Math.round(sAtt / sSch * 100) + "%" : "—", sBad ? `⚠ ${sBad} túllépő` : "✓ rendben"] }); });
+        const CAL = wtCal(Y), calRows = Array.from({ length:12 }, (_, i)=>{ const d = wtDays(Y, i + 1); return { k:i + 1 === Mo ? "sh" : "", c:[HU_M[i], d, RPT.h(d * (+C.d || 8))] }; });
+        const holTxt = [...CAL.hol].filter(d=> d.startsWith(String(Y))).sort().map(d=> `${+d.slice(5, 7)}. ${+d.slice(8)}.`).join(", ");
+        calRows.push({ k:"dim", c:["Munkaszüneti napok", holTxt, ""] }, { k:"dim", c:["Ledolgozós szombatok", (CAL.sw.work || []).join(", ") || "—", ""] }, { k:"dim", c:["Áthelyezett pihenőnapok", (CAL.sw.rest || []).join(", ") || "—", ""] }, { k:"dim", c:["Forrás", CAL.src === "auto" ? (CAL.A.src + " (hivatalos)") : CAL.src === "manual" ? "kézzel megadva" : "beépített / számolt", ""] });
+        const secs = [{ title:"Összesítő dolgozónként", sheet:"Összesítő", note:`Napi óra / keret / szünet boltonként és dolgozónként a beállítás szerint · ${ATT_NOTE}`, fs:16, rh:36,
+            cols:[{ h:"Bolt / dolgozó", w:2.6 }, { h:"Napi óra", w:1.1 }, { h:"Keret", w:.7, al:"c" }, { h:"Munkanap", w:.9, al:"r" }, { h:"Elvárt (hó)", w:1, al:"r" }, { h:"Beosztva (hó)", w:1.1, al:"r" }, { h:"Egész / fél nap", w:1.1, al:"c" }, { h:"Megjelent", w:.9, al:"c" }, { h:"Eltérés (hó)", w:1, al:"r" }, { h:"Keret elvárt", w:1, al:"r" }, { h:"Keret beosztva", w:1.1, al:"r" }, { h:"Eltérés (keret)", w:1.1, al:"r" }, { h:"Állapot", w:1.7 }], rows:sumRows },
+          { title:"Boltok összesítője", sheet:"Boltok", cols:[{ h:"Bolt", w:3 }, { h:"Dolgozók", w:1, al:"r" }, { h:"Beosztott óra", w:1.3, al:"r" }, { h:"Elvárt óra", w:1.3, al:"r" }, { h:"Eltérés", w:1.2, al:"r" }, { h:"Megjelenési arány", w:1.4, al:"c" }, { h:"Állapot", w:1.6 }], rows:shopRows }];
+        if(detail) secs.push({ title:"Napi részletezés", sheet:"Napi részletek", note:"Minden beosztott műszak a hónapban · a szünet 6 óránál hosszabb műszaknál kerül levonásra", fs:15, rh:32,
+          cols:[{ h:"Dátum", w:.8 }, { h:"Nap", w:1 }, { h:"Bolt", w:2.2 }, { h:"Dolgozó", w:2.3 }, { h:"Rész", w:1 }, { h:"Kezdés", w:.8, al:"c" }, { h:"Vége", w:.8, al:"c" }, { h:"Szünet", w:.8, al:"c" }, { h:"Óra", w:.8, al:"r" }, { h:"Megjelenés", w:1.4 }, { h:"Kérés", w:2.2 }], rows:detRows });
+        secs.push({ title:`Munkaidő-naptár ${Y}`, sheet:"Munkaidő-naptár", land:true, cols:[{ h:"Hónap", w:1.6 }, { h:"Munkanap", w:4 }, { h:"Óra (napi " + (+C.d || 8) + " ó)", w:1.2, al:"r" }], rows:calRows });
+        return { title:"Munkaidő-kimutatás", sub:`${Y}. ${HU_M[Mo - 1]} · ${by.size} bolt · ${R.length} dolgozó · alap keret ${C.k || 1} hó · szünet ${+C.brk ? C.brk + " perc (6 óra felett)" : "nincs"}`,
+          kpis:[{ l:"Munkanap a hónapban", v:String(wtDays(Y, Mo)), s:(wtDays(Y, Mo) * (+C.d || 8)) + " óra általános munkaidő" }, { l:"Beosztott óra", v:(Math.round(tH)).toString(), s:`elvárt ${Math.round(tE)} óra` }, { l:"Keret túllépés", v:tBad + " fő", c:tBad ? "r" : "", s:tLow ? tLow + " főnél 8+ óra hiányzik" : "" }, { l:"Megjelenés", v:tSch ? Math.round(tAtt / tSch * 100) + "%" : "—", s:tSch ? `${tAtt} / ${tSch} eddigi műszak jelölve` : "még nincs adat" }],
+          sections:secs }; }
+      function rptHol(Y){ const L = holEff(Y), rows = L.map(h=>{ const s = holStat(h.d), [y, m, d] = h.d.split("-").map(Number); return { c:[`${y}. ${p2(m)}. ${p2(d)}.`, HU_D[(new Date(y, m - 1, d).getDay() + 6) % 7], h.n || "Ünnepnap", h.auto ? "🇭🇺 automatikus" : "admin", s.on, s.ch, s.wait] }; });
+        return { title:"Ünnepnapok", sub:`${Y} · ${L.length} nap · ${list.length} bolt`, sections:[{ title:`Ünnepnapok ${Y}`, cols:[{ h:"Dátum", w:1.3 }, { h:"Nap", w:1.2 }, { h:"Megnevezés", w:3 }, { h:"Forrás", w:1.4 }, { h:"Zárva (beírva)", w:1.2, al:"r" }, { h:"Bolt átírta", w:1.1, al:"r" }, { h:"Még nem frissült", w:1.3, al:"r" }], rows }] }; }
+      function rptCal(){ const rows = []; list.filter(isKapSt).sort((a, c)=> shortN(a).localeCompare(shortN(c), "hu")).forEach(x=>{ const st = stOf(x), E = (st.settings || {}).employees || [], D = calAdm.data[x.uid] || {};
+          rows.push({ k:"sh", c:[RPT.nm(x), "", "", ""] });
+          E.forEach(p=>{ const v = D[p.id] || {}, sub = v.sub ? String(v.subAll || v.sub).split(",").filter(Boolean).map(k=> (CAL_SUBN[k] || k).replace(/^\S+\s/, "")).join(" + ") : "";
+            rows.push({ ind:1, k:sub ? "g" : v.no ? "dim" : "a", c:[p.name, sub || (v.no ? "nem kéri" : "még nem iratkozott fel"), v.pushN ? "igen" : "", sub ? "✓ feliratkozott" : v.no ? "nem kéri" : "vár"] }); }); });
+        return { title:"Naptár-feliratkozások", sub:`${dLong(dKey(new Date()))}`, sections:[{ title:"Dolgozók naptára", cols:[{ h:"Bolt / dolgozó", w:3 }, { h:"Naptár", w:2.4 }, { h:"Értesítés", w:1, al:"c" }, { h:"Állapot", w:1.6 }], rows }] }; }
+      async function rptRun(kind, fmt, opt){
+        const K = window.fpAdmPdf; if(!K || !K.report){ toast2("A letöltő még töltődik — próbáld újra pár másodperc múlva."); return; }
+        const [Y, Mo] = scYm.split("-").map(Number), L = shopsInView(); let R, base;
+        if(kind === "today"){ R = rptToday(L, scDay); base = `FirstPhone_napi_beosztas_${scDay}`; }
+        else if(kind === "month"){ const L2 = scShop ? L.filter(x=> x.uid === scShop) : L; R = rptMonth(L2.length ? L2 : L, Y, Mo); base = `FirstPhone_havi_beosztas_${scYm}${L2.length === 1 ? "_" + fSafe(shortN(L2[0])) : ""}`; }
+        else if(kind === "wt"){ R = rptWT(L, Y, Mo, !!(opt && opt.detail) || fmt === "xlsx"); base = `FirstPhone_munkaido_kimutatas_${scYm}${opt && opt.detail ? "_reszletes" : ""}`; }
+        else if(kind === "hol"){ R = rptHol(scYear); base = `FirstPhone_unnepnapok_${scYear}`; }
+        else { R = rptCal(); base = `FirstPhone_naptar_feliratkozasok_${dKey(new Date())}`; }
+        toast2(fmt === "xlsx" ? "📊 Excel készül…" : "📄 PDF készül…");
+        try{ const blob = fmt === "xlsx" ? await K.xlsx(R) : await K.report(R), name = base + (fmt === "xlsx" ? ".xlsx" : ".pdf");
+          if(window.fpSave) await window.fpSave(blob, name); else docSave(blob, name);
+          toast2(`✓ ${fmt === "xlsx" ? "Excel" : "PDF"} letöltve: ${name}`); logAdd("⬇", `${R.title} (${fmt === "xlsx" ? "Excel" : "PDF"}) · ${R.sub}`); }
+        catch(e){ toast2("Hiba a letöltésnél: " + (e && e.message || e)); }
+      }
+      window.fpAdmRpt = { spec:(kind, detail)=>{ const [Y, Mo] = scYm.split("-").map(Number), L = shopsInView(); return kind === "today" ? rptToday(L, scDay) : kind === "month" ? rptMonth(L, Y, Mo) : kind === "wt" ? rptWT(L, Y, Mo, !!detail) : kind === "hol" ? rptHol(scYear) : rptCal(); } };
+      function rptMenu(btn){ let m = $(".ax-rpm"); if(m){ m.remove(); return; }
+        m = document.createElement("div"); m.className = "ax-rpm";
+        m.innerHTML = `<b>📄 Munkaidő-kimutatás — PDF</b><button type="button" data-rpm="sum">📋 Összesítő <small>dolgozónként, boltonként, munkaidő-naptár</small></button><button type="button" data-rpm="det">🗂️ Részletes <small>+ minden műszak napra bontva, megjelenéssel</small></button>`;
+        const r = btn.getBoundingClientRect(), host = b.getBoundingClientRect(); m.style.top = (r.bottom - host.top + 6) + "px"; m.style.right = Math.max(8, host.right - r.right) + "px"; b.appendChild(m);
+        m.addEventListener("click", e=>{ const t = e.target.closest("[data-rpm]"); if(!t) return; m.remove(); rptRun("wt", "pdf", { detail:t.dataset.rpm === "det" }); });
+        setTimeout(()=> document.addEventListener("click", function h(e){ if(!m.contains(e.target)){ m.remove(); document.removeEventListener("click", h, true); } }, true), 0); }
       function drawSched(){
         const box = $(".ax-sct"); if(!box) return;
         const q = ($(".ax-scq").value || "").trim().toLowerCase(), today = dKey(new Date());
         const [Y, Mo] = scYm.split("-").map(Number), nD = new Date(Y, Mo, 0).getDate();
         $(".ax-scml").textContent = scV === "today" ? dLbl(scDay) : scV === "hol" ? `${scYear}` : `${Y}. ${HU_M[Mo - 1]}`;
         $('[data-x="scnow"]').hidden = scV === "today" ? scDay === today : scV === "hol" ? scYear === new Date().getFullYear() : scYm === today.slice(0, 7);
-        $('[data-x="scpdf"]').hidden = scV === "hol" || scV === "cal" || scV === "wt"; $(".ax-scq").parentNode.hidden = scV === "hol" || scV === "cal"; $(".ax-scm").hidden = scV === "cal";
+        $('[data-x="scpdf"]').hidden = false; $(".ax-scq").parentNode.hidden = scV === "hol" || scV === "cal"; $(".ax-scm").hidden = scV === "cal";
         const L = list.slice().sort((a, c)=> shortN(a).localeCompare(shortN(c), "hu")).filter(x=>{ if(!q) return true; if(shortN(x).toLowerCase().includes(q)) return true; return (((stOf(x).settings || {}).employees) || []).some(e=> String(e.name || "").toLowerCase().includes(q)); });
         if(scV === "hol"){ drawHol(box); drawHero(); return; }
         if(scV === "cal"){ drawCalAdm(box); drawHero(); return; }
@@ -10496,7 +10581,8 @@ service cloud.firestore {
           drawSched(); return true; }
         if(a === "scnow"){ scDay = dKey(new Date()); scYm = scDay.slice(0, 7); scYear = new Date().getFullYear(); drawSched(); return true; }
         if(a === "sccsv"){ schCsv(list, "month"); return true; }
-        if(a === "scpdf"){ pdOpen(); return true; }
+        if(a === "scpdf"){ if(scV === "today" || scV === "month") pdOpen(); else if(scV === "wt") rptMenu($(".ax-scpdf")); else rptRun(scV, "pdf"); return true; }
+        if(a === "scxls"){ rptRun(scV, "xlsx"); return true; }
         if(a === "scpdf1"){ pdOpen(scShop); return true; }
         return false;
       }
@@ -11513,6 +11599,7 @@ service cloud.firestore {
     .ax-nav [data-nav="sched"]{--nc:#6f7ff5;}
     .ax-trn .ax-tb{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.ax-tred{display:flex;flex-direction:column;gap:12px}.ax-trai{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px;border-radius:12px;background:rgba(63,167,160,.1);border:1px solid rgba(63,167,160,.3)}.ax-trai input{flex:1;min-width:180px}.ax-trai select{width:auto}.ax-trq{display:flex;flex-direction:column;gap:10px}.ax-trqi{border:1px solid var(--ax-line,rgba(128,128,128,.25));border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}.ax-trqh{display:flex;gap:8px;align-items:flex-start}.ax-trqh textarea{flex:1}.ax-tro{display:flex;gap:8px;align-items:center}.ax-tro input[type=radio]{width:18px;height:18px;flex:0 0 auto;accent-color:#30b37a}.ax-trto{display:flex;gap:16px;flex-wrap:wrap}.ax-trpk{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px 12px;margin-top:8px;max-height:220px;overflow:auto}.ax-trpk label{display:flex;gap:6px;align-items:center;font-size:13px}.ax-trci{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--ax-line,rgba(128,128,128,.18))}.ax-trci>span{flex:1;min-width:0}.ax-trci small{display:block;opacity:.7;font-size:12px}.ax-trcn{flex:1;min-width:200px}.ax-trce{position:sticky;top:10px}.ax-trn tr.r td{background:rgba(230,80,80,.08)}.ax-tred .ax-fl > .ax-in,.ax-trqi > .ax-in,.ax-trqh textarea{width:100%;box-sizing:border-box}.ax-tro .ax-in{flex:1;min-width:0;width:auto}.ax-trce .ax-in{width:100%;box-sizing:border-box}
     .ax-wtt tr.sh td{background:rgba(111,127,245,.08);border-top:2px solid rgba(111,127,245,.35);padding-top:10px;padding-bottom:10px}.ax-wtt tr.sh small{display:block;font-size:10.5px;opacity:.65;margin-left:2px}.ax-wtt td.pe{padding-left:26px}.ax-wtt tr.dim td{opacity:.55}.ax-wtfx{width:88px}.ax-wtoff{display:inline-flex;gap:3px;align-items:center;margin-left:6px;font-size:11px;opacity:.75;cursor:pointer}.ax-wtsrc{font-size:12px;padding:4px 9px;border-radius:8px;background:rgba(127,127,140,.12)}.ax-wtsrc.ok{background:rgba(48,179,122,.13);color:#3ecf8e}.ax-wtsrc.w{background:rgba(240,149,58,.14);color:#f5a55a}.ax-wtsrc.m{background:rgba(91,149,255,.14);color:#8db8ff}.ax-wtm.bad{border-color:rgba(240,149,58,.7)}
+    .ax-rpm{position:absolute;z-index:60;display:flex;flex-direction:column;gap:6px;min-width:300px;padding:12px;border-radius:14px;background:var(--ax-panel,#1b1d24);border:1px solid var(--ax-line,#2c2f3a);box-shadow:0 18px 44px rgba(0,0,0,.35)}.ax-rpm > b{font-size:12px;opacity:.75;padding:2px 4px}.ax-rpm button{text-align:left;padding:10px 12px;border-radius:10px;border:1px solid var(--ax-line,#2c2f3a);background:var(--ax-panel2,#22252e);color:var(--ax-tx,#eee);font:700 13.5px Inter,sans-serif;cursor:pointer}.ax-rpm button:hover{border-color:#d9ad46}.ax-rpm small{display:block;font-weight:500;opacity:.7;margin-top:2px}
     .ax-wt{display:flex;flex-direction:column;gap:12px;} .ax-wtk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;} @media (max-width:760px){ .ax-wtk{grid-template-columns:1fr;} }
     .ax-wtk > div{padding:12px 14px;border-radius:12px;background:var(--ax-c2,rgba(255,255,255,.04));border:1px solid var(--ax-bd,rgba(255,255,255,.08));} .ax-wtk small{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.7;} .ax-wtk b{display:block;font-size:20px;margin:2px 0;} .ax-wtk em{font-style:normal;font-size:12.5px;opacity:.75;}
     .ax-wtk > .r{border-color:rgba(226,88,90,.5);background:rgba(226,88,90,.1);} .ax-wtk > .r b{color:#e2585a;} .ax-wtk > .g b{color:#30b37a;}
@@ -20295,6 +20382,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function fpSetWho(o){
     const v = Object.assign({ d:tdKey(), at:Date.now() }, o);
     try{ localStorage.setItem(WHO_TODAY, JSON.stringify(v)); }catch(e){}
+    /* 🕘 megjelenés naplózása (admin munkaidő-kimutatás): ki jelölte be magát aznap, és mikor */
+    try{ const k = tdKey(), now = new Date(), hm = `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`, ppl = Array.isArray(o.ppl) && o.ppl.length ? o.ppl : [{ id:o.id || "", name:o.name }];
+      state.att = state.att || {}; const L = state.att[k] = (state.att[k] || []).slice(); let ch = false;
+      ppl.forEach(p=>{ if(!p || !p.name) return; if(!L.some(z=> (p.id && z.id === p.id) || z.name === p.name)){ L.push({ id:p.id || "", name:p.name, t:hm, part:p.part || o.part || "" }); ch = true; } });
+      if(ch){ const cut = new Date(now.getFullYear() - 1, now.getMonth(), 1); Object.keys(state.att).forEach(d=>{ const [y2, m2, d2] = d.split("-").map(Number); if(new Date(y2, m2 - 1, d2) < cut) delete state.att[d]; }); saveState(); } }catch(e){}
     /* a chat és a hibabejelentés „ki írja?” mezője is ő legyen */
     /* ha ketten (vagy többen) dolgoznak: a chatben / hibabejelentésnél az első neve lesz az alap (ott át lehet váltani) */
     try{ if(o.id && personById(o.id) && !isSubId(o.id)) localStorage.setItem("firstphone_chat_who_id", o.id); else if(Array.isArray(o.ppl) && o.ppl.length > 1){ const f = o.ppl.find(x=> x.id && personById(x.id) && !isSubId(x.id)); if(f) localStorage.setItem("firstphone_chat_who_id", f.id); else { localStorage.setItem("firstphone_chat_who_id", "_other"); localStorage.setItem("firstphone_chat_name", o.ppl[0].name); } } else { localStorage.setItem("firstphone_chat_who_id", "_other"); localStorage.setItem("firstphone_chat_name", o.name); } }catch(e){}
@@ -26400,6 +26492,85 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   /* az admin konzol innen kéri a boltokéval azonos stílusú PDF-et */
   window.fpAdmPdf = { month:M=> drawMonthGrid(M), day:D=> drawDayGrid(D), page:(cv, q)=> canvasPage(cv, q), build:(pages, w, h)=> buildMultiImagePdf(pages, w || 595.28, h || 841.89), theme:()=> pdfTheme(), setTheme:v=> pdfThemeSet(v) };
+  /* 📄 általános kimutatás PDF (A4 fekvő, nyomtatóbarát fehér): fejléc + összegző kártyák + táblázatok, oldaltöréssel */
+  async function drawReportPdf(R){
+    const land = R.land !== false, W = land ? 2339 : 1654, H = land ? 1654 : 2339, mX = 96, mT = 84, mB = 96, FONT = "'Inter','Segoe UI',Arial,sans-serif";
+    const logo = await new Promise(res=>{ const im = new Image(); im.onload = ()=> res(im); im.onerror = ()=> res(null); im.src = FP_BLACK_URI; });
+    const pages = []; let cv, c, y, pg = 0;
+    const fmt = v=> v == null ? "" : typeof v === "object" ? (v.t != null ? String(v.t) : v.v == null ? "" : (Math.round(v.v * 10) / 10).toString().replace(".", ",") + (v.u || "")) : typeof v === "number" ? (Math.round(v * 10) / 10).toString().replace(".", ",") : String(v);
+    const fit = (t, w)=>{ t = String(t); if(c.measureText(t).width <= w) return t; while(t.length > 1 && c.measureText(t + "…").width > w) t = t.slice(0, -1); return t + "…"; };
+    const KC = { r:["#fdecec","#c62828"], a:["#fff4e5","#b45309"], g:["", "#1b7f4b"], sh:["#f7efd9","#3a2c06"], dim:["","#8a8f99"] };
+    const newPage = first=>{ cv = document.createElement("canvas"); cv.width = W; cv.height = H; c = cv.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, W, H); pg++;
+      if(first){ if(logo){ const lh = 64, lw = logo.width * lh / logo.height; c.drawImage(logo, W - mX - lw, mT - 6, lw, lh); }
+        c.fillStyle = "#111"; c.font = `800 50px ${FONT}`; c.fillText(R.title, mX, mT + 44); c.fillStyle = "#5b6070"; c.font = `500 26px ${FONT}`; c.fillText(R.sub || "", mX, mT + 86);
+        c.fillStyle = "#d9ad46"; c.fillRect(mX, mT + 108, W - 2 * mX, 5); y = mT + 140; }
+      else { c.fillStyle = "#111"; c.font = `800 28px ${FONT}`; c.fillText(R.title, mX, mT + 22); c.fillStyle = "#8a8f99"; c.font = `500 20px ${FONT}`; c.textAlign = "right"; c.fillText(R.sub || "", W - mX, mT + 22); c.textAlign = "left";
+        c.fillStyle = "#d9ad46"; c.fillRect(mX, mT + 40, W - 2 * mX, 3); y = mT + 70; }
+      pages.push(cv); };
+    newPage(true);
+    if(R.kpis && R.kpis.length){ const n = R.kpis.length, g = 22, bw = (W - 2 * mX - g * (n - 1)) / n, bh = 128;
+      R.kpis.forEach((k, i)=>{ const x = mX + i * (bw + g); c.fillStyle = "#f6f7f9"; c.strokeStyle = k.c === "r" ? "#e57373" : "#dfe2e8"; c.lineWidth = 2; c.beginPath(); c.roundRect ? c.roundRect(x, y, bw, bh, 16) : c.rect(x, y, bw, bh); c.fill(); c.stroke();
+        c.fillStyle = "#6b7080"; c.font = `700 19px ${FONT}`; c.fillText(fit(String(k.l).toUpperCase(), bw - 40), x + 22, y + 36); c.fillStyle = k.c === "r" ? "#c62828" : "#111"; c.font = `800 40px ${FONT}`; c.fillText(fit(k.v, bw - 40), x + 22, y + 84);
+        if(k.s){ c.fillStyle = "#6b7080"; c.font = `500 18px ${FONT}`; c.fillText(fit(k.s, bw - 40), x + 22, y + 112); } });
+      y += bh + 34; }
+    const bottom = H - mB;
+    for(const S of R.sections || []){
+      const tw = W - 2 * mX, tot = S.cols.reduce((a, k)=> a + (k.w || 1), 0), CW = S.cols.map(k=> tw * (k.w || 1) / tot), rh = S.rh || 38, hh = 44;
+      const head = ()=>{ c.fillStyle = "#1f2430"; c.fillRect(mX, y, tw, hh); c.fillStyle = "#fff"; c.font = `700 18px ${FONT}`; let x = mX; S.cols.forEach((k, i)=>{ c.textAlign = k.al === "r" ? "right" : k.al === "c" ? "center" : "left"; const tx = k.al === "r" ? x + CW[i] - 12 : k.al === "c" ? x + CW[i] / 2 : x + 12; c.fillText(fit(k.h, CW[i] - 24), tx, y + 29); x += CW[i]; }); c.textAlign = "left"; y += hh; };
+      if(y + 60 + hh + rh * 2 > bottom) newPage(false);
+      c.fillStyle = "#111"; c.font = `800 30px ${FONT}`; c.fillText(S.title, mX, y + 30); y += 42;
+      if(S.note){ c.fillStyle = "#6b7080"; c.font = `500 18px ${FONT}`; c.fillText(fit(S.note, tw), mX, y + 14); y += 28; }
+      head();
+      (S.rows || []).forEach((r, ri)=>{ if(y + rh > bottom){ newPage(false); c.fillStyle = "#111"; c.font = `800 22px ${FONT}`; c.fillText(S.title + " (folyt.)", mX, y + 20); y += 32; head(); }
+        const K = KC[r.k] || ["", "#1c1f26"]; c.fillStyle = K[0] || (ri % 2 ? "#f8f9fb" : "#fff"); c.fillRect(mX, y, tw, rh);
+        if(r.k === "r" || r.k === "a"){ c.fillStyle = K[1]; c.fillRect(mX, y, 6, rh); }
+        c.strokeStyle = "#e6e8ee"; c.lineWidth = 1; c.beginPath(); c.moveTo(mX, y + rh); c.lineTo(mX + tw, y + rh); c.stroke();
+        let x = mX; r.c.forEach((v, i)=>{ const k = S.cols[i] || {}, last = i === r.c.length - 1 && r.k && r.k !== "sh";
+          c.fillStyle = last || (r.k === "dim") ? K[1] : r.k === "sh" ? K[1] : "#1c1f26"; c.font = `${r.k === "sh" || r.b || (i === 0 && S.b0) || last ? 700 : 500} ${S.fs || 18}px ${FONT}`;
+          c.textAlign = k.al === "r" ? "right" : k.al === "c" ? "center" : "left"; const tx = k.al === "r" ? x + CW[i] - 12 : k.al === "c" ? x + CW[i] / 2 : x + 12 + (i === 0 && r.ind ? 22 : 0);
+          c.fillText(fit(fmt(v), CW[i] - 24 - (i === 0 && r.ind ? 22 : 0)), tx, y + rh / 2 + 7); x += CW[i]; }); c.textAlign = "left"; y += rh; });
+      if(!(S.rows || []).length){ c.fillStyle = "#8a8f99"; c.font = `500 18px ${FONT}`; c.fillText("Nincs adat.", mX + 12, y + 28); y += rh; }
+      y += 34;
+    }
+    const nowD = new Date();
+    pages.forEach((p, i)=>{ const c2 = p.getContext("2d"); c2.fillStyle = "#8a8f99"; c2.font = `500 17px ${FONT}`; c2.fillText(R.foot || "Készült a FirstPhone Munkaasztal adataiból.", mX, H - mB / 2 + 6);
+      c2.textAlign = "right"; c2.fillText(`FirstPhone Munkaasztal · ${nowD.getFullYear()}. ${pad2(nowD.getMonth() + 1)}. ${pad2(nowD.getDate())}. ${pad2(nowD.getHours())}:${pad2(nowD.getMinutes())} · ${i + 1}/${pages.length}. oldal`, W - mX, H - mB / 2 + 6); c2.textAlign = "left"; });
+    const out = []; for(const p of pages) out.push(await canvasPage(p, 0.9));
+    return new Blob([buildMultiImagePdf(out, land ? 841.89 : 595.28, land ? 595.28 : 841.89)], { type:"application/pdf" });
+  }
+  /* 📊 ugyanez Excelben (ExcelJS — formázott, szűrhető, rögzített fejléc), minden szakasz külön munkalap */
+  let exjsP = null;
+  const loadExcelJS = ()=> exjsP || (exjsP = new Promise((res, rej)=>{ if(window.ExcelJS) return res(window.ExcelJS); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"; s.onload = ()=> window.ExcelJS ? res(window.ExcelJS) : rej(new Error("Excel modul")); s.onerror = ()=>{ exjsP = null; rej(new Error("Nem sikerült betölteni az Excel modult (internet?)")); }; document.head.appendChild(s); }));
+  async function drawReportXlsx(R){
+    const EX = await loadExcelJS(), wb = new EX.Workbook(); wb.creator = "FirstPhone Munkaasztal"; wb.created = new Date();
+    const used = new Set(), sheetName = t=>{ let n = String(t).replace(/[\\\/\?\*\[\]:]/g, " ").slice(0, 31).trim() || "Lap", i = 2, b = n; while(used.has(n.toLowerCase())){ n = (b.slice(0, 27) + " " + i++); } used.add(n.toLowerCase()); return n; };
+    const thin = { style:"thin", color:{ argb:"FFDFE2E8" } }, KF = { r:"FFFDECEC", a:"FFFFF4E5", sh:"FFF7EFD9" }, KT = { r:"FFC62828", a:"FFB45309", g:"FF1B7F4B", dim:"FF8A8F99" };
+    (R.sections || []).forEach((S, si)=>{
+      const ws = wb.addWorksheet(sheetName(S.sheet || S.title), { views:[{ state:"frozen", ySplit:(si === 0 && R.kpis ? 5 : 4) }], pageSetup:{ orientation:R.land !== false ? "landscape" : "portrait", fitToPage:true, fitToWidth:1, fitToHeight:0, paperSize:9 } });
+      const nC = S.cols.length;
+      ws.mergeCells(1, 1, 1, Math.max(1, nC)); ws.getCell(1, 1).value = `${R.title} — ${S.title}`; ws.getCell(1, 1).font = { bold:true, size:15, color:{ argb:"FF111111" } };
+      ws.mergeCells(2, 1, 2, Math.max(1, nC)); ws.getCell(2, 1).value = [R.sub, S.note].filter(Boolean).join(" · "); ws.getCell(2, 1).font = { size:10, color:{ argb:"FF5B6070" } };
+      let hr = 4;
+      if(si === 0 && R.kpis){ ws.mergeCells(3, 1, 3, Math.max(1, nC)); ws.getCell(3, 1).value = R.kpis.map(k=> `${k.l}: ${k.v}${k.s ? " (" + k.s + ")" : ""}`).join("   ·   "); ws.getCell(3, 1).font = { bold:true, size:10 }; hr = 5; }
+      const h = ws.getRow(hr); S.cols.forEach((k, i)=>{ const cl = h.getCell(i + 1); cl.value = k.h; cl.font = { bold:true, color:{ argb:"FFFFFFFF" } }; cl.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FF1F2430" } }; cl.alignment = { vertical:"middle", horizontal:k.al === "r" ? "right" : k.al === "c" ? "center" : "left", wrapText:true }; cl.border = { top:thin, bottom:thin, left:thin, right:thin }; });
+      h.height = 22;
+      (S.rows || []).forEach((r, ri)=>{ const row = ws.getRow(hr + 1 + ri);
+        r.c.forEach((v, i)=>{ const cl = row.getCell(i + 1), k = S.cols[i] || {};
+          if(v && typeof v === "object"){ if(v.v != null && !isNaN(v.v)){ cl.value = Math.round(v.v * 100) / 100; cl.numFmt = v.nf || (v.u ? `0.0"${v.u.replace(/"/g, "")}"` : "0.0"); } else cl.value = v.t != null ? String(v.t) : ""; }
+          else if(typeof v === "number"){ cl.value = v; cl.numFmt = Number.isInteger(v) ? "0" : "0.0"; } else cl.value = v == null ? "" : String(v);
+          cl.alignment = { vertical:"middle", horizontal:k.al === "r" ? "right" : k.al === "c" ? "center" : "left", indent:i === 0 && r.ind ? 2 : 0 };
+          cl.border = { bottom:thin, left:thin, right:thin };
+          const last = i === r.c.length - 1;
+          cl.font = { bold:r.k === "sh" || !!r.b || (last && !!KT[r.k]), color:{ argb:(last || r.k === "dim") && KT[r.k] ? KT[r.k] : "FF1C1F26" } };
+          if(KF[r.k]) cl.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:KF[r.k] } }; }); });
+      ws.autoFilter = { from:{ row:hr, column:1 }, to:{ row:hr, column:nC } };
+      S.cols.forEach((k, i)=>{ ws.getColumn(i + 1).width = k.xw || Math.max(10, Math.min(60, Math.round((k.w || 1) * 11))); });
+    });
+    const buf = await wb.xlsx.writeBuffer();
+    return new Blob([buf], { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  }
+  window.fpAdmPdf.report = R=> drawReportPdf(R);
+  window.fpAdmPdf.xlsx = R=> drawReportXlsx(R);
 
   /* ===================== 🖨️ Beosztás nyomtatása (fekete-fehér, A4 fekvő) + fontos határidők ===================== */
   /* határidők egy hónapra: 23-án beosztás küldése (ünnep → előtte), hónap utolsó napján jelenléti ív, következő hónap 1-jén zárások (ünnep → +1 nap) */
