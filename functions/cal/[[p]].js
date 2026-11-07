@@ -388,7 +388,10 @@ li.hl{outline:2px solid var(--gold);animation:hl 1.2s ease 2;} @keyframes hl{50%
 @keyframes duIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:none}} @keyframes duP{0%,100%{transform:scale(1)}50%{transform:scale(1.1) rotate(-6deg)}}
 @media (prefers-reduced-motion:reduce){.du,.du-h i{animation:none !important;}}
 /* alsó tab-sáv */
-.tb{position:fixed;left:0;right:0;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(3,1fr);padding:6px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(20,20,27,.86);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);border-top:1px solid rgba(255,255,255,.07);}
+.rq-t{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;} .rq-t button{padding:11px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--tx);font:700 13.5px system-ui,-apple-system,sans-serif;text-align:left;cursor:pointer;} .rq-t button.on{border-color:var(--gold);background:rgba(245,179,0,.16);}
+.rq-in{width:100%;box-sizing:border-box;padding:13px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.25);color:var(--tx);font:600 16px system-ui,-apple-system,sans-serif;margin:6px 0;} .rq-l{display:block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-top:10px;}
+.rq-li{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:8px;border-radius:14px;background:rgba(255,255,255,.05);} .rq-li span{flex:1;min-width:0;font-size:14px;} .rq-li small{display:block;color:var(--dim);font-size:12.5px;} .rq-li button{border:0;background:rgba(239,90,90,.18);color:#ff9b9b;border-radius:10px;padding:7px 10px;font-weight:800;cursor:pointer;}
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(20,20,27,.86);-webkit-backdrop-filter:saturate(1.5) blur(18px);backdrop-filter:saturate(1.5) blur(18px);border-top:1px solid rgba(255,255,255,.07);}
 .tb button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;border:0;background:none;color:var(--dim);font:700 11px system-ui,-apple-system,sans-serif;cursor:pointer;}
 .tb button i{font-style:normal;width:46px;height:30px;border-radius:99px;display:grid;place-items:center;font-size:19px;transition:background .2s;} .tb button.on{color:var(--tx);} .tb button.on i{background:rgba(245,179,0,.22);box-shadow:inset 0 0 0 1px rgba(245,179,0,.4);}
 .tb button .dot{position:absolute;top:4px;left:calc(50% + 10px);width:9px;height:9px;border-radius:50%;background:#ef5a5a;box-shadow:0 0 0 2px #14141b;}
@@ -411,8 +414,31 @@ ${dutyHtml}${hero}
 <a class="b" href="${esc(g)}"><i>🗓️</i><span>Google Naptár<small>Android, Gmail — „Hozzáadás” gomb</small></span></a>
 <a class="b" id="oa" href="calshow:" hidden><i>📆</i><span>Naptár app megnyitása<small>ha már feliratkoztál</small></span></a>
 <a class="b" href="${esc(o.ics)}"><i>⬇️</i><span>Csak letöltés (.ics)<small>egyszeri, nem frissül magától</small></span></a></div></section>
+<section class="pg" data-pg="r"><div class="card"><h2>🙋 Kérés a beosztáshoz</h2><div class="nt">Jelezd előre, ha valamelyik napon nem tudsz jönni, csak félnapot tudsz, vagy szabadságot kérsz. A boltban a beosztás tervezésekor látni fogják.</div>
+<label class="rq-l" for="rqd">Melyik napra?</label><input class="rq-in" type="date" id="rqd" min="${esc(today)}">
+<label class="rq-l">Mit kérsz?</label><div class="rq-t" id="rqt"><button type="button" data-t="off">❌ Egész nap nem tudok jönni</button><button type="button" data-t="free">🏖️ Szabadságot kérek</button><button type="button" data-t="am">🌅 Csak délelőtt tudok</button><button type="button" data-t="pm">🌇 Csak délután tudok</button><button type="button" data-t="want">✋ Szeretnék dolgozni</button></div>
+<label class="rq-l" for="rqw">Indok <span style="text-transform:none;letter-spacing:0;font-weight:600">(nem kötelező)</span></label><input class="rq-in" id="rqw" maxlength="160" placeholder="Pl. orvos, iskola, családi program…">
+<button class="b p" id="rqs" type="button"><i>📨</i><span>Kérés elküldése<small>a bolt Munkaasztalában megjelenik</small></span></button><div class="st" id="rqo"></div></div>
+<div class="card"><h2>Elküldött kéréseid</h2><div id="rql"></div></div></section>
 <div class="f">FirstPhone Munkaasztal</div></div>
-<nav class="tb" id="tb"><button type="button" class="on" data-to="m"><i>📅</i>Műszakok</button><button type="button" data-to="n"><i>🔔</i>Értesítés<span class="dot" id="tbd" hidden></span></button><button type="button" data-to="c"><i>🗓️</i>Naptárba</button></nav>
+<nav class="tb" id="tb"><button type="button" class="on" data-to="m"><i>📅</i>Műszakok</button><button type="button" data-to="n"><i>🔔</i>Értesítés<span class="dot" id="tbd" hidden></span></button><button type="button" data-to="c"><i>🗓️</i>Naptárba</button><button type="button" data-to="r"><i>🙋</i>Kérés</button></nav>
+<script>
+(function(){
+  var BASE=${JSON.stringify(o.base)}, L=${JSON.stringify(o.reqs || []).replace(/</g, "\\u003c")}, T={off:'❌ Egész nap nem tudok jönni',free:'🏖️ Szabadságot kérek',am:'🌅 Csak délelőtt tudok',pm:'🌇 Csak délután tudok',want:'✋ Szeretnék dolgozni'};
+  var HM=['jan.','febr.','márc.','ápr.','máj.','jún.','júl.','aug.','szept.','okt.','nov.','dec.'], HD=['vasárnap','hétfő','kedd','szerda','csütörtök','péntek','szombat'];
+  var t='', rqt=document.getElementById('rqt'), out=document.getElementById('rqo'), lst=document.getElementById('rql'), sb=document.getElementById('rqs');
+  function e(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function dl(k){ var p=k.split('-').map(Number); return HM[p[1]-1]+' '+p[2]+'., '+HD[new Date(p[0],p[1]-1,p[2]).getDay()]; }
+  function draw(){ lst.innerHTML=L.length?L.map(function(r){ return '<div class="rq-li"><span><b>'+e(dl(r.d))+'</b><small>'+e(T[r.t]||'')+(r.why?' · '+e(r.why):'')+'</small></span><button type="button" data-del="'+e(r.id)+'">Visszavonom</button></div>'; }).join(''):'<div class="nt">Még nincs elküldött kérésed.</div>'; }
+  rqt.addEventListener('click',function(ev){ var b=ev.target.closest('button[data-t]'); if(!b) return; t=b.dataset.t; Array.prototype.forEach.call(rqt.querySelectorAll('button'),function(x){ x.classList.toggle('on',x===b); }); });
+  function send(body){ return fetch(BASE+'/req',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}).then(function(r){ return r.json(); }).then(function(j){ if(!j.ok) throw new Error(j.error||'hiba'); L=(j.req||[]).filter(function(x){ return x.d>=document.getElementById('rqd').min; }); draw(); }); }
+  sb.onclick=function(){ var d=document.getElementById('rqd').value; if(!d){ out.className='st err'; out.textContent='Válaszd ki a napot.'; return; } if(!t){ out.className='st err'; out.textContent='Válaszd ki, mit kérsz.'; return; }
+    sb.disabled=true; out.className='st'; out.textContent='Küldés…';
+    send({d:d,t:t,why:document.getElementById('rqw').value}).then(function(){ out.className='st ok'; out.textContent='✓ Elküldve — a boltban látják a beosztás tervezésekor.'; document.getElementById('rqw').value=''; }).catch(function(x){ out.className='st err'; out.textContent='Nem sikerült: '+x.message; }).then(function(){ sb.disabled=false; }); };
+  lst.addEventListener('click',function(ev){ var b=ev.target.closest('[data-del]'); if(!b) return; b.disabled=true; send({del:b.dataset.del}).catch(function(x){ b.disabled=false; out.className='st err'; out.textContent='Nem sikerült: '+x.message; }); });
+  draw();
+})();
+</script>
 <script>
 /* fülek + havi naptár (a műszakok a beosztásból) */
 (function(){
@@ -516,16 +542,16 @@ export async function onRequest(context) {
   }
   if (seg.length < 3 || seg.length > 4) return txt("Hiányos naptár link.", 404);
   let [uid, emp, tok, act] = seg; const isIcs = /\.ics$/i.test(tok); tok = tok.replace(/\.ics$/i, "");
-  if (!/^[A-Za-z0-9]{6,64}$/.test(uid) || !/^[A-Za-z0-9_-]{2,40}$/.test(emp) || !/^[A-Za-z0-9]{16,64}$/.test(tok) || (act && !/^(push|notify|manifest|done)$/.test(act)) || (act && isIcs)) return txt("Hibás naptár link.", 404);
+  if (!/^[A-Za-z0-9]{6,64}$/.test(uid) || !/^[A-Za-z0-9_-]{2,40}$/.test(emp) || !/^[A-Za-z0-9]{16,64}$/.test(tok) || (act && !/^(push|notify|manifest|done|req)$/.test(act)) || (act && isIcs)) return txt("Hibás naptár link.", 404);
   const M = request.method;
-  if (act === "push" || act === "notify" || act === "done") { if (M !== "POST") return txt("POST kell", 405); }
+  if (act === "push" || act === "notify" || act === "done" || act === "req") { if (M !== "POST") return txt("POST kell", 405); }
   else if (M !== "GET" && M !== "HEAD") return txt("GET kell", 405);
   let sa; try { sa = JSON.parse(env.FIREBASE_SA || ""); } catch (e) { sa = null; }
   if (!sa || !sa.private_key) return txt("A naptár szolgáltatás nincs beállítva.", 503);
   const path = `boltok/${uid}/cal/${emp}`, url = new URL(request.url);
   const base = `${url.origin}/cal/${uid}/${emp}/${tok}`;
   try {
-    const d = await fsGet(sa, path, ["t", "ics", "ev", "name", "sub", "subAll", "subAt", "push"]);
+    const d = await fsGet(sa, path, ["t", "ics", "ev", "name", "sub", "subAll", "subAt", "push", "req"]);
     if (!d) return txt("Ez a naptár nem létezik (vagy törölték).", 404);
     if (!same(d.t, tok)) return txt("Ez a naptár link már nem érvényes.", 404);
 
@@ -556,6 +582,24 @@ export async function onRequest(context) {
       await fsPatch(sa, path, { push: R.map(x => JSON.stringify(x)), pushN: R.length, pushAt: new Date() });
       return json({ ok: true, n: R.length });
     }
+    /* 🙋 kérés a beosztáshoz: melyik napra, mit kér (nem tud jönni / csak DE / csak DU / szabadság / dolgozna), indokkal — a bolt Munkaasztala látja */
+    if (act === "req") {
+      const b = await request.json().catch(() => ({}));
+      const L = (d.req || []).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(Boolean);
+      const today = budaToday(), lim = new Date(Date.parse(today + "T00:00:00Z") - 31 * 864e5).toISOString().slice(0, 10);
+      let R2 = L.filter(x => x && x.d >= lim);
+      if (b.del) R2 = R2.filter(x => x.id !== String(b.del));
+      else {
+        const dd = String(b.d || ""), t = String(b.t || ""), why = String(b.why || "").replace(/[<>\n\r]/g, " ").trim().slice(0, 160);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dd) || dd < today || dd > new Date(Date.parse(today + "T00:00:00Z") + 200 * 864e5).toISOString().slice(0, 10)) return json({ ok: false, error: "Válassz egy mai vagy későbbi napot." }, 400);
+        if (!/^(off|am|pm|free|want)$/.test(t)) return json({ ok: false, error: "Válaszd ki, mit kérsz." }, 400);
+        R2 = R2.filter(x => !(x.d === dd && x.t === t));
+        R2.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), d: dd, t, why, at: Date.now(), src: "tel" });
+      }
+      R2 = R2.sort((x, y) => x.d.localeCompare(y.d)).slice(-60);
+      await fsPatch(sa, path, { req: R2.map(x => JSON.stringify(x)), reqAt: new Date() });
+      return json({ ok: true, req: R2 });
+    }
     if (act === "done") {
       const b = await request.json().catch(() => ({}));
       const bolt = b.src === "bolt";
@@ -575,7 +619,8 @@ export async function onRequest(context) {
     let shop = ""; try { const sh = await fsGet(sa, "boltok/" + uid, ["loc", "place"]); if (sh && sh.loc) shop = "FirstPhone " + sh.loc + (sh.place ? " " + String(sh.place).split(/[,(]/)[0].trim() : ""); } catch (e) {}
     let duty = []; try { duty = await dutyFor(sa, uid, d.ev); } catch (e) {}
     if (duty.some(x => !x.done)) context.waitUntil(dutyTick(sa, uid, url.origin).catch(() => {}));
-    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk, shop, duty }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
+    const reqs = (d.req || []).map(x => { try { return JSON.parse(x); } catch (e) { return null; } }).filter(x => x && x.d >= budaToday());
+    return new Response(page({ name: d.name, ev, base, ics: base + ".ics", web: base + ".ics", vapid: vk, shop, duty, reqs }), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" } });
   } catch (e) {
     return txt("Hiba: " + String((e && e.message) || e), 502);
   }
