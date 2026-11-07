@@ -6031,7 +6031,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261107-153128";</script>
+<script>window.FP_BUILD="20261107-153337";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -10281,7 +10281,7 @@ service cloud.firestore {
             <div class="ax-wtg">${cells}</div>
             <p class="ax-hint"><b>Munkaszüneti napok:</b> ${holL || "—"}</p>
             <div class="ax-wtsw"><label>Ledolgozós szombatok (munkanap)<input class="ax-in ax-wtw" placeholder="${Y}-01-10, ${Y}-08-08" value="${esc((sw.work || []).join(", "))}"></label><label>Áthelyezett pihenőnapok<input class="ax-in ax-wtr" placeholder="${Y}-01-02, ${Y}-08-21" value="${esc((sw.rest || []).join(", "))}"></label><button type="button" class="ax-btn pri sm" data-wt="swsave">✏️ Kézi mentés</button>${CAL.M ? `<button type="button" class="ax-btn sm" data-wt="swreset">↺ Vissza az automatikusra</button>` : ""}</div></div>`; })() : "";
-        const sel = (attr, cur, opts, inh)=> `<select class="ax-in ax-wtd" ${attr}><option value=""${cur ? "" : " selected"}>${inh}</option>${opts.map(([v, l])=> `<option value="${v}"${+cur === v ? " selected" : ""}>${l}</option>`).join("")}</select>`;
+        const sel = (attr, cur, opts, inh)=> `<select class="ax-in ax-wtd" ${attr}><option value=""${cur !== "" && cur != null ? "" : " selected"}>${inh}</option>${opts.map(([v, l])=> `<option value="${v}"${cur !== "" && cur != null && +cur === v ? " selected" : ""}>${l}</option>`).join("")}</select>`;
         const DOPT = [8,7,6,5,4].map(v=> [v, v + " óra/nap"]), KOPT = [1,2,3,4,6].map(v=> [v, v + " hó"]), BOPT = [[0,"nincs"],[20,"20 perc"],[30,"30 perc"],[60,"60 perc"]];
         const byStore = new Map(); rows.forEach(r=>{ if(!byStore.has(r.x.uid)) byStore.set(r.x.uid, []); byStore.get(r.x.uid).push(r); });
         let tr = "";
