@@ -6031,7 +6031,7 @@
   html.m-app .sc-txt{max-height:48% !important;}
 </style>
 <!-- PRÓBA: új kinézet (csak a proba ágon) -->
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script>try{ if(localStorage.getItem("fp_ui_old") !== "1") document.documentElement.classList.add("ui-uj"); }catch(e){ document.documentElement.classList.add("ui-uj"); }</script>
 <style id="uiUjSkin">
   html.ui-uj body:not(.light-theme):not([data-theme="light"]){
@@ -6051,7 +6051,16 @@
   html.ui-uj b, html.ui-uj strong{ font-weight:600; }
   html.ui-uj [style*="font-weight:900"], html.ui-uj [style*="font-weight:800"]{ font-weight:700 !important; }
   html.ui-uj button, html.ui-uj .btn, html.ui-uj a{ transition-timing-function:cubic-bezier(0.22,1,0.36,1) !important; }
-  html.ui-uj button:focus-visible, html.ui-uj a:focus-visible, html.ui-uj input:focus-visible, html.ui-uj select:focus-visible{ outline:2px solid #FBAC01 !important; outline-offset:2px; }
+  html.ui-uj button:focus-visible, html.ui-uj a:focus-visible{ outline:2px solid #FBAC01 !important; outline-offset:2px; }
+  html.ui-uj input:focus, html.ui-uj textarea:focus, html.ui-uj select:focus{ outline:none !important; }
+  /* 📦 csomag beolvasó sáv — egy keret, nincs belső négyzet */
+  html.ui-uj .cs2-scan-in{ background:#181818 !important; border:1px solid #313131 !important; border-radius:16px !important; padding:8px !important; gap:12px !important; box-shadow:none !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1), box-shadow .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj .cs2-scan-in:focus-within{ border-color:#FBAC01 !important; box-shadow:0 0 0 4px rgba(251,172,1,.14) !important; }
+  html.ui-uj .cs2-scan-ic{ flex:0 0 44px; width:44px; height:44px; border-radius:12px; background:#272727; font-size:0 !important; color:transparent; position:relative; }
+  html.ui-uj .cs2-scan-ic::after{ content:""; position:absolute; inset:11px; background:#FBAC01; -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round'%3E%3Cpolyline points='184 40 224 40 224 80'/%3E%3Cpolyline points='72 216 32 216 32 176'/%3E%3Cpolyline points='224 176 224 216 184 216'/%3E%3Cpolyline points='32 80 32 40 72 40'/%3E%3Cline x1='80' y1='88' x2='80' y2='168'/%3E%3Cline x1='176' y1='88' x2='176' y2='168'/%3E%3Cline x1='112' y1='88' x2='112' y2='168'/%3E%3Cline x1='144' y1='88' x2='144' y2='168'/%3E%3C/svg%3E") center/contain no-repeat; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round'%3E%3Cpolyline points='184 40 224 40 224 80'/%3E%3Cpolyline points='72 216 32 216 32 176'/%3E%3Cpolyline points='224 176 224 216 184 216'/%3E%3Cpolyline points='32 80 32 40 72 40'/%3E%3Cline x1='80' y1='88' x2='80' y2='168'/%3E%3Cline x1='176' y1='88' x2='176' y2='168'/%3E%3Cline x1='112' y1='88' x2='112' y2='168'/%3E%3Cline x1='144' y1='88' x2='144' y2='168'/%3E%3C/svg%3E") center/contain no-repeat; }
+  html.ui-uj .cs2-scan-in input{ border:0 !important; outline:none !important; box-shadow:none !important; background:transparent !important; padding:8px 0 !important; font-size:18px !important; line-height:28px !important; font-weight:600 !important; letter-spacing:.02em !important; font-family:'Geist Mono','Consolas',monospace !important; }
+  html.ui-uj .cs2-scan-in input::placeholder{ font-family:'Manrope',system-ui,sans-serif !important; font-size:16px !important; font-weight:500 !important; letter-spacing:0 !important; color:#8A8A8A !important; }
+  html.ui-uj .cs2-scan-in .action-btn{ border-radius:12px !important; padding:12px 16px !important; font-size:16px !important; line-height:24px !important; font-weight:600 !important; }
   html.ui-uj .btn-primary, html.ui-uj .action-btn.primary{ background:#FBAC01 !important; background-image:none !important; color:#000000 !important; box-shadow:none !important; border-color:#FBAC01 !important; }
   html.ui-uj .ps-btn.active, html.ui-uj .pill.active{ background:#FBAC01 !important; background-image:none !important; color:#000000 !important; box-shadow:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:rgba(24,24,24,.86); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid #313131; color:#FFFFFF; font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
