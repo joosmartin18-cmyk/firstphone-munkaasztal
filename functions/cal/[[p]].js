@@ -395,7 +395,42 @@ li.hl{outline:2px solid var(--gold);animation:hl 1.2s ease 2;} @keyframes hl{50%
 .tb button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px 4px;border:0;background:none;color:var(--dim);font:700 11px system-ui,-apple-system,sans-serif;cursor:pointer;}
 .tb button i{font-style:normal;width:46px;height:30px;border-radius:99px;display:grid;place-items:center;font-size:19px;transition:background .2s;} .tb button.on{color:var(--tx);} .tb button.on i{background:rgba(245,179,0,.22);box-shadow:inset 0 0 0 1px rgba(245,179,0,.4);}
 .tb button .dot{position:absolute;top:4px;left:calc(50% + 10px);width:9px;height:9px;border-radius:50%;background:#ef5a5a;box-shadow:0 0 0 2px #14141b;}
-</style></head><body><div class="c">
+</style>
+<script>try{var q=new URLSearchParams(location.search).get("ui");if(q==="uj")localStorage.setItem("fp_cal_ui","uj");if(q==="regi")localStorage.removeItem("fp_cal_ui");if(localStorage.getItem("fp_cal_ui")==="uj")document.documentElement.classList.add("ui-uj");}catch(e){}</script>
+<style>
+/* PRÓBA: új kinézet — csak ?ui=uj után (a többieknek változatlan) */
+html.ui-uj{--bg:#000000;--card:#181818;--card2:#1F1F1F;--line:#313131;--tx:#FFFFFF;--dim:#9B9B9B;--gold:#FBAC01;}
+html.ui-uj body{background:#000000 !important;font-family:'Manrope',system-ui,sans-serif !important;}
+html.ui-uj body *{font-family:'Manrope',system-ui,sans-serif !important;}
+html.ui-uj .top{background:rgba(0,0,0,.82) !important;border-bottom:1px solid #1F1F1F;}
+html.ui-uj .top h1{font-weight:700 !important;font-size:20px !important;line-height:28px !important;}
+html.ui-uj .hero{background:#FBAC01 !important;color:#000 !important;box-shadow:none !important;border-radius:20px !important;}
+html.ui-uj .hero.now{background:#34C38F !important;color:#000 !important;} html.ui-uj .hero.away{background:#5B9CF5 !important;color:#000 !important;}
+html.ui-uj .hero.none{background:#1F1F1F !important;color:#FFFFFF !important;border:1px solid #313131;}
+html.ui-uj .hero b{font-weight:700 !important;} html.ui-uj .hero i{opacity:.18 !important;}
+html.ui-uj .card{background:#181818 !important;border:1px solid #313131 !important;border-radius:20px !important;padding:16px !important;}
+html.ui-uj h2{font-weight:600 !important;letter-spacing:.06em !important;}
+html.ui-uj .mh button{background:#1F1F1F !important;border-color:#313131 !important;border-radius:12px !important;}
+html.ui-uj .gr button{border-radius:10px !important;font-weight:600 !important;}
+html.ui-uj .gr button.w{background:rgba(251,172,1,.18) !important;color:#FFC94A !important;}
+html.ui-uj .gr button.w.am{background:linear-gradient(180deg,rgba(251,172,1,.32) 50%,rgba(251,172,1,.06) 50%) !important;} html.ui-uj .gr button.w.pm{background:linear-gradient(180deg,rgba(251,172,1,.06) 50%,rgba(251,172,1,.32) 50%) !important;}
+html.ui-uj .gr button.t{box-shadow:inset 0 0 0 2px #FBAC01 !important;}
+html.ui-uj li{background:#1F1F1F !important;border-radius:14px !important;} html.ui-uj li.td{background:#1F1F1F !important;border:1px solid #34C38F !important;}
+html.ui-uj .dd{background:#272727 !important;border-radius:12px !important;} html.ui-uj .dd small{color:#FBAC01 !important;}
+html.ui-uj a.b,html.ui-uj button.b{background:#1F1F1F !important;border:1px solid #313131 !important;border-radius:14px !important;font-weight:600 !important;}
+html.ui-uj .b.p{background:#FBAC01 !important;color:#000 !important;border:0 !important;} html.ui-uj .b.p small{color:#3A2A00 !important;}
+html.ui-uj .du{background:#1F1F1F !important;border:1px solid #E5484D !important;border-radius:20px !important;} html.ui-uj .du.ok{border-color:#34C38F !important;}
+html.ui-uj .oc{background:#1F1F1F !important;border-color:#FBAC01 !important;}
+html.ui-uj .rq-t button{background:#1F1F1F !important;border:1px solid #313131 !important;border-radius:12px !important;font-weight:600 !important;}
+html.ui-uj .rq-t button.on{background:#FBAC01 !important;color:#000 !important;border-color:#FBAC01 !important;}
+html.ui-uj .rq-in{background:#1F1F1F !important;border:1px solid #313131 !important;border-radius:12px !important;} html.ui-uj .rq-in:focus{border-color:#FBAC01 !important;outline:none;}
+html.ui-uj .rq-li{background:#1F1F1F !important;border-radius:12px !important;}
+html.ui-uj .tb{background:rgba(24,24,24,.92) !important;border-top:1px solid #313131 !important;}
+html.ui-uj .tb button.on i{background:#FBAC01 !important;box-shadow:none !important;color:#000;}
+html.ui-uj .tb button.on{color:#FFFFFF !important;}
+.uj-chip{display:none;} html.ui-uj .uj-chip{display:flex;justify-content:center;gap:8px;align-items:center;margin:4px 0 12px;font:600 12px/16px 'Manrope',system-ui,sans-serif;color:#9B9B9B;} html.ui-uj .uj-chip i{font-style:normal;color:#000;background:#FBAC01;padding:2px 8px;border-radius:6px;} html.ui-uj .uj-chip a{color:#FBAC01;}
+</style><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"></head><body><div class="c">
+<div class="uj-chip"><i>PRÓBA</i>új kinézet · <a href="?ui=regi">vissza a régire</a></div>
 <div class="top"><img src="/cal-icon.png" alt=""><div><h1>${first ? "Szia, " + esc(first) + "! 👋" : esc(o.name || "Beosztás")}</h1><small>${esc(o.shop ? o.shop + " · " : "FirstPhone · ")}${esc(nm || "a te műszakjaid")}</small></div></div>
 <section class="pg on" data-pg="m">
 <div class="card oc" id="oc" hidden><h2>📅 Az értesítésből jöttél</h2><p id="ocx"></p><a class="b p" id="ob" href="#"><i>📅</i><span>Megnyitás a naptárban<small id="obs">azon a napon</small></span></a></div>
