@@ -6031,7 +6031,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261107-154854";</script>
+<script>window.FP_BUILD="20261107-220546";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -19484,13 +19484,16 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function reqLine(r){ const P = personById(r.p); return `${REQ_T[r.t][0]} ${P ? P.name : "?"} — ${REQ_T[r.t][1].toLowerCase()}${r.why ? ` (${r.why})` : ""}${r.src === "tel" ? " · 📱 telefonról" : ""}`; }
   /* a telefonról küldött kérések betöltése (a dolgozók naptár-dokumentumából), legfeljebb 3 percenként */
   async function reqLoadTel(force){
-    if(!force && Date.now() - telReqAt < 180000) return; telReqAt = Date.now();
-    let C = null; try{ C = calCloud(); }catch(e){} if(!C) return;
+    let C = null; try{ C = calCloud(); }catch(e){} if(!C) return;   /* amíg nincs felhő-kapcsolat, nem számít próbálkozásnak */
+    if(!force && Date.now() - telReqAt < 60000) return; telReqAt = Date.now();
     const out = {}; let any = false;
     await Promise.all(employees().map(async p=>{ try{ const d = await C.db.collection("boltok").doc(C.target).collection("cal").doc(p.id).get(); if(!d.exists) return;
       (d.data().req || []).forEach(x=>{ try{ const r = JSON.parse(x); if(r && r.d && REQ_T[r.t]){ r.p = p.id; r.src = "tel"; (out[r.d] = out[r.d] || []).push(r); any = true; } }catch(e){} }); }catch(e){} }));
     const changed = JSON.stringify(out) !== JSON.stringify(telReqs); telReqs = out; if(changed && activePage === "beosztas") renderCalendar();
   }
+  /* telefonos kérések: betöltés, amint a felhő elérhető, utána percenként (és ha a lap újra előtérbe kerül) */
+  setInterval(()=>{ try{ if(!document.hidden) reqLoadTel(); }catch(e){} }, 20000);
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden){ try{ reqLoadTel(true); }catch(e){} } });
   async function reqDel(key, r){
     if(r.src === "tel"){ let C = null; try{ C = calCloud(); }catch(e){} if(!C){ toast("A telefonról küldött kérés törléséhez internet kell."); return false; }
       try{ const ref = C.db.collection("boltok").doc(C.target).collection("cal").doc(r.p), d = await ref.get(); const L = ((d.exists && d.data().req) || []).filter(x=>{ try{ return JSON.parse(x).id !== r.id; }catch(e){ return true; } });
