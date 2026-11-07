@@ -5944,7 +5944,7 @@
 </style>
 </head>
 <body>
-<script>window.FP_BUILD="20261103-141137";</script>
+<script>window.FP_BUILD="20261107-145740";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -28418,7 +28418,23 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   /* másik gépről jött változás (felhő) */
   setInterval(()=>{ if(!root || !document.body.classList.contains("page-specko")) return; const r = localStorage.getItem(KEY) || ""; if(r && r !== lastRaw && !root.contains(document.activeElement)){ lastRaw = r; D = load(); L = loadL(); draw(); } }, 4000);
-  window.fpSpeckoOpen = ()=>{ mount(); D = load(); L = loadL(); lastRaw = localStorage.getItem(KEY) || ""; draw(); };
+  /* biztonsági háló: ha bármi elakad, ne maradjon üres oldal — látható hiba + újrapróbálás, és a hibanaplóba is bekerül */
+  function failBox(e){ const r = document.getElementById("skPage"); if(!r) return;
+    try{ window.fpErrReport && fpErrReport("Speckó: " + ((e && e.message) || e), "specko", e && e.stack); }catch(_){}
+    r.innerHTML = `<section class="panel" style="padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start"><h2 style="margin:0">⚠ A Speckó most nem töltött be</h2><p style="margin:0;color:var(--text-dim)">A hibát automatikusan jelentettük. A telefonok és a logók nem vesztek el.</p><small style="opacity:.7">${E((e && e.message) || e)}</small><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="action-btn primary" id="skRetry">↻ Újra</button><button type="button" class="action-btn" id="skNoLogo">Megnyitás logók nélkül</button></div></section>`;
+    delete r.dataset.on; root = null;
+    r.querySelector("#skRetry").onclick = ()=> window.fpSpeckoOpen();
+    r.querySelector("#skNoLogo").onclick = ()=>{ window.__skNoLogo = true; window.fpSpeckoOpen(); }; }
+  window.fpSpeckoOpen = ()=>{
+    try{
+      const r = document.getElementById("skPage");
+      if(r && r.dataset.on && !r.querySelector(".sk-tabs")){ delete r.dataset.on; root = null; }   /* üresen maradt → újra felépíti */
+      mount(); D = load(); L = window.__skNoLogo ? [] : loadL(); lastRaw = localStorage.getItem(KEY) || ""; draw();
+    }catch(e){ console.error(e); failBox(e); }
+  };
+  /* ha a Munkaasztal a Speckó oldalon nyílt meg (újratöltés), akkor ez a rész még nem volt kész, amikor az oldal megnyílt — most felépíti */
+  const kick = ()=>{ if(document.body.classList.contains("page-specko") && !(document.getElementById("skPage") || {}).childElementCount) window.fpSpeckoOpen(); };
+  kick(); if(document.readyState !== "complete") window.addEventListener("load", kick); setTimeout(kick, 1500);
 })();</script>
 <script>/* ===================== ⬅ bal oldali menü — próba Kaposvárnál (gépen). A programválasztót kiveszi a fejlécből, és a bal szélre teszi; vissza is tehető. ===================== */
 (function fpRightNav(){
