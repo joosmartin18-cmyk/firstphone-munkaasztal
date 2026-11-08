@@ -6635,6 +6635,46 @@
   html.ui-uj:not(.m-app) .ea-wrap > .ea-card{ width:100% !important; }
   /* 📱 Speckó: keskenyebb lista, nagyobb előnézet */
   html.ui-uj:not(.m-app) .sk-wrap{ grid-template-columns:340px minmax(0,1fr) !important; gap:24px !important; }
+  /* 🏷 Cetli generátor (iframe): balra a cetli-típusok listája, középen az űrlap, jobbra a rögzített élő előnézet */
+  html.ui-uj #app-cetli{ display:grid !important; grid-template-columns:240px minmax(0,1fr) !important; grid-template-areas:"hdr hdr" "nav main" !important; gap:16px 24px !important; align-items:start !important; padding-top:8px !important; }
+  html.ui-uj #app-cetli > .header{ grid-area:hdr; margin:0 !important; padding:0 0 16px !important; background:transparent !important; background-image:none !important; border:0 !important; border-bottom:1px solid var(--u4) !important; border-radius:0 !important; box-shadow:none !important; min-height:0 !important; }
+  html.ui-uj #app-cetli > .header::before, html.ui-uj #app-cetli > .header::after{ display:none !important; }
+  html.ui-uj #app-cetli .brand-badge{ width:44px !important; height:44px !important; border-radius:12px !important; background:var(--u3) !important; background-image:none !important; box-shadow:none !important; font-size:22px !important; }
+  html.ui-uj #app-cetli #brandTitle{ font-size:22px !important; line-height:28px !important; font-weight:600 !important; background:none !important; -webkit-text-fill-color:currentColor !important; color:var(--utx) !important; }
+  html.ui-uj #app-cetli .cl-seg{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:4px !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli .cl-seg button{ height:32px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; font-weight:600 !important; }
+  html.ui-uj #app-cetli .cl-seg button.ui-fb, html.ui-uj #app-cetli .cl-seg button.on, html.ui-uj #app-cetli .cl-seg button[aria-pressed="true"]{ background:var(--u3) !important; color:var(--utx) !important; }
+  /* típus-lista */
+  html.ui-uj #app-cetli > .cl-gal{ grid-area:nav; position:sticky; top:12px; margin:0 !important; padding:8px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; overflow:visible !important; }
+  html.ui-uj #app-cetli > .cl-gal::before{ content:"Cetli típusa"; display:block; padding:8px 10px 8px; font:600 12px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint); }
+  html.ui-uj #app-cetli #cetliTabs{ display:flex !important; flex-direction:column !important; flex-wrap:nowrap !important; gap:2px !important; overflow:visible !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn{ width:100% !important; min-width:0 !important; max-width:none !important; height:auto !important; min-height:52px !important; flex:none !important; display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:flex-start !important; text-align:left !important; gap:12px !important; padding:8px 10px !important; margin:0 !important; border-radius:12px !important; background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; transform:none !important; animation:none !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn::before, html.ui-uj #app-cetli #cetliTabs .tab-btn::after{ display:none !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn:hover{ background:var(--u2) !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn.active{ background:var(--u3) !important; box-shadow:inset 3px 0 0 var(--uacc) !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-ic{ width:36px !important; height:36px !important; min-width:36px !important; border-radius:10px !important; display:grid !important; place-items:center !important; font-size:18px !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:none !important; margin:0 !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn.active .tb-ic{ background:var(--u1) !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx{ display:flex !important; flex-direction:column !important; gap:0 !important; min-width:0 !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx b{ font-size:14px !important; line-height:20px !important; font-weight:600 !important; color:var(--utx) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx > :not(b){ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn svg, html.ui-uj #app-cetli #cetliTabs .tab-btn .tb-ck, html.ui-uj #app-cetli #cetliTabs .tab-btn > i:not(.tb-ic){ display:none !important; }
+  /* űrlap + jobb oldali előnézet */
+  html.ui-uj #app-cetli > .cl-shell{ grid-area:main; margin:0 !important; min-width:0; }
+  html.ui-uj body.cl2 .cl-main .grid{ grid-template-columns:minmax(0,1fr) 360px !important; gap:20px !important; align-items:start !important; }
+  html.ui-uj body.cl2 .cl-main .grid > div:last-child{ order:2 !important; position:sticky; top:12px; }
+  html.ui-uj body.cl2 .cl-main .grid > div:first-child{ order:1 !important; }
+  html.ui-uj #app-cetli .card, html.ui-uj #app-cetli .op-card{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli .op-card{ border-style:dashed !important; }
+  html.ui-uj #app-cetli .op-card button, html.ui-uj #app-cetli [class*="op-"] .btn{ background:var(--u3) !important; background-image:none !important; color:var(--utx) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  @media (max-width:1100px){ html.ui-uj #app-cetli{ grid-template-columns:1fr !important; grid-template-areas:"hdr" "nav" "main" !important; } html.ui-uj #app-cetli > .cl-gal{ position:static; } html.ui-uj #app-cetli #cetliTabs{ flex-direction:row !important; overflow-x:auto !important; } html.ui-uj #app-cetli #cetliTabs .tab-btn{ width:auto !important; } }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx b{ margin:0 !important; padding:0 !important; display:block !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx{ justify-content:center !important; height:auto !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx > *{ margin:0 !important; }
+  html.ui-uj #app-cetli .op-btn{ background:var(--u3) !important; background-image:none !important; color:var(--utx) !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:10px !important; }
+  html.ui-uj #app-cetli .op-btn:hover{ border-color:var(--uacc) !important; }
+  html.ui-uj #app-cetli .pv-stage{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli .pv-stage::before, html.ui-uj #app-cetli .pv-stage::after{ display:none !important; }
+  html.ui-uj #app-cetli .card h2{ font-size:16px !important; font-weight:600 !important; }
 
   /* ===== PRÓBA 13: admin — új elrendezés (fix oldalsáv, vékony fejléc, idővonal) ===== */
   html.ui-uj body #fcAdmin .ax-hrow{ width:100% !important; display:flex !important; align-items:center !important; gap:12px !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
@@ -16908,6 +16948,46 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) .ea-wrap > .ea-card{ width:100% !important; }
   /* 📱 Speckó: keskenyebb lista, nagyobb előnézet */
   html.ui-uj:not(.m-app) .sk-wrap{ grid-template-columns:340px minmax(0,1fr) !important; gap:24px !important; }
+  /* 🏷 Cetli generátor (iframe): balra a cetli-típusok listája, középen az űrlap, jobbra a rögzített élő előnézet */
+  html.ui-uj #app-cetli{ display:grid !important; grid-template-columns:240px minmax(0,1fr) !important; grid-template-areas:"hdr hdr" "nav main" !important; gap:16px 24px !important; align-items:start !important; padding-top:8px !important; }
+  html.ui-uj #app-cetli > .header{ grid-area:hdr; margin:0 !important; padding:0 0 16px !important; background:transparent !important; background-image:none !important; border:0 !important; border-bottom:1px solid var(--u4) !important; border-radius:0 !important; box-shadow:none !important; min-height:0 !important; }
+  html.ui-uj #app-cetli > .header::before, html.ui-uj #app-cetli > .header::after{ display:none !important; }
+  html.ui-uj #app-cetli .brand-badge{ width:44px !important; height:44px !important; border-radius:12px !important; background:var(--u3) !important; background-image:none !important; box-shadow:none !important; font-size:22px !important; }
+  html.ui-uj #app-cetli #brandTitle{ font-size:22px !important; line-height:28px !important; font-weight:600 !important; background:none !important; -webkit-text-fill-color:currentColor !important; color:var(--utx) !important; }
+  html.ui-uj #app-cetli .cl-seg{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:4px !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli .cl-seg button{ height:32px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; font-weight:600 !important; }
+  html.ui-uj #app-cetli .cl-seg button.ui-fb, html.ui-uj #app-cetli .cl-seg button.on, html.ui-uj #app-cetli .cl-seg button[aria-pressed="true"]{ background:var(--u3) !important; color:var(--utx) !important; }
+  /* típus-lista */
+  html.ui-uj #app-cetli > .cl-gal{ grid-area:nav; position:sticky; top:12px; margin:0 !important; padding:8px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; overflow:visible !important; }
+  html.ui-uj #app-cetli > .cl-gal::before{ content:"Cetli típusa"; display:block; padding:8px 10px 8px; font:600 12px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint); }
+  html.ui-uj #app-cetli #cetliTabs{ display:flex !important; flex-direction:column !important; flex-wrap:nowrap !important; gap:2px !important; overflow:visible !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn{ width:100% !important; min-width:0 !important; max-width:none !important; height:auto !important; min-height:52px !important; flex:none !important; display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:flex-start !important; text-align:left !important; gap:12px !important; padding:8px 10px !important; margin:0 !important; border-radius:12px !important; background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; transform:none !important; animation:none !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn::before, html.ui-uj #app-cetli #cetliTabs .tab-btn::after{ display:none !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn:hover{ background:var(--u2) !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn.active{ background:var(--u3) !important; box-shadow:inset 3px 0 0 var(--uacc) !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-ic{ width:36px !important; height:36px !important; min-width:36px !important; border-radius:10px !important; display:grid !important; place-items:center !important; font-size:18px !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:none !important; margin:0 !important; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn.active .tb-ic{ background:var(--u1) !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx{ display:flex !important; flex-direction:column !important; gap:0 !important; min-width:0 !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx b{ font-size:14px !important; line-height:20px !important; font-weight:600 !important; color:var(--utx) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx > :not(b){ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj #app-cetli #cetliTabs .tab-btn svg, html.ui-uj #app-cetli #cetliTabs .tab-btn .tb-ck, html.ui-uj #app-cetli #cetliTabs .tab-btn > i:not(.tb-ic){ display:none !important; }
+  /* űrlap + jobb oldali előnézet */
+  html.ui-uj #app-cetli > .cl-shell{ grid-area:main; margin:0 !important; min-width:0; }
+  html.ui-uj body.cl2 .cl-main .grid{ grid-template-columns:minmax(0,1fr) 360px !important; gap:20px !important; align-items:start !important; }
+  html.ui-uj body.cl2 .cl-main .grid > div:last-child{ order:2 !important; position:sticky; top:12px; }
+  html.ui-uj body.cl2 .cl-main .grid > div:first-child{ order:1 !important; }
+  html.ui-uj #app-cetli .card, html.ui-uj #app-cetli .op-card{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli .op-card{ border-style:dashed !important; }
+  html.ui-uj #app-cetli .op-card button, html.ui-uj #app-cetli [class*="op-"] .btn{ background:var(--u3) !important; background-image:none !important; color:var(--utx) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  @media (max-width:1100px){ html.ui-uj #app-cetli{ grid-template-columns:1fr !important; grid-template-areas:"hdr" "nav" "main" !important; } html.ui-uj #app-cetli > .cl-gal{ position:static; } html.ui-uj #app-cetli #cetliTabs{ flex-direction:row !important; overflow-x:auto !important; } html.ui-uj #app-cetli #cetliTabs .tab-btn{ width:auto !important; } }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx b{ margin:0 !important; padding:0 !important; display:block !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx{ justify-content:center !important; height:auto !important; }
+  html.ui-uj #app-cetli #cetliTabs .tb-tx > *{ margin:0 !important; }
+  html.ui-uj #app-cetli .op-btn{ background:var(--u3) !important; background-image:none !important; color:var(--utx) !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:10px !important; }
+  html.ui-uj #app-cetli .op-btn:hover{ border-color:var(--uacc) !important; }
+  html.ui-uj #app-cetli .pv-stage{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj #app-cetli .pv-stage::before, html.ui-uj #app-cetli .pv-stage::after{ display:none !important; }
+  html.ui-uj #app-cetli .card h2{ font-size:16px !important; font-weight:600 !important; }
 
   /* ===== PRÓBA 13: admin — új elrendezés (fix oldalsáv, vékony fejléc, idővonal) ===== */
   html.ui-uj body #fcAdmin .ax-hrow{ width:100% !important; display:flex !important; align-items:center !important; gap:12px !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
