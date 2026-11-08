@@ -6029,9 +6029,216 @@
   html.m-app .sc-va > [data-v="x"]{position:fixed !important;top:calc(10px + env(safe-area-inset-top));right:10px;width:38px !important;height:38px !important;min-height:0 !important;flex:none !important;border-radius:50% !important;font-size:15px !important;}
   html.m-app .sc-txt{max-height:48% !important;}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="axNew">
+  /* ===== Admin konzol — új kinézet (2026-11) ===== */
+  #fcAdmin, .ax, .ax-drw, .ax-swin{ --u0:#000000; --u1:#181818; --u2:#1F1F1F; --u3:#272727; --u4:#313131; --utx:#FFFFFF; --udim:#9B9B9B; --ufaint:#707070; --uacc:#FBAC01; --uacctx:#000000; --ulink:#FBAC01; }
+  #fcAdmin.th-light, .ax.th-light, .ax-drw.th-light, .ax-swin.th-light{ --u0:#F2F2F2; --u1:#FFFFFF; --u2:#F6F6F6; --u3:#ECECEC; --u4:#DDDDDD; --utx:#111111; --udim:#5C5C5C; --ufaint:#8A8A8A; --uacc:#FBAC01; --uacctx:#000000; --ulink:#8A5A00; }
+  #fcAdmin *:not(code):not(pre):not(kbd):not(svg):not(svg *), .ax-drw *:not(code):not(pre):not(kbd):not(svg):not(svg *), .ax-swin *:not(code):not(pre):not(kbd):not(svg):not(svg *){ font-family:'Manrope',system-ui,sans-serif !important; }
+  html .ax, html .ax-drw, html .ax-swin{ --ax-bg:var(--u0); --ax-side:var(--u1); --ax-panel:var(--u1); --ax-panel2:var(--u2); --ax-line:var(--u4); --ax-line2:var(--u4); --ax-tx:var(--utx); --ax-dim:var(--udim); --ax-faint:var(--ufaint); --ax-acc:var(--uacc); --ax-shadow:none; }
+  html .ax.th-light, html .ax-drw.th-light, html .ax-swin.th-light{ --ax-acc:#8A5A00; }
+  html .ax-card{ border-radius:16px !important; box-shadow:none !important; background-image:none !important; }
+  html .ax-btn{ border-radius:10px !important; box-shadow:none !important; background-image:none !important; }
+  html .ax-btn.pri{ background:var(--uacc) !important; color:var(--uacctx) !important; border-color:var(--uacc) !important; }
+  html .ax-in{ border-radius:10px !important; }
+  html #fcAdmin{ background:var(--u0) !important; background-image:none !important; }
+  html #fcAdmin::before, html #fcAdmin::after{ display:none !important; }
+  html body #fcAdmin .ax-app.side{ padding-left:240px !important; }
+  html.axr-rail body #fcAdmin .ax-app.side{ padding-left:72px !important; }
+  html body #fcAdmin .ax-nav{ position:fixed !important; left:0 !important; top:0 !important; bottom:0 !important; transform:none !important; width:240px !important; max-height:none !important; height:auto !important; margin:0 !important; padding:12px !important; border-radius:0 !important; border:0 !important; border-right:1px solid var(--u4) !important; background:var(--u1) !important; background-image:none !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; gap:2px !important; overflow-y:auto !important; overflow-x:hidden !important; z-index:70 !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+  html.axr-rail body #fcAdmin .ax-nav{ width:72px !important; }
+  html.axr-rail body #fcAdmin .ax-nav:hover, html.axr-rail body #fcAdmin .ax-nav:focus-within{ width:240px !important; box-shadow:16px 0 48px rgba(0,0,0,.35) !important; }
+  html body #fcAdmin .ax-nav::before, html body #fcAdmin .ax-nav::after{ display:none !important; }
+  html body #fcAdmin .ax-nav > button{ flex:none !important; display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:flex-start !important; gap:12px !important; width:100% !important; height:44px !important; min-height:44px !important; padding:10px 14px !important; margin:0 !important; border-radius:10px !important; border:0 !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; text-align:left !important; white-space:nowrap !important; animation:none !important; transform:none !important; position:relative; }
+  html body #fcAdmin .ax-nav > button::before, html body #fcAdmin .ax-nav > button::after{ display:none !important; }
+  html body #fcAdmin .ax-nav > button:hover{ background:var(--u3) !important; color:var(--utx) !important; }
+  html body #fcAdmin .ax-nav > button.on{ background:var(--u3) !important; color:var(--utx) !important; }
+  html body #fcAdmin .ax-nav > button .ps-i{ font-size:0 !important; width:20px !important; height:20px !important; flex:none !important; margin:0 !important; display:block !important; background:currentColor !important; background-image:none !important; border-radius:0 !important; box-shadow:none !important; -webkit-mask-size:contain; mask-size:contain; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; }
+  html body #fcAdmin .ax-nav > button.on .ps-i{ background-color:var(--uacc) !important; }
+  html body #fcAdmin .ax-nav > button .ps-t{ display:block !important; font-size:14px !important; line-height:20px !important; font-weight:500 !important; color:inherit !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:opacity .3s cubic-bezier(0.22,1,0.36,1); }
+  html body #fcAdmin .ax-nav > button.on .ps-t{ font-weight:600 !important; }
+  html body #fcAdmin .ax-nav > button em{ position:static !important; margin-left:auto !important; min-width:20px; height:20px; padding:0 6px !important; border-radius:9999px !important; display:grid; place-items:center; font:600 12px/16px 'Manrope',system-ui,sans-serif !important; font-style:normal !important; background:var(--u4) !important; color:var(--utx) !important; box-shadow:none !important; border:0 !important; }
+  html body #fcAdmin .ax-nav > button em.hot{ background:var(--uacc) !important; color:var(--uacctx) !important; }
+  html body #fcAdmin .ax-nav > button em[hidden]{ display:none !important; }
+  html.axr-rail body #fcAdmin .ax-nav:not(:hover):not(:focus-within) > button .ps-t{ opacity:0; }
+  html.axr-rail body #fcAdmin .ax-nav:not(:hover):not(:focus-within) > button em{ position:absolute !important; top:4px; right:4px; min-width:8px; width:8px; height:8px; padding:0 !important; font-size:0 !important; }
+  html body #fcAdmin .ax-nav .ax-nbr{ display:none !important; }
+  html.axr-rail body #fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-grp{ font-size:0; padding:8px 12px; }
+  html.axr-rail body #fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-grp::after{ content:""; display:block; height:1px; background:var(--u4); }
+  html.axr-rail body #fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-navtop b{ display:none; }
+  html body #fcAdmin .ax-rr{ position:fixed !important; top:16px !important; right:24px !important; left:auto !important; bottom:auto !important; transform:none !important; width:auto !important; height:auto !important; padding:0 !important; border:0 !important; border-radius:0 !important; background:transparent !important; background-image:none !important; box-shadow:none !important; z-index:69 !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+  html body #fcAdmin .ax-rr::before, html body #fcAdmin .ax-rr::after{ display:none !important; }
+  html body #fcAdmin .ax-rr .ax-hbtns{ display:flex !important; flex-direction:row !important; gap:6px !important; align-items:center !important; }
+  html body #fcAdmin .ax-rr .ax-hbtns > *{ animation:none !important; }
+  html body #fcAdmin .ax-rr .ax-ib{ width:40px !important; height:40px !important; border-radius:10px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; }
+  html body #fcAdmin .ax-rr .ax-ib:hover{ background:var(--u3) !important; border-color:var(--uacc) !important; }
+  html body #fcAdmin .ax-rr .ax-me{ height:40px; border-radius:10px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-hdr{ background:transparent !important; background-image:none !important; border:0 !important; border-bottom:1px solid var(--u4) !important; border-radius:0 !important; box-shadow:none !important; padding-right:360px !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+  html body #fcAdmin .ax-hdr::before, html body #fcAdmin .ax-hdr::after, html body #fcAdmin .ax-ph::before, html body #fcAdmin .ax-ph::after{ display:none !important; }
+  html body #fcAdmin .ax-ph{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:16px !important; }
+  html body #fcAdmin .ax-h1{ background:none !important; -webkit-text-fill-color:currentColor !important; color:var(--utx) !important; font-weight:600 !important; }
+  html body #fcAdmin .ax-card{ background-color:var(--u1) !important; }
+  html body #fcAdmin .ax-card :is(.ax-card){ background-color:var(--u2) !important; }
+  html body #fcAdmin .ax-tb{ background:transparent !important; background-image:none !important; box-shadow:none !important; }
+
+  html body #fcAdmin .ax-nav > button[data-nav="dash"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='40' y1='216' x2='216' y2='216'/%3E%3Crect x='56' y='120' width='32' height='96'/%3E%3Crect x='112' y='72' width='32' height='144'/%3E%3Crect x='168' y='40' width='32' height='176'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='40' y1='216' x2='216' y2='216'/%3E%3Crect x='56' y='120' width='32' height='96'/%3E%3Crect x='112' y='72' width='32' height='144'/%3E%3Crect x='168' y='40' width='32' height='176'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="shops"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M48 139.6V208a8 8 0 0 0 8 8h144a8 8 0 0 0 8-8v-68.4'/%3E%3Cpath d='M54 40h148a8 8 0 0 1 7.7 5.8L224 96H32l14.3-50.2A8 8 0 0 1 54 40Z'/%3E%3Cpath d='M96 96v16a32 32 0 0 1-64 0V96m128 0v16a32 32 0 0 1-64 0V96m128 0v16a32 32 0 0 1-64 0V96'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M48 139.6V208a8 8 0 0 0 8 8h144a8 8 0 0 0 8-8v-68.4'/%3E%3Cpath d='M54 40h148a8 8 0 0 1 7.7 5.8L224 96H32l14.3-50.2A8 8 0 0 1 54 40Z'/%3E%3Cpath d='M96 96v16a32 32 0 0 1-64 0V96m128 0v16a32 32 0 0 1-64 0V96m128 0v16a32 32 0 0 1-64 0V96'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="acc"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='84' cy='172' r='44'/%3E%3Cline x1='115.1' y1='140.9' x2='208' y2='48'/%3E%3Cline x1='176' y1='80' x2='208' y2='112'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='84' cy='172' r='44'/%3E%3Cline x1='115.1' y1='140.9' x2='208' y2='48'/%3E%3Cline x1='176' y1='80' x2='208' y2='112'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="inbox"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M79.9 202.2A96 96 0 1 0 45.7 168l-13.4 40a8 8 0 0 0 10.1 10.1Z'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M79.9 202.2A96 96 0 1 0 45.7 168l-13.4 40a8 8 0 0 0 10.1 10.1Z'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="tix"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='72' y='72' width='112' height='152' rx='56'/%3E%3Cline x1='128' y1='120' x2='128' y2='224'/%3E%3Cline x1='240' y1='136' x2='184' y2='136'/%3E%3Cline x1='72' y1='136' x2='16' y2='136'/%3E%3Cline x1='184' y1='176' x2='224' y2='200'/%3E%3Cline x1='72' y1='176' x2='32' y2='200'/%3E%3Cline x1='184' y1='96' x2='224' y2='72'/%3E%3Cline x1='72' y1='96' x2='32' y2='72'/%3E%3Cpath d='M96 80V64a32 32 0 0 1 64 0v16'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='72' y='72' width='112' height='152' rx='56'/%3E%3Cline x1='128' y1='120' x2='128' y2='224'/%3E%3Cline x1='240' y1='136' x2='184' y2='136'/%3E%3Cline x1='72' y1='136' x2='16' y2='136'/%3E%3Cline x1='184' y1='176' x2='224' y2='200'/%3E%3Cline x1='72' y1='176' x2='32' y2='200'/%3E%3Cline x1='184' y1='96' x2='224' y2='72'/%3E%3Cline x1='72' y1='96' x2='32' y2='72'/%3E%3Cpath d='M96 80V64a32 32 0 0 1 64 0v16'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="ann"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M160 80v128a8 8 0 0 1-12.4 6.7L96 176H56a16 16 0 0 1-16-16V96a16 16 0 0 1 16-16h40l51.6-38.7A8 8 0 0 1 160 48Z'/%3E%3Cpath d='M200 104a32 32 0 0 1 0 48'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M160 80v128a8 8 0 0 1-12.4 6.7L96 176H56a16 16 0 0 1-16-16V96a16 16 0 0 1 16-16h40l51.6-38.7A8 8 0 0 1 160 48Z'/%3E%3Cpath d='M200 104a32 32 0 0 1 0 48'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="docs"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M216 208H40a8 8 0 0 1-8-8V56a8 8 0 0 1 8-8h53.3a8 8 0 0 1 4.8 1.6L128 72h88a8 8 0 0 1 8 8v120a8 8 0 0 1-8 8Z'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M216 208H40a8 8 0 0 1-8-8V56a8 8 0 0 1 8-8h53.3a8 8 0 0 1 4.8 1.6L128 72h88a8 8 0 0 1 8 8v120a8 8 0 0 1-8 8Z'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="train"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='8 96 128 32 248 96 128 160 8 96'/%3E%3Cpolyline points='192 240 192 128 128 96'/%3E%3Cpath d='M224 113v55.4a8 8 0 0 1-2 5.3C204.3 193.5 176.7 216 128 216s-76.3-22.5-94-42.3a8 8 0 0 1-2-5.3V113'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='8 96 128 32 248 96 128 160 8 96'/%3E%3Cpolyline points='192 240 192 128 128 96'/%3E%3Cpath d='M224 113v55.4a8 8 0 0 1-2 5.3C204.3 193.5 176.7 216 128 216s-76.3-22.5-94-42.3a8 8 0 0 1-2-5.3V113'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="news"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='32' y='80' width='192' height='48' rx='8'/%3E%3Cpath d='M208 128v72a8 8 0 0 1-8 8H56a8 8 0 0 1-8-8v-72'/%3E%3Cline x1='128' y1='80' x2='128' y2='208'/%3E%3Cpath d='M128 80c-16 0-48-8-48-32a24 24 0 0 1 48 0Zm0 0c16 0 48-8 48-32a24 24 0 0 0-48 0'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='32' y='80' width='192' height='48' rx='8'/%3E%3Cpath d='M208 128v72a8 8 0 0 1-8 8H56a8 8 0 0 1-8-8v-72'/%3E%3Cline x1='128' y1='80' x2='128' y2='208'/%3E%3Cpath d='M128 80c-16 0-48-8-48-32a24 24 0 0 1 48 0Zm0 0c16 0 48-8 48-32a24 24 0 0 0-48 0'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="set"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='128' y1='168' x2='128' y2='216'/%3E%3Cline x1='128' y1='40' x2='128' y2='136'/%3E%3Cline x1='200' y1='192' x2='200' y2='216'/%3E%3Cline x1='200' y1='40' x2='200' y2='160'/%3E%3Cline x1='56' y1='120' x2='56' y2='216'/%3E%3Cline x1='56' y1='40' x2='56' y2='88'/%3E%3Ccircle cx='128' cy='152' r='16'/%3E%3Ccircle cx='200' cy='176' r='16'/%3E%3Ccircle cx='56' cy='104' r='16'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='128' y1='168' x2='128' y2='216'/%3E%3Cline x1='128' y1='40' x2='128' y2='136'/%3E%3Cline x1='200' y1='192' x2='200' y2='216'/%3E%3Cline x1='200' y1='40' x2='200' y2='160'/%3E%3Cline x1='56' y1='120' x2='56' y2='216'/%3E%3Cline x1='56' y1='40' x2='56' y2='88'/%3E%3Ccircle cx='128' cy='152' r='16'/%3E%3Ccircle cx='200' cy='176' r='16'/%3E%3Ccircle cx='56' cy='104' r='16'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="data"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='128' cy='80' rx='88' ry='48'/%3E%3Cpath d='M40 80v48c0 26.5 39.4 48 88 48s88-21.5 88-48V80'/%3E%3Cpath d='M40 128v48c0 26.5 39.4 48 88 48s88-21.5 88-48v-48'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='128' cy='80' rx='88' ry='48'/%3E%3Cpath d='M40 80v48c0 26.5 39.4 48 88 48s88-21.5 88-48V80'/%3E%3Cpath d='M40 128v48c0 26.5 39.4 48 88 48s88-21.5 88-48v-48'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ax-nav > button[data-nav="sched"] .ps-i{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='40' y='40' width='176' height='176' rx='12'/%3E%3Cline x1='176' y1='24' x2='176' y2='56'/%3E%3Cline x1='80' y1='24' x2='80' y2='56'/%3E%3Cline x1='40' y1='88' x2='216' y2='88'/%3E%3Cline x1='88' y1='128' x2='104' y2='128'/%3E%3Cline x1='120' y1='128' x2='136' y2='128'/%3E%3Cline x1='152' y1='128' x2='168' y2='128'/%3E%3Cline x1='88' y1='168' x2='104' y2='168'/%3E%3Cline x1='120' y1='168' x2='136' y2='168'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='40' y='40' width='176' height='176' rx='12'/%3E%3Cline x1='176' y1='24' x2='176' y2='56'/%3E%3Cline x1='80' y1='24' x2='80' y2='56'/%3E%3Cline x1='40' y1='88' x2='216' y2='88'/%3E%3Cline x1='88' y1='128' x2='104' y2='128'/%3E%3Cline x1='120' y1='128' x2='136' y2='128'/%3E%3Cline x1='152' y1='128' x2='168' y2='128'/%3E%3Cline x1='88' y1='168' x2='104' y2='168'/%3E%3Cline x1='120' y1='168' x2='136' y2='168'/%3E%3C/svg%3E"); }
+  html body #fcAdmin .ui-navtop{ display:flex !important; align-items:center; gap:8px; height:48px; padding:0 4px 0 4px; margin-bottom:8px; flex:none; background:none !important; }
+  html body #fcAdmin .ui-navtop b{ display:block; flex:1; min-width:0; font:600 14px/20px 'Manrope',system-ui,sans-serif; color:var(--utx); white-space:nowrap; overflow:hidden; }
+  html body #fcAdmin .ui-pinbtn{ width:40px !important; height:40px !important; flex:none; border-radius:10px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; display:grid !important; place-items:center; padding:0 !important; }
+  html body #fcAdmin .ui-pinbtn svg{ width:20px; height:20px; display:block; }
+  html body #fcAdmin .ui-grp{ flex:none; padding:16px 12px 4px; font:600 12px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint); white-space:nowrap; overflow:hidden; }
+
+  html body #fcAdmin .ax-hrow{ width:100% !important; display:flex !important; align-items:center !important; gap:12px !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-hdr .ax-brand{ display:none !important; }
+  html body #fcAdmin .ax-hdr .ax-search{ flex:0 1 440px !important; margin:0 !important; order:1; }
+  html body #fcAdmin .ax-hdr .ax-search input{ height:44px !important; border-radius:12px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-hdr .ax-hbtns{ order:2; margin-left:auto !important; }
+  html body #fcAdmin .ax-status{ background:transparent !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:500 !important; }
+  /* oldalfejléc: nem kártya, hanem egy nagy cím */
+  html body #fcAdmin .ax-ph{ background:transparent !important; border:0 !important; border-radius:0 !important; padding:28px 0 20px !important; margin:0 !important; display:flex !important; align-items:flex-end !important; gap:16px !important; flex-wrap:wrap; }
+  html body #fcAdmin .ax-ph .ax-phi{ display:none !important; }
+  html body #fcAdmin .ax-ph .ax-pht{ flex:1 1 320px; min-width:0; }
+  html body #fcAdmin .ax-h1{ font-size:30px !important; line-height:36px !important; letter-spacing:-0.02em !important; margin:0 0 4px !important; }
+  html body #fcAdmin .ax-sub{ font-size:14px !important; line-height:20px !important; color:var(--udim) !important; margin:0 !important; }
+  html body #fcAdmin .ax-phs > *{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; box-shadow:none !important; }
+  /* KPI: lapos csempék, kis színes pont, nagy szám, ikon nélkül */
+  html body #fcAdmin .ax-kpis{ display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:12px !important; margin:0 0 16px !important; }
+  @media (min-width:1700px){ html body #fcAdmin .ax-kpis{ grid-template-columns:repeat(8,minmax(0,1fr)) !important; } }
+  html body #fcAdmin .ax-kpi{ min-height:0 !important; height:auto !important; padding:16px !important; border-radius:14px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; text-align:left !important; display:flex !important; flex-direction:column !important; gap:4px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html body #fcAdmin .ax-kpi:hover{ border-color:var(--k) !important; transform:none !important; }
+  html body #fcAdmin .ax-kpi.alert{ border-color:color-mix(in srgb,var(--k) 60%,transparent) !important; }
+  html body #fcAdmin .ax-kpi .ki{ display:none !important; }
+  html body #fcAdmin .ax-kpi small{ display:flex !important; align-items:center; gap:8px; font-size:12px !important; line-height:16px !important; font-weight:600 !important; letter-spacing:.04em; text-transform:uppercase; color:var(--udim) !important; }
+  html body #fcAdmin .ax-kpi small::before{ content:""; width:8px; height:8px; border-radius:9999px; background:var(--k); flex:none; }
+  html body #fcAdmin .ax-kpi b{ font-size:30px !important; line-height:36px !important; font-weight:700 !important; color:var(--utx) !important; -webkit-text-fill-color:currentColor !important; background:none !important; }
+  html body #fcAdmin .ax-kpi b span{ font-size:16px !important; color:var(--udim) !important; }
+  html body #fcAdmin .ax-kpi p{ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; margin:0 !important; }
+  html body #fcAdmin .ax-kpi .bar{ height:4px !important; border-radius:9999px !important; background:var(--u3) !important; margin-top:8px !important; }
+  html body #fcAdmin .ax-kpi .bar i{ background:var(--k) !important; border-radius:9999px !important; }
+  html body #fcAdmin .ax-card{ border-radius:16px !important; border:1px solid var(--u4) !important; background-image:none !important; box-shadow:none !important; padding:20px !important; }
+  html body #fcAdmin .ax-ch h3{ font-size:16px !important; line-height:24px !important; font-weight:600 !important; }
+  html body #fcAdmin .ax-g2{ gap:16px !important; margin-bottom:16px !important; }
+  html body #fcAdmin .ax-ai{ border-radius:12px !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:inset 3px 0 0 var(--k) !important; min-height:48px !important; margin-bottom:6px !important; }
+  html body #fcAdmin .ax-ai:hover{ background:var(--u3) !important; }
+  html body #fcAdmin .ax-ai i{ background:transparent !important; box-shadow:none !important; }
+  /* ⏱ Ma a boltokban — idővonal */
+  html body #fcAdmin .ui-tl{ padding:0 !important; overflow:hidden; margin-bottom:16px; }
+  html body #fcAdmin .ui-tl > .ax-ch{ display:flex; align-items:center; gap:12px; padding:16px 20px; margin:0 !important; border-bottom:1px solid var(--u4); }
+  html body #fcAdmin .ui-tl > .ax-ch small{ color:var(--udim); font-size:13px; }
+  html body #fcAdmin .ui-tl-miss{ color:#FF6B6B; font-weight:600; }
+  html body #fcAdmin .ui-tl-g{ display:flex; flex-direction:column; }
+  html body #fcAdmin .ui-tl-hd, html body #fcAdmin .ui-tl-r{ display:grid; grid-template-columns:240px minmax(0,1fr); }
+  html body #fcAdmin .ui-tl-hd{ border-bottom:1px solid var(--u4); }
+  html body #fcAdmin .ui-tl-hd > span{ padding:10px 20px; font-size:12px; font-weight:600; color:var(--udim); }
+  html body #fcAdmin .ui-tl-hrs{ display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); }
+  html body #fcAdmin .ui-tl-hrs i{ font-style:normal; padding:10px 0 10px 6px; font-size:12px; color:var(--udim); box-shadow:inset 1px 0 0 var(--u4); font-variant-numeric:tabular-nums; }
+  html body #fcAdmin .ui-tl-r{ min-height:56px; border-bottom:1px solid var(--u3); cursor:pointer; transition:background .3s cubic-bezier(0.22,1,0.36,1); }
+  html body #fcAdmin .ui-tl-r:last-child{ border-bottom:0; }
+  html body #fcAdmin .ui-tl-r:hover{ background:var(--u2); }
+  html body #fcAdmin .ui-tl-s{ display:flex; align-items:center; gap:12px; padding:8px 20px; min-width:0; }
+  html body #fcAdmin .ui-tl-s > span{ display:flex; flex-direction:column; min-width:0; }
+  html body #fcAdmin .ui-tl-s b{ font-size:14px; line-height:20px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html body #fcAdmin .ui-tl-s small{ font-size:12px; line-height:16px; color:var(--udim); }
+  html body #fcAdmin .ui-tl-t{ position:relative; min-height:calc(var(--ln) * 44px + 12px); background-image:repeating-linear-gradient(90deg,var(--u3) 0 1px,transparent 1px calc(100% / var(--n))); }
+  html body #fcAdmin .ui-tl-g{ --n:12; }
+  html body #fcAdmin .ui-tl-b{ position:absolute; display:flex; align-items:center; gap:8px; padding:0 10px 0 12px; border-radius:8px; background:var(--u3); box-shadow:inset 3px 0 0 var(--c); overflow:hidden; min-width:0; }
+  html body #fcAdmin .ui-tl-b.w{ background:color-mix(in srgb,#FF6B6B 14%,var(--u1)); }
+  html body #fcAdmin .ui-tl-b span{ font-size:12px; line-height:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  html body #fcAdmin .ui-tl-b em{ margin-left:auto; font-style:normal; font-size:12px; color:var(--udim); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  html body #fcAdmin .ui-tl-now{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--uacc); z-index:2; pointer-events:none; }
+  html body #fcAdmin .ui-tl-s .ax-av, html body #fcAdmin .ax-tln .ax-av{ display:grid !important; place-items:center !important; width:32px !important; height:32px !important; border-radius:8px !important; font-size:11px !important; font-weight:600 !important; line-height:1 !important; padding:0 !important; color:#000 !important; background-color:var(--av) !important; }
+  html body #fcAdmin .ax-kpi{ padding:14px 16px !important; }
+  html body #fcAdmin .ax-kpi b{ font-size:28px !important; line-height:34px !important; }
+  /* 📅 admin beosztás */
+  html body #fcAdmin .ax-pane[data-pane="sched"] > .ax-tb{ display:flex !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important; margin-bottom:16px !important; }
+  html body #fcAdmin .ax-pane[data-pane="sched"] .ax-scv{ flex:none; }
+  html body #fcAdmin .ax-pane[data-pane="sched"] .ax-scm{ flex:none; display:flex; align-items:center; gap:8px; }
+  html body #fcAdmin .ax-pane[data-pane="sched"] .ax-inp{ flex:1 1 160px; min-width:120px; margin-left:auto; }
+  html body #fcAdmin .ax-seg{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:4px !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-seg button{ height:32px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; border:0 !important; color:var(--udim) !important; font-weight:600 !important; }
+  html body #fcAdmin .ax-seg button.on{ background:var(--u3) !important; color:var(--utx) !important; }
+  html body #fcAdmin .ax-wk{ gap:8px !important; }
+  html body #fcAdmin .ax-wk button{ padding:8px 4px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; transform:none !important; }
+  html body #fcAdmin .ax-wk button small{ font-weight:600 !important; letter-spacing:.04em !important; }
+  html body #fcAdmin .ax-wk button b{ font:600 18px/24px 'Manrope',system-ui,sans-serif !important; }
+  html body #fcAdmin .ax-wk button.on{ border-color:var(--uacc) !important; background:var(--u2) !important; }
+  html body #fcAdmin .ax-wk button.on b{ color:var(--uacc) !important; }
+  html body #fcAdmin .ax-kp{ gap:8px !important; margin-top:8px !important; }
+  html body #fcAdmin .ax-kp button{ min-height:0 !important; padding:10px 14px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-kp button.on{ border-color:var(--uacc) !important; }
+  html body #fcAdmin .ax-kp .ic{ display:none !important; }
+  html body #fcAdmin .ax-kp small{ font-weight:600 !important; color:var(--udim) !important; }
+  html body #fcAdmin .ax-kp b{ font-weight:700 !important; }
+  html body #fcAdmin .ax-tl{ padding:0 !important; }
+  html body #fcAdmin .ax-tlh{ padding:10px 20px !important; border-bottom:1px solid var(--u4) !important; margin:0 !important; }
+  html body #fcAdmin .ax-tlr{ padding:6px 20px !important; border-bottom:1px solid var(--u3) !important; }
+  html body #fcAdmin .ax-tlb{ background:var(--u3) !important; border:0 !important; border-radius:8px !important; animation:none !important; }
+  html body #fcAdmin .ax-tlb::before{ width:3px !important; }
+  html body #fcAdmin .ax-tlb b{ font-weight:600 !important; font-size:12px !important; }
+  html body #fcAdmin .ax-tlb small i{ background:var(--u4) !important; color:var(--utx) !important; font-weight:600 !important; }
+  /* táblázatok és listák */
+  html body #fcAdmin table{ border-collapse:separate !important; border-spacing:0 !important; }
+  html body #fcAdmin th{ background:transparent !important; font-size:12px !important; font-weight:600 !important; letter-spacing:.04em; text-transform:uppercase; color:var(--udim) !important; border-bottom:1px solid var(--u4) !important; }
+  html body #fcAdmin td{ border-bottom:1px solid var(--u3) !important; background:transparent !important; }
+  html body #fcAdmin tr.go:hover td{ background:var(--u2) !important; }
+  html body #fcAdmin .ax-btn{ height:40px !important; border-radius:10px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; font-weight:600 !important; }
+  html body #fcAdmin .ax-btn:hover{ background:var(--u3) !important; }
+  html body #fcAdmin .ax-btn.pri{ background:var(--uacc) !important; border-color:var(--uacc) !important; color:#000 !important; }
+  html body #fcAdmin .ax-in{ border-radius:10px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-in:focus{ border-color:var(--uacc) !important; outline:none !important; }
+  html body #fcAdmin .ax-b{ border-radius:9999px !important; font-weight:600 !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-scard{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html body #fcAdmin .ax-scard:hover{ border-color:var(--uacc) !important; transform:none !important; }
+  html body #fcAdmin .ax-li{ border-radius:12px !important; }
+  html body #fcAdmin .ax-li:hover{ background:var(--u2) !important; }
+
+  @media (min-width:900px){
+  html:not(.axr-rail) body #fcAdmin .ax-app{ padding-left:248px !important; }
+  html.axr-rail body #fcAdmin .ax-app{ padding-left:72px !important; }
+  html:not(.axr-rail) body #fcAdmin .ax-nav{ width:248px !important; }
+  html body #fcAdmin .ax-nav{ background:var(--u1) !important; }
+  html.axr-rail body #fcAdmin .ax-nav:hover{ width:248px !important; }
+  html body #fcAdmin .ax-main, html body #fcAdmin .ax-body{ max-width:none !important; width:auto !important; margin:0 !important; padding-left:0 !important; padding-right:0 !important; }
+  html body #fcAdmin .ax-body{ padding:0 32px 48px !important; }
+  html body #fcAdmin .ax-hdr{ position:sticky !important; top:0 !important; z-index:30 !important; margin:0 -32px !important; padding:0 32px !important; height:72px; display:flex !important; align-items:center !important; background:var(--u0) !important; border-bottom:1px solid var(--u4) !important; }
+  html body #fcAdmin .ax-app{ padding-right:0 !important; }
+  }
+
+  @media (max-width:899px){
+    html body #fcAdmin .ax-app, html.axr-rail body #fcAdmin .ax-app{ padding:0 0 84px !important; }
+    html body #fcAdmin .ax-nav, html.axr-rail body #fcAdmin .ax-nav, html.axr-rail body #fcAdmin .ax-nav:hover{ top:auto !important; bottom:8px !important; left:8px !important; right:8px !important; width:auto !important; height:64px !important; flex-direction:row !important; overflow-x:auto !important; overflow-y:hidden !important; padding:6px !important; border-radius:20px !important; border:1px solid var(--u4) !important; gap:2px !important; scrollbar-width:none; }
+    html body #fcAdmin .ax-nav .ui-navtop, html body #fcAdmin .ax-nav .ui-grp{ display:none !important; }
+    html body #fcAdmin .ax-nav > button{ flex:0 0 64px !important; width:64px !important; height:52px !important; min-height:52px !important; flex-direction:column !important; justify-content:center !important; gap:2px !important; padding:4px !important; }
+    html body #fcAdmin .ax-nav > button .ps-t{ opacity:1 !important; font-size:10px !important; line-height:14px !important; max-width:60px; text-align:center; }
+    html body #fcAdmin .ax-nav > button em{ position:absolute !important; top:2px; right:8px; }
+    html body #fcAdmin .ax-body{ padding:0 16px 24px !important; }
+    html body #fcAdmin .ax-hdr, html body #fcAdmin .ax-hrow, html body #fcAdmin .ax-main, html body #fcAdmin .ax-body, html body #fcAdmin .ax-app{ transform:none !important; filter:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; contain:none !important; will-change:auto !important; }
+    html body #fcAdmin .ax-hdr{ position:static !important; margin:0 -16px !important; padding:12px 16px !important; height:auto !important; }
+    html body #fcAdmin .ax-hdr .ax-search{ flex:1 1 auto !important; }
+    html body #fcAdmin .ax-rr{ position:static !important; padding:8px 16px 0 !important; }
+    html body #fcAdmin .ax-h1{ font-size:24px !important; line-height:32px !important; }
+    html body #fcAdmin .ax-ph{ padding:16px 0 12px !important; }
+    html body #fcAdmin .ax-phs{ display:none !important; }
+    html body #fcAdmin .ax-kpis{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+    html body #fcAdmin .ax-g2{ grid-template-columns:1fr !important; display:grid !important; }
+    html body #fcAdmin .ui-tl-g{ overflow-x:auto; }
+    html body #fcAdmin .ui-tl-hd, html body #fcAdmin .ui-tl-r{ min-width:760px; grid-template-columns:180px minmax(0,1fr); }
+    html body #fcAdmin .ax-pane[data-pane="sched"] > .ax-tb{ flex-wrap:wrap !important; }
+</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261107-220546";</script>
+<script>window.FP_BUILD="20261108-103252";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -9800,7 +10007,7 @@ service cloud.firestore {
         $(".ax-dtix").innerHTML = T.slice(0, 5).map(m=> `<div class="ax-li" data-tix="${esc(m.key)}"><span class="ax-tid">${tixId(m)}</span><span class="tx"><span>${esc(firstLine(m.text))}</span><small>${esc(m.shop)} · ${rel(m.ms)}</small></span>${stBadge(m)}</div>`).join("") || `<div class="ax-empty">Még nincs hibajegy.</div>`;
         const M = []; list.forEach(x=> (threads[x.uid] || []).forEach(m=>{ if(m.from === "s" && m.type !== "bug") M.push({ x, m }); })); M.sort((a, c)=> c.m.ms - a.m.ms);
         $(".ax-dmsg").innerHTML = M.slice(0, 5).map(({ x, m })=> `<div class="ax-li${m.ms > +(lsGet(adSeenK(x.uid)) || 0) ? " un" : ""}" data-cu="${esc(x.uid)}">${axAv(x)}<span class="tx"><span><b>${esc(shortN(x))}</b></span><small>${esc(msgTxt(m))}</small></span><time>${when(m.ms)}</time></div>`).join("") || `<div class="ax-empty">Még nem írt egy bolt sem.</div>`;
-        cnt("shops", tot || null); cnt("tix", newT.length || null, true); cnt("inbox", un || null, true); cnt("data", orph.length || null); cnt("news", newsCfg.on ? `${list.filter(seenOf).length}/${tot}` : null); drawHero();
+        cnt("shops", tot || null); cnt("tix", newT.length || null, true); cnt("inbox", un || null, true); cnt("data", orph.length || null); cnt("news", newsCfg.on ? `${list.filter(seenOf).length}/${tot}` : null); drawHero(); try{ window.uiAxTL && uiAxTL(list, axAv, shortN, b); }catch(e){}
       }
       let rT = null; function later(){ clearTimeout(rT); rT = setTimeout(()=>{ drawCts(); drawTix(); drawDash(); drawShopsIfOn(); }, 120); }
       /* --- 🏬 boltok --- */
@@ -29347,5 +29554,70 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const a = x.animate([{ opacity:0, transform:"translateX(-34px) scale(.96)" }, { opacity:1, transform:"none" }], { duration:420, delay:i * 55, easing:"cubic-bezier(.2,.9,.25,1)", fill:"backwards" }); a.onfinish = ()=>{ x.style.transformOrigin = ""; }; }
       }catch(_){ } }); }, 30); }, true);
 })();</script>
+<script id="axNewJs">
+/* Admin konzol — új kinézet: oldalsáv csoportok + „Ma a boltokban” idővonal */
+(function(){
+  var H = document.documentElement, K = "fp_ax_nav";
+  var ICO = '<svg viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="40" y1="64" x2="216" y2="64"/><line x1="40" y1="128" x2="216" y2="128"/><line x1="40" y1="192" x2="216" y2="192"/></svg>';
+  function get(){ try{ return localStorage.getItem(K) || "rail"; }catch(e){ return "rail"; } }
+  function setm(m){ H.classList.toggle("axr-rail", m !== "pin"); try{ localStorage.setItem(K, m); }catch(e){}
+    var b = document.querySelector("#fcAdmin .ui-pinbtn"); if(b){ b.setAttribute("aria-pressed", m === "pin" ? "true" : "false"); b.title = m === "pin" ? "Menü összecsukása" : "Menü rögzítése (mindig nyitva)"; } }
+  setm(get());
+  function tick(){
+    var an = document.querySelector("#fcAdmin .ax-nav"); if(!an) return;
+    var app = document.querySelector("#fcAdmin .ax-app"); if(app && an.parentNode !== app) app.appendChild(an);
+    if(!an.querySelector(".ui-navtop")){ var tp = document.createElement("div"); tp.className = "ui-navtop"; tp.innerHTML = '<button type="button" class="ui-pinbtn" aria-label="Menü rögzítése">' + ICO + '</button><b>Admin</b>'; an.insertBefore(tp, an.firstChild);
+      tp.querySelector("button").addEventListener("click", function(e){ e.stopPropagation(); setm(H.classList.contains("axr-rail") ? "pin" : "rail"); }); setm(get()); }
+    var a2 = an.querySelector(".ui-navtop");
+    [["Áttekintés", ["dash","shops","sched","acc"]], ["Kommunikáció", ["inbox","tix","ann","docs","train","news"]], ["Rendszer", ["set","data"]]].forEach(function(g){
+      var h = an.querySelector('.ui-grp[data-g="' + g[0] + '"]'); if(!h){ h = document.createElement("div"); h.className = "ui-grp"; h.setAttribute("data-g", g[0]); h.textContent = g[0]; }
+      if(a2.nextSibling !== h) a2.after(h); a2 = h;
+      g[1].forEach(function(k){ var b = an.querySelector('button[data-nav="' + k + '"]'); if(b){ if(a2.nextSibling !== b) a2.after(b); a2 = b; } }); });
+  }
+  function start(){ try{ tick(); }catch(e){} setInterval(function(){ try{ tick(); }catch(e){} }, 1000); }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+/* admin irányítópult — „Ma a boltokban” idővonal */
+window.uiAxTL = function(list, axAv, shortN, root){
+  try{
+    const pane = root.querySelector('.ax-pane[data-pane="dash"]'); if(!pane) return;
+    let card = pane.querySelector('.ui-tl');
+    if(!card){ card = document.createElement('div'); card.className = 'ax-card ui-tl'; const k = pane.querySelector('.ax-kpis'); k ? k.after(card) : pane.prepend(card); }
+    const now = new Date(), key = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const dow = (now.getDay()+6)%7, tm = s=>{ const m = /^(\d{1,2}):?(\d{2})?/.exec(String(s||'')); return m ? (+m[1])*60 + (+(m[2]||0)) : null; };
+    const fm = v=> Math.floor(v/60) + ':' + String(v%60).padStart(2,'0');
+    const esc = t=> String(t==null?'':t).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const rows = []; let H0 = 24*60, H1 = 0, open = 0, miss = 0;
+    list.slice().sort((a,c)=> shortN(a).localeCompare(shortN(c),'hu')).forEach(x=>{
+      let st = null; try{ st = JSON.parse((x.raw||{}).firstphone_beosztas_tervezo_v2 || 'null'); }catch(e){}
+      const se = st && st.settings || {}, E = se.employees || [], dh = st && st.dayHrs && st.dayHrs[key];
+      const h = dh && tm(dh.open)!=null ? dh : (se.hours || [])[dow];
+      const r = { x, bars:[], open:null };
+      if(h && !h.closed && tm(h.open)!=null && tm(h.close)!=null){
+        const a = tm(h.open), c = tm(h.close), mid = tm(h.mid) > a && tm(h.mid) < c ? tm(h.mid) : Math.round(((a+c)/2)/15)*15;
+        r.open = [a,c]; open++; H0 = Math.min(H0,a); H1 = Math.max(H1,c);
+        const as = st && st.schedule && st.schedule[key], nm = id=>{ if(String(id).indexOf('sub:')===0) return { name:String(id).slice(4), hex:'#9B9B9B' }; return E.find(e=> e.id===id) || { name:'?', hex:'#9B9B9B' }; };
+        const add = (id, part)=>{ const p = nm(id), s = part==='pm' ? mid : a, e = part==='am' ? mid : c; r.bars.push({ s, e, t:p.name + (part==='am' ? ' · DE' : part==='pm' ? ' · DU' : ''), c:p.hex || '#9B9B9B' }); };
+        if(as && as.type==='unnep'){ r.hol = true; }
+        else if(as && as.type==='split'){ as.am ? add(as.am,'am') : r.bars.push({ s:a, e:mid, t:'Nincs beosztva', warn:1 }); as.pm ? add(as.pm,'pm') : r.bars.push({ s:mid, e:c, t:'Nincs beosztva', warn:1 }); }
+        else if(as && as.type==='multi'){ (as.full||[]).forEach(i=>add(i,'full')); (as.am||[]).forEach(i=>add(i,'am')); (as.pm||[]).forEach(i=>add(i,'pm')); }
+        else if(as && as.type){ add(as.type,'full'); }
+        else r.bars.push({ s:a, e:c, t:'Nincs beosztva', warn:1 });
+        if(r.bars.some(b=> b.warn)) miss++;
+      }
+      rows.push(r);
+    });
+    if(H1 <= H0){ H0 = 8*60; H1 = 20*60; } H0 = Math.floor(H0/60)*60; H1 = Math.ceil(H1/60)*60;
+    const span = H1 - H0, pct = v=> ((v - H0) / span * 100);
+    const hrs = []; for(let v = H0; v < H1; v += 60) hrs.push(v);
+    const lane = r=>{ const out = []; const L = r.bars.slice().sort((p,q)=> p.s-q.s); const lanes = []; L.forEach(b=>{ let i = lanes.findIndex(e=> e <= b.s); if(i<0){ i = lanes.length; lanes.push(0); } lanes[i] = b.e; b.l = i; }); r.ln = Math.max(1, lanes.length); return L; };
+    const nowM = now.getHours()*60 + now.getMinutes();
+    card.innerHTML = `<div class="ax-ch"><h3>Ma a boltokban</h3><small>${open} nyitva${miss ? ` · <b class="ui-tl-miss">${miss} hiány</b>` : ''}</small><span class="ax-sp"></span><button type="button" class="ax-lnk" data-go="sched">Beosztás →</button></div>
+      <div class="ui-tl-g" style="--n:${hrs.length}"><div class="ui-tl-hd"><span>Bolt</span><div class="ui-tl-hrs">${hrs.map(v=>`<i>${fm(v)}</i>`).join('')}</div></div>
+      ${rows.map(r=>{ const L = lane(r); return `<div class="ui-tl-r" data-uid="${esc(r.x.uid)}"><div class="ui-tl-s">${axAv(r.x)}<span><b>${esc(shortN(r.x))}</b><small>${r.hol ? 'Ünnepnap' : r.open ? fm(r.open[0]) + '–' + fm(r.open[1]) : 'Zárva'}</small></span></div>
+        <div class="ui-tl-t" style="--ln:${r.ln||1}">${nowM > H0 && nowM < H1 ? `<s class="ui-tl-now" style="left:${pct(nowM)}%"></s>` : ''}${L.map(b=>`<div class="ui-tl-b${b.warn ? ' w' : ''}" style="left:calc(${pct(b.s)}% + 3px);width:calc(${pct(b.e)-pct(b.s)}% - 6px);top:calc(${b.l} * (100% / var(--ln)) + 6px);height:calc(100% / var(--ln) - 12px);--c:${b.warn ? '#FF6B6B' : esc(b.c)}"><span>${esc(b.t)}</span><em>${fm(b.s)}–${fm(b.e)}</em></div>`).join('')}</div></div>`; }).join('') || '<div class="ax-empty">Még nincs bolt.</div>'}</div>`;
+  }catch(e){ console.warn('uiAxTL', e); }
+};
+</script>
 </body>
 </html>
