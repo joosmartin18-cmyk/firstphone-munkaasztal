@@ -6543,15 +6543,40 @@
   html.ui-uj:not(.m-app) .tdn-it:hover{ border-color:var(--uacc) !important; }
   html.ui-uj:not(.m-app) .tdn-it > p{ font-size:15px !important; line-height:22px !important; font-weight:500 !important; margin:8px 0 12px !important; color:var(--utx) !important; }
   html.ui-uj:not(.m-app) .tdn-chk button{ border-radius:9999px !important; background:var(--u3) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
-  /* 💰 Kassza: bankjegyek és érmék egymás mellett, jobbra rögzített összesítő */
-  html.ui-uj:not(.m-app) .ks-grid{ display:grid !important; grid-template-columns:minmax(0,1fr) 360px !important; gap:24px !important; align-items:start !important; }
-  html.ui-uj:not(.m-app) .ks-main{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:16px !important; align-items:start !important; }
-  html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; }
-  html.ui-uj:not(.m-app) .ks-row{ min-height:52px !important; padding:6px 8px !important; border-radius:10px !important; background:transparent !important; border:0 !important; box-shadow:inset 0 -1px 0 var(--u4) !important; }
-  html.ui-uj:not(.m-app) .ks-side{ position:sticky !important; top:16px !important; }
-  html.ui-uj:not(.m-app) #ksHero{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:16px !important; box-shadow:none !important; }
+  /* 💰 Kassza: felül egy „egyenlet” sáv (hátul + kasszában = összesen · jelentés), alatta külön kártyákban a címletek */
+  html.ui-uj:not(.m-app) .ks-grid{ display:flex !important; flex-direction:column !important; gap:20px !important; }
+  html.ui-uj:not(.m-app) .ks-side{ order:-1; position:static !important; display:grid !important; grid-template-columns:minmax(0,2.3fr) minmax(280px,1fr) !important; gap:16px !important; width:auto !important; max-width:none !important; }
+  html.ui-uj:not(.m-app) .ks-side > .ks-card{ margin:0 !important; }
+  html.ui-uj:not(.m-app) .ks-total{ display:grid !important; grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr) 32px minmax(0,1.15fr) !important; align-items:stretch !important; gap:0 !important; padding:16px !important; }
+  html.ui-uj:not(.m-app) .ks-total > *{ margin:0 !important; min-width:0; }
+  html.ui-uj:not(.m-app) #ksBlkBack{ grid-column:1; grid-row:1; }
+  html.ui-uj:not(.m-app) .ks-total > .ks-plus{ grid-column:2; grid-row:1; position:static !important; height:auto !important; display:grid !important; place-items:center !important; }
+  html.ui-uj:not(.m-app) .ks-total > .ks-plus span{ position:static !important; transform:none !important; background:var(--u3) !important; color:var(--utx) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer{ grid-column:3; grid-row:1; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer{ position:relative !important; overflow:visible !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer::after{ content:"=" !important; display:grid !important; place-items:center; position:absolute !important; right:-29px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:9999px; background:var(--u3); color:var(--utx); font:700 16px/1 'Manrope',system-ui,sans-serif; }
+  html.ui-uj:not(.m-app) #ksHero{ grid-column:5; grid-row:1; padding:16px !important; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:4px !important; }
+  html.ui-uj:not(.m-app) .ks-blk{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:14px !important; padding:14px !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:center !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .ks-blk .ks-blk-tx{ width:100% !important; }
+  html.ui-uj:not(.m-app) .ks-blk .ks-ico{ width:44px !important; height:44px !important; min-width:44px !important; border-radius:10px !important; }
+  html.ui-uj:not(.m-app) #ksHeroSt{ font-size:12px !important; line-height:16px !important; padding:6px 10px !important; border-radius:10px !important; }
+  html.ui-uj:not(.m-app) .ks-report{ display:flex !important; flex-direction:column !important; gap:10px !important; padding:16px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res{ padding:10px 12px !important; min-height:0 !important; border-radius:12px !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res-ic{ width:36px !important; height:36px !important; min-width:36px !important; font-size:18px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res-tx, html.ui-uj:not(.m-app) .ks-report .ks-res-tx *{ font-size:13px !important; line-height:18px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res-tx b, html.ui-uj:not(.m-app) .ks-report .ks-res-tx strong{ font-size:15px !important; }
+  html.ui-uj:not(.m-app) .ks-main{ width:100% !important; max-width:none !important; display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:20px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; padding:0 !important; overflow:hidden; }
+  html.ui-uj:not(.m-app) .ks-main .ks-sec-h{ padding:16px 20px !important; margin:0 !important; background:var(--u2) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .ks-main .ks-sec-h h3{ font-size:16px !important; font-weight:600 !important; }
+  html.ui-uj:not(.m-app) .ks-main .ks-sec-sum{ font-size:16px !important; font-weight:700 !important; color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .ks-main .ks-rows{ padding:8px !important; display:flex !important; flex-direction:column !important; gap:0 !important; }
+  html.ui-uj:not(.m-app) .ks-row{ min-height:56px !important; padding:6px 12px !important; border-radius:10px !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .ks-row:nth-child(even){ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) .ks-row:hover{ background:var(--u3) !important; }
+  html.ui-uj:not(.m-app) #ksHero{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:14px !important; box-shadow:none !important; }
   html.ui-uj:not(.m-app) #ksHero *{ color:#000 !important; }
-  html.ui-uj:not(.m-app) #ksAll{ font-size:40px !important; line-height:44px !important; font-weight:700 !important; }
+  html.ui-uj:not(.m-app) #ksAll{ font-size:34px !important; line-height:40px !important; font-weight:700 !important; }
   /* 📦 Csomag: beolvasás fent, balra a lista, jobbra a szállítók és az összesítő */
   html.ui-uj:not(.m-app) body.page-csomag #csPage{ display:grid !important; grid-template-columns:minmax(0,1fr) 340px !important; gap:16px 24px !important; align-items:start !important; }
   html.ui-uj:not(.m-app) body.page-csomag #csPage > *{ grid-column:1 / -1; min-width:0; margin:0 !important; }
@@ -16767,15 +16792,40 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) .tdn-it:hover{ border-color:var(--uacc) !important; }
   html.ui-uj:not(.m-app) .tdn-it > p{ font-size:15px !important; line-height:22px !important; font-weight:500 !important; margin:8px 0 12px !important; color:var(--utx) !important; }
   html.ui-uj:not(.m-app) .tdn-chk button{ border-radius:9999px !important; background:var(--u3) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
-  /* 💰 Kassza: bankjegyek és érmék egymás mellett, jobbra rögzített összesítő */
-  html.ui-uj:not(.m-app) .ks-grid{ display:grid !important; grid-template-columns:minmax(0,1fr) 360px !important; gap:24px !important; align-items:start !important; }
-  html.ui-uj:not(.m-app) .ks-main{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:16px !important; align-items:start !important; }
-  html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; }
-  html.ui-uj:not(.m-app) .ks-row{ min-height:52px !important; padding:6px 8px !important; border-radius:10px !important; background:transparent !important; border:0 !important; box-shadow:inset 0 -1px 0 var(--u4) !important; }
-  html.ui-uj:not(.m-app) .ks-side{ position:sticky !important; top:16px !important; }
-  html.ui-uj:not(.m-app) #ksHero{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:16px !important; box-shadow:none !important; }
+  /* 💰 Kassza: felül egy „egyenlet” sáv (hátul + kasszában = összesen · jelentés), alatta külön kártyákban a címletek */
+  html.ui-uj:not(.m-app) .ks-grid{ display:flex !important; flex-direction:column !important; gap:20px !important; }
+  html.ui-uj:not(.m-app) .ks-side{ order:-1; position:static !important; display:grid !important; grid-template-columns:minmax(0,2.3fr) minmax(280px,1fr) !important; gap:16px !important; width:auto !important; max-width:none !important; }
+  html.ui-uj:not(.m-app) .ks-side > .ks-card{ margin:0 !important; }
+  html.ui-uj:not(.m-app) .ks-total{ display:grid !important; grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr) 32px minmax(0,1.15fr) !important; align-items:stretch !important; gap:0 !important; padding:16px !important; }
+  html.ui-uj:not(.m-app) .ks-total > *{ margin:0 !important; min-width:0; }
+  html.ui-uj:not(.m-app) #ksBlkBack{ grid-column:1; grid-row:1; }
+  html.ui-uj:not(.m-app) .ks-total > .ks-plus{ grid-column:2; grid-row:1; position:static !important; height:auto !important; display:grid !important; place-items:center !important; }
+  html.ui-uj:not(.m-app) .ks-total > .ks-plus span{ position:static !important; transform:none !important; background:var(--u3) !important; color:var(--utx) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer{ grid-column:3; grid-row:1; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer{ position:relative !important; overflow:visible !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer::after{ content:"=" !important; display:grid !important; place-items:center; position:absolute !important; right:-29px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:9999px; background:var(--u3); color:var(--utx); font:700 16px/1 'Manrope',system-ui,sans-serif; }
+  html.ui-uj:not(.m-app) #ksHero{ grid-column:5; grid-row:1; padding:16px !important; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:4px !important; }
+  html.ui-uj:not(.m-app) .ks-blk{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:14px !important; padding:14px !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:center !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .ks-blk .ks-blk-tx{ width:100% !important; }
+  html.ui-uj:not(.m-app) .ks-blk .ks-ico{ width:44px !important; height:44px !important; min-width:44px !important; border-radius:10px !important; }
+  html.ui-uj:not(.m-app) #ksHeroSt{ font-size:12px !important; line-height:16px !important; padding:6px 10px !important; border-radius:10px !important; }
+  html.ui-uj:not(.m-app) .ks-report{ display:flex !important; flex-direction:column !important; gap:10px !important; padding:16px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res{ padding:10px 12px !important; min-height:0 !important; border-radius:12px !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res-ic{ width:36px !important; height:36px !important; min-width:36px !important; font-size:18px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res-tx, html.ui-uj:not(.m-app) .ks-report .ks-res-tx *{ font-size:13px !important; line-height:18px !important; }
+  html.ui-uj:not(.m-app) .ks-report .ks-res-tx b, html.ui-uj:not(.m-app) .ks-report .ks-res-tx strong{ font-size:15px !important; }
+  html.ui-uj:not(.m-app) .ks-main{ width:100% !important; max-width:none !important; display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:20px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; padding:0 !important; overflow:hidden; }
+  html.ui-uj:not(.m-app) .ks-main .ks-sec-h{ padding:16px 20px !important; margin:0 !important; background:var(--u2) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .ks-main .ks-sec-h h3{ font-size:16px !important; font-weight:600 !important; }
+  html.ui-uj:not(.m-app) .ks-main .ks-sec-sum{ font-size:16px !important; font-weight:700 !important; color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .ks-main .ks-rows{ padding:8px !important; display:flex !important; flex-direction:column !important; gap:0 !important; }
+  html.ui-uj:not(.m-app) .ks-row{ min-height:56px !important; padding:6px 12px !important; border-radius:10px !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .ks-row:nth-child(even){ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) .ks-row:hover{ background:var(--u3) !important; }
+  html.ui-uj:not(.m-app) #ksHero{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:14px !important; box-shadow:none !important; }
   html.ui-uj:not(.m-app) #ksHero *{ color:#000 !important; }
-  html.ui-uj:not(.m-app) #ksAll{ font-size:40px !important; line-height:44px !important; font-weight:700 !important; }
+  html.ui-uj:not(.m-app) #ksAll{ font-size:34px !important; line-height:40px !important; font-weight:700 !important; }
   /* 📦 Csomag: beolvasás fent, balra a lista, jobbra a szállítók és az összesítő */
   html.ui-uj:not(.m-app) body.page-csomag #csPage{ display:grid !important; grid-template-columns:minmax(0,1fr) 340px !important; gap:16px 24px !important; align-items:start !important; }
   html.ui-uj:not(.m-app) body.page-csomag #csPage > *{ grid-column:1 / -1; min-width:0; margin:0 !important; }
