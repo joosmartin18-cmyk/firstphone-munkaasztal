@@ -6322,6 +6322,80 @@
   html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
   html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
   html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+  /* ===== dolgozónkénti téma kérdés ===== */
+  @keyframes uiThIn{ from{ opacity:0; transform:translateY(18px) scale(.96); } to{ opacity:1; transform:none; } }
+  @keyframes uiThBg{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes uiThCard{ from{ opacity:0; transform:translateY(14px) rotate(var(--r,0deg)); } to{ opacity:1; transform:rotate(0); } }
+  @keyframes uiThBar{ 0%,100%{ transform:scaleX(.55); } 50%{ transform:scaleX(1); } }
+  html.ui-uj .ui-thback{ position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:uiThBg .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  html.ui-uj .ui-thback.out{ opacity:0; transition:opacity .35s ease; }
+  html.ui-uj .ui-th{ width:min(560px,100%); padding:28px; border-radius:28px; background:var(--u1,#181818); border:1px solid var(--u4,#313131); color:var(--utx,#fff); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:uiThIn .5s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th .tag{ display:inline-block; padding:5px 11px; border-radius:999px; font-size:12px; font-weight:700; background:color-mix(in srgb,var(--uacc,#FBAC01) 16%,transparent); color:var(--uacc,#FBAC01); }
+  html.ui-uj .ui-th h3{ margin:14px 0 6px; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+  html.ui-uj .ui-th p{ margin:0 0 20px; font-size:13.5px; line-height:1.5; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  html.ui-uj .ui-th-opts button{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:20px; border:2px solid var(--u4,#313131); background:var(--u2,#222); color:inherit; cursor:pointer; text-align:left; font:inherit; transition:border-color .2s, transform .2s, box-shadow .2s; animation:uiThCard .55s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th-opts button:nth-child(1){ --r:-3deg; animation-delay:.12s; } html.ui-uj .ui-th-opts button:nth-child(2){ --r:3deg; animation-delay:.2s; }
+  html.ui-uj .ui-th-opts button:hover, html.ui-uj .ui-th-opts button:focus-visible{ border-color:var(--uacc,#FBAC01); transform:translateY(-4px); box-shadow:0 14px 30px -12px rgba(0,0,0,.6); outline:none; }
+  html.ui-uj .ui-th-opts button.pick{ border-color:var(--uacc,#FBAC01); transform:scale(1.04); box-shadow:0 0 0 6px color-mix(in srgb,var(--uacc,#FBAC01) 25%,transparent); }
+  html.ui-uj .ui-th-opts .pv{ display:flex; gap:6px; height:110px; padding:8px; border-radius:14px; overflow:hidden; }
+  html.ui-uj .ui-th-opts .pv.d{ background:#0b0b0b; border:1px solid #2a2a2a; } html.ui-uj .ui-th-opts .pv.l{ background:#f4f2ec; border:1px solid #e0ddd4; }
+  html.ui-uj .ui-th-opts .pv i{ display:flex; flex-direction:column; gap:6px; border-radius:8px; padding:7px; font-style:normal; }
+  html.ui-uj .ui-th-opts .pv .rl{ width:26px; } html.ui-uj .ui-th-opts .pv .mn{ flex:1; }
+  html.ui-uj .ui-th-opts .pv.d i{ background:#181818; } html.ui-uj .ui-th-opts .pv.l i{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  html.ui-uj .ui-th-opts .pv u{ height:8px; border-radius:3px; } html.ui-uj .ui-th-opts .pv.d u{ background:#333; } html.ui-uj .ui-th-opts .pv.l u{ background:#e4e1d8; }
+  html.ui-uj .ui-th-opts .pv u:first-child{ background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv b{ height:12px; width:60%; border-radius:4px; background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv s{ height:8px; border-radius:4px; transform-origin:left; animation:uiThBar 2.4s ease-in-out infinite; }
+  html.ui-uj .ui-th-opts .pv s:nth-of-type(2){ animation-delay:.3s; } html.ui-uj .ui-th-opts .pv s:nth-of-type(3){ animation-delay:.6s; }
+  html.ui-uj .ui-th-opts .pv.d s{ background:#2e2e2e; } html.ui-uj .ui-th-opts .pv.l s{ background:#e8e5dc; }
+  html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+  html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+  /* ===== dolgozónkénti téma kérdés ===== */
+  @keyframes uiThIn{ from{ opacity:0; transform:translateY(18px) scale(.96); } to{ opacity:1; transform:none; } }
+  @keyframes uiThBg{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes uiThCard{ from{ opacity:0; transform:translateY(14px) rotate(var(--r,0deg)); } to{ opacity:1; transform:rotate(0); } }
+  @keyframes uiThBar{ 0%,100%{ transform:scaleX(.55); } 50%{ transform:scaleX(1); } }
+  html.ui-uj .ui-thback{ position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:uiThBg .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  html.ui-uj .ui-thback.out{ opacity:0; transition:opacity .35s ease; }
+  html.ui-uj .ui-th{ width:min(560px,100%); padding:28px; border-radius:28px; background:var(--u1,#181818); border:1px solid var(--u4,#313131); color:var(--utx,#fff); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:uiThIn .5s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th .tag{ display:inline-block; padding:5px 11px; border-radius:999px; font-size:12px; font-weight:700; background:color-mix(in srgb,var(--uacc,#FBAC01) 16%,transparent); color:var(--uacc,#FBAC01); }
+  html.ui-uj .ui-th h3{ margin:14px 0 6px; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+  html.ui-uj .ui-th p{ margin:0 0 20px; font-size:13.5px; line-height:1.5; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  html.ui-uj .ui-th-opts button{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:20px; border:2px solid var(--u4,#313131); background:var(--u2,#222); color:inherit; cursor:pointer; text-align:left; font:inherit; transition:border-color .2s, transform .2s, box-shadow .2s; animation:uiThCard .55s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th-opts button:nth-child(1){ --r:-3deg; animation-delay:.12s; } html.ui-uj .ui-th-opts button:nth-child(2){ --r:3deg; animation-delay:.2s; }
+  html.ui-uj .ui-th-opts button:hover, html.ui-uj .ui-th-opts button:focus-visible{ border-color:var(--uacc,#FBAC01); transform:translateY(-4px); box-shadow:0 14px 30px -12px rgba(0,0,0,.6); outline:none; }
+  html.ui-uj .ui-th-opts button.pick{ border-color:var(--uacc,#FBAC01); transform:scale(1.04); box-shadow:0 0 0 6px color-mix(in srgb,var(--uacc,#FBAC01) 25%,transparent); }
+  html.ui-uj .ui-th-opts .pv{ display:flex; gap:6px; height:110px; padding:8px; border-radius:14px; overflow:hidden; }
+  html.ui-uj .ui-th-opts .pv.d{ background:#0b0b0b; border:1px solid #2a2a2a; } html.ui-uj .ui-th-opts .pv.l{ background:#f4f2ec; border:1px solid #e0ddd4; }
+  html.ui-uj .ui-th-opts .pv i{ display:flex; flex-direction:column; gap:6px; border-radius:8px; padding:7px; font-style:normal; }
+  html.ui-uj .ui-th-opts .pv .rl{ width:26px; } html.ui-uj .ui-th-opts .pv .mn{ flex:1; }
+  html.ui-uj .ui-th-opts .pv.d i{ background:#181818; } html.ui-uj .ui-th-opts .pv.l i{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  html.ui-uj .ui-th-opts .pv u{ height:8px; border-radius:3px; } html.ui-uj .ui-th-opts .pv.d u{ background:#333; } html.ui-uj .ui-th-opts .pv.l u{ background:#e4e1d8; }
+  html.ui-uj .ui-th-opts .pv u:first-child{ background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv b{ height:12px; width:60%; border-radius:4px; background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv s{ height:8px; border-radius:4px; transform-origin:left; animation:uiThBar 2.4s ease-in-out infinite; }
+  html.ui-uj .ui-th-opts .pv s:nth-of-type(2){ animation-delay:.3s; } html.ui-uj .ui-th-opts .pv s:nth-of-type(3){ animation-delay:.6s; }
+  html.ui-uj .ui-th-opts .pv.d s{ background:#2e2e2e; } html.ui-uj .ui-th-opts .pv.l s{ background:#e8e5dc; }
+  html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+  html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -7567,6 +7641,31 @@
   html.ui-uj .postit-content .cs-tr i{ border-radius:4px; }
   html.ui-uj .postit-content .slip-footer{ border-top:0; background:radial-gradient(circle,#000 0.8px,transparent 1.1px) left top/5px 3px repeat-x; font-weight:700; }
   html.ui-uj .postit-content .cs-meta{ font-weight:700; }
+  /* --- Post-it (75×75, tintasugaras / lézer): ugyanaz a stílus, de tintatakarékos — nincs nagy fekete kitöltés, csak körvonal --- */
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag{ background:#fff !important; border:1.5px solid #000; padding:2.5px 6px 2.5px 7px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag::before{ display:block !important; width:6px; height:6px; background:#000; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag::after{ background:radial-gradient(circle,#000 0.7px,transparent 1px) right center/6px 5px repeat; height:9px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag span{ color:#000 !important; background:transparent !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content :is(.cs-hero,.cs-flow,.cs-keyline,.cs-keybox) .cs-k,
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-row2 .cs-f > .cs-k{ background:#fff !important; color:#000 !important; border:1px solid #000; padding:0.5px 4.5px 0; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-keyline{ background:#fff !important; color:#000 !important; border:2px solid #000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-keyline *{ color:#000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-products .slip-product-3::before,
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-products .slip-product::before{ background:#fff; color:#000; border:1.5px solid #000; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-dates .cs-d2{ background:#fff !important; color:#000 !important; border-left:2px solid #000; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-dates .cs-d2 *{ color:#000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-dates .cs-d2 b{ text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:2px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-status.status-store{ background:#fff !important; color:#000 !important; border:2px solid #000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-status.status-store::before{ background:#000; color:#fff; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-note{ border-left-width:3px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content :is(.kk-ship .kk-how,.ty-card .web-row){ background:#fff !important; color:#000 !important; border:1.5px solid #000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .ty-mark{ background:#fff !important; color:#000 !important; border:1.5px solid #000; }
+  /* pöttyös vonal a sor alján, ne fusson bele a szövegbe */
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-line{ padding-bottom:3px; background-size:4px 2px; background-image:radial-gradient(circle,#000 0.6px,transparent 0.9px); }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content :is(.slip-footer,.slip-disc .d-cut){ background-size:4px 2px; background-image:radial-gradient(circle,#000 0.6px,transparent 0.9px); }
+  /* a színes logó helyett tintatakarékos fekete-fehér, sima változat */
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-logo:not(.lg-plain){ filter:grayscale(1) contrast(1.6) brightness(1.15); }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-footer{ background:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -17377,6 +17476,80 @@ service cloud.firestore {
   html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
   html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
   html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+  /* ===== dolgozónkénti téma kérdés ===== */
+  @keyframes uiThIn{ from{ opacity:0; transform:translateY(18px) scale(.96); } to{ opacity:1; transform:none; } }
+  @keyframes uiThBg{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes uiThCard{ from{ opacity:0; transform:translateY(14px) rotate(var(--r,0deg)); } to{ opacity:1; transform:rotate(0); } }
+  @keyframes uiThBar{ 0%,100%{ transform:scaleX(.55); } 50%{ transform:scaleX(1); } }
+  html.ui-uj .ui-thback{ position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:uiThBg .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  html.ui-uj .ui-thback.out{ opacity:0; transition:opacity .35s ease; }
+  html.ui-uj .ui-th{ width:min(560px,100%); padding:28px; border-radius:28px; background:var(--u1,#181818); border:1px solid var(--u4,#313131); color:var(--utx,#fff); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:uiThIn .5s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th .tag{ display:inline-block; padding:5px 11px; border-radius:999px; font-size:12px; font-weight:700; background:color-mix(in srgb,var(--uacc,#FBAC01) 16%,transparent); color:var(--uacc,#FBAC01); }
+  html.ui-uj .ui-th h3{ margin:14px 0 6px; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+  html.ui-uj .ui-th p{ margin:0 0 20px; font-size:13.5px; line-height:1.5; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  html.ui-uj .ui-th-opts button{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:20px; border:2px solid var(--u4,#313131); background:var(--u2,#222); color:inherit; cursor:pointer; text-align:left; font:inherit; transition:border-color .2s, transform .2s, box-shadow .2s; animation:uiThCard .55s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th-opts button:nth-child(1){ --r:-3deg; animation-delay:.12s; } html.ui-uj .ui-th-opts button:nth-child(2){ --r:3deg; animation-delay:.2s; }
+  html.ui-uj .ui-th-opts button:hover, html.ui-uj .ui-th-opts button:focus-visible{ border-color:var(--uacc,#FBAC01); transform:translateY(-4px); box-shadow:0 14px 30px -12px rgba(0,0,0,.6); outline:none; }
+  html.ui-uj .ui-th-opts button.pick{ border-color:var(--uacc,#FBAC01); transform:scale(1.04); box-shadow:0 0 0 6px color-mix(in srgb,var(--uacc,#FBAC01) 25%,transparent); }
+  html.ui-uj .ui-th-opts .pv{ display:flex; gap:6px; height:110px; padding:8px; border-radius:14px; overflow:hidden; }
+  html.ui-uj .ui-th-opts .pv.d{ background:#0b0b0b; border:1px solid #2a2a2a; } html.ui-uj .ui-th-opts .pv.l{ background:#f4f2ec; border:1px solid #e0ddd4; }
+  html.ui-uj .ui-th-opts .pv i{ display:flex; flex-direction:column; gap:6px; border-radius:8px; padding:7px; font-style:normal; }
+  html.ui-uj .ui-th-opts .pv .rl{ width:26px; } html.ui-uj .ui-th-opts .pv .mn{ flex:1; }
+  html.ui-uj .ui-th-opts .pv.d i{ background:#181818; } html.ui-uj .ui-th-opts .pv.l i{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  html.ui-uj .ui-th-opts .pv u{ height:8px; border-radius:3px; } html.ui-uj .ui-th-opts .pv.d u{ background:#333; } html.ui-uj .ui-th-opts .pv.l u{ background:#e4e1d8; }
+  html.ui-uj .ui-th-opts .pv u:first-child{ background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv b{ height:12px; width:60%; border-radius:4px; background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv s{ height:8px; border-radius:4px; transform-origin:left; animation:uiThBar 2.4s ease-in-out infinite; }
+  html.ui-uj .ui-th-opts .pv s:nth-of-type(2){ animation-delay:.3s; } html.ui-uj .ui-th-opts .pv s:nth-of-type(3){ animation-delay:.6s; }
+  html.ui-uj .ui-th-opts .pv.d s{ background:#2e2e2e; } html.ui-uj .ui-th-opts .pv.l s{ background:#e8e5dc; }
+  html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+  html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+  /* ===== dolgozónkénti téma kérdés ===== */
+  @keyframes uiThIn{ from{ opacity:0; transform:translateY(18px) scale(.96); } to{ opacity:1; transform:none; } }
+  @keyframes uiThBg{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes uiThCard{ from{ opacity:0; transform:translateY(14px) rotate(var(--r,0deg)); } to{ opacity:1; transform:rotate(0); } }
+  @keyframes uiThBar{ 0%,100%{ transform:scaleX(.55); } 50%{ transform:scaleX(1); } }
+  html.ui-uj .ui-thback{ position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:uiThBg .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  html.ui-uj .ui-thback.out{ opacity:0; transition:opacity .35s ease; }
+  html.ui-uj .ui-th{ width:min(560px,100%); padding:28px; border-radius:28px; background:var(--u1,#181818); border:1px solid var(--u4,#313131); color:var(--utx,#fff); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:uiThIn .5s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th .tag{ display:inline-block; padding:5px 11px; border-radius:999px; font-size:12px; font-weight:700; background:color-mix(in srgb,var(--uacc,#FBAC01) 16%,transparent); color:var(--uacc,#FBAC01); }
+  html.ui-uj .ui-th h3{ margin:14px 0 6px; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+  html.ui-uj .ui-th p{ margin:0 0 20px; font-size:13.5px; line-height:1.5; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  html.ui-uj .ui-th-opts button{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:20px; border:2px solid var(--u4,#313131); background:var(--u2,#222); color:inherit; cursor:pointer; text-align:left; font:inherit; transition:border-color .2s, transform .2s, box-shadow .2s; animation:uiThCard .55s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th-opts button:nth-child(1){ --r:-3deg; animation-delay:.12s; } html.ui-uj .ui-th-opts button:nth-child(2){ --r:3deg; animation-delay:.2s; }
+  html.ui-uj .ui-th-opts button:hover, html.ui-uj .ui-th-opts button:focus-visible{ border-color:var(--uacc,#FBAC01); transform:translateY(-4px); box-shadow:0 14px 30px -12px rgba(0,0,0,.6); outline:none; }
+  html.ui-uj .ui-th-opts button.pick{ border-color:var(--uacc,#FBAC01); transform:scale(1.04); box-shadow:0 0 0 6px color-mix(in srgb,var(--uacc,#FBAC01) 25%,transparent); }
+  html.ui-uj .ui-th-opts .pv{ display:flex; gap:6px; height:110px; padding:8px; border-radius:14px; overflow:hidden; }
+  html.ui-uj .ui-th-opts .pv.d{ background:#0b0b0b; border:1px solid #2a2a2a; } html.ui-uj .ui-th-opts .pv.l{ background:#f4f2ec; border:1px solid #e0ddd4; }
+  html.ui-uj .ui-th-opts .pv i{ display:flex; flex-direction:column; gap:6px; border-radius:8px; padding:7px; font-style:normal; }
+  html.ui-uj .ui-th-opts .pv .rl{ width:26px; } html.ui-uj .ui-th-opts .pv .mn{ flex:1; }
+  html.ui-uj .ui-th-opts .pv.d i{ background:#181818; } html.ui-uj .ui-th-opts .pv.l i{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  html.ui-uj .ui-th-opts .pv u{ height:8px; border-radius:3px; } html.ui-uj .ui-th-opts .pv.d u{ background:#333; } html.ui-uj .ui-th-opts .pv.l u{ background:#e4e1d8; }
+  html.ui-uj .ui-th-opts .pv u:first-child{ background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv b{ height:12px; width:60%; border-radius:4px; background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv s{ height:8px; border-radius:4px; transform-origin:left; animation:uiThBar 2.4s ease-in-out infinite; }
+  html.ui-uj .ui-th-opts .pv s:nth-of-type(2){ animation-delay:.3s; } html.ui-uj .ui-th-opts .pv s:nth-of-type(3){ animation-delay:.6s; }
+  html.ui-uj .ui-th-opts .pv.d s{ background:#2e2e2e; } html.ui-uj .ui-th-opts .pv.l s{ background:#e8e5dc; }
+  html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+  html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -18622,6 +18795,31 @@ service cloud.firestore {
   html.ui-uj .postit-content .cs-tr i{ border-radius:4px; }
   html.ui-uj .postit-content .slip-footer{ border-top:0; background:radial-gradient(circle,#000 0.8px,transparent 1.1px) left top/5px 3px repeat-x; font-weight:700; }
   html.ui-uj .postit-content .cs-meta{ font-weight:700; }
+  /* --- Post-it (75×75, tintasugaras / lézer): ugyanaz a stílus, de tintatakarékos — nincs nagy fekete kitöltés, csak körvonal --- */
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag{ background:#fff !important; border:1.5px solid #000; padding:2.5px 6px 2.5px 7px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag::before{ display:block !important; width:6px; height:6px; background:#000; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag::after{ background:radial-gradient(circle,#000 0.7px,transparent 1px) right center/6px 5px repeat; height:9px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-tag span{ color:#000 !important; background:transparent !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content :is(.cs-hero,.cs-flow,.cs-keyline,.cs-keybox) .cs-k,
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-row2 .cs-f > .cs-k{ background:#fff !important; color:#000 !important; border:1px solid #000; padding:0.5px 4.5px 0; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-keyline{ background:#fff !important; color:#000 !important; border:2px solid #000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-keyline *{ color:#000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-products .slip-product-3::before,
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-products .slip-product::before{ background:#fff; color:#000; border:1.5px solid #000; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-dates .cs-d2{ background:#fff !important; color:#000 !important; border-left:2px solid #000; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-dates .cs-d2 *{ color:#000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-dates .cs-d2 b{ text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:2px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-status.status-store{ background:#fff !important; color:#000 !important; border:2px solid #000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-status.status-store::before{ background:#000; color:#fff; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-note{ border-left-width:3px; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content :is(.kk-ship .kk-how,.ty-card .web-row){ background:#fff !important; color:#000 !important; border:1.5px solid #000 !important; }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .ty-mark{ background:#fff !important; color:#000 !important; border:1.5px solid #000; }
+  /* pöttyös vonal a sor alján, ne fusson bele a szövegbe */
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .cs-line{ padding-bottom:3px; background-size:4px 2px; background-image:radial-gradient(circle,#000 0.6px,transparent 0.9px); }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content :is(.slip-footer,.slip-disc .d-cut){ background-size:4px 2px; background-image:radial-gradient(circle,#000 0.6px,transparent 0.9px); }
+  /* a színes logó helyett tintatakarékos fekete-fehér, sima változat */
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-logo:not(.lg-plain){ filter:grayscale(1) contrast(1.6) brightness(1.15); }
+  html.ui-uj :is(.pi-clip,#piMeasure,.pi-slot) .postit-content .slip-footer{ background:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
