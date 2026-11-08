@@ -7675,6 +7675,95 @@
   html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(2){ animation-delay:.05s; } html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(3){ animation-delay:.1s; } html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(4){ animation-delay:.15s; } html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(n+5){ animation-delay:.2s; }
   html.ui-uj:not(.m-app) .help-modal .hs-steps li::before{ position:absolute !important; left:14px !important; top:12px !important; width:28px !important; height:28px !important; margin:0 !important; border-radius:9px !important; display:grid !important; place-items:center; font:800 13px 'Manrope',sans-serif !important; }
   html.ui-uj:not(.m-app) .help-modal .hs-steps li:last-child{ border-bottom:1px solid var(--u4) !important; }
+
+  /* ---------- 📱 TELEFON: Fotók és dokumentumok ---------- */
+  html.ui-uj.m-app #scPanel > .sc-c{ font-family:'Manrope',system-ui,sans-serif !important; background:var(--u0) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h{ gap:12px !important; padding:calc(12px + env(safe-area-inset-top)) 14px 12px 16px !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, color-mix(in srgb,var(--u1) 92%,transparent) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h .ic{ width:42px !important; height:42px !important; border-radius:14px !important; display:grid !important; place-items:center; font-size:21px !important; background:color-mix(in srgb,#30b37a 20%,var(--u2)) !important; border:1px solid color-mix(in srgb,#30b37a 40%,transparent) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h > div{ flex:1; min-width:0; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h b{ display:block; font:800 18px/1.2 'Manrope',sans-serif !important; letter-spacing:-.02em; color:var(--utx) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h small{ display:block; font-size:12px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-x{ width:38px !important; height:38px !important; border-radius:12px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; flex:none; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del{ display:flex !important; align-items:center; gap:10px !important; margin-top:12px !important; padding:10px 12px !important; border-radius:16px !important; border:1px solid color-mix(in srgb,#e2585a 40%,transparent) !important; background:linear-gradient(120deg,color-mix(in srgb,#e2585a 14%,transparent),transparent 80%), var(--u1) !important; box-shadow:none !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del > i{ font-style:normal; animation:uiTlTick 2.4s ease-in-out infinite; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del > span{ flex:1; min-width:0; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del b{ display:block; font:800 12.5px/1.3 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del .sc-dl{ display:block !important; flex:none; padding:4px 9px; border-radius:999px; background:color-mix(in srgb,#e2585a 18%,transparent); color:#ff8a8c !important; font:800 11px 'Manrope',sans-serif !important; font-style:normal; white-space:nowrap; }
+  html.ui-uj.m-app body.light-theme #scPanel .sc-del .sc-dl{ color:#c03537 !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-tools{ display:grid !important; grid-template-columns:1fr auto; gap:10px !important; margin-top:12px !important; }
+  html.ui-uj.m-app #scPanel .sc-q{ grid-column:1 / -1; height:46px !important; padding:0 14px !important; border-radius:14px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; color:var(--utx) !important; font:600 16px 'Manrope',sans-serif !important; }
+  html.ui-uj.m-app #scPanel .sc-flt{ grid-column:1 / -1; display:grid !important; grid-template-columns:repeat(4,1fr); gap:3px !important; padding:4px !important; border-radius:14px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj.m-app #scPanel .sc-flt button{ border:0 !important; border-radius:11px !important; padding:9px 2px !important; background:transparent !important; box-shadow:none !important; color:var(--udim) !important; font:700 12.5px 'Manrope',sans-serif !important; white-space:nowrap; }
+  html.ui-uj.m-app #scPanel .sc-flt button.on{ background:var(--u0) !important; color:var(--utx) !important; box-shadow:inset 0 -2px 0 var(--uacc) !important; }
+  html.ui-uj.m-app #scPanel .sc-tg{ font:700 12.5px 'Manrope',sans-serif !important; color:var(--udim) !important; align-self:center; }
+  html.ui-uj.m-app #scPanel .sc-tg input{ accent-color:var(--uacc); }
+  html.ui-uj.m-app #scPanel .sc-cnt{ align-self:center; padding:4px 10px; border-radius:999px; background:var(--u2); font:800 12px 'Manrope',sans-serif !important; color:var(--udim) !important; }
+  html.ui-uj.m-app #scPanel .sc-grid{ gap:12px !important; margin-top:14px !important; }
+  html.ui-uj.m-app #scPanel .sc-it{ display:flex !important; flex-direction:column; align-items:stretch; height:auto !important; min-height:0 !important; padding:7px 7px 11px !important; border-radius:18px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; box-shadow:none !important; text-align:left; overflow:hidden; animation:uiTlUp .4s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj.m-app #scPanel .sc-it .sc-tt{ position:relative !important; flex:none; width:100% !important; height:auto !important; aspect-ratio:4 / 3 !important; border-radius:13px !important; background:var(--u2) !important; overflow:hidden; display:grid !important; place-items:center; }
+  html.ui-uj.m-app #scPanel .sc-it .sc-tt img{ width:100%; height:100%; object-fit:cover; }
+  html.ui-uj.m-app #scPanel .sc-it > b{ position:static !important; display:block !important; margin:9px 3px 1px !important; padding:0 !important; font:800 13px/1.3 'Manrope',sans-serif !important; color:var(--utx) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-it > small{ position:static !important; display:block !important; margin:0 3px !important; padding:0 !important; font-size:11px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-it .sc-ttl{ position:static !important; display:block; margin:5px 3px 0 !important; font-size:10.5px !important; }
+  html.ui-uj.m-app #scPanel .sc-empty{ display:flex !important; flex-direction:column; align-items:center; gap:6px; text-align:center; border-radius:22px !important; border:1.5px dashed var(--u4) !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj.m-app #scPanel .sc-empty > span{ font-size:28px !important; width:60px; height:60px; display:grid; place-items:center; border-radius:18px; background:var(--u2); border:1px solid var(--u4); animation:uiTlTick 3s ease-in-out infinite; }
+  html.ui-uj.m-app #scPanel .sc-empty b{ font:800 16px 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app #scPanel .sc-top{ background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--u0) 92%,transparent) 30%) !important; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-top:1px solid var(--u3); }
+  html.ui-uj.m-app #scPanel .sc-big .sc-sh{ font:800 12px 'Manrope',sans-serif !important; color:var(--udim) !important; }
+  html.ui-uj.m-app #scPanel .sc-big.cam .sc-sh{ color:var(--utx) !important; }
+  html.ui-uj.m-app #scPanel .sc-big:not(.cam) > i{ border-radius:18px !important; background:var(--u2) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj.m-app #scPanel .sc-big.img > i{ background:color-mix(in srgb,#e8a93a 16%,var(--u2)) !important; } html.ui-uj.m-app #scPanel .sc-big.up > i{ background:color-mix(in srgb,#5b9cf5 16%,var(--u2)) !important; }
+
+  /* ---------- 📱 TELEFON: Hibabejelentés — teljes képernyős lap ---------- */
+  html.ui-uj.m-app .ch-panel.bug2{ position:fixed !important; inset:0 !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important; transform:none !important; width:100% !important; height:100% !important; max-height:none !important; z-index:100050 !important;
+    border:0 !important; border-radius:0 !important; background:var(--u0) !important; box-shadow:none !important; font-family:'Manrope',system-ui,sans-serif !important; display:flex !important; flex-direction:column; animation:uiTlIn .35s cubic-bezier(.22,1,.36,1) both !important; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h{ display:flex !important; align-items:center; gap:12px !important; padding:calc(12px + env(safe-area-inset-top)) 14px 12px 16px !important; border-bottom:1px solid var(--u4) !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; flex:none; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h > i{ width:42px !important; height:42px !important; border-radius:14px !important; font-size:21px !important; display:grid !important; place-items:center; flex:none; background:color-mix(in srgb,#f0a030 20%,var(--u2)) !important; border:1px solid color-mix(in srgb,#f0a030 45%,transparent) !important; font-style:normal; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h > div{ flex:1; min-width:0; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h b{ display:block; font:800 18px/1.2 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h small{ display:block; font-size:12px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app .ch-panel.bug2 .ch-x{ width:38px !important; height:38px !important; border-radius:12px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; flex:none; }
+  html.ui-uj.m-app .ch-panel.bug2 .chs-main{ flex:1; min-height:0; overflow-y:auto !important; -webkit-overflow-scrolling:touch; display:block !important; padding-bottom:env(safe-area-inset-bottom); }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f{ display:flex !important; flex-direction:column; gap:14px !important; padding:16px !important; border:0 !important; background:none !important; animation:none !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-cats{ display:grid !important; grid-template-columns:repeat(4,1fr); gap:6px !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-cats button{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 2px !important; border-radius:14px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; color:var(--utx) !important; font:700 12px 'Manrope',sans-serif !important; box-shadow:none !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-cats button.on{ background:color-mix(in srgb,#f0a030 18%,var(--u1)) !important; border-color:#f0a030 !important; box-shadow:inset 0 -3px 0 #f0a030 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f label{ display:flex !important; flex-direction:column; gap:7px !important; font:800 11px 'Manrope',sans-serif !important; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f :is(select,textarea){ text-transform:none; letter-spacing:0; border:1px solid var(--u4) !important; background:var(--u1) !important; color:var(--utx) !important; font:600 16px 'Manrope',sans-serif !important; padding:12px 13px !important; border-radius:14px !important; box-shadow:none !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f select{ height:48px; padding-top:0 !important; padding-bottom:0 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f textarea{ min-height:120px; line-height:1.5; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f > label:nth-of-type(1){ order:1; } html.ui-uj.m-app .ch-panel.bug2 .bug-f > label:nth-of-type(3){ order:2; } html.ui-uj.m-app .ch-panel.bug2 .bug-f > label:nth-of-type(2){ order:3; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-tech{ order:4; display:block; padding:9px 12px; border-radius:12px; background:var(--u1); font-size:11px !important; color:var(--udim) !important; font-family:'JetBrains Mono',ui-monospace,monospace !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-go{ order:5; display:flex !important; flex-direction:column-reverse; align-items:stretch; gap:8px; position:sticky; bottom:0; padding:8px 0 4px; background:linear-gradient(180deg,transparent,var(--u0) 30%); }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-out{ text-align:center; font-size:13px; font-weight:700; color:var(--udim); }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-out:empty{ display:none; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-send{ width:100%; height:52px !important; border-radius:16px !important; border:0 !important; background:#f0a030 !important; color:#1a1405 !important; font:800 16px 'Manrope',sans-serif !important; box-shadow:0 10px 24px -10px #f0a030 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-hist{ display:flex; flex-direction:column; gap:10px; padding:18px 16px 24px !important; border-top:1px solid var(--u4) !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-h{ display:flex !important; align-items:center; justify-content:space-between; font:800 11px 'Manrope',sans-serif !important; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; margin:0 !important; padding:0 !important; border:0 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-h em{ font-style:normal; padding:3px 9px; border-radius:999px; background:var(--u2); color:var(--utx); letter-spacing:0; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it{ margin:0 !important; padding:12px 14px !important; border-radius:16px !important; border:1px solid var(--u4) !important; background:var(--u0) !important; box-shadow:inset 3px 0 0 var(--bs,#9b9b9b) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it.st-new{ --bs:#f0a030; } html.ui-uj.m-app .ch-panel.bug2 .bh-it.st-done{ --bs:#30b37a; } html.ui-uj.m-app .ch-panel.bug2 .bh-it.st-wip{ --bs:#5b9cf5; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-t{ display:flex !important; align-items:center; gap:6px; flex-wrap:wrap; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-t b{ font:800 13px 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-t span{ font-size:11.5px !important; color:var(--udim) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-st{ margin-left:auto; font-style:normal; font-size:11px !important; font-weight:800 !important; padding:3px 8px !important; border-radius:999px !important; background:color-mix(in srgb,var(--bs) 18%,transparent) !important; color:var(--utx) !important; border:0 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it p{ margin:7px 0 6px !important; font-size:13.5px !important; line-height:1.45 !important; color:var(--utx) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it small{ font-size:11px !important; color:var(--udim) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-ans{ margin-top:9px !important; padding:9px 11px !important; border-radius:12px !important; background:color-mix(in srgb,#30b37a 14%,var(--u2)) !important; border:0 !important; font-size:13px !important; color:var(--utx) !important; }
+
+  /* ---------- 📱 TELEFON: Súgó ---------- */
+  html.ui-uj.m-app .help-modal{ font-family:'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj.m-app .help-modal .help-top{ background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj.m-app .help-modal .help-top h2{ font:800 17px/1.2 'Manrope',sans-serif !important; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  html.ui-uj.m-app .help-modal .help-count{ white-space:nowrap; flex:none; }
+  html.ui-uj.m-app .help-modal .hs-steps{ display:flex !important; flex-direction:column; gap:8px !important; }
+  html.ui-uj.m-app .help-modal .hs-steps li{ position:relative; margin:0 !important; padding:11px 12px 11px 48px !important; border:1px solid var(--u4) !important; border-radius:15px !important; background:var(--u2) !important; line-height:1.55 !important; animation:uiTlUp .45s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj.m-app .help-modal .hs-steps li::before{ position:absolute !important; left:12px !important; top:11px !important; width:26px !important; height:26px !important; margin:0 !important; border-radius:8px !important; display:grid !important; place-items:center; font:800 12.5px 'Manrope',sans-serif !important; }
+  html.ui-uj.m-app .help-modal .hs-steps li:last-child{ border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj.m-app .help-modal .help-foot .action-btn{ border-radius:14px !important; }
+  html.ui-uj.m-app #scPanel .sc-grid{ grid-auto-rows:auto !important; grid-template-rows:none !important; align-items:start !important; overflow:visible !important; height:auto !important; max-height:none !important; }
+  html.ui-uj.m-app #scPanel .sc-it{ max-height:none !important; }
+  html.ui-uj.m-app .help-modal .help-count{ display:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -7797,7 +7886,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-180956";</script>
+<script>window.FP_BUILD="20261108-181723";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -18633,6 +18722,95 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(2){ animation-delay:.05s; } html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(3){ animation-delay:.1s; } html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(4){ animation-delay:.15s; } html.ui-uj:not(.m-app) .help-modal .hs-steps li:nth-child(n+5){ animation-delay:.2s; }
   html.ui-uj:not(.m-app) .help-modal .hs-steps li::before{ position:absolute !important; left:14px !important; top:12px !important; width:28px !important; height:28px !important; margin:0 !important; border-radius:9px !important; display:grid !important; place-items:center; font:800 13px 'Manrope',sans-serif !important; }
   html.ui-uj:not(.m-app) .help-modal .hs-steps li:last-child{ border-bottom:1px solid var(--u4) !important; }
+
+  /* ---------- 📱 TELEFON: Fotók és dokumentumok ---------- */
+  html.ui-uj.m-app #scPanel > .sc-c{ font-family:'Manrope',system-ui,sans-serif !important; background:var(--u0) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h{ gap:12px !important; padding:calc(12px + env(safe-area-inset-top)) 14px 12px 16px !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, color-mix(in srgb,var(--u1) 92%,transparent) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h .ic{ width:42px !important; height:42px !important; border-radius:14px !important; display:grid !important; place-items:center; font-size:21px !important; background:color-mix(in srgb,#30b37a 20%,var(--u2)) !important; border:1px solid color-mix(in srgb,#30b37a 40%,transparent) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h > div{ flex:1; min-width:0; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h b{ display:block; font:800 18px/1.2 'Manrope',sans-serif !important; letter-spacing:-.02em; color:var(--utx) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-h small{ display:block; font-size:12px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-x{ width:38px !important; height:38px !important; border-radius:12px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; flex:none; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del{ display:flex !important; align-items:center; gap:10px !important; margin-top:12px !important; padding:10px 12px !important; border-radius:16px !important; border:1px solid color-mix(in srgb,#e2585a 40%,transparent) !important; background:linear-gradient(120deg,color-mix(in srgb,#e2585a 14%,transparent),transparent 80%), var(--u1) !important; box-shadow:none !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del > i{ font-style:normal; animation:uiTlTick 2.4s ease-in-out infinite; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del > span{ flex:1; min-width:0; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del b{ display:block; font:800 12.5px/1.3 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-del .sc-dl{ display:block !important; flex:none; padding:4px 9px; border-radius:999px; background:color-mix(in srgb,#e2585a 18%,transparent); color:#ff8a8c !important; font:800 11px 'Manrope',sans-serif !important; font-style:normal; white-space:nowrap; }
+  html.ui-uj.m-app body.light-theme #scPanel .sc-del .sc-dl{ color:#c03537 !important; }
+  html.ui-uj.m-app #scPanel .sc-c > .sc-tools{ display:grid !important; grid-template-columns:1fr auto; gap:10px !important; margin-top:12px !important; }
+  html.ui-uj.m-app #scPanel .sc-q{ grid-column:1 / -1; height:46px !important; padding:0 14px !important; border-radius:14px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; color:var(--utx) !important; font:600 16px 'Manrope',sans-serif !important; }
+  html.ui-uj.m-app #scPanel .sc-flt{ grid-column:1 / -1; display:grid !important; grid-template-columns:repeat(4,1fr); gap:3px !important; padding:4px !important; border-radius:14px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj.m-app #scPanel .sc-flt button{ border:0 !important; border-radius:11px !important; padding:9px 2px !important; background:transparent !important; box-shadow:none !important; color:var(--udim) !important; font:700 12.5px 'Manrope',sans-serif !important; white-space:nowrap; }
+  html.ui-uj.m-app #scPanel .sc-flt button.on{ background:var(--u0) !important; color:var(--utx) !important; box-shadow:inset 0 -2px 0 var(--uacc) !important; }
+  html.ui-uj.m-app #scPanel .sc-tg{ font:700 12.5px 'Manrope',sans-serif !important; color:var(--udim) !important; align-self:center; }
+  html.ui-uj.m-app #scPanel .sc-tg input{ accent-color:var(--uacc); }
+  html.ui-uj.m-app #scPanel .sc-cnt{ align-self:center; padding:4px 10px; border-radius:999px; background:var(--u2); font:800 12px 'Manrope',sans-serif !important; color:var(--udim) !important; }
+  html.ui-uj.m-app #scPanel .sc-grid{ gap:12px !important; margin-top:14px !important; }
+  html.ui-uj.m-app #scPanel .sc-it{ display:flex !important; flex-direction:column; align-items:stretch; height:auto !important; min-height:0 !important; padding:7px 7px 11px !important; border-radius:18px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; box-shadow:none !important; text-align:left; overflow:hidden; animation:uiTlUp .4s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj.m-app #scPanel .sc-it .sc-tt{ position:relative !important; flex:none; width:100% !important; height:auto !important; aspect-ratio:4 / 3 !important; border-radius:13px !important; background:var(--u2) !important; overflow:hidden; display:grid !important; place-items:center; }
+  html.ui-uj.m-app #scPanel .sc-it .sc-tt img{ width:100%; height:100%; object-fit:cover; }
+  html.ui-uj.m-app #scPanel .sc-it > b{ position:static !important; display:block !important; margin:9px 3px 1px !important; padding:0 !important; font:800 13px/1.3 'Manrope',sans-serif !important; color:var(--utx) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-it > small{ position:static !important; display:block !important; margin:0 3px !important; padding:0 !important; font-size:11px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app #scPanel .sc-it .sc-ttl{ position:static !important; display:block; margin:5px 3px 0 !important; font-size:10.5px !important; }
+  html.ui-uj.m-app #scPanel .sc-empty{ display:flex !important; flex-direction:column; align-items:center; gap:6px; text-align:center; border-radius:22px !important; border:1.5px dashed var(--u4) !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj.m-app #scPanel .sc-empty > span{ font-size:28px !important; width:60px; height:60px; display:grid; place-items:center; border-radius:18px; background:var(--u2); border:1px solid var(--u4); animation:uiTlTick 3s ease-in-out infinite; }
+  html.ui-uj.m-app #scPanel .sc-empty b{ font:800 16px 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app #scPanel .sc-top{ background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--u0) 92%,transparent) 30%) !important; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-top:1px solid var(--u3); }
+  html.ui-uj.m-app #scPanel .sc-big .sc-sh{ font:800 12px 'Manrope',sans-serif !important; color:var(--udim) !important; }
+  html.ui-uj.m-app #scPanel .sc-big.cam .sc-sh{ color:var(--utx) !important; }
+  html.ui-uj.m-app #scPanel .sc-big:not(.cam) > i{ border-radius:18px !important; background:var(--u2) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj.m-app #scPanel .sc-big.img > i{ background:color-mix(in srgb,#e8a93a 16%,var(--u2)) !important; } html.ui-uj.m-app #scPanel .sc-big.up > i{ background:color-mix(in srgb,#5b9cf5 16%,var(--u2)) !important; }
+
+  /* ---------- 📱 TELEFON: Hibabejelentés — teljes képernyős lap ---------- */
+  html.ui-uj.m-app .ch-panel.bug2{ position:fixed !important; inset:0 !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important; transform:none !important; width:100% !important; height:100% !important; max-height:none !important; z-index:100050 !important;
+    border:0 !important; border-radius:0 !important; background:var(--u0) !important; box-shadow:none !important; font-family:'Manrope',system-ui,sans-serif !important; display:flex !important; flex-direction:column; animation:uiTlIn .35s cubic-bezier(.22,1,.36,1) both !important; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h{ display:flex !important; align-items:center; gap:12px !important; padding:calc(12px + env(safe-area-inset-top)) 14px 12px 16px !important; border-bottom:1px solid var(--u4) !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; flex:none; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h > i{ width:42px !important; height:42px !important; border-radius:14px !important; font-size:21px !important; display:grid !important; place-items:center; flex:none; background:color-mix(in srgb,#f0a030 20%,var(--u2)) !important; border:1px solid color-mix(in srgb,#f0a030 45%,transparent) !important; font-style:normal; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h > div{ flex:1; min-width:0; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h b{ display:block; font:800 18px/1.2 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 > .ch-h small{ display:block; font-size:12px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj.m-app .ch-panel.bug2 .ch-x{ width:38px !important; height:38px !important; border-radius:12px !important; border:1px solid var(--u4) !important; background:var(--u2) !important; color:var(--utx) !important; flex:none; }
+  html.ui-uj.m-app .ch-panel.bug2 .chs-main{ flex:1; min-height:0; overflow-y:auto !important; -webkit-overflow-scrolling:touch; display:block !important; padding-bottom:env(safe-area-inset-bottom); }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f{ display:flex !important; flex-direction:column; gap:14px !important; padding:16px !important; border:0 !important; background:none !important; animation:none !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-cats{ display:grid !important; grid-template-columns:repeat(4,1fr); gap:6px !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-cats button{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 2px !important; border-radius:14px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; color:var(--utx) !important; font:700 12px 'Manrope',sans-serif !important; box-shadow:none !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-cats button.on{ background:color-mix(in srgb,#f0a030 18%,var(--u1)) !important; border-color:#f0a030 !important; box-shadow:inset 0 -3px 0 #f0a030 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f label{ display:flex !important; flex-direction:column; gap:7px !important; font:800 11px 'Manrope',sans-serif !important; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f :is(select,textarea){ text-transform:none; letter-spacing:0; border:1px solid var(--u4) !important; background:var(--u1) !important; color:var(--utx) !important; font:600 16px 'Manrope',sans-serif !important; padding:12px 13px !important; border-radius:14px !important; box-shadow:none !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f select{ height:48px; padding-top:0 !important; padding-bottom:0 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f textarea{ min-height:120px; line-height:1.5; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-f > label:nth-of-type(1){ order:1; } html.ui-uj.m-app .ch-panel.bug2 .bug-f > label:nth-of-type(3){ order:2; } html.ui-uj.m-app .ch-panel.bug2 .bug-f > label:nth-of-type(2){ order:3; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-tech{ order:4; display:block; padding:9px 12px; border-radius:12px; background:var(--u1); font-size:11px !important; color:var(--udim) !important; font-family:'JetBrains Mono',ui-monospace,monospace !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-go{ order:5; display:flex !important; flex-direction:column-reverse; align-items:stretch; gap:8px; position:sticky; bottom:0; padding:8px 0 4px; background:linear-gradient(180deg,transparent,var(--u0) 30%); }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-out{ text-align:center; font-size:13px; font-weight:700; color:var(--udim); }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-out:empty{ display:none; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-send{ width:100%; height:52px !important; border-radius:16px !important; border:0 !important; background:#f0a030 !important; color:#1a1405 !important; font:800 16px 'Manrope',sans-serif !important; box-shadow:0 10px 24px -10px #f0a030 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bug-hist{ display:flex; flex-direction:column; gap:10px; padding:18px 16px 24px !important; border-top:1px solid var(--u4) !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-h{ display:flex !important; align-items:center; justify-content:space-between; font:800 11px 'Manrope',sans-serif !important; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; margin:0 !important; padding:0 !important; border:0 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-h em{ font-style:normal; padding:3px 9px; border-radius:999px; background:var(--u2); color:var(--utx); letter-spacing:0; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it{ margin:0 !important; padding:12px 14px !important; border-radius:16px !important; border:1px solid var(--u4) !important; background:var(--u0) !important; box-shadow:inset 3px 0 0 var(--bs,#9b9b9b) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it.st-new{ --bs:#f0a030; } html.ui-uj.m-app .ch-panel.bug2 .bh-it.st-done{ --bs:#30b37a; } html.ui-uj.m-app .ch-panel.bug2 .bh-it.st-wip{ --bs:#5b9cf5; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-t{ display:flex !important; align-items:center; gap:6px; flex-wrap:wrap; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-t b{ font:800 13px 'Manrope',sans-serif !important; color:var(--utx) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-t span{ font-size:11.5px !important; color:var(--udim) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-st{ margin-left:auto; font-style:normal; font-size:11px !important; font-weight:800 !important; padding:3px 8px !important; border-radius:999px !important; background:color-mix(in srgb,var(--bs) 18%,transparent) !important; color:var(--utx) !important; border:0 !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it p{ margin:7px 0 6px !important; font-size:13.5px !important; line-height:1.45 !important; color:var(--utx) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-it small{ font-size:11px !important; color:var(--udim) !important; }
+  html.ui-uj.m-app .ch-panel.bug2 .bh-ans{ margin-top:9px !important; padding:9px 11px !important; border-radius:12px !important; background:color-mix(in srgb,#30b37a 14%,var(--u2)) !important; border:0 !important; font-size:13px !important; color:var(--utx) !important; }
+
+  /* ---------- 📱 TELEFON: Súgó ---------- */
+  html.ui-uj.m-app .help-modal{ font-family:'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj.m-app .help-modal .help-top{ background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj.m-app .help-modal .help-top h2{ font:800 17px/1.2 'Manrope',sans-serif !important; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  html.ui-uj.m-app .help-modal .help-count{ white-space:nowrap; flex:none; }
+  html.ui-uj.m-app .help-modal .hs-steps{ display:flex !important; flex-direction:column; gap:8px !important; }
+  html.ui-uj.m-app .help-modal .hs-steps li{ position:relative; margin:0 !important; padding:11px 12px 11px 48px !important; border:1px solid var(--u4) !important; border-radius:15px !important; background:var(--u2) !important; line-height:1.55 !important; animation:uiTlUp .45s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj.m-app .help-modal .hs-steps li::before{ position:absolute !important; left:12px !important; top:11px !important; width:26px !important; height:26px !important; margin:0 !important; border-radius:8px !important; display:grid !important; place-items:center; font:800 12.5px 'Manrope',sans-serif !important; }
+  html.ui-uj.m-app .help-modal .hs-steps li:last-child{ border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj.m-app .help-modal .help-foot .action-btn{ border-radius:14px !important; }
+  html.ui-uj.m-app #scPanel .sc-grid{ grid-auto-rows:auto !important; grid-template-rows:none !important; align-items:start !important; overflow:visible !important; height:auto !important; max-height:none !important; }
+  html.ui-uj.m-app #scPanel .sc-it{ max-height:none !important; }
+  html.ui-uj.m-app .help-modal .help-count{ display:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
