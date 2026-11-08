@@ -7189,6 +7189,181 @@
   html.ui-uj:not(.m-app) #todoCard .tdn-add{ width:auto !important; max-width:none !important; align-self:stretch !important; }
   html.ui-uj:not(.m-app) #todoCard .tdn-add .tdn-in{ width:100% !important; }
   html.ui-uj:not(.m-app) #todoCard .tdn-board{ width:100% !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+/* ===== PRÓBA 18 — Selejt új kinézet + Csomag szállító-logók ===== */
+@media (min-width:1180px){
+  /* ---------- SELEJT ---------- */
+  html.ui-uj:not(.m-app) #sxPage{ --sxa:#FF5A5F; --sxs:#5B9CF5; }
+  html.ui-uj:not(.m-app) #sxPage:has(#sxKind button:nth-child(2).on){ --sxa:#5B9CF5; }
+
+  /* fejléc: egyetlen számláló-sáv + két gyors gomb */
+  html.ui-uj:not(.m-app) .sx-top{ display:grid !important; grid-template-columns:minmax(0,1fr) 340px !important; gap:14px !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #sxKpis{ display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:0 !important; padding:6px !important; border-radius:20px !important; border:1px solid var(--u4) !important;
+    background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k{ min-width:0 !important; margin:0 !important; padding:14px 18px !important; border:0 !important; border-radius:15px !important; background:transparent !important; box-shadow:none !important; position:relative; display:flex !important; flex-direction:column; justify-content:center; gap:6px; }
+  html.ui-uj:not(.m-app) #sxKpis > .k + .k::before{ content:""; position:absolute; left:0; top:18%; bottom:18%; width:1px; background:var(--u4); }
+  html.ui-uj:not(.m-app) #sxKpis > .k small{ font-size:11px !important; font-weight:700 !important; letter-spacing:.06em; text-transform:uppercase; color:var(--udim) !important; white-space:nowrap; }
+  html.ui-uj:not(.m-app) #sxKpis > .k b{ font-size:34px !important; font-weight:800 !important; line-height:1 !important; letter-spacing:-.03em; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k b span{ font-size:13px !important; font-weight:600 !important; color:var(--udim) !important; letter-spacing:0; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.r b{ color:#FF5A5F !important; } html.ui-uj:not(.m-app) #sxKpis > .k.b b{ color:#5B9CF5 !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.y b{ color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.y.warn{ background:color-mix(in srgb,var(--uacc) 12%,transparent) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.y.warn + .k::before{ display:none; }
+
+  html.ui-uj:not(.m-app) .sx-topb{ display:flex !important; flex-direction:column; gap:8px !important; }
+  html.ui-uj:not(.m-app) .sx-tbtn{ flex:1; display:flex !important; align-items:center; gap:12px; padding:10px 14px !important; border-radius:16px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; background-image:none !important; box-shadow:none !important; text-align:left; transition:border-color .15s, transform .15s; }
+  html.ui-uj:not(.m-app) .sx-tbtn:hover{ border-color:var(--uacc) !important; transform:translateX(2px); }
+  html.ui-uj:not(.m-app) .sx-tbtn i{ width:36px !important; height:36px !important; border-radius:11px !important; display:grid !important; place-items:center; background:var(--u2) !important; font-style:normal; font-size:17px; flex:0 0 auto; }
+  html.ui-uj:not(.m-app) .sx-tbtn.ck i{ background:color-mix(in srgb,var(--uacc) 18%,transparent) !important; }
+  html.ui-uj:not(.m-app) .sx-tbtn span{ min-width:0; flex:1; display:flex; flex-direction:column; gap:2px; }
+  html.ui-uj:not(.m-app) .sx-tbtn b{ font-size:14px !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .sx-tbtn small{ font-size:11.5px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj:not(.m-app) .sx-tbtn em{ font-style:normal; color:var(--udim); }
+
+  html.ui-uj:not(.m-app) #sxCkBanner{ grid-column:1 / -1; display:grid !important; grid-template-columns:auto minmax(0,1fr) auto auto !important; align-items:center; gap:14px !important; padding:12px 14px 12px 18px !important; border-radius:18px !important;
+    border:1px solid color-mix(in srgb,var(--uacc) 45%,transparent) !important; background:linear-gradient(90deg,color-mix(in srgb,var(--uacc) 14%,transparent),transparent 70%), var(--u1) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #sxCkBanner[hidden]{ display:none !important; }
+  html.ui-uj:not(.m-app) #sxCkBanner .action-btn{ width:auto !important; min-width:0 !important; padding:10px 18px !important; border-radius:12px !important; }
+  html.ui-uj:not(.m-app) #sxCkBanner .action-btn.secondary{ background:transparent !important; border:1px solid var(--u4) !important; }
+
+  /* rács: bal = rögzítő „jegy”, jobb = mai napló */
+  html.ui-uj:not(.m-app) .sx-grid{ grid-template-columns:420px minmax(0,1fr) minmax(0,1fr) !important; grid-template-areas:"add sum sum" "add list list" "add chk chk" "add imp exp" !important; grid-auto-rows:auto !important; gap:16px !important; margin-top:16px !important; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-side{ display:contents !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd{ grid-area:add !important; align-self:start; }
+  html.ui-uj:not(.m-app) .sx-grid .sx-sum{ grid-area:sum !important; }
+  html.ui-uj:not(.m-app) #sxSecList{ grid-area:list !important; }
+  html.ui-uj:not(.m-app) #sxSecChk{ grid-area:chk !important; }
+  html.ui-uj:not(.m-app) #sxSecImp{ grid-area:imp !important; } html.ui-uj:not(.m-app) #sxSecExp{ grid-area:exp !important; }
+  html.ui-uj:not(.m-app) .sx-grid :is(#sxSecAdd,.sx-sum,#sxSecList,#sxSecChk,#sxSecImp,#sxSecExp){ margin:0 !important; border-radius:22px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; background-image:none !important; box-shadow:none !important; }
+
+  /* rögzítő jegy */
+  html.ui-uj:not(.m-app) #sxSecAdd{ padding:0 !important; overflow:hidden; position:sticky !important; top:16px; }
+  html.ui-uj:not(.m-app) #sxSecAdd > *{ margin-left:22px !important; margin-right:22px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h{ margin:0 !important; padding:20px 22px 16px !important; display:block !important; border-bottom:1px dashed var(--u4); position:relative;
+    background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, color-mix(in srgb,var(--sxa) 7%,var(--u1)) !important; box-shadow:inset 0 4px 0 var(--sxa); transition:box-shadow .2s, background .2s; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h h3{ font-size:20px !important; font-weight:800 !important; letter-spacing:-.02em; margin:0 0 4px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h .sx-hint{ font-size:12px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::before, html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::after{ content:""; position:absolute; bottom:-9px; width:18px; height:18px; border-radius:50%; background:var(--u0); border:1px solid var(--u4); z-index:2; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::before{ left:-10px; } html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::after{ right:-10px; }
+
+  html.ui-uj:not(.m-app) #sxKind{ display:grid !important; grid-template-columns:1fr 1fr auto !important; gap:4px !important; padding:4px !important; margin-top:18px !important; border-radius:14px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxKind button{ border:0 !important; border-radius:11px !important; padding:10px 8px !important; background:transparent !important; background-image:none !important; color:var(--udim) !important; font-weight:700 !important; font-size:13.5px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #sxKind button.on{ background:var(--sxa) !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) #sxKind button:nth-child(3).on{ background:var(--u4) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxKind button small{ font-size:11.5px !important; color:inherit !important; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd :is(.sx-row2,.sx-row3){ display:flex !important; flex-direction:column; gap:14px !important; margin-top:16px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-f{ margin-top:14px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-f > span{ display:block; font-size:11px !important; font-weight:800 !important; letter-spacing:.07em; text-transform:uppercase; color:var(--udim) !important; margin-bottom:7px; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-f > span em{ font-style:normal; text-transform:none; letter-spacing:0; font-weight:500; color:var(--ufaint) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in{ display:flex !important; align-items:center; gap:10px; padding:0 14px !important; height:46px; border-radius:13px !important; border:1px solid var(--u4) !important; background:var(--u0) !important; box-shadow:none !important; transition:border-color .15s, box-shadow .15s; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in:focus-within{ border-color:var(--sxa) !important; box-shadow:0 0 0 3px color-mix(in srgb,var(--sxa) 22%,transparent) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in input{ flex:1; min-width:0; height:100% !important; border:0 !important; outline:0 !important; background:transparent !important; box-shadow:none !important; padding:0 !important; margin:0 !important; color:var(--utx) !important; font-size:14.5px !important; border-radius:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in > i{ font-style:normal; font-size:17px; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-code{ height:54px; border-style:dashed !important; border-width:1.5px !important; border-color:color-mix(in srgb,var(--sxa) 55%,var(--u4)) !important;
+    background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--sxa) 9%,transparent) 0 2px,transparent 2px 5px,color-mix(in srgb,var(--sxa) 6%,transparent) 5px 6px,transparent 6px 10px) right 12px center/62px 26px no-repeat, var(--u0) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-code input{ font-family:'JetBrains Mono',ui-monospace,monospace !important; letter-spacing:.04em; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-sm{ height:40px; margin-top:8px; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty{ display:inline-flex !important; align-items:center; gap:0 !important; border:1px solid var(--u4); border-radius:13px; overflow:hidden; background:var(--u0); }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty button{ width:46px !important; height:46px !important; border:0 !important; border-radius:0 !important; background:transparent !important; background-image:none !important; box-shadow:none !important; font-size:20px !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty button:hover{ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty input{ width:64px !important; height:46px !important; border:0 !important; border-left:1px solid var(--u4) !important; border-right:1px solid var(--u4) !important; border-radius:0 !important; background:transparent !important; text-align:center; font-size:20px !important; font-weight:800 !important; color:var(--utx) !important; box-shadow:none !important; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips{ display:flex !important; flex-wrap:wrap; gap:6px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips button{ padding:7px 12px !important; border-radius:999px !important; border:1px solid var(--u4) !important; background:transparent !important; background-image:none !important; box-shadow:none !important; font-size:12.5px !important; font-weight:600 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips button:hover{ border-color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips button.on{ background:color-mix(in srgb,var(--sxa) 18%,transparent) !important; border-color:var(--sxa) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-dates{ display:flex !important; align-items:center; gap:8px !important; flex-wrap:wrap; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-date{ height:36px; flex:1; min-width:130px; padding:0 10px !important; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-foot{ margin:18px 0 0 !important; padding:16px 22px 22px !important; border-top:1px dashed var(--u4); display:flex !important; flex-direction:column; gap:12px !important; background:var(--u0); }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxAdd{ height:52px !important; border-radius:14px !important; border:0 !important; background:var(--sxa) !important; background-image:none !important; color:#fff !important; font-size:15px !important; font-weight:800 !important; box-shadow:0 8px 22px -10px var(--sxa) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxAdd:hover{ filter:brightness(1.08); }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxMsg{ margin:0 !important; padding:0 22px 18px !important; background:var(--u0) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxMsg:empty{ display:none; }
+
+  /* mai összesítő: széles sáv */
+  html.ui-uj:not(.m-app) .sx-grid .sx-sum{ display:grid !important; grid-template-columns:auto minmax(0,1fr) auto !important; grid-template-areas:"k k k" "big split slip" "mini split slip" !important; align-items:center; column-gap:24px !important; row-gap:2px !important; padding:18px 22px !important;
+    background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-k{ grid-area:k; margin-bottom:6px !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-big{ grid-area:big; display:flex !important; align-items:baseline; gap:8px; }
+  html.ui-uj:not(.m-app) .sx-sum #sxTot{ font-size:56px !important; line-height:.95 !important; font-weight:800 !important; letter-spacing:-.04em; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-big span{ color:var(--udim) !important; font-weight:600; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-mini{ grid-area:mini; font-size:12px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split{ grid-area:split; display:grid !important; grid-template-columns:1fr 1fr !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split > div{ padding:12px 14px !important; border-radius:14px !important; border:0 !important; background:var(--u2) !important; box-shadow:inset 3px 0 0 #FF5A5F !important; display:flex !important; flex-direction:column; gap:4px; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split > div.su{ box-shadow:inset 3px 0 0 #5B9CF5 !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split small{ font-size:11.5px !important; color:var(--udim) !important; white-space:nowrap; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split b{ font-size:22px !important; font-weight:800 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-dayslip{ grid-area:slip; width:190px !important; height:auto !important; padding:10px 14px !important; margin:0 !important; border-radius:12px !important; border:1px solid var(--u4) !important; background:var(--u0) !important; background-image:none !important; box-shadow:none !important; font-size:12.5px !important; white-space:nowrap; justify-content:flex-start !important; text-align:left; }
+  html.ui-uj:not(.m-app) .sx-sum > #sxDaySlip{ grid-area:auto !important; grid-column:3 !important; grid-row:2 !important; align-self:end; margin-bottom:4px !important; } html.ui-uj:not(.m-app) .sx-sum > #sxDaySlipSu{ grid-area:auto !important; grid-column:3 !important; grid-row:3 !important; align-self:start; margin-top:4px !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-dayslip:not(:disabled):hover{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-dayslip:disabled{ opacity:.45; }
+  html.ui-uj:not(.m-app) .sx-grid .sx-k{ font-size:11px !important; font-weight:800 !important; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; }
+
+  /* mai napló */
+  html.ui-uj:not(.m-app) #sxSecList{ padding:20px 22px !important; }
+  html.ui-uj:not(.m-app) #sxSecList > .sx-h{ display:flex !important; align-items:center; justify-content:space-between; margin-bottom:14px !important; }
+  html.ui-uj:not(.m-app) #sxSecList > .sx-h h3{ font-size:18px !important; font-weight:800 !important; }
+  html.ui-uj:not(.m-app) #sxCnt{ padding:5px 11px; border-radius:999px; background:var(--u2); font-size:12px !important; font-weight:700; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxList{ gap:0 !important; position:relative; }
+  html.ui-uj:not(.m-app) #sxList .sx-grp{ font-size:11px !important; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; padding:0 0 8px !important; display:flex; justify-content:space-between; background:none !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-grp b{ letter-spacing:0; text-transform:none; font-weight:700; }
+  html.ui-uj:not(.m-app) #sxList .sx-item{ display:grid !important; grid-template-columns:58px minmax(0,1fr) auto auto !important; align-items:center; gap:14px !important; padding:12px 12px 12px 0 !important; margin:0 !important; border:0 !important; border-top:1px solid var(--u3) !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; position:relative; }
+  html.ui-uj:not(.m-app) #sxList .sx-item:hover{ background:color-mix(in srgb,var(--u2) 60%,transparent) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-item .sx-time{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:12px !important; color:var(--udim) !important; padding-left:14px; position:relative; background:none !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-item .sx-time::before{ content:""; position:absolute; left:0; top:50%; width:7px; height:7px; margin-top:-3.5px; border-radius:50%; background:#FF5A5F; box-shadow:0 0 0 3px color-mix(in srgb,#FF5A5F 22%,transparent); }
+  html.ui-uj:not(.m-app) #sxList .sx-item.su .sx-time::before{ background:#5B9CF5; box-shadow:0 0 0 3px color-mix(in srgb,#5B9CF5 22%,transparent); }
+  html.ui-uj:not(.m-app) #sxList .sx-what b{ font-size:14.5px !important; font-weight:700 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-what small{ display:flex !important; flex-wrap:wrap; gap:5px; margin-top:5px; }
+  html.ui-uj:not(.m-app) #sxList .sx-what small > span{ padding:2px 8px !important; border-radius:6px !important; background:var(--u2) !important; border:0 !important; font-size:11.5px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-code{ font-family:'JetBrains Mono',ui-monospace,monospace; }
+  html.ui-uj:not(.m-app) #sxList .sx-q{ display:inline-flex !important; align-items:center; gap:2px !important; padding:3px !important; border-radius:11px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q button{ width:26px !important; height:26px !important; border:0 !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q button:hover{ background:var(--u4) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q b{ min-width:20px; text-align:center; font-size:15px !important; font-weight:800 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q span{ font-size:11px !important; color:var(--udim) !important; margin-right:2px; }
+  html.ui-uj:not(.m-app) #sxList .sx-acts{ display:flex !important; gap:2px !important; opacity:.35; transition:opacity .15s; }
+  html.ui-uj:not(.m-app) #sxList .sx-item:hover .sx-acts{ opacity:1; }
+  html.ui-uj:not(.m-app) #sxList .sx-ib{ width:30px !important; height:30px !important; border:0 !important; border-radius:9px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-ib:hover{ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-empty{ border:1px dashed var(--u4) !important; border-radius:18px !important; padding:34px 20px !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+
+  /* feltöltés + letöltés: egymás mellett */
+  html.ui-uj:not(.m-app) .sx-grid :is(#sxSecImp,#sxSecExp){ padding:18px 20px !important; display:flex !important; flex-direction:column; gap:12px; }
+  html.ui-uj:not(.m-app) #sxSecImp .sx-drop{ flex:1; min-height:150px; display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:6px; border:1.5px dashed var(--u4) !important; border-radius:16px !important; background:var(--u0) !important; transition:border-color .15s, background .15s; }
+  html.ui-uj:not(.m-app) #sxSecImp .sx-drop:hover{ border-color:var(--uacc) !important; background:color-mix(in srgb,var(--uacc) 6%,var(--u0)) !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-quick{ display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:3px !important; padding:3px !important; border-radius:12px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-quick button{ border:0 !important; border-radius:9px !important; padding:7px 4px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; font-size:12px !important; font-weight:700 !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-quick button.on{ background:var(--u0) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-range{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-range label{ min-width:0; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-range input{ width:100% !important; min-width:0 !important; box-sizing:border-box; }
+  html.ui-uj:not(.m-app) #sxSecExp #sxXlsx{ border-radius:12px !important; height:44px !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-saved{ display:none !important; }
+
+  /* ---------- CSOMAG: szállító-logók ---------- */
+  html.ui-uj:not(.m-app) .cs2-car .cs2-car-h{ gap:14px !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo{ width:112px !important; height:58px !important; padding:8px 10px !important; border:0 !important; border-radius:14px !important; overflow:hidden; position:relative;
+    box-shadow:0 6px 16px -8px rgba(0,0,0,.6) !important; transition:transform .15s !important; }
+  html.ui-uj:not(.m-app) .cs2-car.gls button.cs2-logo{ background:var(--gls) !important; }
+  html.ui-uj:not(.m-app) .cs2-car.mpl button.cs2-logo{ background:var(--mpl) !important; }
+  html.ui-uj:not(.m-app) .cs2-car.dpd button.cs2-logo{ background:var(--dpd) !important; box-shadow:inset 0 -4px 0 var(--dpd-r), 0 6px 16px -8px rgba(0,0,0,.6) !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo.has{ background:#fff !important; box-shadow:inset 0 -4px 0 var(--cc), 0 6px 16px -8px rgba(0,0,0,.6) !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo:hover{ transform:translateY(-2px) !important; background-color:inherit; }
+  html.ui-uj:not(.m-app) .cs2-car.gls button.cs2-logo:not(.has):hover{ background:var(--gls) !important; } html.ui-uj:not(.m-app) .cs2-car.mpl button.cs2-logo:not(.has):hover{ background:var(--mpl) !important; } html.ui-uj:not(.m-app) .cs2-car.dpd button.cs2-logo:not(.has):hover{ background:var(--dpd) !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo.has:hover{ background:#fff !important; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-logo img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-logo img[hidden]{ display:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-wm{ font:900 24px 'Poppins','Manrope',sans-serif !important; letter-spacing:.01em; }
+  html.ui-uj:not(.m-app) .cs2-car.gls .cs2-wm{ color:var(--gls-ink) !important; } html.ui-uj:not(.m-app) .cs2-car.mpl .cs2-wm{ color:#fff !important; font-size:19px !important; } html.ui-uj:not(.m-app) .cs2-car.dpd .cs2-wm{ color:#fff !important; font-size:22px !important; letter-spacing:-.02em; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-logo i{ color:#fff !important; font-size:9.5px !important; }
+  html.ui-uj:not(.m-app) .cs-badge{ border:0 !important; }
+  html.ui-uj:not(.m-app) .cs-badge.gls:not(.has-logo){ background:var(--gls) !important; color:var(--gls-ink) !important; }
+  html.ui-uj:not(.m-app) .cs-badge.mpl:not(.has-logo){ background:var(--mpl) !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) .cs-badge.dpd:not(.has-logo){ background:var(--dpd) !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) .cs-badge.has-logo{ background:#fff !important; }
+}
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -17866,6 +18041,181 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) #todoCard .tdn-add{ width:auto !important; max-width:none !important; align-self:stretch !important; }
   html.ui-uj:not(.m-app) #todoCard .tdn-add .tdn-in{ width:100% !important; }
   html.ui-uj:not(.m-app) #todoCard .tdn-board{ width:100% !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
+/* ===== PRÓBA 18 — Selejt új kinézet + Csomag szállító-logók ===== */
+@media (min-width:1180px){
+  /* ---------- SELEJT ---------- */
+  html.ui-uj:not(.m-app) #sxPage{ --sxa:#FF5A5F; --sxs:#5B9CF5; }
+  html.ui-uj:not(.m-app) #sxPage:has(#sxKind button:nth-child(2).on){ --sxa:#5B9CF5; }
+
+  /* fejléc: egyetlen számláló-sáv + két gyors gomb */
+  html.ui-uj:not(.m-app) .sx-top{ display:grid !important; grid-template-columns:minmax(0,1fr) 340px !important; gap:14px !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #sxKpis{ display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:0 !important; padding:6px !important; border-radius:20px !important; border:1px solid var(--u4) !important;
+    background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k{ min-width:0 !important; margin:0 !important; padding:14px 18px !important; border:0 !important; border-radius:15px !important; background:transparent !important; box-shadow:none !important; position:relative; display:flex !important; flex-direction:column; justify-content:center; gap:6px; }
+  html.ui-uj:not(.m-app) #sxKpis > .k + .k::before{ content:""; position:absolute; left:0; top:18%; bottom:18%; width:1px; background:var(--u4); }
+  html.ui-uj:not(.m-app) #sxKpis > .k small{ font-size:11px !important; font-weight:700 !important; letter-spacing:.06em; text-transform:uppercase; color:var(--udim) !important; white-space:nowrap; }
+  html.ui-uj:not(.m-app) #sxKpis > .k b{ font-size:34px !important; font-weight:800 !important; line-height:1 !important; letter-spacing:-.03em; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k b span{ font-size:13px !important; font-weight:600 !important; color:var(--udim) !important; letter-spacing:0; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.r b{ color:#FF5A5F !important; } html.ui-uj:not(.m-app) #sxKpis > .k.b b{ color:#5B9CF5 !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.y b{ color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.y.warn{ background:color-mix(in srgb,var(--uacc) 12%,transparent) !important; }
+  html.ui-uj:not(.m-app) #sxKpis > .k.y.warn + .k::before{ display:none; }
+
+  html.ui-uj:not(.m-app) .sx-topb{ display:flex !important; flex-direction:column; gap:8px !important; }
+  html.ui-uj:not(.m-app) .sx-tbtn{ flex:1; display:flex !important; align-items:center; gap:12px; padding:10px 14px !important; border-radius:16px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; background-image:none !important; box-shadow:none !important; text-align:left; transition:border-color .15s, transform .15s; }
+  html.ui-uj:not(.m-app) .sx-tbtn:hover{ border-color:var(--uacc) !important; transform:translateX(2px); }
+  html.ui-uj:not(.m-app) .sx-tbtn i{ width:36px !important; height:36px !important; border-radius:11px !important; display:grid !important; place-items:center; background:var(--u2) !important; font-style:normal; font-size:17px; flex:0 0 auto; }
+  html.ui-uj:not(.m-app) .sx-tbtn.ck i{ background:color-mix(in srgb,var(--uacc) 18%,transparent) !important; }
+  html.ui-uj:not(.m-app) .sx-tbtn span{ min-width:0; flex:1; display:flex; flex-direction:column; gap:2px; }
+  html.ui-uj:not(.m-app) .sx-tbtn b{ font-size:14px !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .sx-tbtn small{ font-size:11.5px !important; color:var(--udim) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj:not(.m-app) .sx-tbtn em{ font-style:normal; color:var(--udim); }
+
+  html.ui-uj:not(.m-app) #sxCkBanner{ grid-column:1 / -1; display:grid !important; grid-template-columns:auto minmax(0,1fr) auto auto !important; align-items:center; gap:14px !important; padding:12px 14px 12px 18px !important; border-radius:18px !important;
+    border:1px solid color-mix(in srgb,var(--uacc) 45%,transparent) !important; background:linear-gradient(90deg,color-mix(in srgb,var(--uacc) 14%,transparent),transparent 70%), var(--u1) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #sxCkBanner[hidden]{ display:none !important; }
+  html.ui-uj:not(.m-app) #sxCkBanner .action-btn{ width:auto !important; min-width:0 !important; padding:10px 18px !important; border-radius:12px !important; }
+  html.ui-uj:not(.m-app) #sxCkBanner .action-btn.secondary{ background:transparent !important; border:1px solid var(--u4) !important; }
+
+  /* rács: bal = rögzítő „jegy”, jobb = mai napló */
+  html.ui-uj:not(.m-app) .sx-grid{ grid-template-columns:420px minmax(0,1fr) minmax(0,1fr) !important; grid-template-areas:"add sum sum" "add list list" "add chk chk" "add imp exp" !important; grid-auto-rows:auto !important; gap:16px !important; margin-top:16px !important; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-side{ display:contents !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd{ grid-area:add !important; align-self:start; }
+  html.ui-uj:not(.m-app) .sx-grid .sx-sum{ grid-area:sum !important; }
+  html.ui-uj:not(.m-app) #sxSecList{ grid-area:list !important; }
+  html.ui-uj:not(.m-app) #sxSecChk{ grid-area:chk !important; }
+  html.ui-uj:not(.m-app) #sxSecImp{ grid-area:imp !important; } html.ui-uj:not(.m-app) #sxSecExp{ grid-area:exp !important; }
+  html.ui-uj:not(.m-app) .sx-grid :is(#sxSecAdd,.sx-sum,#sxSecList,#sxSecChk,#sxSecImp,#sxSecExp){ margin:0 !important; border-radius:22px !important; border:1px solid var(--u4) !important; background:var(--u1) !important; background-image:none !important; box-shadow:none !important; }
+
+  /* rögzítő jegy */
+  html.ui-uj:not(.m-app) #sxSecAdd{ padding:0 !important; overflow:hidden; position:sticky !important; top:16px; }
+  html.ui-uj:not(.m-app) #sxSecAdd > *{ margin-left:22px !important; margin-right:22px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h{ margin:0 !important; padding:20px 22px 16px !important; display:block !important; border-bottom:1px dashed var(--u4); position:relative;
+    background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, color-mix(in srgb,var(--sxa) 7%,var(--u1)) !important; box-shadow:inset 0 4px 0 var(--sxa); transition:box-shadow .2s, background .2s; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h h3{ font-size:20px !important; font-weight:800 !important; letter-spacing:-.02em; margin:0 0 4px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h .sx-hint{ font-size:12px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::before, html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::after{ content:""; position:absolute; bottom:-9px; width:18px; height:18px; border-radius:50%; background:var(--u0); border:1px solid var(--u4); z-index:2; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::before{ left:-10px; } html.ui-uj:not(.m-app) #sxSecAdd > .sx-h::after{ right:-10px; }
+
+  html.ui-uj:not(.m-app) #sxKind{ display:grid !important; grid-template-columns:1fr 1fr auto !important; gap:4px !important; padding:4px !important; margin-top:18px !important; border-radius:14px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxKind button{ border:0 !important; border-radius:11px !important; padding:10px 8px !important; background:transparent !important; background-image:none !important; color:var(--udim) !important; font-weight:700 !important; font-size:13.5px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #sxKind button.on{ background:var(--sxa) !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) #sxKind button:nth-child(3).on{ background:var(--u4) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxKind button small{ font-size:11.5px !important; color:inherit !important; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd :is(.sx-row2,.sx-row3){ display:flex !important; flex-direction:column; gap:14px !important; margin-top:16px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd > .sx-f{ margin-top:14px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-f > span{ display:block; font-size:11px !important; font-weight:800 !important; letter-spacing:.07em; text-transform:uppercase; color:var(--udim) !important; margin-bottom:7px; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-f > span em{ font-style:normal; text-transform:none; letter-spacing:0; font-weight:500; color:var(--ufaint) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in{ display:flex !important; align-items:center; gap:10px; padding:0 14px !important; height:46px; border-radius:13px !important; border:1px solid var(--u4) !important; background:var(--u0) !important; box-shadow:none !important; transition:border-color .15s, box-shadow .15s; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in:focus-within{ border-color:var(--sxa) !important; box-shadow:0 0 0 3px color-mix(in srgb,var(--sxa) 22%,transparent) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in input{ flex:1; min-width:0; height:100% !important; border:0 !important; outline:0 !important; background:transparent !important; box-shadow:none !important; padding:0 !important; margin:0 !important; color:var(--utx) !important; font-size:14.5px !important; border-radius:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in > i{ font-style:normal; font-size:17px; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-code{ height:54px; border-style:dashed !important; border-width:1.5px !important; border-color:color-mix(in srgb,var(--sxa) 55%,var(--u4)) !important;
+    background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--sxa) 9%,transparent) 0 2px,transparent 2px 5px,color-mix(in srgb,var(--sxa) 6%,transparent) 5px 6px,transparent 6px 10px) right 12px center/62px 26px no-repeat, var(--u0) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-code input{ font-family:'JetBrains Mono',ui-monospace,monospace !important; letter-spacing:.04em; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-sm{ height:40px; margin-top:8px; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty{ display:inline-flex !important; align-items:center; gap:0 !important; border:1px solid var(--u4); border-radius:13px; overflow:hidden; background:var(--u0); }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty button{ width:46px !important; height:46px !important; border:0 !important; border-radius:0 !important; background:transparent !important; background-image:none !important; box-shadow:none !important; font-size:20px !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty button:hover{ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-qty input{ width:64px !important; height:46px !important; border:0 !important; border-left:1px solid var(--u4) !important; border-right:1px solid var(--u4) !important; border-radius:0 !important; background:transparent !important; text-align:center; font-size:20px !important; font-weight:800 !important; color:var(--utx) !important; box-shadow:none !important; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips{ display:flex !important; flex-wrap:wrap; gap:6px !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips button{ padding:7px 12px !important; border-radius:999px !important; border:1px solid var(--u4) !important; background:transparent !important; background-image:none !important; box-shadow:none !important; font-size:12.5px !important; font-weight:600 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips button:hover{ border-color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-chips button.on{ background:color-mix(in srgb,var(--sxa) 18%,transparent) !important; border-color:var(--sxa) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-dates{ display:flex !important; align-items:center; gap:8px !important; flex-wrap:wrap; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-in-date{ height:36px; flex:1; min-width:130px; padding:0 10px !important; }
+
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-foot{ margin:18px 0 0 !important; padding:16px 22px 22px !important; border-top:1px dashed var(--u4); display:flex !important; flex-direction:column; gap:12px !important; background:var(--u0); }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxAdd{ height:52px !important; border-radius:14px !important; border:0 !important; background:var(--sxa) !important; background-image:none !important; color:#fff !important; font-size:15px !important; font-weight:800 !important; box-shadow:0 8px 22px -10px var(--sxa) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxAdd:hover{ filter:brightness(1.08); }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxMsg{ margin:0 !important; padding:0 22px 18px !important; background:var(--u0) !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd #sxMsg:empty{ display:none; }
+
+  /* mai összesítő: széles sáv */
+  html.ui-uj:not(.m-app) .sx-grid .sx-sum{ display:grid !important; grid-template-columns:auto minmax(0,1fr) auto !important; grid-template-areas:"k k k" "big split slip" "mini split slip" !important; align-items:center; column-gap:24px !important; row-gap:2px !important; padding:18px 22px !important;
+    background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px, var(--u1) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-k{ grid-area:k; margin-bottom:6px !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-big{ grid-area:big; display:flex !important; align-items:baseline; gap:8px; }
+  html.ui-uj:not(.m-app) .sx-sum #sxTot{ font-size:56px !important; line-height:.95 !important; font-weight:800 !important; letter-spacing:-.04em; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-big span{ color:var(--udim) !important; font-weight:600; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-mini{ grid-area:mini; font-size:12px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split{ grid-area:split; display:grid !important; grid-template-columns:1fr 1fr !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split > div{ padding:12px 14px !important; border-radius:14px !important; border:0 !important; background:var(--u2) !important; box-shadow:inset 3px 0 0 #FF5A5F !important; display:flex !important; flex-direction:column; gap:4px; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split > div.su{ box-shadow:inset 3px 0 0 #5B9CF5 !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split small{ font-size:11.5px !important; color:var(--udim) !important; white-space:nowrap; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-split b{ font-size:22px !important; font-weight:800 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-dayslip{ grid-area:slip; width:190px !important; height:auto !important; padding:10px 14px !important; margin:0 !important; border-radius:12px !important; border:1px solid var(--u4) !important; background:var(--u0) !important; background-image:none !important; box-shadow:none !important; font-size:12.5px !important; white-space:nowrap; justify-content:flex-start !important; text-align:left; }
+  html.ui-uj:not(.m-app) .sx-sum > #sxDaySlip{ grid-area:auto !important; grid-column:3 !important; grid-row:2 !important; align-self:end; margin-bottom:4px !important; } html.ui-uj:not(.m-app) .sx-sum > #sxDaySlipSu{ grid-area:auto !important; grid-column:3 !important; grid-row:3 !important; align-self:start; margin-top:4px !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-dayslip:not(:disabled):hover{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .sx-sum > .sx-dayslip:disabled{ opacity:.45; }
+  html.ui-uj:not(.m-app) .sx-grid .sx-k{ font-size:11px !important; font-weight:800 !important; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; }
+
+  /* mai napló */
+  html.ui-uj:not(.m-app) #sxSecList{ padding:20px 22px !important; }
+  html.ui-uj:not(.m-app) #sxSecList > .sx-h{ display:flex !important; align-items:center; justify-content:space-between; margin-bottom:14px !important; }
+  html.ui-uj:not(.m-app) #sxSecList > .sx-h h3{ font-size:18px !important; font-weight:800 !important; }
+  html.ui-uj:not(.m-app) #sxCnt{ padding:5px 11px; border-radius:999px; background:var(--u2); font-size:12px !important; font-weight:700; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxList{ gap:0 !important; position:relative; }
+  html.ui-uj:not(.m-app) #sxList .sx-grp{ font-size:11px !important; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--udim) !important; padding:0 0 8px !important; display:flex; justify-content:space-between; background:none !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-grp b{ letter-spacing:0; text-transform:none; font-weight:700; }
+  html.ui-uj:not(.m-app) #sxList .sx-item{ display:grid !important; grid-template-columns:58px minmax(0,1fr) auto auto !important; align-items:center; gap:14px !important; padding:12px 12px 12px 0 !important; margin:0 !important; border:0 !important; border-top:1px solid var(--u3) !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; position:relative; }
+  html.ui-uj:not(.m-app) #sxList .sx-item:hover{ background:color-mix(in srgb,var(--u2) 60%,transparent) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-item .sx-time{ font-family:'JetBrains Mono',ui-monospace,monospace; font-size:12px !important; color:var(--udim) !important; padding-left:14px; position:relative; background:none !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-item .sx-time::before{ content:""; position:absolute; left:0; top:50%; width:7px; height:7px; margin-top:-3.5px; border-radius:50%; background:#FF5A5F; box-shadow:0 0 0 3px color-mix(in srgb,#FF5A5F 22%,transparent); }
+  html.ui-uj:not(.m-app) #sxList .sx-item.su .sx-time::before{ background:#5B9CF5; box-shadow:0 0 0 3px color-mix(in srgb,#5B9CF5 22%,transparent); }
+  html.ui-uj:not(.m-app) #sxList .sx-what b{ font-size:14.5px !important; font-weight:700 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-what small{ display:flex !important; flex-wrap:wrap; gap:5px; margin-top:5px; }
+  html.ui-uj:not(.m-app) #sxList .sx-what small > span{ padding:2px 8px !important; border-radius:6px !important; background:var(--u2) !important; border:0 !important; font-size:11.5px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-code{ font-family:'JetBrains Mono',ui-monospace,monospace; }
+  html.ui-uj:not(.m-app) #sxList .sx-q{ display:inline-flex !important; align-items:center; gap:2px !important; padding:3px !important; border-radius:11px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q button{ width:26px !important; height:26px !important; border:0 !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q button:hover{ background:var(--u4) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q b{ min-width:20px; text-align:center; font-size:15px !important; font-weight:800 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-q span{ font-size:11px !important; color:var(--udim) !important; margin-right:2px; }
+  html.ui-uj:not(.m-app) #sxList .sx-acts{ display:flex !important; gap:2px !important; opacity:.35; transition:opacity .15s; }
+  html.ui-uj:not(.m-app) #sxList .sx-item:hover .sx-acts{ opacity:1; }
+  html.ui-uj:not(.m-app) #sxList .sx-ib{ width:30px !important; height:30px !important; border:0 !important; border-radius:9px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-ib:hover{ background:var(--u2) !important; }
+  html.ui-uj:not(.m-app) #sxList .sx-empty{ border:1px dashed var(--u4) !important; border-radius:18px !important; padding:34px 20px !important; background:radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+
+  /* feltöltés + letöltés: egymás mellett */
+  html.ui-uj:not(.m-app) .sx-grid :is(#sxSecImp,#sxSecExp){ padding:18px 20px !important; display:flex !important; flex-direction:column; gap:12px; }
+  html.ui-uj:not(.m-app) #sxSecImp .sx-drop{ flex:1; min-height:150px; display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:6px; border:1.5px dashed var(--u4) !important; border-radius:16px !important; background:var(--u0) !important; transition:border-color .15s, background .15s; }
+  html.ui-uj:not(.m-app) #sxSecImp .sx-drop:hover{ border-color:var(--uacc) !important; background:color-mix(in srgb,var(--uacc) 6%,var(--u0)) !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-quick{ display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:3px !important; padding:3px !important; border-radius:12px !important; background:var(--u2) !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-quick button{ border:0 !important; border-radius:9px !important; padding:7px 4px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; color:var(--udim) !important; font-size:12px !important; font-weight:700 !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-quick button.on{ background:var(--u0) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-range{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-range label{ min-width:0; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-range input{ width:100% !important; min-width:0 !important; box-sizing:border-box; }
+  html.ui-uj:not(.m-app) #sxSecExp #sxXlsx{ border-radius:12px !important; height:44px !important; }
+  html.ui-uj:not(.m-app) #sxSecExp .sx-saved{ display:none !important; }
+
+  /* ---------- CSOMAG: szállító-logók ---------- */
+  html.ui-uj:not(.m-app) .cs2-car .cs2-car-h{ gap:14px !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo{ width:112px !important; height:58px !important; padding:8px 10px !important; border:0 !important; border-radius:14px !important; overflow:hidden; position:relative;
+    box-shadow:0 6px 16px -8px rgba(0,0,0,.6) !important; transition:transform .15s !important; }
+  html.ui-uj:not(.m-app) .cs2-car.gls button.cs2-logo{ background:var(--gls) !important; }
+  html.ui-uj:not(.m-app) .cs2-car.mpl button.cs2-logo{ background:var(--mpl) !important; }
+  html.ui-uj:not(.m-app) .cs2-car.dpd button.cs2-logo{ background:var(--dpd) !important; box-shadow:inset 0 -4px 0 var(--dpd-r), 0 6px 16px -8px rgba(0,0,0,.6) !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo.has{ background:#fff !important; box-shadow:inset 0 -4px 0 var(--cc), 0 6px 16px -8px rgba(0,0,0,.6) !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo:hover{ transform:translateY(-2px) !important; background-color:inherit; }
+  html.ui-uj:not(.m-app) .cs2-car.gls button.cs2-logo:not(.has):hover{ background:var(--gls) !important; } html.ui-uj:not(.m-app) .cs2-car.mpl button.cs2-logo:not(.has):hover{ background:var(--mpl) !important; } html.ui-uj:not(.m-app) .cs2-car.dpd button.cs2-logo:not(.has):hover{ background:var(--dpd) !important; }
+  html.ui-uj:not(.m-app) .cs2-car button.cs2-logo.has:hover{ background:#fff !important; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-logo img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-logo img[hidden]{ display:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-wm{ font:900 24px 'Poppins','Manrope',sans-serif !important; letter-spacing:.01em; }
+  html.ui-uj:not(.m-app) .cs2-car.gls .cs2-wm{ color:var(--gls-ink) !important; } html.ui-uj:not(.m-app) .cs2-car.mpl .cs2-wm{ color:#fff !important; font-size:19px !important; } html.ui-uj:not(.m-app) .cs2-car.dpd .cs2-wm{ color:#fff !important; font-size:22px !important; letter-spacing:-.02em; }
+  html.ui-uj:not(.m-app) .cs2-car .cs2-logo i{ color:#fff !important; font-size:9.5px !important; }
+  html.ui-uj:not(.m-app) .cs-badge{ border:0 !important; }
+  html.ui-uj:not(.m-app) .cs-badge.gls:not(.has-logo){ background:var(--gls) !important; color:var(--gls-ink) !important; }
+  html.ui-uj:not(.m-app) .cs-badge.mpl:not(.has-logo){ background:var(--mpl) !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) .cs-badge.dpd:not(.has-logo){ background:var(--dpd) !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) .cs-badge.has-logo{ background:#fff !important; }
+}
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
