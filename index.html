@@ -6365,6 +6365,71 @@
   html.ui-uj:not(.m-app) .tabs .tab-btn:hover{ color:var(--utx) !important; }
   html.ui-uj:not(.m-app) .tabs .tab-btn.active{ color:var(--utx) !important; font-weight:600 !important; }
   html.ui-uj #mainPanel{ background:transparent !important; border:0 !important; padding:16px 0 0 !important; }
+
+  /* ===== PRÓBA 9: 🏠 Ma kezdőlap + oldalsó napi panel ===== */
+  .ma-page{display:none;} body.page-ma .ma-page{display:block;}
+  body.page-ma #tabs, body.page-ma #autoAdvanceBanner, body.page-ma #mainPanel, body.page-ma #settingsPanel{display:none !important;}
+  html:not(.m-app) body.page-ma .app{max-width:1400px;}
+  .ma-page{font-family:'Manrope',system-ui,sans-serif; color:var(--text);}
+  .ma-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 24px;}
+  .ma-head p{margin:0 0 4px;font-size:14px;line-height:20px;color:var(--text-dim);}
+  .ma-head h1{margin:0;font-size:36px;line-height:40px;font-weight:600;letter-spacing:-.02em;}
+  .ma-chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .ma-chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:9999px;background:var(--bg-panel);border:1px solid var(--border);font-size:12px;font-weight:600;}
+  .ma-chip i{width:8px;height:8px;border-radius:9999px;background:#34C38F;} .ma-chip i.r{background:#FF6B6B;} .ma-chip.warn{color:#F5A55A;}
+  .ma-qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
+  .ma-qa button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font-family:inherit;text-align:left;cursor:pointer;transition:background-color .3s cubic-bezier(0.22,1,0.36,1),border-color .3s cubic-bezier(0.22,1,0.36,1),transform .5s cubic-bezier(0.22,1,0.36,1);}
+  .ma-qa button:hover{border-color:#FBAC01;background:var(--bg-panel2);} .ma-qa button:active{transform:scale(.98);}
+  .ma-qa b{font-size:14px;line-height:20px;font-weight:600;margin-top:8px;} .ma-qa small{font-size:12px;line-height:16px;color:var(--text-dim);}
+  .ma-i{display:block;width:40px;height:40px;border-radius:12px;background:var(--bg-panel2);position:relative;}
+  .ma-i::after{content:"";position:absolute;inset:10px;background:#FBAC01;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;}
+  .ma-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start;}
+  .ma-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0;}
+  .ma-ch{display:flex;align-items:center;justify-content:space-between;gap:12px;} .ma-ch h2{margin:0;font-size:16px !important;line-height:24px !important;font-weight:600;}
+  .ma-lk{border:0;background:none;color:#FBAC01;font:600 14px/20px 'Manrope',system-ui,sans-serif;cursor:pointer;padding:4px 0;}
+  body.light-theme .ma-lk, body[data-theme="light"] .ma-lk{color:#8A5A00;}
+  .ma-list{display:flex;flex-direction:column;gap:8px;}
+  .ma-row{display:flex;align-items:center;gap:12px;min-height:40px;font-size:14px;line-height:20px;}
+  .ma-row em, .ma-pp em{font-style:normal;font-size:12px;line-height:16px;font-weight:600;color:var(--text-dim);white-space:nowrap;}
+  .ma-grow{flex:1;min-width:0;display:flex;flex-direction:column;} .ma-grow small{font-size:12px;line-height:16px;color:var(--text-dim);}
+  .ma-dot{width:8px;height:8px;border-radius:9999px;border:2px solid var(--border);flex:none;}
+  .ma-pp{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--bg-panel2);box-shadow:inset 3px 0 0 var(--c);}
+  .ma-pp b{font-size:14px;line-height:20px;font-weight:600;}
+  .ma-av{width:36px;height:36px;border-radius:9999px;background:var(--c);color:#000;display:grid;place-items:center;font-size:12px;font-weight:600;flex:none;}
+  .ma-ok{color:#34C38F !important;} .ma-warn{color:#F5A55A !important;} .ma-bad{color:#FF6B6B !important;}
+  .ma-empty{margin:0;font-size:14px;line-height:20px;color:var(--text-dim);}
+  .ma-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
+  .ma-wd{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:10px;border:0;background:var(--bg-panel2);color:var(--text);font-family:inherit;cursor:pointer;}
+  .ma-wd small{font-size:12px;line-height:16px;color:var(--text-dim);} .ma-wd b{font-size:16px;line-height:24px;font-weight:600;}
+  .ma-wd span{display:flex;gap:2px;min-height:6px;} .ma-wd span i{width:6px;height:6px;border-radius:9999px;}
+  .ma-wd.on{box-shadow:inset 0 0 0 2px #FBAC01;}
+  .ma-pk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .ma-pk div{padding:12px;border-radius:12px;background:var(--bg-panel2);display:flex;flex-direction:column;gap:4px;}
+  .ma-pk small{font-size:12px;line-height:16px;color:var(--text-dim);} .ma-pk b{font-size:24px;line-height:32px;font-weight:600;} .ma-pk span{font-size:12px;line-height:16px;color:var(--text-dim);}
+  .ma-cal{width:40px;flex:none;display:flex;flex-direction:column;align-items:center;} .ma-cal small{font-size:12px;line-height:16px;color:var(--text-dim);} .ma-cal b{font-size:16px;line-height:24px;font-weight:600;}
+  .ma-tag{font-size:12px;line-height:16px;font-weight:600;padding:2px 8px;border-radius:6px;background:#1A2740;color:#8DB8FF;white-space:nowrap;} .ma-tag.warn{background:#F5A55A;color:#000;}
+  html.ui-uj body #pageSwitch .ps-btn[data-page="ma"] .ps-i{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");}
+  html.ui-uj.m-app body #mTab button[data-p="ma"] i::before{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");}
+  .ma-i-scan::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='184 40 224 40 224 80'/%3E%3Cpolyline points='72 216 32 216 32 176'/%3E%3Cpolyline points='224 176 224 216 184 216'/%3E%3Cpolyline points='32 80 32 40 72 40'/%3E%3Cline x1='80' y1='88' x2='80' y2='168'/%3E%3Cline x1='112' y1='88' x2='112' y2='168'/%3E%3Cline x1='144' y1='88' x2='144' y2='168'/%3E%3Cline x1='176' y1='88' x2='176' y2='168'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='184 40 224 40 224 80'/%3E%3Cpolyline points='72 216 32 216 32 176'/%3E%3Cpolyline points='224 176 224 216 184 216'/%3E%3Cpolyline points='32 80 32 40 72 40'/%3E%3Cline x1='80' y1='88' x2='80' y2='168'/%3E%3Cline x1='112' y1='88' x2='112' y2='168'/%3E%3Cline x1='144' y1='88' x2='144' y2='168'/%3E%3Cline x1='176' y1='88' x2='176' y2='168'/%3E%3C/svg%3E");}
+  .ma-i-tag::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M42.3 138.3A8 8 0 0 1 40 132.7V40h92.7a8 8 0 0 1 5.6 2.3l99.4 99.4a8 8 0 0 1 0 11.3L153 237.7a8 8 0 0 1-11.3 0Z'/%3E%3Ccircle cx='84' cy='84' r='12'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M42.3 138.3A8 8 0 0 1 40 132.7V40h92.7a8 8 0 0 1 5.6 2.3l99.4 99.4a8 8 0 0 1 0 11.3L153 237.7a8 8 0 0 1-11.3 0Z'/%3E%3Ccircle cx='84' cy='84' r='12'/%3E%3C/svg%3E");}
+  .ma-i-trash::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='216' y1='56' x2='40' y2='56'/%3E%3Cline x1='104' y1='104' x2='104' y2='168'/%3E%3Cline x1='152' y1='104' x2='152' y2='168'/%3E%3Cpath d='M200 56v152a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56'/%3E%3Cpath d='M168 56V40a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='216' y1='56' x2='40' y2='56'/%3E%3Cline x1='104' y1='104' x2='104' y2='168'/%3E%3Cline x1='152' y1='104' x2='152' y2='168'/%3E%3Cpath d='M200 56v152a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56'/%3E%3Cpath d='M168 56V40a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16'/%3E%3C/svg%3E");}
+  .ma-i-wallet::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 64v128a16 16 0 0 0 16 16h160a8 8 0 0 0 8-8V88a8 8 0 0 0-8-8H56a16 16 0 0 1-16-16Zm0 0a16 16 0 0 1 16-16h136'/%3E%3Ccircle cx='180' cy='144' r='12'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 64v128a16 16 0 0 0 16 16h160a8 8 0 0 0 8-8V88a8 8 0 0 0-8-8H56a16 16 0 0 1-16-16Zm0 0a16 16 0 0 1 16-16h136'/%3E%3Ccircle cx='180' cy='144' r='12'/%3E%3C/svg%3E");}
+  /* oldalsó napi panel a felugró ablak helyett */
+  html.ui-uj:not(.m-app) #assignBackdrop{background:rgba(0,0,0,.28) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;justify-content:flex-end !important;align-items:stretch !important;z-index:90 !important;}
+  html.ui-uj:not(.m-app) #assignBackdrop .popup{width:420px !important;max-width:100vw !important;height:100vh !important;max-height:none !important;margin:0 !important;border-radius:0 !important;border:0 !important;border-left:1px solid var(--u4) !important;background:var(--u1) !important;padding:24px !important;box-shadow:-24px 0 64px rgba(0,0,0,.45) !important;animation:uiDrawer .5s cubic-bezier(0.22,1,0.36,1) !important;overflow-y:auto !important;box-sizing:border-box;}
+  @keyframes uiDrawer{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+  html.ui-uj #assignBackdrop #popupTitle{font-size:24px !important;line-height:32px !important;font-weight:600 !important;margin:0 0 4px !important;}
+  html.ui-uj #assignBackdrop .popup-sub{font-size:14px !important;line-height:20px !important;color:var(--udim) !important;margin-bottom:16px !important;}
+  html.ui-uj #assignBackdrop .opt-btn{min-height:48px !important;border-radius:12px !important;background:var(--u2) !important;background-image:none !important;border:1px solid var(--u4) !important;box-shadow:none !important;color:var(--utx) !important;font-weight:600 !important;}
+  html.ui-uj #assignBackdrop .opt-btn:hover{background:var(--u3) !important;}
+  html.ui-uj #assignBackdrop .opt-btn.cur{border-color:var(--uacc) !important;box-shadow:inset 0 0 0 1px var(--uacc) !important;}
+  @media (max-width:640px){
+    .ma-head{margin:4px 0 16px;} .ma-head h1{font-size:28px;line-height:36px;}
+    .ma-qa{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+    .ma-qa button{align-items:center;text-align:center;padding:12px 4px;gap:0;border-radius:14px;}
+    .ma-qa b{font-size:12px;line-height:16px;margin-top:8px;} .ma-qa small{display:none;}
+    .ma-grid{grid-template-columns:minmax(0,1fr);gap:12px;} .ma-card{padding:16px;}
+  }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -6400,6 +6465,7 @@
     }
     var br = ps.querySelector(".ui-brand"); if(br){ var li = document.querySelector("#logoInner img"), bs = document.getElementById("brandSub"); if(li && br.querySelector("img").getAttribute("src") !== li.getAttribute("src")) br.querySelector("img").setAttribute("src", li.getAttribute("src")); var tx = bs ? bs.textContent.trim() : ""; if(br.querySelector("small").textContent !== tx) br.querySelector("small").textContent = tx; }
     var anchor = ps.querySelector(".ui-navtop");
+    var mb = ps.querySelector('.ps-btn[data-page="ma"]'); if(mb){ if(anchor.nextSibling !== mb) anchor.after(mb); anchor = mb; }
     G.forEach(function(g){
       var h = ps.querySelector('.ui-grp[data-g="' + g[0] + '"]');
       if(!h){ h = document.createElement("div"); h.className = "ui-grp"; h.setAttribute("data-g", g[0]); h.textContent = g[0]; }
@@ -12485,6 +12551,7 @@ service cloud.firestore {
 
   <div class="page-switch" id="pageSwitch">
     <div class="ps-ind"></div>
+    <button type="button" class="ps-btn" data-page="ma" title="Ma — napi áttekintés"><i class="ps-i">🏠</i> <span class="ps-t">Ma</span></button>
     <button type="button" class="ps-btn" data-page="beosztas" title="Beosztás"><i class="ps-i">📅</i> <span class="ps-t">Beosztás</span></button>
     <button type="button" class="ps-btn" data-page="cetli" title="Cetli generátor"><i class="ps-i">🏷️</i> <span class="ps-t">Cetli<span class="ps-long"> generátor</span></span></button>
     <button type="button" class="ps-btn" data-page="leltar" title="Leltár"><i class="ps-i">📋</i> <span class="ps-t">Leltár</span></button>
@@ -12740,6 +12807,7 @@ service cloud.firestore {
 
   <div class="sk-page" id="skPage"></div>
   <div class="ea-page" id="eaPage"></div>
+  <div class="ma-page" id="maPage"></div>
 
   <div class="td-page" id="tdPage">
     <section class="panel td-top">
@@ -16197,6 +16265,71 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) .tabs .tab-btn:hover{ color:var(--utx) !important; }
   html.ui-uj:not(.m-app) .tabs .tab-btn.active{ color:var(--utx) !important; font-weight:600 !important; }
   html.ui-uj #mainPanel{ background:transparent !important; border:0 !important; padding:16px 0 0 !important; }
+
+  /* ===== PRÓBA 9: 🏠 Ma kezdőlap + oldalsó napi panel ===== */
+  .ma-page{display:none;} body.page-ma .ma-page{display:block;}
+  body.page-ma #tabs, body.page-ma #autoAdvanceBanner, body.page-ma #mainPanel, body.page-ma #settingsPanel{display:none !important;}
+  html:not(.m-app) body.page-ma .app{max-width:1400px;}
+  .ma-page{font-family:'Manrope',system-ui,sans-serif; color:var(--text);}
+  .ma-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 24px;}
+  .ma-head p{margin:0 0 4px;font-size:14px;line-height:20px;color:var(--text-dim);}
+  .ma-head h1{margin:0;font-size:36px;line-height:40px;font-weight:600;letter-spacing:-.02em;}
+  .ma-chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .ma-chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:9999px;background:var(--bg-panel);border:1px solid var(--border);font-size:12px;font-weight:600;}
+  .ma-chip i{width:8px;height:8px;border-radius:9999px;background:#34C38F;} .ma-chip i.r{background:#FF6B6B;} .ma-chip.warn{color:#F5A55A;}
+  .ma-qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
+  .ma-qa button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px;border-radius:16px;border:1px solid var(--border);background:var(--bg-panel);color:var(--text);font-family:inherit;text-align:left;cursor:pointer;transition:background-color .3s cubic-bezier(0.22,1,0.36,1),border-color .3s cubic-bezier(0.22,1,0.36,1),transform .5s cubic-bezier(0.22,1,0.36,1);}
+  .ma-qa button:hover{border-color:#FBAC01;background:var(--bg-panel2);} .ma-qa button:active{transform:scale(.98);}
+  .ma-qa b{font-size:14px;line-height:20px;font-weight:600;margin-top:8px;} .ma-qa small{font-size:12px;line-height:16px;color:var(--text-dim);}
+  .ma-i{display:block;width:40px;height:40px;border-radius:12px;background:var(--bg-panel2);position:relative;}
+  .ma-i::after{content:"";position:absolute;inset:10px;background:#FBAC01;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;}
+  .ma-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start;}
+  .ma-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0;}
+  .ma-ch{display:flex;align-items:center;justify-content:space-between;gap:12px;} .ma-ch h2{margin:0;font-size:16px !important;line-height:24px !important;font-weight:600;}
+  .ma-lk{border:0;background:none;color:#FBAC01;font:600 14px/20px 'Manrope',system-ui,sans-serif;cursor:pointer;padding:4px 0;}
+  body.light-theme .ma-lk, body[data-theme="light"] .ma-lk{color:#8A5A00;}
+  .ma-list{display:flex;flex-direction:column;gap:8px;}
+  .ma-row{display:flex;align-items:center;gap:12px;min-height:40px;font-size:14px;line-height:20px;}
+  .ma-row em, .ma-pp em{font-style:normal;font-size:12px;line-height:16px;font-weight:600;color:var(--text-dim);white-space:nowrap;}
+  .ma-grow{flex:1;min-width:0;display:flex;flex-direction:column;} .ma-grow small{font-size:12px;line-height:16px;color:var(--text-dim);}
+  .ma-dot{width:8px;height:8px;border-radius:9999px;border:2px solid var(--border);flex:none;}
+  .ma-pp{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--bg-panel2);box-shadow:inset 3px 0 0 var(--c);}
+  .ma-pp b{font-size:14px;line-height:20px;font-weight:600;}
+  .ma-av{width:36px;height:36px;border-radius:9999px;background:var(--c);color:#000;display:grid;place-items:center;font-size:12px;font-weight:600;flex:none;}
+  .ma-ok{color:#34C38F !important;} .ma-warn{color:#F5A55A !important;} .ma-bad{color:#FF6B6B !important;}
+  .ma-empty{margin:0;font-size:14px;line-height:20px;color:var(--text-dim);}
+  .ma-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
+  .ma-wd{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;border-radius:10px;border:0;background:var(--bg-panel2);color:var(--text);font-family:inherit;cursor:pointer;}
+  .ma-wd small{font-size:12px;line-height:16px;color:var(--text-dim);} .ma-wd b{font-size:16px;line-height:24px;font-weight:600;}
+  .ma-wd span{display:flex;gap:2px;min-height:6px;} .ma-wd span i{width:6px;height:6px;border-radius:9999px;}
+  .ma-wd.on{box-shadow:inset 0 0 0 2px #FBAC01;}
+  .ma-pk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .ma-pk div{padding:12px;border-radius:12px;background:var(--bg-panel2);display:flex;flex-direction:column;gap:4px;}
+  .ma-pk small{font-size:12px;line-height:16px;color:var(--text-dim);} .ma-pk b{font-size:24px;line-height:32px;font-weight:600;} .ma-pk span{font-size:12px;line-height:16px;color:var(--text-dim);}
+  .ma-cal{width:40px;flex:none;display:flex;flex-direction:column;align-items:center;} .ma-cal small{font-size:12px;line-height:16px;color:var(--text-dim);} .ma-cal b{font-size:16px;line-height:24px;font-weight:600;}
+  .ma-tag{font-size:12px;line-height:16px;font-weight:600;padding:2px 8px;border-radius:6px;background:#1A2740;color:#8DB8FF;white-space:nowrap;} .ma-tag.warn{background:#F5A55A;color:#000;}
+  html.ui-uj body #pageSwitch .ps-btn[data-page="ma"] .ps-i{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");}
+  html.ui-uj.m-app body #mTab button[data-p="ma"] i::before{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M152 208v-48a8 8 0 0 0-8-8h-32a8 8 0 0 0-8 8v48a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V115.5a8 8 0 0 1 2.6-5.9l80-72.7a8 8 0 0 1 10.8 0l80 72.7a8 8 0 0 1 2.6 5.9V208a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8Z'/%3E%3C/svg%3E");}
+  .ma-i-scan::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='184 40 224 40 224 80'/%3E%3Cpolyline points='72 216 32 216 32 176'/%3E%3Cpolyline points='224 176 224 216 184 216'/%3E%3Cpolyline points='32 80 32 40 72 40'/%3E%3Cline x1='80' y1='88' x2='80' y2='168'/%3E%3Cline x1='112' y1='88' x2='112' y2='168'/%3E%3Cline x1='144' y1='88' x2='144' y2='168'/%3E%3Cline x1='176' y1='88' x2='176' y2='168'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='184 40 224 40 224 80'/%3E%3Cpolyline points='72 216 32 216 32 176'/%3E%3Cpolyline points='224 176 224 216 184 216'/%3E%3Cpolyline points='32 80 32 40 72 40'/%3E%3Cline x1='80' y1='88' x2='80' y2='168'/%3E%3Cline x1='112' y1='88' x2='112' y2='168'/%3E%3Cline x1='144' y1='88' x2='144' y2='168'/%3E%3Cline x1='176' y1='88' x2='176' y2='168'/%3E%3C/svg%3E");}
+  .ma-i-tag::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M42.3 138.3A8 8 0 0 1 40 132.7V40h92.7a8 8 0 0 1 5.6 2.3l99.4 99.4a8 8 0 0 1 0 11.3L153 237.7a8 8 0 0 1-11.3 0Z'/%3E%3Ccircle cx='84' cy='84' r='12'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M42.3 138.3A8 8 0 0 1 40 132.7V40h92.7a8 8 0 0 1 5.6 2.3l99.4 99.4a8 8 0 0 1 0 11.3L153 237.7a8 8 0 0 1-11.3 0Z'/%3E%3Ccircle cx='84' cy='84' r='12'/%3E%3C/svg%3E");}
+  .ma-i-trash::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='216' y1='56' x2='40' y2='56'/%3E%3Cline x1='104' y1='104' x2='104' y2='168'/%3E%3Cline x1='152' y1='104' x2='152' y2='168'/%3E%3Cpath d='M200 56v152a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56'/%3E%3Cpath d='M168 56V40a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='216' y1='56' x2='40' y2='56'/%3E%3Cline x1='104' y1='104' x2='104' y2='168'/%3E%3Cline x1='152' y1='104' x2='152' y2='168'/%3E%3Cpath d='M200 56v152a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V56'/%3E%3Cpath d='M168 56V40a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v16'/%3E%3C/svg%3E");}
+  .ma-i-wallet::after{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 64v128a16 16 0 0 0 16 16h160a8 8 0 0 0 8-8V88a8 8 0 0 0-8-8H56a16 16 0 0 1-16-16Zm0 0a16 16 0 0 1 16-16h136'/%3E%3Ccircle cx='180' cy='144' r='12'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M40 64v128a16 16 0 0 0 16 16h160a8 8 0 0 0 8-8V88a8 8 0 0 0-8-8H56a16 16 0 0 1-16-16Zm0 0a16 16 0 0 1 16-16h136'/%3E%3Ccircle cx='180' cy='144' r='12'/%3E%3C/svg%3E");}
+  /* oldalsó napi panel a felugró ablak helyett */
+  html.ui-uj:not(.m-app) #assignBackdrop{background:rgba(0,0,0,.28) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;justify-content:flex-end !important;align-items:stretch !important;z-index:90 !important;}
+  html.ui-uj:not(.m-app) #assignBackdrop .popup{width:420px !important;max-width:100vw !important;height:100vh !important;max-height:none !important;margin:0 !important;border-radius:0 !important;border:0 !important;border-left:1px solid var(--u4) !important;background:var(--u1) !important;padding:24px !important;box-shadow:-24px 0 64px rgba(0,0,0,.45) !important;animation:uiDrawer .5s cubic-bezier(0.22,1,0.36,1) !important;overflow-y:auto !important;box-sizing:border-box;}
+  @keyframes uiDrawer{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+  html.ui-uj #assignBackdrop #popupTitle{font-size:24px !important;line-height:32px !important;font-weight:600 !important;margin:0 0 4px !important;}
+  html.ui-uj #assignBackdrop .popup-sub{font-size:14px !important;line-height:20px !important;color:var(--udim) !important;margin-bottom:16px !important;}
+  html.ui-uj #assignBackdrop .opt-btn{min-height:48px !important;border-radius:12px !important;background:var(--u2) !important;background-image:none !important;border:1px solid var(--u4) !important;box-shadow:none !important;color:var(--utx) !important;font-weight:600 !important;}
+  html.ui-uj #assignBackdrop .opt-btn:hover{background:var(--u3) !important;}
+  html.ui-uj #assignBackdrop .opt-btn.cur{border-color:var(--uacc) !important;box-shadow:inset 0 0 0 1px var(--uacc) !important;}
+  @media (max-width:640px){
+    .ma-head{margin:4px 0 16px;} .ma-head h1{font-size:28px;line-height:36px;}
+    .ma-qa{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+    .ma-qa button{align-items:center;text-align:center;padding:12px 4px;gap:0;border-radius:14px;}
+    .ma-qa b{font-size:12px;line-height:16px;margin-top:8px;} .ma-qa small{display:none;}
+    .ma-grid{grid-template-columns:minmax(0,1fr);gap:12px;} .ma-card{padding:16px;}
+  }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -26568,7 +26701,78 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     render(false);
   })();
 
+    /* ===== PRÓBA: 🏠 Ma — napi áttekintés (kezdőlap) ===== */
+  function maKey(d){ return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+  function maRender(){
+    const el = document.getElementById("maPage"); if(!el) return;
+    const now = new Date(), key = maKey(now), E = (employees() || []).filter(e=> e && e.name);
+    const empOf = id=> E.find(e=> e.id === id);
+    const dt = (()=>{ try{ return dayTimesK(key); }catch(e){ return null; } })();
+    const a = getAssignment(key);
+    const att = ((state.att || {})[key]) || [];
+    const ppl = E.map(e=>{ let p = null; try{ p = personPart(e.id, a, key); }catch(_){} return { e, p }; }).filter(x=> x.p && !x.p.holiday);
+    let who = ""; try{ who = (window.fpWhoName && fpWhoName()) || ""; }catch(e){}
+    const first = String(who || "").trim().split(/\s+/).slice(-1)[0];
+    const hr = now.getHours(), hi = hr < 10 ? "Jó reggelt" : hr < 18 ? "Szia" : "Jó estét";
+    const DW = ["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
+    const dLong = d=> `${DW[d.getDay()].charAt(0).toUpperCase() + DW[d.getDay()].slice(1)}, ${HU_MONTHS[d.getMonth()].toLowerCase()} ${d.getDate()}.`;
+    const ico = n=> `<i class="ma-i ma-i-${n}" aria-hidden="true"></i>`;
+    /* teendők */
+    const todos = (state.todos || []).filter(t=> t && t.text && !(t.done && Object.values(t.done).some(Boolean)))
+      .sort((x, y)=> String(x.due || "9999").localeCompare(String(y.due || "9999"))).slice(0, 5);
+    const tdRow = t=>{ const ow = t.who && t.who !== "all" ? (empOf(t.who) || {}).name : "Közös", due = t.due ? (t.due < key ? `<em class="ma-bad">lejárt</em>` : t.due === key ? `<em class="ma-warn">ma</em>` : `<em>${+t.due.slice(5, 7)}. ${+t.due.slice(8)}.</em>`) : "";
+      return `<div class="ma-row"><span class="ma-dot" aria-hidden="true"></span><span class="ma-grow">${esc(t.text)}<small>${esc(ow || "")}</small></span>${due}</div>`; };
+    /* hét */
+    const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    const week = Array.from({ length:7 }, (_, i)=>{ const d = new Date(mon); d.setDate(mon.getDate() + i); const k = maKey(d), aa = getAssignment(k);
+      const dots = E.map(e=>{ let p = null; try{ p = personPart(e.id, aa, k); }catch(_){} return p && !p.holiday ? `<i style="background:${esc(e.hex || "#9B9B9B")}"></i>` : ""; }).join("");
+      return `<button type="button" class="ma-wd${k === key ? " on" : ""}" data-ma-go="beosztas"><small>${["H","K","Sze","Cs","P","Szo","V"][i]}</small><b>${d.getDate()}</b><span>${dots}</span></button>`; }).join("");
+    /* csomagok */
+    let wait = []; try{ wait = (cs.items || []).filter(x=> !x.outAt); }catch(e){}
+    const cnt = c=> wait.filter(x=> x.car === c).length;
+    /* közelgő: leltár + határidők */
+    const up = [];
+    try{ ltUpcoming(3).forEach(x=> up.push({ d:x.date, t:x.type === "H" ? "Hétfői leltár" : "Pénteki leltár", s:x.type === "H" ? "Telefon + ShieldUp" : "Telefon + AirPods" })); }catch(e){}
+    try{ [0, 1].forEach(o=>{ const d = new Date(now.getFullYear(), now.getMonth() + o, 1), M = fpDeadlinesIn(d.getFullYear(), d.getMonth() + 1) || {};
+      Object.keys(M).forEach(k=>{ if(k < key) return; const p = k.split("-").map(Number); M[k].forEach(x=> up.push({ d:new Date(p[0], p[1] - 1, p[2]), t:x.k === "beo" ? "Beosztás küldése" : x.k === "jel" ? "Jelenléti ív küldése" : "Zárások küldése", s:"" })); }); }); }catch(e){}
+    up.sort((x, y)=> x.d - y.d);
+    const upRow = x=>{ const dd = Math.round((new Date(x.d.getFullYear(), x.d.getMonth(), x.d.getDate()) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+      return `<div class="ma-row"><span class="ma-cal"><small>${["V","H","K","Sze","Cs","P","Szo"][x.d.getDay()]}</small><b>${x.d.getDate()}</b></span><span class="ma-grow">${esc(x.t)}${x.s ? `<small>${esc(x.s)}</small>` : ""}</span><em class="${dd <= 1 ? "ma-warn" : ""}">${dd === 0 ? "ma" : dd === 1 ? "holnap" : dd + " nap"}</em></div>`; };
+    /* kérések (30 nap) */
+    const rq = [];
+    for(let i = 0; i < 30; i++){ const d = new Date(now); d.setDate(now.getDate() + i); const k = maKey(d);
+      let L = []; try{ L = reqsOf(k); }catch(e){}
+      L.forEach(r=>{ const e = empOf(r.p); if(!e) return; let p = null; try{ p = personPart(r.p, getAssignment(k), k); }catch(_){}
+        const clash = p && !p.holiday && (r.t === "off" || r.t === "free" || (r.t === "am" && p.part === "pm") || (r.t === "pm" && p.part === "am"));
+        rq.push({ d, e, r, clash }); }); }
+    const rqRow = x=> `<div class="ma-row"><span class="ma-tag ${x.clash ? "warn" : ""}">${x.clash ? "Ütközik" : esc(((typeof REQ_T !== "undefined" && REQ_T[x.r.t]) || {}).l || "Kérés")}</span><span class="ma-grow">${esc(x.e.name)} · ${HU_MONTHS[x.d.getMonth()].toLowerCase().slice(0, 3)}. ${x.d.getDate()}.${x.r.why ? `<small>${esc(x.r.why)}</small>` : ""}</span></div>`;
+    const card = (t, go, body, extra)=> `<section class="ma-card${extra ? " " + extra : ""}"><div class="ma-ch"><h2>${t}</h2>${go ? `<button type="button" class="ma-lk" data-ma-go="${go[0]}">${go[1]}</button>` : ""}</div>${body}</section>`;
+    const pplHtml = !dt ? `<p class="ma-empty">Ma zárva vagyunk.</p>` : ppl.length ? ppl.map(x=>{ const in1 = att.find(z=> (x.e.id && z.id === x.e.id) || z.name === x.e.name);
+      return `<div class="ma-pp" style="--c:${esc(x.e.hex || "#9B9B9B")}"><span class="ma-av">${esc(x.e.name.split(/\s+/).map(s=> s[0]).join("").slice(0, 3))}</span><span class="ma-grow"><b>${esc(x.e.name)}</b><small>${x.p.part === "am" ? "Délelőtt" : x.p.part === "pm" ? "Délután" : "Egész nap"} · ${esc(x.p.start)}–${esc(x.p.end)}</small></span>${in1 ? `<em class="ma-ok">Bent · ${esc(in1.t || "")}</em>` : `<em>${esc(x.p.start)}-tól</em>`}</div>`; }).join("") : `<p class="ma-empty ma-warn">Mára nincs senki beosztva.</p>`;
+    el.innerHTML = `
+      <div class="ma-head"><div><p>${dLong(now)}</p><h1>${hi}${first ? ", " + esc(first) : ""}</h1></div>
+        <div class="ma-chips"><span class="ma-chip"><i class="${dt ? "g" : "r"}"></i>${dt ? `Nyitva ${esc(dt.open)}–${esc(dt.close)}` : "Ma zárva"}</span>${up[0] && Math.round((up[0].d - now) / 86400000) <= 1 && /leltár/.test(up[0].t) ? `<span class="ma-chip warn">${esc(up[0].t)} ${up[0].d.getDate() === now.getDate() ? "ma" : "holnap"}</span>` : ""}</div></div>
+      <div class="ma-qa">
+        <button type="button" data-ma-go="csomag">${ico("scan")}<b>Csomag beolvasása</b><small>GLS, Posta, DPD</small></button>
+        <button type="button" data-ma-go="cetli">${ico("tag")}<b>Cetli nyomtatása</b><small>Szállítási, garancia, egyéb</small></button>
+        <button type="button" data-ma-go="selejt">${ico("trash")}<b>Selejt rögzítése</b><small>Vonalkóddal</small></button>
+        <button type="button" data-ma-go="kassza">${ico("wallet")}<b>Kassza számolás</b><small>Zárás előtt</small></button>
+      </div>
+      <div class="ma-grid">
+        ${card("Ma dolgozik", ["beosztas", "Beosztás"], `<div class="ma-list">${pplHtml}</div>`)}
+        ${card("Teendők", ["teendo", "Mind"], todos.length ? `<div class="ma-list">${todos.map(tdRow).join("")}</div>` : `<p class="ma-empty">Nincs nyitott teendő.</p>`)}
+        ${card("Ezen a héten", ["beosztas", "Naptár"], `<div class="ma-week">${week}</div>`)}
+        ${card("Futárra váró csomagok", ["csomag", "Megnyitás"], `<div class="ma-pk">${[["gls", "GLS"], ["mpl", "Posta"], ["dpd", "DPD"]].map(([c, n])=> `<div><small>${n}</small><b>${cnt(c)}</b><span class="${cnt(c) ? "ma-warn" : ""}">${cnt(c) ? "futárra vár" : "nincs"}</span></div>`).join("")}</div>`)}
+        ${card("Közelgő", null, up.length ? `<div class="ma-list">${up.slice(0, 4).map(upRow).join("")}</div>` : `<p class="ma-empty">Nincs közelgő esemény.</p>`)}
+        ${card("Szabadnap-kérések", ["beosztas", "Naptár"], rq.length ? `<div class="ma-list">${rq.slice(0, 4).map(rqRow).join("")}</div>` : `<p class="ma-empty">A következő 30 napra nincs kérés.</p>`)}
+      </div>`;
+  }
+  document.addEventListener("click", e=>{ const g = e.target.closest && e.target.closest("[data-ma-go]"); if(!g || !document.getElementById("maPage").contains(g)) return; setPage(g.dataset.maGo, true); });
+  setInterval(()=>{ try{ if(activePage === "ma" && !document.hidden) maRender(); }catch(e){} }, 30000);
+  window.fpMaRender = maRender;
+
   const PAGE_INFO = {
+    ma: { title:"Ma", sub:"Napi áttekintés · ki dolgozik, teendők, csomagok, határidők" },
     beosztas: { title:"Beosztás Tervező", sub:"Munkarend szerkesztő & PDF export" },
     cetli:    { title:"Cetli generátor",  sub:"Szállítási és egyéb cetlik · post-it (Kaposvárban P-touch is)" },
     leltar:   { title:"Leltár",           sub:"Hétfő: Telefon + ShieldUp · Péntek: Telefon + AirPods" },
@@ -26583,6 +26787,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   let activePage = "beosztas";
   try{ const p = localStorage.getItem(PAGE_KEY); if(PAGE_INFO[p]) activePage = p; }catch(e){}
   if(!state.settings.configured && activePage !== "tudastar") activePage = "beosztas";
+  else if(state.settings.configured) activePage = "ma";   /* PRÓBA: indulás a Ma lapon */
   let cetliFrame = null, cetliReady = false;
   function childFP(){ try{ return cetliReady && cetliFrame && cetliFrame.contentWindow && cetliFrame.contentWindow.FP; }catch(e){ return null; } }
   function syncChild(){
@@ -26644,7 +26849,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function setPage(page, animate, force){
     if(!PAGE_INFO[page]) page = "beosztas";
     const pagePrev = activePage;
-    if(!force && !modOn(page) && state.settings.configured) page = firstPage();
+    if(!force && page !== "ma" && !modOn(page) && state.settings.configured) page = firstPage();
     if(page !== "beosztas" && page !== "tudastar" && !state.settings.configured){ toast("Előbb állítsd be az üzletet a jobb felső ⚙️ gombbal."); page = "beosztas"; }
     activePage = page;
     /* 🆕 új elrendezések (Selejt · Leltár · Tudástár) — 2026-10-20: minden bolt */
@@ -26665,6 +26870,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     document.body.classList.toggle("page-specko", page === "specko");
     if(page === "specko" && window.fpSpeckoOpen) fpSpeckoOpen();
     document.body.classList.toggle("page-elado", page === "elado");
+    document.body.classList.toggle("page-ma", page === "ma"); if(page === "ma"){ try{ maRender(); }catch(e){ console.warn("ma", e); } }
     if(page === "elado" && window.fpEaOpen) fpEaOpen();
     if(page === "tudastar" && window.ttShow) ttShow();
     document.body.classList.toggle("page-teendo", page === "teendo");
