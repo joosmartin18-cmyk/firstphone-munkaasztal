@@ -8503,6 +8503,562 @@
   html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
   html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
   html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -22278,6 +22834,562 @@ service cloud.firestore {
   html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
   html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
   html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -35055,7 +36167,112 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     return drawMonthGrid({ y:state.year, m:state.month, people, counts, days, start, total, rows, hours:hoursSummary(), place:workplaceName(), address:state.settings.address || "" });
   }
   /* a havi rács rajzolása (a bolt saját beosztása és az admin „minden bolt” letöltése is ezt használja) */
+  /* 2026-11-08: új havi beosztás-lap (sötét és világos sablon) — tiszta rács, színkódos névkártyák, pöttyös háttér; a világos tintatakarékos */
   async function drawMonthGrid(M){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
+    try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
+    const { people, counts, days, rows } = M;
+    const SC = M.sc || 1, W = Math.round(5432 * SC), H = Math.round(7680 * SC);
+    const canvas = document.createElement("canvas"); canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+    const LT = pdfPal().light;
+    const T = LT ? { bg:"#ffffff", dot:"#ececec", cell:"#ffffff", cellWe:"#ffffff", line:"#d4d4d4", lineWe:"#bdbdbd", ink:"#111111", dim:"#555555", faint:"#9a9a9a", acc:"#111111", accTx:"#ffffff", hol:"#ffffff", holLine:"#9a9a9a", holTx:"#111111", hatch:"#d0d0d0" }
+                 : { bg:"#0e0e10", dot:"#1d1d21", cell:"#17171a", cellWe:"#141417", line:"#2a2a2f", lineWe:"#2a2a2f", ink:"#f4f4f5", dim:"#a5a5ad", faint:"#6b6b73", acc:"#FBAC01", accTx:"#111111", hol:"#221315", holLine:"#5a2a2e", holTx:"#ff8a8c", hatch:"#2c1a1c" };
+    const F = (w, px)=> `${w} ${Math.round(px)}px Manrope, Arial, "Helvetica Neue", sans-serif`;
+    const mix = (hex, a, base)=>{ const c = hexToRgb(hex), b = base || (LT ? [255,255,255] : [23,23,26]); return `rgb(${c.map((v, k)=> Math.round(b[k] + (v - b[k]) * a)).join(",")})`; };
+    const tShort = t=> String(t || "").replace(/^0(\d)/, "$1");
+    const ls = v=>{ try{ ctx.letterSpacing = v; }catch(e){} };
+    /* háttér + a Munkaasztal pöttyös mintája */
+    ctx.fillStyle = T.bg; ctx.fillRect(0, 0, W, H);
+    if(!LT){ const st = Math.round(W * 0.0125), r = Math.max(2, W * 0.0011); ctx.fillStyle = T.dot; for(let yy = st / 2; yy < H; yy += st) for(let xx = st / 2; xx < W; xx += st){ ctx.beginPath(); ctx.arc(xx, yy, r, 0, Math.PI * 2); ctx.fill(); } }
+    const mX = W * 0.05; let y = H * 0.032;
+    /* --- fejléc: logó balra, cím + hónap jobbra --- */
+    const headH = H * 0.07;
+    let logo = null; try{ logo = await loadImage(await getLogoDataUrl(LT ? "black" : "color", M.loc)); }catch(e){}
+    if(logo){ const lh = headH * 0.78, lw = lh * (logo.width / logo.height), k = Math.min(1, W * 0.36 / lw); ctx.drawImage(logo, mX, y + (headH - lh * k) / 2, lw * k, lh * k); }
+    ctx.textAlign = "right"; ctx.fillStyle = T.ink; ctx.font = F(900, W * 0.046); ls(`${-W * 0.0006}px`);
+    ctx.fillText("Havi beosztás", W - mX, y + headH * 0.52); ls("0px");
+    { const tx = `${M.y}. ${HU_MONTHS[M.m - 1].toLowerCase()}`; ctx.font = F(800, W * 0.019); const tw = ctx.measureText(tx).width, ph = W * 0.034, pw = tw + W * 0.03, px = W - mX - pw, py = y + headH * 0.66;
+      roundRectPath(ctx, px, py, pw, ph, ph / 2); if(LT){ ctx.lineWidth = W * 0.0012; ctx.strokeStyle = T.ink; ctx.stroke(); } else { ctx.fillStyle = T.acc; ctx.fill(); }
+      ctx.fillStyle = LT ? T.ink : T.accTx; ctx.textAlign = "center"; ctx.fillText(tx, px + pw / 2, py + ph * 0.69); }
+    ctx.textAlign = "left"; y += headH + H * 0.03;
+    /* --- infó-sor: hely és nyitvatartás kapszulákban --- */
+    { const ch = H * 0.024; ctx.font = F(700, W * 0.0128);
+      const pill = (txt, x, alignRight, maxW)=>{ let t = txt; while(ctx.measureText(t).width > maxW && t.length > 8) t = t.slice(0, -2); if(t !== txt) t += "…"; const w = ctx.measureText(t).width + W * 0.03, x0 = alignRight ? x - w : x;
+        roundRectPath(ctx, x0, y, w, ch, ch / 2); ctx.fillStyle = LT ? "#ffffff" : T.cell; ctx.fill(); ctx.lineWidth = W * 0.0008; ctx.strokeStyle = T.line; ctx.stroke();
+        ctx.fillStyle = T.dim; ctx.fillText(t, x0 + W * 0.015, y + ch * 0.66); };
+      pill(`📍 ${M.place}${M.address ? " · " + M.address : ""}`, mX, false, W * 0.48);
+      pill(`🕘 ${M.hours}`, W - mX, true, W * 0.4);
+      y += ch + H * 0.022; }
+    /* --- napok fejléce --- */
+    const gap = W * 0.008, gridW = W - mX * 2, cellW = (gridW - gap * 6) / 7;
+    const DN = ["HÉTFŐ","KEDD","SZERDA","CSÜTÖRTÖK","PÉNTEK","SZOMBAT","VASÁRNAP"];
+    ctx.font = F(900, W * 0.0122); ls(`${W * 0.0012}px`); ctx.textAlign = "center";
+    DN.forEach((d, i)=>{ const cx = mX + i * (cellW + gap); ctx.fillStyle = i > 4 ? (LT ? T.ink : T.acc) : T.dim; ctx.fillText(d, cx + cellW / 2, y + H * 0.012);
+      if(i > 4){ ctx.fillRect(cx + cellW * 0.38, y + H * 0.018, cellW * 0.24, W * 0.0011); } });
+    ls("0px"); ctx.textAlign = "left"; y += H * 0.026;
+    const legendRows = Math.ceil(people.length / 3), legendH = H * 0.05 + legendRows * H * 0.032;
+    const cellH = (H - y - legendH - H * 0.045 - gap * (rows - 1)) / rows;
+    /* betűméret: a lehető legnagyobb, amivel a legzsúfoltabb nap is kifér */
+    const pad = cellW * 0.065, barW = cellW * 0.035, innerW = cellW - pad * 2, txtW = innerW - barW - cellW * 0.07;
+    const wrap = (txt, size)=>{ ctx.font = F(800, size); const w = String(txt).split(/\s+/), out = []; let line = "";
+      w.forEach(word=>{ const t = line ? line + " " + word : word; if(ctx.measureText(t).width <= txtW || !line) line = t; else { out.push(line); line = word; } }); if(line) out.push(line); return out; };
+    const layout = sc=>{ const ns = cellW * 0.108 * sc, ts = cellW * 0.084 * sc, eg = cellW * 0.035 * sc, ep = cellW * 0.04 * sc; let worst = 0;
+      const fitName = nm=>{ let z = ns, L = wrap(nm, z); const ok = ()=>{ ctx.font = F(800, z); return L.length <= 2 && L.every(l=> ctx.measureText(l).width <= txtW); };
+        while(!ok() && z > ns * 0.55){ z *= 0.94; L = wrap(nm, z); } return { L, z }; };
+      days.forEach(dy=>{ let hh = cellW * 0.24; dy.ent = dy.list.map(e=>{ const { L, z } = fitName(e.pp.name); const eh = ep * 2 + L.length * z * 1.16 + (e.tm ? ts * 1.45 : 0); hh += eh + eg; return { e, L, z, eh }; }); worst = Math.max(worst, hh); });
+      return { ns, ts, eg, ep, worst }; };
+    let sc = 1.4, LY = layout(sc); while(LY.worst > cellH - cellW * 0.04 && sc > 0.5){ sc -= 0.04; LY = layout(sc); }
+    days.forEach(dy=>{
+      const cx = mX + dy.c * (cellW + gap), cy = y + dy.r * (cellH + gap), we = dy.c > 4, rr = cellW * 0.085;
+      roundRectPath(ctx, cx, cy, cellW, cellH, rr); ctx.fillStyle = dy.hol ? T.hol : we ? T.cellWe : T.cell; ctx.fill();
+      if(dy.hol){ ctx.save(); roundRectPath(ctx, cx, cy, cellW, cellH, rr); ctx.clip(); ctx.strokeStyle = T.hatch; ctx.lineWidth = W * 0.0012; for(let k = -cellH; k < cellW + cellH; k += cellW * 0.08){ ctx.beginPath(); ctx.moveTo(cx + k, cy); ctx.lineTo(cx + k - cellH, cy + cellH); ctx.stroke(); } ctx.restore(); }
+      roundRectPath(ctx, cx, cy, cellW, cellH, rr); ctx.lineWidth = W * 0.0009; ctx.strokeStyle = dy.hol ? T.holLine : we ? T.lineWe : T.line; if(we && LT) ctx.setLineDash([W * 0.004, W * 0.003]); ctx.stroke(); ctx.setLineDash([]);
+      /* napszám: hétvégén kiemelve */
+      ctx.font = F(900, cellW * 0.15); ctx.fillStyle = dy.hol ? T.holTx : we ? (LT ? T.ink : T.acc) : T.ink; ctx.fillText(String(dy.d), cx + pad, cy + cellW * 0.17);
+      if(we && !dy.hol){ const nw = ctx.measureText(String(dy.d)).width; ctx.fillRect(cx + pad, cy + cellW * 0.195, nw, W * 0.0011); }
+      let ey = cy + cellW * 0.24;
+      if(dy.hol){ ctx.textAlign = "center"; ctx.fillStyle = T.holTx; ctx.font = F(900, cellW * 0.1); ls(`${cellW * 0.01}px`); const hy = cy + cellH * (dy.hn ? 0.47 : 0.55); ctx.fillText("ÜNNEP", cx + cellW / 2, hy); ls("0px");
+        if(dy.hn){ let fs = cellW * 0.08; ctx.font = F(700, fs); while(fs > cellW * 0.05 && ctx.measureText(dy.hn).width > cellW - pad * 2){ fs -= 1; ctx.font = F(700, fs); } ctx.fillStyle = LT ? T.dim : "#e8a5a7"; ctx.fillText(dy.hn, cx + cellW / 2, hy + cellW * 0.12); }
+        ctx.font = F(600, cellW * 0.07); ctx.fillStyle = T.faint; ctx.fillText("zárva", cx + cellW / 2, hy + cellW * (dy.hn ? 0.22 : 0.12)); ctx.textAlign = "left"; return; }
+      if(!dy.ent.length){ ctx.font = F(700, cellW * 0.085); ctx.fillStyle = T.faint; ctx.textAlign = "center"; ctx.fillText(dy.closed ? "zárva" : "—", cx + cellW / 2, cy + cellH * 0.58); ctx.textAlign = "left"; return; }
+      dy.ent.forEach(({ e, L, z, eh })=>{
+        const ex = cx + pad, hx = e.pp.hex, er = cellW * 0.045;
+        roundRectPath(ctx, ex, ey, innerW, eh, er); ctx.fillStyle = LT ? "#ffffff" : mix(hx, e.pp.sub ? 0.1 : 0.17); ctx.fill();
+        ctx.lineWidth = W * 0.0008; ctx.strokeStyle = LT ? "#cfcfcf" : mix(hx, 0.4); if(e.pp.sub) ctx.setLineDash([W * 0.003, W * 0.002]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.save(); roundRectPath(ctx, ex, ey, innerW, eh, er); ctx.clip(); ctx.fillStyle = hx; ctx.fillRect(ex, ey, barW, eh); ctx.restore();
+        const tx = ex + barW + cellW * 0.05; let ty = ey + LY.ep + z * 0.92;
+        ctx.fillStyle = T.ink; ctx.font = F(800, z); L.forEach(line=>{ ctx.fillText(line, tx, ty); ty += z * 1.16; });
+        if(e.tm){ ty += LY.ts * 0.32 - z * 0.16; let x2 = tx;
+          if(e.part !== "full" || e.pp.sub){ const tag = e.pp.sub ? "HELY." : e.part === "am" ? "DE" : "DU"; ctx.font = F(900, LY.ts * 0.78); const tw = ctx.measureText(tag).width + LY.ts * 0.55, th = LY.ts * 1.08;
+            roundRectPath(ctx, x2, ty - th * 0.8, tw, th, th / 2); ctx.lineWidth = W * 0.0008; ctx.strokeStyle = LT ? T.ink : hx; ctx.stroke(); ctx.fillStyle = LT ? T.ink : mix(hx, 0.75, [255,255,255]);
+            ctx.textAlign = "center"; ctx.fillText(tag, x2 + tw / 2, ty - th * 0.08); ctx.textAlign = "left"; x2 += tw + LY.ts * 0.35; }
+          let tz = LY.ts; ctx.font = F(700, tz); const room = tx + txtW + cellW * 0.04 - x2; while(ctx.measureText(e.tm).width > room && tz > LY.ts * 0.6){ tz *= 0.94; ctx.font = F(700, tz); }
+          ctx.fillStyle = T.dim; ctx.fillText(e.tm, x2, ty); }
+        ey += eh + LY.eg;
+      });
+    });
+    y += rows * (cellH + gap) + H * 0.016;
+    /* --- dolgozók: monogram-kör, név, napok --- */
+    ctx.font = F(900, W * 0.0125); ls(`${W * 0.0012}px`); ctx.fillStyle = T.dim; ctx.fillText("DOLGOZÓK", mX, y + H * 0.014); ls("0px");
+    ctx.textAlign = "right"; ctx.font = F(700, W * 0.0115);
+    ctx.fillText(`${people.filter(p=> !p.sub).length} dolgozó${people.some(p=> p.sub) ? ` + ${people.filter(p=> p.sub).length} helyettesítő` : ""}`, W - mX, y + H * 0.014); ctx.textAlign = "left";
+    y += H * 0.024; const colL = (W - mX * 2 - gap * 2) / 3, chH = H * 0.028;
+    people.forEach((pp, i)=>{ const lx = mX + (i % 3) * (colL + gap), ly = y + Math.floor(i / 3) * (chH + H * 0.006);
+      roundRectPath(ctx, lx, ly, colL, chH, chH / 2); ctx.fillStyle = LT ? "#ffffff" : T.cell; ctx.fill(); ctx.lineWidth = W * 0.0008; ctx.strokeStyle = LT ? "#cfcfcf" : mix(pp.hex, 0.35); ctx.stroke();
+      const cr = chH * 0.36, ccx = lx + chH * 0.5, ccy = ly + chH / 2; ctx.beginPath(); ctx.arc(ccx, ccy, cr, 0, Math.PI * 2); ctx.fillStyle = pp.hex; ctx.fill();
+      const ini = String(pp.name || "?").split(/\s+/).filter(Boolean).slice(0, 2).map(w=> w[0]).join("").toUpperCase();
+      ctx.font = F(900, cr * 0.85); ctx.fillStyle = textOn(pp.hex); ctx.textAlign = "center"; ctx.fillText(ini, ccx, ccy + cr * 0.32); ctx.textAlign = "left";
+      const nm = pp.sub ? `${pp.name} (helyettesítő)` : pp.name; ctx.font = F(800, W * 0.013); let t = nm; const maxW = colL - chH * 1.1 - W * 0.07; while(ctx.measureText(t).width > maxW && t.length > 4) t = t.slice(0, -2); if(t !== nm) t += "…";
+      ctx.fillStyle = T.ink; ctx.fillText(t, lx + chH * 1.0, ly + chH * 0.64);
+      ctx.font = F(900, W * 0.0125); ctx.fillStyle = LT ? T.ink : mix(pp.hex, 0.8, [255,255,255]); ctx.textAlign = "right"; ctx.fillText(`${counts[pp.id]} nap`, lx + colL - chH * 0.45, ly + chH * 0.64); ctx.textAlign = "left"; });
+    y += legendRows * (chH + H * 0.006) + H * 0.014;
+    ctx.font = F(600, W * 0.0105); ctx.fillStyle = T.faint;
+    const fy = Math.min(y, H - H * 0.014), nowD = new Date();
+    ctx.fillText(`DE = délelőtt · DU = délután · HELY. = helyettesítő · A beosztás előzetes tervezés, a tényleges munkarend eltérhet.`, mX, fy);
+    ctx.textAlign = "right"; ctx.fillText(`FirstPhone Munkaasztal · ${nowD.getFullYear()}. ${pad2(nowD.getMonth() + 1)}. ${pad2(nowD.getDate())}.`, W - mX, fy); ctx.textAlign = "left";
+    return canvas;
+  }
+  async function drawMonthGridOld(M){
     const { people, counts, days, rows } = M;
     const SC = M.sc || 1, W = Math.round(5432 * SC), H = Math.round(7680 * SC);
     const canvas = document.createElement("canvas"); canvas.width = W; canvas.height = H;
