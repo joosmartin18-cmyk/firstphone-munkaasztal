@@ -6423,7 +6423,7 @@
   }
 
   /* ===== PRÓBA 10: Beosztás oldal — új elrendezés (naptár + jobb oldali dolgozói sáv) és új napi ablak ===== */
-  html.ui-uj:not(.m-app) body.lay-new:not(.page-ma) #mainPanel{ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) body.lay-new:not([class*="page-"]) #mainPanel{ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
   html.ui-uj:not(.m-app) #mainPanel > *{ grid-column:1; min-width:0; }
   html.ui-uj:not(.m-app) #mainPanel > #prevBannerWrap, html.ui-uj:not(.m-app) #mainPanel > .month-row, html.ui-uj:not(.m-app) #mainPanel > #calPersonBar{ grid-column:1 / -1; }
   html.ui-uj:not(.m-app) #mainPanel > #uiSide{ grid-column:2 !important; grid-row:3 / span 3 !important; display:flex; flex-direction:column; gap:16px; align-self:start; position:sticky; top:16px; }
@@ -6480,6 +6480,49 @@
   html.ui-uj #assignBackdrop .opt-swatch{ width:12px !important; height:12px !important; border-radius:9999px !important; flex:none; box-shadow:none !important; }
   html.ui-uj #assignBackdrop .op-av, html.ui-uj #assignBackdrop .opt-btn .av{ width:40px !important; height:40px !important; border-radius:9999px !important; font-size:13px !important; }
   html.ui-uj #assignBackdrop .popup > button:last-child, html.ui-uj #assignBackdrop .popup-cancel, html.ui-uj #assignBackdrop #popupCancel{ margin-top:16px !important; width:100% !important; height:44px !important; border-radius:12px !important; background:transparent !important; border:1px solid var(--u4) !important; color:var(--udim) !important; font-weight:600 !important; }
+
+  /* ===== PRÓBA 11: egységes oldal-szerkezet minden programban — cím fent egyszer, alatta eszközsor, majd tartalom ===== */
+  /* a régi „nagy fejléc-kártyák” ikon + cím része eltűnik (a cím már a lap tetején van) */
+  html.ui-uj:not(.m-app) :is(.td-ic,.ks-head-ic,.sx-ic,.ea-hic,.sk-hic,.td-tt,.ks-head-tx,.sx-tt,.ea-ht,.sk-ht,.tt-hl,.cs2-title){ display:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.sx-top,.ea-hero,.tt-hero,.cs2-top,.sk-hero){ background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; padding:0 !important; margin:0 0 20px !important; border-radius:0 !important; min-height:0 !important; }
+  html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.sx-top,.ea-hero,.tt-hero,.cs2-top,.sk-hero)::before, html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.sx-top,.ea-hero,.tt-hero,.cs2-top,.sk-hero)::after{ display:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.ea-hero,.sk-hero){ display:flex !important; flex-wrap:wrap !important; align-items:center !important; gap:12px !important; }
+  /* KPI-k: egyforma számkártyák */
+  html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis){ display:flex !important; gap:12px !important; flex-wrap:wrap !important; }
+  html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis) > *{ min-width:140px; padding:14px 16px !important; border-radius:14px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; text-align:left !important; }
+  html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis) b, html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis) strong{ font-size:24px !important; line-height:32px !important; font-weight:600 !important; }
+  /* fülek / szegmensek mindenhol ugyanúgy */
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg,.cs2-mstrip){ display:inline-flex !important; gap:4px !important; padding:4px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; width:auto !important; }
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg) > button{ height:36px !important; padding:0 14px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:600 !important; flex:none !important; width:auto !important; }
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg) > button:is(.on,.active,[aria-selected="true"]){ background:var(--u3) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg) > :is(.td-ind,.ea-ind,.tt-ind,[class$="-ind"]){ display:none !important; }
+  html.ui-uj:not(.m-app) .td-tabs{ margin-left:auto !important; }
+  /* tartalom-kártyák: egyforma panel */
+  html.ui-uj:not(.m-app) :is(.td-page,.ks-page,.cs-page,.lt-page,.sx-page,.ea-page,.tt-page,.sk-page) .panel:not(.td-top):not(.ks-head):not(.sx-top):not(.ea-hero):not(.tt-hero):not(.cs2-top):not(.sk-hero){ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-page,.ks-page,.cs-page,.lt-page,.sx-page,.ea-page,.tt-page,.sk-page) .panel :is(h2,h3){ font-size:16px !important; line-height:24px !important; font-weight:600 !important; letter-spacing:0 !important; text-transform:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-page,.ks-page,.cs-page,.lt-page,.sx-page,.ea-page,.tt-page,.sk-page) :is(.ksn-h,.sx-h,.cs2-h,.lt-h,.ea-h3)::first-letter{ }
+  /* Kassza: nagy összeg kártya marad kiemelt, gombok jobbra */
+  html.ui-uj:not(.m-app) .ks-head-btns{ margin-left:auto !important; display:flex !important; gap:8px !important; }
+  /* Csomag: szállító kártyák egyformán, színes csík a márkára */
+  html.ui-uj:not(.m-app) .cs2-car{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car.gls{ box-shadow:inset 0 3px 0 #FFD400 !important; } html.ui-uj:not(.m-app) .cs2-car.mpl{ box-shadow:inset 0 3px 0 #E4002B !important; } html.ui-uj:not(.m-app) .cs2-car.dpd{ box-shadow:inset 0 3px 0 #DC0032 !important; }
+  html.ui-uj:not(.m-app) .cs2-months{ background:transparent !important; border:0 !important; padding:0 !important; }
+  /* Leltár: a következő leltár nagy kártyája letisztultan */
+  html.ui-uj:not(.m-app) #ltHero{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:20px !important; }
+  html.ui-uj:not(.m-app) #ltHero::before, html.ui-uj:not(.m-app) #ltHero::after{ display:none !important; }
+  /* Tudástár: keresőmező nagy, egyszerű */
+  html.ui-uj:not(.m-app) .tt-hero{ display:grid !important; grid-template-columns:minmax(0,1fr) auto !important; gap:12px !important; align-items:center !important; }
+  html.ui-uj:not(.m-app) .tt-hero > #ttSearchWrap{ grid-column:1; grid-row:1; height:48px !important; border-radius:12px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tt-hero > #ttSeg{ grid-column:2; grid-row:1; }
+  html.ui-uj:not(.m-app) .tt-hero > #ttCount{ grid-column:1 / -1; }
+  html.ui-uj:not(.m-app) .tt-toc{ background:transparent !important; border:0 !important; padding:0 !important; }
+  /* Selejt: eszközsor */
+  html.ui-uj:not(.m-app) .sx-top{ display:grid !important; grid-template-columns:minmax(0,1fr) auto !important; gap:12px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .sx-top > .sx-today{ display:none !important; }
+  html.ui-uj:not(.m-app) .sx-top > #sxCkBanner{ grid-column:1 / -1; }
+  /* Eladás: kereső oldalsáv és kártya */
+  html.ui-uj:not(.m-app) .ea-tabs{ margin-left:auto !important; }
+  html.ui-uj:not(.m-app) .sk-hb{ margin-left:auto !important; display:flex !important; gap:8px !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -16376,7 +16419,7 @@ service cloud.firestore {
   }
 
   /* ===== PRÓBA 10: Beosztás oldal — új elrendezés (naptár + jobb oldali dolgozói sáv) és új napi ablak ===== */
-  html.ui-uj:not(.m-app) body.lay-new:not(.page-ma) #mainPanel{ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) body.lay-new:not([class*="page-"]) #mainPanel{ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
   html.ui-uj:not(.m-app) #mainPanel > *{ grid-column:1; min-width:0; }
   html.ui-uj:not(.m-app) #mainPanel > #prevBannerWrap, html.ui-uj:not(.m-app) #mainPanel > .month-row, html.ui-uj:not(.m-app) #mainPanel > #calPersonBar{ grid-column:1 / -1; }
   html.ui-uj:not(.m-app) #mainPanel > #uiSide{ grid-column:2 !important; grid-row:3 / span 3 !important; display:flex; flex-direction:column; gap:16px; align-self:start; position:sticky; top:16px; }
@@ -16433,6 +16476,49 @@ service cloud.firestore {
   html.ui-uj #assignBackdrop .opt-swatch{ width:12px !important; height:12px !important; border-radius:9999px !important; flex:none; box-shadow:none !important; }
   html.ui-uj #assignBackdrop .op-av, html.ui-uj #assignBackdrop .opt-btn .av{ width:40px !important; height:40px !important; border-radius:9999px !important; font-size:13px !important; }
   html.ui-uj #assignBackdrop .popup > button:last-child, html.ui-uj #assignBackdrop .popup-cancel, html.ui-uj #assignBackdrop #popupCancel{ margin-top:16px !important; width:100% !important; height:44px !important; border-radius:12px !important; background:transparent !important; border:1px solid var(--u4) !important; color:var(--udim) !important; font-weight:600 !important; }
+
+  /* ===== PRÓBA 11: egységes oldal-szerkezet minden programban — cím fent egyszer, alatta eszközsor, majd tartalom ===== */
+  /* a régi „nagy fejléc-kártyák” ikon + cím része eltűnik (a cím már a lap tetején van) */
+  html.ui-uj:not(.m-app) :is(.td-ic,.ks-head-ic,.sx-ic,.ea-hic,.sk-hic,.td-tt,.ks-head-tx,.sx-tt,.ea-ht,.sk-ht,.tt-hl,.cs2-title){ display:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.sx-top,.ea-hero,.tt-hero,.cs2-top,.sk-hero){ background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; padding:0 !important; margin:0 0 20px !important; border-radius:0 !important; min-height:0 !important; }
+  html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.sx-top,.ea-hero,.tt-hero,.cs2-top,.sk-hero)::before, html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.sx-top,.ea-hero,.tt-hero,.cs2-top,.sk-hero)::after{ display:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-top,.ks-head,.ea-hero,.sk-hero){ display:flex !important; flex-wrap:wrap !important; align-items:center !important; gap:12px !important; }
+  /* KPI-k: egyforma számkártyák */
+  html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis){ display:flex !important; gap:12px !important; flex-wrap:wrap !important; }
+  html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis) > *{ min-width:140px; padding:14px 16px !important; border-radius:14px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; text-align:left !important; }
+  html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis) b, html.ui-uj:not(.m-app) :is(#tdStats,#sxKpis) strong{ font-size:24px !important; line-height:32px !important; font-weight:600 !important; }
+  /* fülek / szegmensek mindenhol ugyanúgy */
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg,.cs2-mstrip){ display:inline-flex !important; gap:4px !important; padding:4px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; width:auto !important; }
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg) > button{ height:36px !important; padding:0 14px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:600 !important; flex:none !important; width:auto !important; }
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg) > button:is(.on,.active,[aria-selected="true"]){ background:var(--u3) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) :is(.td-tabs,.ea-tabs,.tt-seg) > :is(.td-ind,.ea-ind,.tt-ind,[class$="-ind"]){ display:none !important; }
+  html.ui-uj:not(.m-app) .td-tabs{ margin-left:auto !important; }
+  /* tartalom-kártyák: egyforma panel */
+  html.ui-uj:not(.m-app) :is(.td-page,.ks-page,.cs-page,.lt-page,.sx-page,.ea-page,.tt-page,.sk-page) .panel:not(.td-top):not(.ks-head):not(.sx-top):not(.ea-hero):not(.tt-hero):not(.cs2-top):not(.sk-hero){ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-page,.ks-page,.cs-page,.lt-page,.sx-page,.ea-page,.tt-page,.sk-page) .panel :is(h2,h3){ font-size:16px !important; line-height:24px !important; font-weight:600 !important; letter-spacing:0 !important; text-transform:none !important; }
+  html.ui-uj:not(.m-app) :is(.td-page,.ks-page,.cs-page,.lt-page,.sx-page,.ea-page,.tt-page,.sk-page) :is(.ksn-h,.sx-h,.cs2-h,.lt-h,.ea-h3)::first-letter{ }
+  /* Kassza: nagy összeg kártya marad kiemelt, gombok jobbra */
+  html.ui-uj:not(.m-app) .ks-head-btns{ margin-left:auto !important; display:flex !important; gap:8px !important; }
+  /* Csomag: szállító kártyák egyformán, színes csík a márkára */
+  html.ui-uj:not(.m-app) .cs2-car{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car.gls{ box-shadow:inset 0 3px 0 #FFD400 !important; } html.ui-uj:not(.m-app) .cs2-car.mpl{ box-shadow:inset 0 3px 0 #E4002B !important; } html.ui-uj:not(.m-app) .cs2-car.dpd{ box-shadow:inset 0 3px 0 #DC0032 !important; }
+  html.ui-uj:not(.m-app) .cs2-months{ background:transparent !important; border:0 !important; padding:0 !important; }
+  /* Leltár: a következő leltár nagy kártyája letisztultan */
+  html.ui-uj:not(.m-app) #ltHero{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; border-radius:20px !important; }
+  html.ui-uj:not(.m-app) #ltHero::before, html.ui-uj:not(.m-app) #ltHero::after{ display:none !important; }
+  /* Tudástár: keresőmező nagy, egyszerű */
+  html.ui-uj:not(.m-app) .tt-hero{ display:grid !important; grid-template-columns:minmax(0,1fr) auto !important; gap:12px !important; align-items:center !important; }
+  html.ui-uj:not(.m-app) .tt-hero > #ttSearchWrap{ grid-column:1; grid-row:1; height:48px !important; border-radius:12px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tt-hero > #ttSeg{ grid-column:2; grid-row:1; }
+  html.ui-uj:not(.m-app) .tt-hero > #ttCount{ grid-column:1 / -1; }
+  html.ui-uj:not(.m-app) .tt-toc{ background:transparent !important; border:0 !important; padding:0 !important; }
+  /* Selejt: eszközsor */
+  html.ui-uj:not(.m-app) .sx-top{ display:grid !important; grid-template-columns:minmax(0,1fr) auto !important; gap:12px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .sx-top > .sx-today{ display:none !important; }
+  html.ui-uj:not(.m-app) .sx-top > #sxCkBanner{ grid-column:1 / -1; }
+  /* Eladás: kereső oldalsáv és kártya */
+  html.ui-uj:not(.m-app) .ea-tabs{ margin-left:auto !important; }
+  html.ui-uj:not(.m-app) .sk-hb{ margin-left:auto !important; display:flex !important; gap:8px !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
