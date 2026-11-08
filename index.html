@@ -6239,6 +6239,14 @@
   html.ui-uj.m-app body #mTab button[data-p="tudastar"] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); }
   html.ui-uj.m-app body #mTab button[data-more] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); }
 
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -7399,6 +7407,43 @@
   html.ui-uj.ui-pin .ui-pinbtn svg line:nth-child(3){ transform:rotate(-45deg) translateY(-64px) scaleX(.82); }
   html.ui-uj.ui-pin .ui-pinbtn{ border-color:color-mix(in srgb,var(--uacc) 50%,var(--u4)); }
   @media (prefers-reduced-motion:reduce){ html.ui-uj.fp-rnav:not(.m-app) body, html.ui-uj.fp-rnav:not(.m-app) body #pageSwitch, html.ui-uj .ui-pinbtn svg line{ transition:none !important; } html.ui-uj.fp-rnav:not(.m-app) body #pageSwitch *{ animation:none !important; } }
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+  /* ===== dolgozónkénti téma kérdés ===== */
+  @keyframes uiThIn{ from{ opacity:0; transform:translateY(18px) scale(.96); } to{ opacity:1; transform:none; } }
+  @keyframes uiThBg{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes uiThCard{ from{ opacity:0; transform:translateY(14px) rotate(var(--r,0deg)); } to{ opacity:1; transform:rotate(0); } }
+  @keyframes uiThBar{ 0%,100%{ transform:scaleX(.55); } 50%{ transform:scaleX(1); } }
+  html.ui-uj .ui-thback{ position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:uiThBg .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  html.ui-uj .ui-thback.out{ opacity:0; transition:opacity .35s ease; }
+  html.ui-uj .ui-th{ width:min(560px,100%); padding:28px; border-radius:28px; background:var(--u1,#181818); border:1px solid var(--u4,#313131); color:var(--utx,#fff); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:uiThIn .5s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th .tag{ display:inline-block; padding:5px 11px; border-radius:999px; font-size:12px; font-weight:700; background:color-mix(in srgb,var(--uacc,#FBAC01) 16%,transparent); color:var(--uacc,#FBAC01); }
+  html.ui-uj .ui-th h3{ margin:14px 0 6px; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+  html.ui-uj .ui-th p{ margin:0 0 20px; font-size:13.5px; line-height:1.5; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  html.ui-uj .ui-th-opts button{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:20px; border:2px solid var(--u4,#313131); background:var(--u2,#222); color:inherit; cursor:pointer; text-align:left; font:inherit; transition:border-color .2s, transform .2s, box-shadow .2s; animation:uiThCard .55s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th-opts button:nth-child(1){ --r:-3deg; animation-delay:.12s; } html.ui-uj .ui-th-opts button:nth-child(2){ --r:3deg; animation-delay:.2s; }
+  html.ui-uj .ui-th-opts button:hover, html.ui-uj .ui-th-opts button:focus-visible{ border-color:var(--uacc,#FBAC01); transform:translateY(-4px); box-shadow:0 14px 30px -12px rgba(0,0,0,.6); outline:none; }
+  html.ui-uj .ui-th-opts button.pick{ border-color:var(--uacc,#FBAC01); transform:scale(1.04); box-shadow:0 0 0 6px color-mix(in srgb,var(--uacc,#FBAC01) 25%,transparent); }
+  html.ui-uj .ui-th-opts .pv{ display:flex; gap:6px; height:110px; padding:8px; border-radius:14px; overflow:hidden; }
+  html.ui-uj .ui-th-opts .pv.d{ background:#0b0b0b; border:1px solid #2a2a2a; } html.ui-uj .ui-th-opts .pv.l{ background:#f4f2ec; border:1px solid #e0ddd4; }
+  html.ui-uj .ui-th-opts .pv i{ display:flex; flex-direction:column; gap:6px; border-radius:8px; padding:7px; font-style:normal; }
+  html.ui-uj .ui-th-opts .pv .rl{ width:26px; } html.ui-uj .ui-th-opts .pv .mn{ flex:1; }
+  html.ui-uj .ui-th-opts .pv.d i{ background:#181818; } html.ui-uj .ui-th-opts .pv.l i{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  html.ui-uj .ui-th-opts .pv u{ height:8px; border-radius:3px; } html.ui-uj .ui-th-opts .pv.d u{ background:#333; } html.ui-uj .ui-th-opts .pv.l u{ background:#e4e1d8; }
+  html.ui-uj .ui-th-opts .pv u:first-child{ background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv b{ height:12px; width:60%; border-radius:4px; background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv s{ height:8px; border-radius:4px; transform-origin:left; animation:uiThBar 2.4s ease-in-out infinite; }
+  html.ui-uj .ui-th-opts .pv s:nth-of-type(2){ animation-delay:.3s; } html.ui-uj .ui-th-opts .pv s:nth-of-type(3){ animation-delay:.6s; }
+  html.ui-uj .ui-th-opts .pv.d s{ background:#2e2e2e; } html.ui-uj .ui-th-opts .pv.l s{ background:#e8e5dc; }
+  html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+  html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -17126,6 +17171,14 @@ service cloud.firestore {
   html.ui-uj.m-app body #mTab button[data-p="tudastar"] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); }
   html.ui-uj.m-app body #mTab button[data-more] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); }
 
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -18286,6 +18339,43 @@ service cloud.firestore {
   html.ui-uj.ui-pin .ui-pinbtn svg line:nth-child(3){ transform:rotate(-45deg) translateY(-64px) scaleX(.82); }
   html.ui-uj.ui-pin .ui-pinbtn{ border-color:color-mix(in srgb,var(--uacc) 50%,var(--u4)); }
   @media (prefers-reduced-motion:reduce){ html.ui-uj.fp-rnav:not(.m-app) body, html.ui-uj.fp-rnav:not(.m-app) body #pageSwitch, html.ui-uj .ui-pinbtn svg line{ transition:none !important; } html.ui-uj.fp-rnav:not(.m-app) body #pageSwitch *{ animation:none !important; } }
+  /* ===== felső sáv (cím + eszközsor) mindig fent marad ===== */
+  @media (min-width:1180px){
+    html.ui-uj.fp-rnav:not(.m-app) .hdr2{ position:sticky !important; top:0 !important; z-index:57 !important; margin-top:-16px !important; padding-top:16px !important; transform:none !important;
+      background:color-mix(in srgb,var(--u0) 82%,transparent) !important; -webkit-backdrop-filter:blur(14px) saturate(1.3); backdrop-filter:blur(14px) saturate(1.3); }
+    html.ui-uj.fp-rnav:not(.m-app) body #fpTools{ position:fixed !important; top:16px !important; right:24px !important; transform:none !important; z-index:60 !important; opacity:1 !important; visibility:visible !important; display:block !important; }
+    html.ui-uj.fp-rnav.hdr-mini:not(.m-app) .hdr2{ position:sticky !important; left:auto !important; right:auto !important; width:auto !important; }
+  }
+  /* ===== dolgozónkénti téma kérdés ===== */
+  @keyframes uiThIn{ from{ opacity:0; transform:translateY(18px) scale(.96); } to{ opacity:1; transform:none; } }
+  @keyframes uiThBg{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes uiThCard{ from{ opacity:0; transform:translateY(14px) rotate(var(--r,0deg)); } to{ opacity:1; transform:rotate(0); } }
+  @keyframes uiThBar{ 0%,100%{ transform:scaleX(.55); } 50%{ transform:scaleX(1); } }
+  html.ui-uj .ui-thback{ position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); animation:uiThBg .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  html.ui-uj .ui-thback.out{ opacity:0; transition:opacity .35s ease; }
+  html.ui-uj .ui-th{ width:min(560px,100%); padding:28px; border-radius:28px; background:var(--u1,#181818); border:1px solid var(--u4,#313131); color:var(--utx,#fff); box-shadow:0 30px 80px rgba(0,0,0,.5); animation:uiThIn .5s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th .tag{ display:inline-block; padding:5px 11px; border-radius:999px; font-size:12px; font-weight:700; background:color-mix(in srgb,var(--uacc,#FBAC01) 16%,transparent); color:var(--uacc,#FBAC01); }
+  html.ui-uj .ui-th h3{ margin:14px 0 6px; font-size:24px; line-height:1.2; font-weight:800; letter-spacing:-.02em; }
+  html.ui-uj .ui-th p{ margin:0 0 20px; font-size:13.5px; line-height:1.5; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  html.ui-uj .ui-th-opts button{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:20px; border:2px solid var(--u4,#313131); background:var(--u2,#222); color:inherit; cursor:pointer; text-align:left; font:inherit; transition:border-color .2s, transform .2s, box-shadow .2s; animation:uiThCard .55s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj .ui-th-opts button:nth-child(1){ --r:-3deg; animation-delay:.12s; } html.ui-uj .ui-th-opts button:nth-child(2){ --r:3deg; animation-delay:.2s; }
+  html.ui-uj .ui-th-opts button:hover, html.ui-uj .ui-th-opts button:focus-visible{ border-color:var(--uacc,#FBAC01); transform:translateY(-4px); box-shadow:0 14px 30px -12px rgba(0,0,0,.6); outline:none; }
+  html.ui-uj .ui-th-opts button.pick{ border-color:var(--uacc,#FBAC01); transform:scale(1.04); box-shadow:0 0 0 6px color-mix(in srgb,var(--uacc,#FBAC01) 25%,transparent); }
+  html.ui-uj .ui-th-opts .pv{ display:flex; gap:6px; height:110px; padding:8px; border-radius:14px; overflow:hidden; }
+  html.ui-uj .ui-th-opts .pv.d{ background:#0b0b0b; border:1px solid #2a2a2a; } html.ui-uj .ui-th-opts .pv.l{ background:#f4f2ec; border:1px solid #e0ddd4; }
+  html.ui-uj .ui-th-opts .pv i{ display:flex; flex-direction:column; gap:6px; border-radius:8px; padding:7px; font-style:normal; }
+  html.ui-uj .ui-th-opts .pv .rl{ width:26px; } html.ui-uj .ui-th-opts .pv .mn{ flex:1; }
+  html.ui-uj .ui-th-opts .pv.d i{ background:#181818; } html.ui-uj .ui-th-opts .pv.l i{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  html.ui-uj .ui-th-opts .pv u{ height:8px; border-radius:3px; } html.ui-uj .ui-th-opts .pv.d u{ background:#333; } html.ui-uj .ui-th-opts .pv.l u{ background:#e4e1d8; }
+  html.ui-uj .ui-th-opts .pv u:first-child{ background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv b{ height:12px; width:60%; border-radius:4px; background:#FBAC01; }
+  html.ui-uj .ui-th-opts .pv s{ height:8px; border-radius:4px; transform-origin:left; animation:uiThBar 2.4s ease-in-out infinite; }
+  html.ui-uj .ui-th-opts .pv s:nth-of-type(2){ animation-delay:.3s; } html.ui-uj .ui-th-opts .pv s:nth-of-type(3){ animation-delay:.6s; }
+  html.ui-uj .ui-th-opts .pv.d s{ background:#2e2e2e; } html.ui-uj .ui-th-opts .pv.l s{ background:#e8e5dc; }
+  html.ui-uj .ui-th-opts .lb{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+  html.ui-uj .ui-th-opts .lb b{ font-size:15px; font-weight:800; } html.ui-uj .ui-th-opts .lb small{ font-size:12px; color:var(--udim,#9b9b9b); }
+  html.ui-uj .ui-th-opts button.now .lb small::after{ content:" · most ez van"; color:var(--uacc,#FBAC01); }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -32451,6 +32541,42 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
     document.addEventListener("keydown", function esc(e){ if(e.key === "Escape" && b.isConnected){ close(); document.removeEventListener("keydown", esc); } });
     document.body.appendChild(b); setTimeout(function(){ try{ b.querySelector("button").focus(); }catch(e){} }, 60); return true; }
   var tries = 0, iv = setInterval(function(){ tries++; if(show() || tries > 120) clearInterval(iv); }, 2500);
+})();
+
+/* PRÓBA: dolgozónkénti sötét / világos mód — egyszer megkérdezi, megjegyzi, és váltáskor magától átáll */
+(function(){
+  var K = "fp_theme_by_who", lastWho = null, auto = false, asking = false;
+  function load(){ try{ return JSON.parse(localStorage.getItem(K) || "{}") || {}; }catch(e){ return {}; } }
+  function save(o){ try{ localStorage.setItem(K, JSON.stringify(o)); }catch(e){} }
+  function who(){ try{ var o = JSON.parse(localStorage.getItem("fp_who_today") || "null"); if(!o || !o.name) return null; var d = new Date(), tk = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); if(o.d !== tk) return null;
+      var p = Array.isArray(o.ppl) && o.ppl.length ? o.ppl[0] : o; var nm = String(p.name || o.name).trim(); return nm ? { key:(p.id ? "id:" + p.id : "n:" + nm.toLowerCase()), name:nm } : null; }catch(e){ return null; } }
+  function cur(){ return document.body.classList.contains("light-theme") ? "light" : "dark"; }
+  function apply(t){ if(cur() === t) return; var b = document.getElementById("themeToggle"); if(!b) return; auto = true; b.click(); setTimeout(function(){ auto = false; }, 50); }
+  function busy(){ return !document.documentElement.classList.contains("ui-uj") || document.getElementById("fcLogin") || document.getElementById("shiftModal") || document.querySelector(".ui-newsback, .ui-thback, .modal-backdrop.show, .help-modal.show"); }
+  function ask(w){
+    asking = true;
+    var b = document.createElement("div"); b.className = "ui-thback";
+    b.innerHTML = '<div class="ui-th" role="dialog" aria-modal="true" aria-labelledby="uiThT"><span class="tag">🎨 Saját megjelenés</span><h3 id="uiThT"></h3><p>Megjegyzem, és ha legközelebb te dolgozol, magától erre áll át a Munkaasztal. Később a 🌙 gombbal bármikor átállíthatod.</p>'
+      + '<div class="ui-th-opts">'
+      + '<button type="button" data-t="dark"><span class="pv d"><i class="rl"><u></u><u></u><u></u><u></u></i><i class="mn"><b></b><s></s><s></s><s></s></i></span><span class="lb"><b>🌙 Sötét</b><small>kíméli a szemet</small></span></button>'
+      + '<button type="button" data-t="light"><span class="pv l"><i class="rl"><u></u><u></u><u></u><u></u></i><i class="mn"><b></b><s></s><s></s><s></s></i></span><span class="lb"><b>☀️ Világos</b><small>világos boltban jól látszik</small></span></button>'
+      + '</div></div>';
+    b.querySelector("h3").textContent = "Szia, " + w.name.split(" ").slice(-1)[0] + "! Melyik mód legyen a tiéd?";
+    var c = cur(); b.querySelector('[data-t="' + c + '"]').classList.add("now");
+    b.querySelectorAll("[data-t]").forEach(function(x){ x.onclick = function(){ var t = x.getAttribute("data-t"), o = load(); o[w.key] = t; save(o);
+      x.classList.add("pick"); b.classList.add("out"); setTimeout(function(){ b.remove(); asking = false; apply(t); }, 380); }; });
+    document.body.appendChild(b); setTimeout(function(){ try{ b.querySelector(".now").focus(); }catch(e){} }, 80);
+  }
+  function tick(){
+    if(asking) return; var w = who(); var k = w ? w.key : "";
+    if(k === lastWho) return; if(!w){ lastWho = ""; return; }
+    if(busy()) return;
+    lastWho = k; var o = load();
+    if(o[k]) apply(o[k]); else ask(w);
+  }
+  /* kézi váltás → a mostani dolgozónál megjegyzi */
+  document.addEventListener("click", function(e){ if(auto || !e.target.closest || !e.target.closest("#themeToggle")) return; setTimeout(function(){ var w = who(); if(!w) return; var o = load(); o[w.key] = cur(); save(o); }, 900); }, true);
+  setInterval(tick, 1500); setTimeout(tick, 2500);
 })();
 </script>
 </body>
