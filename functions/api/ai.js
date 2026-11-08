@@ -3,7 +3,7 @@
        { task:"card", q, specs? }          → { ok, card }     eladási kártya egy termékre
        { task:"ask",  q, card }            → { ok, text }     kérdés egy termékről (a kártya adataiból)
        { task:"quiz", topic, n, level, card? } → { ok, quiz }  tesztkérdések (4 válaszlehetőség, magyarázattal)
-   Kell hozzá: ANTHROPIC_API_KEY titok a Cloudflare Pages beállításaiban (és a már meglévő FIREBASE_SA).
+   Kell hozzá: a Cloudflare Pages „AI” (Workers AI) kötése — ingyenes napi kerettel —, vagy ANTHROPIC_API_KEY titok (és a már meglévő FIREBASE_SA).
    Napi keret boltonként (AI_DAILY, alapból 300 kérés), hogy véletlenül se fusson el a költség. */
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const enc = new TextEncoder();
@@ -50,19 +50,37 @@ const clip = (s, n) => String(s == null ? "" : s).slice(0, n);
 const SYS = "Egy magyar mobiltelefon- és kiegészítő-üzletlánc (FirstPhone) bolti eladóit segíted. Mindig magyarul, közérthetően, gyakorlatiasan válaszolsz. " +
   "Nem találsz ki árat, akciót, garanciális feltételt vagy konkrét műszaki adatot: csak azt használod, ami a kapott adatokban szerepel, vagy ami általánosan, biztosan igaz. " +
   "Ha valami bizonytalan, azt írod, hogy nézzék meg az adatlapon vagy a Bizzióban. A vásárlónak szánt mondatokat magázva írod.";
+/* AI hívás: ha van ANTHROPIC_API_KEY → Claude; különben a Cloudflare saját, ingyenes Workers AI-ja (env.AI kötés, napi ingyenes keret) */
+const WAI_MODELS = ["@cf/google/gemma-3-12b-it", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"];
 async function claude(env, prompt, maxTok) {
+  if (!env.ANTHROPIC_API_KEY && env.AI) return workersAI(env, prompt, maxTok);
   const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
     body: JSON.stringify({ model: env.AI_MODEL || "claude-sonnet-5", max_tokens: maxTok || 1500, system: SYS, messages: [{ role: "user", content: prompt }] }) });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) { const e = new Error((j.error && j.error.message) || ("AI " + r.status)); e.status = r.status; throw e; }
   return (j.content || []).filter(c => c.type === "text").map(c => c.text).join("").trim();
 }
+async function workersAI(env, prompt, maxTok) {
+  const models = env.WAI_MODEL ? [env.WAI_MODEL] : WAI_MODELS; let last = null;
+  for (const m of models) {
+    try {
+      const o = await env.AI.run(m, { messages: [{ role: "system", content: SYS }, { role: "user", content: prompt }], max_tokens: Math.min(maxTok || 1500, 2500), temperature: 0.4 });
+      const t = o == null ? "" : typeof o.response === "string" ? o.response : o.response ? JSON.stringify(o.response) : (o.choices && o.choices[0] && o.choices[0].message && o.choices[0].message.content) || "";
+      if (String(t).trim()) return String(t).trim();
+      last = new Error("üres válasz");
+    } catch (e) {
+      last = e; const msg = String((e && e.message) || e);
+      if (/neuron|daily|limit|quota|4006|capacity|429/i.test(msg)) { const x = new Error("Mára elfogyott az ingyenes AI-keret — holnap újra működik."); x.status = 429; x.free = true; throw x; }
+    }
+  }
+  throw last || new Error("Az AI most nem érhető el.");
+}
 function asJson(t) { try { return JSON.parse(t); } catch (e) {} const a = t.indexOf("{"), b = t.lastIndexOf("}"); if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (e) {} } return null; }
 const arr = (v, n, m) => (Array.isArray(v) ? v : []).slice(0, n).map(x => Array.isArray(x) ? x.slice(0, 2).map(y => clip(y, m)) : clip(x, m)).filter(x => Array.isArray(x) ? x[0] : x);
 
 export async function onRequest({ request, env }) {
   if (request.method !== "POST") return json({ ok: false, error: "POST kell" }, 405);
-  if (!env.ANTHROPIC_API_KEY) return json({ ok: false, error: "nokey", msg: "Az AI még nincs bekapcsolva (hiányzik az ANTHROPIC_API_KEY a Cloudflare beállításaiban)." }, 503);
+  if (!env.ANTHROPIC_API_KEY && !env.AI) return json({ ok: false, error: "nokey", msg: "Az AI még nincs bekapcsolva (a Cloudflare-ben hiányzik a Workers AI kötés)." }, 503);
   let sa; try { sa = JSON.parse(env.FIREBASE_SA || ""); } catch (e) { sa = null; }
   if (!sa || !sa.private_key) return json({ ok: false, error: "nosa" }, 503);
   const idToken = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
@@ -102,6 +120,6 @@ export async function onRequest({ request, env }) {
     }
     return json({ ok: false, error: "ismeretlen feladat" }, 400);
   } catch (e) {
-    return json({ ok: false, error: e && e.status === 429 ? "Az AI most túlterhelt — próbáld újra pár perc múlva." : String((e && e.message) || e) }, 502);
+    return json({ ok: false, error: e && e.free ? e.message : e && e.status === 429 ? "Az AI most túlterhelt — próbáld újra pár perc múlva." : String((e && e.message) || e) }, 502);
   }
 }
