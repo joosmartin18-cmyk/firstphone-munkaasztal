@@ -6543,28 +6543,40 @@
   html.ui-uj:not(.m-app) .tdn-it:hover{ border-color:var(--uacc) !important; }
   html.ui-uj:not(.m-app) .tdn-it > p{ font-size:15px !important; line-height:22px !important; font-weight:500 !important; margin:8px 0 12px !important; color:var(--utx) !important; }
   html.ui-uj:not(.m-app) .tdn-chk button{ border-radius:9999px !important; background:var(--u3) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
-  /* 💰 Kassza: felül egy „egyenlet” sáv (hátul + kasszában = összesen · jelentés), alatta külön kártyákban a címletek */
+  /* 💰 Kassza: felül EGY lapos összesítő sor (hátul + kasszában = összesen │ jelentés → eltérés), alatta a címletek */
   html.ui-uj:not(.m-app) .ks-grid{ display:flex !important; flex-direction:column !important; gap:20px !important; }
-  html.ui-uj:not(.m-app) .ks-side{ order:-1; position:static !important; display:grid !important; grid-template-columns:minmax(0,2.3fr) minmax(280px,1fr) !important; gap:16px !important; width:auto !important; max-width:none !important; }
-  html.ui-uj:not(.m-app) .ks-side > .ks-card{ margin:0 !important; }
-  html.ui-uj:not(.m-app) .ks-total{ display:grid !important; grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr) 32px minmax(0,1.15fr) !important; align-items:stretch !important; gap:0 !important; padding:16px !important; }
-  html.ui-uj:not(.m-app) .ks-total > *{ margin:0 !important; min-width:0; }
-  html.ui-uj:not(.m-app) #ksBlkBack{ grid-column:1; grid-row:1; }
-  html.ui-uj:not(.m-app) .ks-total > .ks-plus{ grid-column:2; grid-row:1; position:static !important; height:auto !important; display:grid !important; place-items:center !important; }
-  html.ui-uj:not(.m-app) .ks-total > .ks-plus span{ position:static !important; transform:none !important; background:var(--u3) !important; color:var(--utx) !important; box-shadow:none !important; }
-  html.ui-uj:not(.m-app) #ksBlkDrawer{ grid-column:3; grid-row:1; }
-  html.ui-uj:not(.m-app) #ksBlkDrawer{ position:relative !important; overflow:visible !important; }
-  html.ui-uj:not(.m-app) #ksBlkDrawer::after{ content:"=" !important; display:grid !important; place-items:center; position:absolute !important; right:-29px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:9999px; background:var(--u3); color:var(--utx); font:700 16px/1 'Manrope',system-ui,sans-serif; }
-  html.ui-uj:not(.m-app) #ksHero{ grid-column:5; grid-row:1; padding:16px !important; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:4px !important; }
-  html.ui-uj:not(.m-app) .ks-blk{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:14px !important; padding:14px !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:center !important; gap:10px !important; }
-  html.ui-uj:not(.m-app) .ks-blk .ks-blk-tx{ width:100% !important; }
-  html.ui-uj:not(.m-app) .ks-blk .ks-ico{ width:44px !important; height:44px !important; min-width:44px !important; border-radius:10px !important; }
-  html.ui-uj:not(.m-app) #ksHeroSt{ font-size:12px !important; line-height:16px !important; padding:6px 10px !important; border-radius:10px !important; }
-  html.ui-uj:not(.m-app) .ks-report{ display:flex !important; flex-direction:column !important; gap:10px !important; padding:16px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res{ padding:10px 12px !important; min-height:0 !important; border-radius:12px !important; gap:10px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res-ic{ width:36px !important; height:36px !important; min-width:36px !important; font-size:18px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res-tx, html.ui-uj:not(.m-app) .ks-report .ks-res-tx *{ font-size:13px !important; line-height:18px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res-tx b, html.ui-uj:not(.m-app) .ks-report .ks-res-tx strong{ font-size:15px !important; }
+  html.ui-uj:not(.m-app) .ks-side{ order:-1; position:static !important; width:auto !important; max-width:none !important;
+    display:grid !important; grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr) minmax(0,1.1fr) !important; grid-template-areas:"back plus drw sum fld res" !important;
+    align-items:center !important; column-gap:16px !important; row-gap:16px !important; padding:20px 24px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; }
+  html.ui-uj:not(.m-app) .ks-side > .ks-total, html.ui-uj:not(.m-app) .ks-side > .ks-report{ display:contents !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-report > .ks-k, html.ui-uj:not(.m-app) .ks-side #ksCmp, html.ui-uj:not(.m-app) .ks-side #ksHeroSt, html.ui-uj:not(.m-app) .ks-side .ks-ico, html.ui-uj:not(.m-app) .ks-side #ksResIc{ display:none !important; }
+  html.ui-uj:not(.m-app) #ksBlkBack{ grid-area:back; } html.ui-uj:not(.m-app) .ks-side .ks-plus{ grid-area:plus; } html.ui-uj:not(.m-app) #ksBlkDrawer{ grid-area:drw; }
+  html.ui-uj:not(.m-app) #ksHero{ grid-area:sum; } html.ui-uj:not(.m-app) .ks-side .ks-fld{ grid-area:fld; } html.ui-uj:not(.m-app) #ksRes{ grid-area:res; }
+  html.ui-uj:not(.m-app) .ks-side .ks-blk{ background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; padding:0 !important; margin:0 !important; min-height:0 !important; display:block !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-blk-tx{ display:flex !important; flex-direction:column !important; gap:6px !important; width:100% !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-blk-tx > :first-child, html.ui-uj:not(.m-app) .ks-side .ks-fld > span{ font:600 12px/16px 'Manrope',system-ui,sans-serif !important; letter-spacing:.06em !important; text-transform:uppercase !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-fld > span em, html.ui-uj:not(.m-app) .ks-side .ks-blk-tx > :first-child em, html.ui-uj:not(.m-app) .ks-side .ks-blk-tx > :first-child small{ display:none !important; }
+  html.ui-uj:not(.m-app) .ks-side input{ height:44px !important; font-size:18px !important; font-weight:600 !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx b, html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx strong{ font-size:28px !important; line-height:32px !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx small, html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx > :last-child:not(:first-child){ font-size:12px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-plus{ position:static !important; height:auto !important; margin:0 !important; display:grid !important; place-items:center !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-plus span, html.ui-uj:not(.m-app) #ksBlkDrawer::after{ position:static !important; transform:none !important; width:28px !important; height:28px !important; border-radius:9999px !important; background:var(--u3) !important; color:var(--utx) !important; box-shadow:none !important; display:grid !important; place-items:center !important; font:700 16px/1 'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer{ position:relative !important; display:flex !important; align-items:center !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer::after{ content:"=" !important; flex:none; margin-left:auto !important; }
+  html.ui-uj:not(.m-app) #ksHero{ align-self:stretch; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:2px !important; padding:12px 18px !important; margin:0 !important; min-height:0 !important; background:var(--uacc) !important; background-image:none !important; border-radius:14px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ksHero, html.ui-uj:not(.m-app) #ksHero *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) #ksHero .ksh-l{ font-size:12px !important; letter-spacing:.06em !important; }
+  html.ui-uj:not(.m-app) #ksAll{ font-size:30px !important; line-height:36px !important; font-weight:700 !important; white-space:nowrap; }
+  html.ui-uj:not(.m-app) .ks-side .ks-fld{ margin:0 !important; padding-left:16px !important; border-left:1px solid var(--u4) !important; display:flex !important; flex-direction:column !important; gap:6px !important; }
+  html.ui-uj:not(.m-app) #ksRes{ align-self:stretch; margin:0 !important; min-height:0 !important; padding:10px 14px !important; border-radius:12px !important; display:flex !important; align-items:center !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:inset 3px 0 0 var(--udim) !important; animation:none !important; }
+  html.ui-uj:not(.m-app) #ksRes.plus{ box-shadow:inset 3px 0 0 #F5A55A !important; } html.ui-uj:not(.m-app) #ksRes.minus{ box-shadow:inset 3px 0 0 #FF6B6B !important; } html.ui-uj:not(.m-app) #ksRes.ok{ box-shadow:inset 3px 0 0 #34C38F !important; }
+  html.ui-uj:not(.m-app) #ksRes .ks-res-tx{ display:flex !important; flex-direction:column !important; gap:2px !important; }
+  html.ui-uj:not(.m-app) #ksResT{ font-size:16px !important; line-height:22px !important; font-weight:700 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #ksRes.plus #ksResT{ color:#F5A55A !important; } html.ui-uj:not(.m-app) #ksRes.minus #ksResT{ color:#FF6B6B !important; } html.ui-uj:not(.m-app) #ksRes.ok #ksResT{ color:#34C38F !important; }
+  html.ui-uj:not(.m-app) #ksResS{ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; }
+  @media (max-width:1400px){ html.ui-uj:not(.m-app) .ks-side{ grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) minmax(0,1.2fr) !important; grid-template-areas:"back plus drw sum" "fld fld res res" !important; }
+    html.ui-uj:not(.m-app) .ks-side .ks-fld{ border-left:0 !important; padding-left:0 !important; padding-top:16px !important; border-top:1px solid var(--u4) !important; }
+    html.ui-uj:not(.m-app) #ksRes{ margin-top:16px !important; } }
   html.ui-uj:not(.m-app) .ks-main{ width:100% !important; max-width:none !important; display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:20px !important; align-items:start !important; }
   html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; padding:0 !important; overflow:hidden; }
   html.ui-uj:not(.m-app) .ks-main .ks-sec-h{ padding:16px 20px !important; margin:0 !important; background:var(--u2) !important; border-bottom:1px solid var(--u4) !important; }
@@ -16792,28 +16804,40 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) .tdn-it:hover{ border-color:var(--uacc) !important; }
   html.ui-uj:not(.m-app) .tdn-it > p{ font-size:15px !important; line-height:22px !important; font-weight:500 !important; margin:8px 0 12px !important; color:var(--utx) !important; }
   html.ui-uj:not(.m-app) .tdn-chk button{ border-radius:9999px !important; background:var(--u3) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
-  /* 💰 Kassza: felül egy „egyenlet” sáv (hátul + kasszában = összesen · jelentés), alatta külön kártyákban a címletek */
+  /* 💰 Kassza: felül EGY lapos összesítő sor (hátul + kasszában = összesen │ jelentés → eltérés), alatta a címletek */
   html.ui-uj:not(.m-app) .ks-grid{ display:flex !important; flex-direction:column !important; gap:20px !important; }
-  html.ui-uj:not(.m-app) .ks-side{ order:-1; position:static !important; display:grid !important; grid-template-columns:minmax(0,2.3fr) minmax(280px,1fr) !important; gap:16px !important; width:auto !important; max-width:none !important; }
-  html.ui-uj:not(.m-app) .ks-side > .ks-card{ margin:0 !important; }
-  html.ui-uj:not(.m-app) .ks-total{ display:grid !important; grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr) 32px minmax(0,1.15fr) !important; align-items:stretch !important; gap:0 !important; padding:16px !important; }
-  html.ui-uj:not(.m-app) .ks-total > *{ margin:0 !important; min-width:0; }
-  html.ui-uj:not(.m-app) #ksBlkBack{ grid-column:1; grid-row:1; }
-  html.ui-uj:not(.m-app) .ks-total > .ks-plus{ grid-column:2; grid-row:1; position:static !important; height:auto !important; display:grid !important; place-items:center !important; }
-  html.ui-uj:not(.m-app) .ks-total > .ks-plus span{ position:static !important; transform:none !important; background:var(--u3) !important; color:var(--utx) !important; box-shadow:none !important; }
-  html.ui-uj:not(.m-app) #ksBlkDrawer{ grid-column:3; grid-row:1; }
-  html.ui-uj:not(.m-app) #ksBlkDrawer{ position:relative !important; overflow:visible !important; }
-  html.ui-uj:not(.m-app) #ksBlkDrawer::after{ content:"=" !important; display:grid !important; place-items:center; position:absolute !important; right:-29px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:9999px; background:var(--u3); color:var(--utx); font:700 16px/1 'Manrope',system-ui,sans-serif; }
-  html.ui-uj:not(.m-app) #ksHero{ grid-column:5; grid-row:1; padding:16px !important; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:4px !important; }
-  html.ui-uj:not(.m-app) .ks-blk{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:14px !important; padding:14px !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:center !important; gap:10px !important; }
-  html.ui-uj:not(.m-app) .ks-blk .ks-blk-tx{ width:100% !important; }
-  html.ui-uj:not(.m-app) .ks-blk .ks-ico{ width:44px !important; height:44px !important; min-width:44px !important; border-radius:10px !important; }
-  html.ui-uj:not(.m-app) #ksHeroSt{ font-size:12px !important; line-height:16px !important; padding:6px 10px !important; border-radius:10px !important; }
-  html.ui-uj:not(.m-app) .ks-report{ display:flex !important; flex-direction:column !important; gap:10px !important; padding:16px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res{ padding:10px 12px !important; min-height:0 !important; border-radius:12px !important; gap:10px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res-ic{ width:36px !important; height:36px !important; min-width:36px !important; font-size:18px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res-tx, html.ui-uj:not(.m-app) .ks-report .ks-res-tx *{ font-size:13px !important; line-height:18px !important; }
-  html.ui-uj:not(.m-app) .ks-report .ks-res-tx b, html.ui-uj:not(.m-app) .ks-report .ks-res-tx strong{ font-size:15px !important; }
+  html.ui-uj:not(.m-app) .ks-side{ order:-1; position:static !important; width:auto !important; max-width:none !important;
+    display:grid !important; grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr) minmax(0,1.1fr) !important; grid-template-areas:"back plus drw sum fld res" !important;
+    align-items:center !important; column-gap:16px !important; row-gap:16px !important; padding:20px 24px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; }
+  html.ui-uj:not(.m-app) .ks-side > .ks-total, html.ui-uj:not(.m-app) .ks-side > .ks-report{ display:contents !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-report > .ks-k, html.ui-uj:not(.m-app) .ks-side #ksCmp, html.ui-uj:not(.m-app) .ks-side #ksHeroSt, html.ui-uj:not(.m-app) .ks-side .ks-ico, html.ui-uj:not(.m-app) .ks-side #ksResIc{ display:none !important; }
+  html.ui-uj:not(.m-app) #ksBlkBack{ grid-area:back; } html.ui-uj:not(.m-app) .ks-side .ks-plus{ grid-area:plus; } html.ui-uj:not(.m-app) #ksBlkDrawer{ grid-area:drw; }
+  html.ui-uj:not(.m-app) #ksHero{ grid-area:sum; } html.ui-uj:not(.m-app) .ks-side .ks-fld{ grid-area:fld; } html.ui-uj:not(.m-app) #ksRes{ grid-area:res; }
+  html.ui-uj:not(.m-app) .ks-side .ks-blk{ background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; padding:0 !important; margin:0 !important; min-height:0 !important; display:block !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-blk-tx{ display:flex !important; flex-direction:column !important; gap:6px !important; width:100% !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-blk-tx > :first-child, html.ui-uj:not(.m-app) .ks-side .ks-fld > span{ font:600 12px/16px 'Manrope',system-ui,sans-serif !important; letter-spacing:.06em !important; text-transform:uppercase !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-fld > span em, html.ui-uj:not(.m-app) .ks-side .ks-blk-tx > :first-child em, html.ui-uj:not(.m-app) .ks-side .ks-blk-tx > :first-child small{ display:none !important; }
+  html.ui-uj:not(.m-app) .ks-side input{ height:44px !important; font-size:18px !important; font-weight:600 !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx b, html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx strong{ font-size:28px !important; line-height:32px !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx small, html.ui-uj:not(.m-app) #ksBlkDrawer .ks-blk-tx > :last-child:not(:first-child){ font-size:12px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-plus{ position:static !important; height:auto !important; margin:0 !important; display:grid !important; place-items:center !important; }
+  html.ui-uj:not(.m-app) .ks-side .ks-plus span, html.ui-uj:not(.m-app) #ksBlkDrawer::after{ position:static !important; transform:none !important; width:28px !important; height:28px !important; border-radius:9999px !important; background:var(--u3) !important; color:var(--utx) !important; box-shadow:none !important; display:grid !important; place-items:center !important; font:700 16px/1 'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer{ position:relative !important; display:flex !important; align-items:center !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) #ksBlkDrawer::after{ content:"=" !important; flex:none; margin-left:auto !important; }
+  html.ui-uj:not(.m-app) #ksHero{ align-self:stretch; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:2px !important; padding:12px 18px !important; margin:0 !important; min-height:0 !important; background:var(--uacc) !important; background-image:none !important; border-radius:14px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ksHero, html.ui-uj:not(.m-app) #ksHero *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) #ksHero .ksh-l{ font-size:12px !important; letter-spacing:.06em !important; }
+  html.ui-uj:not(.m-app) #ksAll{ font-size:30px !important; line-height:36px !important; font-weight:700 !important; white-space:nowrap; }
+  html.ui-uj:not(.m-app) .ks-side .ks-fld{ margin:0 !important; padding-left:16px !important; border-left:1px solid var(--u4) !important; display:flex !important; flex-direction:column !important; gap:6px !important; }
+  html.ui-uj:not(.m-app) #ksRes{ align-self:stretch; margin:0 !important; min-height:0 !important; padding:10px 14px !important; border-radius:12px !important; display:flex !important; align-items:center !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:inset 3px 0 0 var(--udim) !important; animation:none !important; }
+  html.ui-uj:not(.m-app) #ksRes.plus{ box-shadow:inset 3px 0 0 #F5A55A !important; } html.ui-uj:not(.m-app) #ksRes.minus{ box-shadow:inset 3px 0 0 #FF6B6B !important; } html.ui-uj:not(.m-app) #ksRes.ok{ box-shadow:inset 3px 0 0 #34C38F !important; }
+  html.ui-uj:not(.m-app) #ksRes .ks-res-tx{ display:flex !important; flex-direction:column !important; gap:2px !important; }
+  html.ui-uj:not(.m-app) #ksResT{ font-size:16px !important; line-height:22px !important; font-weight:700 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #ksRes.plus #ksResT{ color:#F5A55A !important; } html.ui-uj:not(.m-app) #ksRes.minus #ksResT{ color:#FF6B6B !important; } html.ui-uj:not(.m-app) #ksRes.ok #ksResT{ color:#34C38F !important; }
+  html.ui-uj:not(.m-app) #ksResS{ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; }
+  @media (max-width:1400px){ html.ui-uj:not(.m-app) .ks-side{ grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) minmax(0,1.2fr) !important; grid-template-areas:"back plus drw sum" "fld fld res res" !important; }
+    html.ui-uj:not(.m-app) .ks-side .ks-fld{ border-left:0 !important; padding-left:0 !important; padding-top:16px !important; border-top:1px solid var(--u4) !important; }
+    html.ui-uj:not(.m-app) #ksRes{ margin-top:16px !important; } }
   html.ui-uj:not(.m-app) .ks-main{ width:100% !important; max-width:none !important; display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:20px !important; align-items:start !important; }
   html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; padding:0 !important; overflow:hidden; }
   html.ui-uj:not(.m-app) .ks-main .ks-sec-h{ padding:16px 20px !important; margin:0 !important; background:var(--u2) !important; border-bottom:1px solid var(--u4) !important; }
