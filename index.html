@@ -6586,6 +6586,146 @@
   html.ui-uj:not(.m-app) .ea-wrap > .ea-card{ width:100% !important; }
   /* 📱 Speckó: keskenyebb lista, nagyobb előnézet */
   html.ui-uj:not(.m-app) .sk-wrap{ grid-template-columns:340px minmax(0,1fr) !important; gap:24px !important; }
+
+  /* ===== PRÓBA 13: admin — új elrendezés (fix oldalsáv, vékony fejléc, idővonal) ===== */
+  html.ui-uj body #fcAdmin .ax-hrow{ width:100% !important; display:flex !important; align-items:center !important; gap:12px !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-brand{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-search{ flex:0 1 440px !important; margin:0 !important; order:1; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-search input{ height:44px !important; border-radius:12px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-hbtns{ order:2; margin-left:auto !important; }
+  html.ui-uj body #fcAdmin .ax-status{ background:transparent !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:500 !important; }
+  /* oldalfejléc: nem kártya, hanem egy nagy cím */
+  html.ui-uj body #fcAdmin .ax-ph{ background:transparent !important; border:0 !important; border-radius:0 !important; padding:28px 0 20px !important; margin:0 !important; display:flex !important; align-items:flex-end !important; gap:16px !important; flex-wrap:wrap; }
+  html.ui-uj body #fcAdmin .ax-ph .ax-phi{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-ph .ax-pht{ flex:1 1 320px; min-width:0; }
+  html.ui-uj body #fcAdmin .ax-h1{ font-size:30px !important; line-height:36px !important; letter-spacing:-0.02em !important; margin:0 0 4px !important; }
+  html.ui-uj body #fcAdmin .ax-sub{ font-size:14px !important; line-height:20px !important; color:var(--udim) !important; margin:0 !important; }
+  html.ui-uj body #fcAdmin .ax-phs > *{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; box-shadow:none !important; }
+  /* KPI: lapos csempék, kis színes pont, nagy szám, ikon nélkül */
+  html.ui-uj body #fcAdmin .ax-kpis{ display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:12px !important; margin:0 0 16px !important; }
+  @media (min-width:1700px){ html.ui-uj body #fcAdmin .ax-kpis{ grid-template-columns:repeat(8,minmax(0,1fr)) !important; } }
+  html.ui-uj body #fcAdmin .ax-kpi{ min-height:0 !important; height:auto !important; padding:16px !important; border-radius:14px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; text-align:left !important; display:flex !important; flex-direction:column !important; gap:4px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi:hover{ border-color:var(--k) !important; transform:none !important; }
+  html.ui-uj body #fcAdmin .ax-kpi.alert{ border-color:color-mix(in srgb,var(--k) 60%,transparent) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi .ki{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-kpi small{ display:flex !important; align-items:center; gap:8px; font-size:12px !important; line-height:16px !important; font-weight:600 !important; letter-spacing:.04em; text-transform:uppercase; color:var(--udim) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi small::before{ content:""; width:8px; height:8px; border-radius:9999px; background:var(--k); flex:none; }
+  html.ui-uj body #fcAdmin .ax-kpi b{ font-size:30px !important; line-height:36px !important; font-weight:700 !important; color:var(--utx) !important; -webkit-text-fill-color:currentColor !important; background:none !important; }
+  html.ui-uj body #fcAdmin .ax-kpi b span{ font-size:16px !important; color:var(--udim) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi p{ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; margin:0 !important; }
+  html.ui-uj body #fcAdmin .ax-kpi .bar{ height:4px !important; border-radius:9999px !important; background:var(--u3) !important; margin-top:8px !important; }
+  html.ui-uj body #fcAdmin .ax-kpi .bar i{ background:var(--k) !important; border-radius:9999px !important; }
+  html.ui-uj body #fcAdmin .ax-card{ border-radius:16px !important; border:1px solid var(--u4) !important; background-image:none !important; box-shadow:none !important; padding:20px !important; }
+  html.ui-uj body #fcAdmin .ax-ch h3{ font-size:16px !important; line-height:24px !important; font-weight:600 !important; }
+  html.ui-uj body #fcAdmin .ax-g2{ gap:16px !important; margin-bottom:16px !important; }
+  html.ui-uj body #fcAdmin .ax-ai{ border-radius:12px !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:inset 3px 0 0 var(--k) !important; min-height:48px !important; margin-bottom:6px !important; }
+  html.ui-uj body #fcAdmin .ax-ai:hover{ background:var(--u3) !important; }
+  html.ui-uj body #fcAdmin .ax-ai i{ background:transparent !important; box-shadow:none !important; }
+  /* ⏱ Ma a boltokban — idővonal */
+  html.ui-uj body #fcAdmin .ui-tl{ padding:0 !important; overflow:hidden; margin-bottom:16px; }
+  html.ui-uj body #fcAdmin .ui-tl > .ax-ch{ display:flex; align-items:center; gap:12px; padding:16px 20px; margin:0 !important; border-bottom:1px solid var(--u4); }
+  html.ui-uj body #fcAdmin .ui-tl > .ax-ch small{ color:var(--udim); font-size:13px; }
+  html.ui-uj body #fcAdmin .ui-tl-miss{ color:#FF6B6B; font-weight:600; }
+  html.ui-uj body #fcAdmin .ui-tl-g{ display:flex; flex-direction:column; }
+  html.ui-uj body #fcAdmin .ui-tl-hd, html.ui-uj body #fcAdmin .ui-tl-r{ display:grid; grid-template-columns:240px minmax(0,1fr); }
+  html.ui-uj body #fcAdmin .ui-tl-hd{ border-bottom:1px solid var(--u4); }
+  html.ui-uj body #fcAdmin .ui-tl-hd > span{ padding:10px 20px; font-size:12px; font-weight:600; color:var(--udim); }
+  html.ui-uj body #fcAdmin .ui-tl-hrs{ display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); }
+  html.ui-uj body #fcAdmin .ui-tl-hrs i{ font-style:normal; padding:10px 0 10px 6px; font-size:12px; color:var(--udim); box-shadow:inset 1px 0 0 var(--u4); font-variant-numeric:tabular-nums; }
+  html.ui-uj body #fcAdmin .ui-tl-r{ min-height:56px; border-bottom:1px solid var(--u3); cursor:pointer; transition:background .3s cubic-bezier(0.22,1,0.36,1); }
+  html.ui-uj body #fcAdmin .ui-tl-r:last-child{ border-bottom:0; }
+  html.ui-uj body #fcAdmin .ui-tl-r:hover{ background:var(--u2); }
+  html.ui-uj body #fcAdmin .ui-tl-s{ display:flex; align-items:center; gap:12px; padding:8px 20px; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-s > span{ display:flex; flex-direction:column; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-s b{ font-size:14px; line-height:20px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj body #fcAdmin .ui-tl-s small{ font-size:12px; line-height:16px; color:var(--udim); }
+  html.ui-uj body #fcAdmin .ui-tl-t{ position:relative; min-height:calc(var(--ln) * 44px + 12px); background-image:repeating-linear-gradient(90deg,var(--u3) 0 1px,transparent 1px calc(100% / var(--n))); }
+  html.ui-uj body #fcAdmin .ui-tl-g{ --n:12; }
+  html.ui-uj body #fcAdmin .ui-tl-b{ position:absolute; display:flex; align-items:center; gap:8px; padding:0 10px 0 12px; border-radius:8px; background:var(--u3); box-shadow:inset 3px 0 0 var(--c); overflow:hidden; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-b.w{ background:color-mix(in srgb,#FF6B6B 14%,var(--u1)); }
+  html.ui-uj body #fcAdmin .ui-tl-b span{ font-size:12px; line-height:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-b em{ margin-left:auto; font-style:normal; font-size:12px; color:var(--udim); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  html.ui-uj body #fcAdmin .ui-tl-now{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--uacc); z-index:2; pointer-events:none; }
+  html.ui-uj body #fcAdmin .ui-tl-s .ax-av, html.ui-uj body #fcAdmin .ax-tln .ax-av{ display:grid !important; place-items:center !important; width:32px !important; height:32px !important; border-radius:8px !important; font-size:11px !important; font-weight:600 !important; line-height:1 !important; padding:0 !important; color:#000 !important; background-color:var(--av) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi{ padding:14px 16px !important; }
+  html.ui-uj body #fcAdmin .ax-kpi b{ font-size:28px !important; line-height:34px !important; }
+  /* 📅 admin beosztás */
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] > .ax-tb{ display:flex !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important; margin-bottom:16px !important; }
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] .ax-scv{ flex:none; }
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] .ax-scm{ flex:none; display:flex; align-items:center; gap:8px; }
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] .ax-inp{ flex:1 1 160px; min-width:120px; margin-left:auto; }
+  html.ui-uj body #fcAdmin .ax-seg{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:4px !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-seg button{ height:32px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; border:0 !important; color:var(--udim) !important; font-weight:600 !important; }
+  html.ui-uj body #fcAdmin .ax-seg button.on{ background:var(--u3) !important; color:var(--utx) !important; }
+  html.ui-uj body #fcAdmin .ax-wk{ gap:8px !important; }
+  html.ui-uj body #fcAdmin .ax-wk button{ padding:8px 4px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; transform:none !important; }
+  html.ui-uj body #fcAdmin .ax-wk button small{ font-weight:600 !important; letter-spacing:.04em !important; }
+  html.ui-uj body #fcAdmin .ax-wk button b{ font:600 18px/24px 'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj body #fcAdmin .ax-wk button.on{ border-color:var(--uacc) !important; background:var(--u2) !important; }
+  html.ui-uj body #fcAdmin .ax-wk button.on b{ color:var(--uacc) !important; }
+  html.ui-uj body #fcAdmin .ax-kp{ gap:8px !important; margin-top:8px !important; }
+  html.ui-uj body #fcAdmin .ax-kp button{ min-height:0 !important; padding:10px 14px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-kp button.on{ border-color:var(--uacc) !important; }
+  html.ui-uj body #fcAdmin .ax-kp .ic{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-kp small{ font-weight:600 !important; color:var(--udim) !important; }
+  html.ui-uj body #fcAdmin .ax-kp b{ font-weight:700 !important; }
+  html.ui-uj body #fcAdmin .ax-tl{ padding:0 !important; }
+  html.ui-uj body #fcAdmin .ax-tlh{ padding:10px 20px !important; border-bottom:1px solid var(--u4) !important; margin:0 !important; }
+  html.ui-uj body #fcAdmin .ax-tlr{ padding:6px 20px !important; border-bottom:1px solid var(--u3) !important; }
+  html.ui-uj body #fcAdmin .ax-tlb{ background:var(--u3) !important; border:0 !important; border-radius:8px !important; animation:none !important; }
+  html.ui-uj body #fcAdmin .ax-tlb::before{ width:3px !important; }
+  html.ui-uj body #fcAdmin .ax-tlb b{ font-weight:600 !important; font-size:12px !important; }
+  html.ui-uj body #fcAdmin .ax-tlb small i{ background:var(--u4) !important; color:var(--utx) !important; font-weight:600 !important; }
+  /* táblázatok és listák */
+  html.ui-uj body #fcAdmin table{ border-collapse:separate !important; border-spacing:0 !important; }
+  html.ui-uj body #fcAdmin th{ background:transparent !important; font-size:12px !important; font-weight:600 !important; letter-spacing:.04em; text-transform:uppercase; color:var(--udim) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj body #fcAdmin td{ border-bottom:1px solid var(--u3) !important; background:transparent !important; }
+  html.ui-uj body #fcAdmin tr.go:hover td{ background:var(--u2) !important; }
+  html.ui-uj body #fcAdmin .ax-btn{ height:40px !important; border-radius:10px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; font-weight:600 !important; }
+  html.ui-uj body #fcAdmin .ax-btn:hover{ background:var(--u3) !important; }
+  html.ui-uj body #fcAdmin .ax-btn.pri{ background:var(--uacc) !important; border-color:var(--uacc) !important; color:#000 !important; }
+  html.ui-uj body #fcAdmin .ax-in{ border-radius:10px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-in:focus{ border-color:var(--uacc) !important; outline:none !important; }
+  html.ui-uj body #fcAdmin .ax-b{ border-radius:9999px !important; font-weight:600 !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-scard{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-scard:hover{ border-color:var(--uacc) !important; transform:none !important; }
+  html.ui-uj body #fcAdmin .ax-li{ border-radius:12px !important; }
+  html.ui-uj body #fcAdmin .ax-li:hover{ background:var(--u2) !important; }
+
+  @media (min-width:900px){
+  html.ui-uj:not(.ui-rail) body #fcAdmin .ax-app{ padding-left:248px !important; }
+  html.ui-uj.ui-rail body #fcAdmin .ax-app{ padding-left:72px !important; }
+  html.ui-uj:not(.ui-rail) body #fcAdmin .ax-nav{ width:248px !important; }
+  html.ui-uj body #fcAdmin .ax-nav{ background:var(--u1) !important; }
+  html.ui-uj.ui-rail body #fcAdmin .ax-nav:hover{ width:248px !important; }
+  html.ui-uj body #fcAdmin .ax-main, html.ui-uj body #fcAdmin .ax-body{ max-width:none !important; width:auto !important; margin:0 !important; padding-left:0 !important; padding-right:0 !important; }
+  html.ui-uj body #fcAdmin .ax-body{ padding:0 32px 48px !important; }
+  html.ui-uj body #fcAdmin .ax-hdr{ position:sticky !important; top:0 !important; z-index:30 !important; margin:0 -32px !important; padding:0 32px !important; height:72px; display:flex !important; align-items:center !important; background:var(--u0) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj body #fcAdmin .ax-app{ padding-right:0 !important; }
+  }
+
+  @media (max-width:899px){
+    html.ui-uj body #fcAdmin .ax-app, html.ui-uj.ui-rail body #fcAdmin .ax-app{ padding:0 0 84px !important; }
+    html.ui-uj body #fcAdmin .ax-nav, html.ui-uj.ui-rail body #fcAdmin .ax-nav, html.ui-uj.ui-rail body #fcAdmin .ax-nav:hover{ top:auto !important; bottom:8px !important; left:8px !important; right:8px !important; width:auto !important; height:64px !important; flex-direction:row !important; overflow-x:auto !important; overflow-y:hidden !important; padding:6px !important; border-radius:20px !important; border:1px solid var(--u4) !important; gap:2px !important; scrollbar-width:none; }
+    html.ui-uj body #fcAdmin .ax-nav .ui-navtop, html.ui-uj body #fcAdmin .ax-nav .ui-grp{ display:none !important; }
+    html.ui-uj body #fcAdmin .ax-nav > button{ flex:0 0 64px !important; width:64px !important; height:52px !important; min-height:52px !important; flex-direction:column !important; justify-content:center !important; gap:2px !important; padding:4px !important; }
+    html.ui-uj body #fcAdmin .ax-nav > button .ps-t{ opacity:1 !important; font-size:10px !important; line-height:14px !important; max-width:60px; text-align:center; }
+    html.ui-uj body #fcAdmin .ax-nav > button em{ position:absolute !important; top:2px; right:8px; }
+    html.ui-uj body #fcAdmin .ax-body{ padding:0 16px 24px !important; }
+    html.ui-uj body #fcAdmin .ax-hdr, html.ui-uj body #fcAdmin .ax-hrow, html.ui-uj body #fcAdmin .ax-main, html.ui-uj body #fcAdmin .ax-body, html.ui-uj body #fcAdmin .ax-app{ transform:none !important; filter:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; contain:none !important; will-change:auto !important; }
+    html.ui-uj body #fcAdmin .ax-hdr{ position:static !important; margin:0 -16px !important; padding:12px 16px !important; height:auto !important; }
+    html.ui-uj body #fcAdmin .ax-hdr .ax-search{ flex:1 1 auto !important; }
+    html.ui-uj body #fcAdmin .ax-rr{ position:static !important; padding:8px 16px 0 !important; }
+    html.ui-uj body #fcAdmin .ax-h1{ font-size:24px !important; line-height:32px !important; }
+    html.ui-uj body #fcAdmin .ax-ph{ padding:16px 0 12px !important; }
+    html.ui-uj body #fcAdmin .ax-phs{ display:none !important; }
+    html.ui-uj body #fcAdmin .ax-kpis{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+    html.ui-uj body #fcAdmin .ax-g2{ grid-template-columns:1fr !important; display:grid !important; }
+    html.ui-uj body #fcAdmin .ui-tl-g{ overflow-x:auto; }
+    html.ui-uj body #fcAdmin .ui-tl-hd, html.ui-uj body #fcAdmin .ui-tl-r{ min-width:760px; grid-template-columns:180px minmax(0,1fr); }
+    html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] > .ax-tb{ flex-wrap:wrap !important; }
+    html.ui-uj body:has(#fcAdmin) #uiUjBadge{ bottom:88px !important; }
+  }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -6633,6 +6773,7 @@
       h.hidden = !any; });
     var an = document.querySelector("#fcAdmin .ax-nav");
     if(an){
+      var aapp = document.querySelector("#fcAdmin .ax-app"); if(aapp && an.parentNode !== aapp) aapp.appendChild(an);
       if(!an.querySelector(".ui-navtop")){ var tp = document.createElement("div"); tp.className = "ui-navtop"; tp.innerHTML = '<button type="button" class="ui-pinbtn" aria-label="Menü rögzítése">' + ICO + '</button><b>Admin</b>'; an.insertBefore(tp, an.firstChild);
         tp.querySelector("button").addEventListener("click", function(e){ e.stopPropagation(); setm(H.classList.contains("ui-pin") ? "rail" : "pin"); }); }
       var an2 = an.querySelector(".ui-navtop");
@@ -7447,8 +7588,8 @@
   const loginTxt = (x, pw)=> `FirstPhone Munkaasztal — belépés\n\nBolt: ${x.name}\nWeboldal: ${FP_SITE}\nBelépés: ${x.name}  (vagy: ${x.email})\nJelszó: ${pw}\n\nBelépéskor elég a bolt nevét beírni. Ha nem megy, írj az adminnak.`;
   function loginPrint(x, pw){
     const f = document.createElement("iframe"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden"; document.body.appendChild(f);
-    const d = f.contentDocument; d.open(); d.write(`<!doctype html><html><head><meta charset="utf-8"><title>Belépés — ${esc(x.name)}</title><style>
-      body{font:15px/1.5 Arial,sans-serif;color:#111;margin:40px;} .c{max-width:520px;border:2px solid #111;border-radius:18px;padding:26px 30px;} h1{margin:0 0 4px;font-size:22px;} p.s{margin:0 0 18px;color:#555;}
+    const d = f.contentDocument; d.open(); d.write(`<!doctype html><html><head><meta charset="utf-8"><title>Belépés — ${esc(x.name)}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style>
+      body{font:15px/1.5 Manrope,Arial,sans-serif;color:#111;margin:40px;} h1{border-bottom:3px solid #FBAC01;padding-bottom:6px;} .c{max-width:520px;border:2px solid #111;border-radius:18px;padding:26px 30px;} h1{margin:0 0 4px;font-size:22px;} p.s{margin:0 0 18px;color:#555;}
       dl{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin:0;} dt{color:#555;} dd{margin:0;font-weight:700;} dd.pw{font:700 20px ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px;} small{display:block;margin-top:18px;color:#555;}</style></head>
       <body><div class="c"><h1>FirstPhone Munkaasztal</h1><p class="s">Belépési adatok — ${esc(x.name)}</p><dl><dt>Weboldal</dt><dd>${esc(FP_SITE.replace(/^https:\/\//, ""))}</dd><dt>Belépés</dt><dd>${esc(x.name)}<br><span style="font-weight:400;color:#555">vagy: ${esc(x.email)}</span></dd><dt>Jelszó</dt><dd class="pw">${esc(pw)}</dd></dl>
       <small>Belépéskor elég a bolt nevét beírni. A lapot tedd el biztonságos helyre — ne tűzd ki a pultra.</small></div></body></html>`); d.close();
@@ -10460,7 +10601,7 @@ service cloud.firestore {
         $(".ax-dtix").innerHTML = T.slice(0, 5).map(m=> `<div class="ax-li" data-tix="${esc(m.key)}"><span class="ax-tid">${tixId(m)}</span><span class="tx"><span>${esc(firstLine(m.text))}</span><small>${esc(m.shop)} · ${rel(m.ms)}</small></span>${stBadge(m)}</div>`).join("") || `<div class="ax-empty">Még nincs hibajegy.</div>`;
         const M = []; list.forEach(x=> (threads[x.uid] || []).forEach(m=>{ if(m.from === "s" && m.type !== "bug") M.push({ x, m }); })); M.sort((a, c)=> c.m.ms - a.m.ms);
         $(".ax-dmsg").innerHTML = M.slice(0, 5).map(({ x, m })=> `<div class="ax-li${m.ms > +(lsGet(adSeenK(x.uid)) || 0) ? " un" : ""}" data-cu="${esc(x.uid)}">${axAv(x)}<span class="tx"><span><b>${esc(shortN(x))}</b></span><small>${esc(msgTxt(m))}</small></span><time>${when(m.ms)}</time></div>`).join("") || `<div class="ax-empty">Még nem írt egy bolt sem.</div>`;
-        cnt("shops", tot || null); cnt("tix", newT.length || null, true); cnt("inbox", un || null, true); cnt("data", orph.length || null); cnt("news", newsCfg.on ? `${list.filter(seenOf).length}/${tot}` : null); drawHero();
+        cnt("shops", tot || null); cnt("tix", newT.length || null, true); cnt("inbox", un || null, true); cnt("data", orph.length || null); cnt("news", newsCfg.on ? `${list.filter(seenOf).length}/${tot}` : null); drawHero(); try{ window.uiAxTL && uiAxTL(list, axAv, shortN, b); }catch(e){}
       }
       let rT = null; function later(){ clearTimeout(rT); rT = setTimeout(()=>{ drawCts(); drawTix(); drawDash(); drawShopsIfOn(); }, 120); }
       /* --- 🏬 boltok --- */
@@ -16645,6 +16786,146 @@ service cloud.firestore {
   html.ui-uj:not(.m-app) .ea-wrap > .ea-card{ width:100% !important; }
   /* 📱 Speckó: keskenyebb lista, nagyobb előnézet */
   html.ui-uj:not(.m-app) .sk-wrap{ grid-template-columns:340px minmax(0,1fr) !important; gap:24px !important; }
+
+  /* ===== PRÓBA 13: admin — új elrendezés (fix oldalsáv, vékony fejléc, idővonal) ===== */
+  html.ui-uj body #fcAdmin .ax-hrow{ width:100% !important; display:flex !important; align-items:center !important; gap:12px !important; padding:0 !important; margin:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-brand{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-search{ flex:0 1 440px !important; margin:0 !important; order:1; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-search input{ height:44px !important; border-radius:12px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-hdr .ax-hbtns{ order:2; margin-left:auto !important; }
+  html.ui-uj body #fcAdmin .ax-status{ background:transparent !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:500 !important; }
+  /* oldalfejléc: nem kártya, hanem egy nagy cím */
+  html.ui-uj body #fcAdmin .ax-ph{ background:transparent !important; border:0 !important; border-radius:0 !important; padding:28px 0 20px !important; margin:0 !important; display:flex !important; align-items:flex-end !important; gap:16px !important; flex-wrap:wrap; }
+  html.ui-uj body #fcAdmin .ax-ph .ax-phi{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-ph .ax-pht{ flex:1 1 320px; min-width:0; }
+  html.ui-uj body #fcAdmin .ax-h1{ font-size:30px !important; line-height:36px !important; letter-spacing:-0.02em !important; margin:0 0 4px !important; }
+  html.ui-uj body #fcAdmin .ax-sub{ font-size:14px !important; line-height:20px !important; color:var(--udim) !important; margin:0 !important; }
+  html.ui-uj body #fcAdmin .ax-phs > *{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; box-shadow:none !important; }
+  /* KPI: lapos csempék, kis színes pont, nagy szám, ikon nélkül */
+  html.ui-uj body #fcAdmin .ax-kpis{ display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:12px !important; margin:0 0 16px !important; }
+  @media (min-width:1700px){ html.ui-uj body #fcAdmin .ax-kpis{ grid-template-columns:repeat(8,minmax(0,1fr)) !important; } }
+  html.ui-uj body #fcAdmin .ax-kpi{ min-height:0 !important; height:auto !important; padding:16px !important; border-radius:14px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; text-align:left !important; display:flex !important; flex-direction:column !important; gap:4px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi:hover{ border-color:var(--k) !important; transform:none !important; }
+  html.ui-uj body #fcAdmin .ax-kpi.alert{ border-color:color-mix(in srgb,var(--k) 60%,transparent) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi .ki{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-kpi small{ display:flex !important; align-items:center; gap:8px; font-size:12px !important; line-height:16px !important; font-weight:600 !important; letter-spacing:.04em; text-transform:uppercase; color:var(--udim) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi small::before{ content:""; width:8px; height:8px; border-radius:9999px; background:var(--k); flex:none; }
+  html.ui-uj body #fcAdmin .ax-kpi b{ font-size:30px !important; line-height:36px !important; font-weight:700 !important; color:var(--utx) !important; -webkit-text-fill-color:currentColor !important; background:none !important; }
+  html.ui-uj body #fcAdmin .ax-kpi b span{ font-size:16px !important; color:var(--udim) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi p{ font-size:12px !important; line-height:16px !important; color:var(--udim) !important; margin:0 !important; }
+  html.ui-uj body #fcAdmin .ax-kpi .bar{ height:4px !important; border-radius:9999px !important; background:var(--u3) !important; margin-top:8px !important; }
+  html.ui-uj body #fcAdmin .ax-kpi .bar i{ background:var(--k) !important; border-radius:9999px !important; }
+  html.ui-uj body #fcAdmin .ax-card{ border-radius:16px !important; border:1px solid var(--u4) !important; background-image:none !important; box-shadow:none !important; padding:20px !important; }
+  html.ui-uj body #fcAdmin .ax-ch h3{ font-size:16px !important; line-height:24px !important; font-weight:600 !important; }
+  html.ui-uj body #fcAdmin .ax-g2{ gap:16px !important; margin-bottom:16px !important; }
+  html.ui-uj body #fcAdmin .ax-ai{ border-radius:12px !important; background:var(--u2) !important; background-image:none !important; border:0 !important; box-shadow:inset 3px 0 0 var(--k) !important; min-height:48px !important; margin-bottom:6px !important; }
+  html.ui-uj body #fcAdmin .ax-ai:hover{ background:var(--u3) !important; }
+  html.ui-uj body #fcAdmin .ax-ai i{ background:transparent !important; box-shadow:none !important; }
+  /* ⏱ Ma a boltokban — idővonal */
+  html.ui-uj body #fcAdmin .ui-tl{ padding:0 !important; overflow:hidden; margin-bottom:16px; }
+  html.ui-uj body #fcAdmin .ui-tl > .ax-ch{ display:flex; align-items:center; gap:12px; padding:16px 20px; margin:0 !important; border-bottom:1px solid var(--u4); }
+  html.ui-uj body #fcAdmin .ui-tl > .ax-ch small{ color:var(--udim); font-size:13px; }
+  html.ui-uj body #fcAdmin .ui-tl-miss{ color:#FF6B6B; font-weight:600; }
+  html.ui-uj body #fcAdmin .ui-tl-g{ display:flex; flex-direction:column; }
+  html.ui-uj body #fcAdmin .ui-tl-hd, html.ui-uj body #fcAdmin .ui-tl-r{ display:grid; grid-template-columns:240px minmax(0,1fr); }
+  html.ui-uj body #fcAdmin .ui-tl-hd{ border-bottom:1px solid var(--u4); }
+  html.ui-uj body #fcAdmin .ui-tl-hd > span{ padding:10px 20px; font-size:12px; font-weight:600; color:var(--udim); }
+  html.ui-uj body #fcAdmin .ui-tl-hrs{ display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr)); }
+  html.ui-uj body #fcAdmin .ui-tl-hrs i{ font-style:normal; padding:10px 0 10px 6px; font-size:12px; color:var(--udim); box-shadow:inset 1px 0 0 var(--u4); font-variant-numeric:tabular-nums; }
+  html.ui-uj body #fcAdmin .ui-tl-r{ min-height:56px; border-bottom:1px solid var(--u3); cursor:pointer; transition:background .3s cubic-bezier(0.22,1,0.36,1); }
+  html.ui-uj body #fcAdmin .ui-tl-r:last-child{ border-bottom:0; }
+  html.ui-uj body #fcAdmin .ui-tl-r:hover{ background:var(--u2); }
+  html.ui-uj body #fcAdmin .ui-tl-s{ display:flex; align-items:center; gap:12px; padding:8px 20px; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-s > span{ display:flex; flex-direction:column; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-s b{ font-size:14px; line-height:20px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.ui-uj body #fcAdmin .ui-tl-s small{ font-size:12px; line-height:16px; color:var(--udim); }
+  html.ui-uj body #fcAdmin .ui-tl-t{ position:relative; min-height:calc(var(--ln) * 44px + 12px); background-image:repeating-linear-gradient(90deg,var(--u3) 0 1px,transparent 1px calc(100% / var(--n))); }
+  html.ui-uj body #fcAdmin .ui-tl-g{ --n:12; }
+  html.ui-uj body #fcAdmin .ui-tl-b{ position:absolute; display:flex; align-items:center; gap:8px; padding:0 10px 0 12px; border-radius:8px; background:var(--u3); box-shadow:inset 3px 0 0 var(--c); overflow:hidden; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-b.w{ background:color-mix(in srgb,#FF6B6B 14%,var(--u1)); }
+  html.ui-uj body #fcAdmin .ui-tl-b span{ font-size:12px; line-height:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  html.ui-uj body #fcAdmin .ui-tl-b em{ margin-left:auto; font-style:normal; font-size:12px; color:var(--udim); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  html.ui-uj body #fcAdmin .ui-tl-now{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--uacc); z-index:2; pointer-events:none; }
+  html.ui-uj body #fcAdmin .ui-tl-s .ax-av, html.ui-uj body #fcAdmin .ax-tln .ax-av{ display:grid !important; place-items:center !important; width:32px !important; height:32px !important; border-radius:8px !important; font-size:11px !important; font-weight:600 !important; line-height:1 !important; padding:0 !important; color:#000 !important; background-color:var(--av) !important; }
+  html.ui-uj body #fcAdmin .ax-kpi{ padding:14px 16px !important; }
+  html.ui-uj body #fcAdmin .ax-kpi b{ font-size:28px !important; line-height:34px !important; }
+  /* 📅 admin beosztás */
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] > .ax-tb{ display:flex !important; flex-wrap:nowrap !important; align-items:center !important; gap:8px !important; margin-bottom:16px !important; }
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] .ax-scv{ flex:none; }
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] .ax-scm{ flex:none; display:flex; align-items:center; gap:8px; }
+  html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] .ax-inp{ flex:1 1 160px; min-width:120px; margin-left:auto; }
+  html.ui-uj body #fcAdmin .ax-seg{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:4px !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-seg button{ height:32px !important; border-radius:8px !important; background:transparent !important; background-image:none !important; box-shadow:none !important; border:0 !important; color:var(--udim) !important; font-weight:600 !important; }
+  html.ui-uj body #fcAdmin .ax-seg button.on{ background:var(--u3) !important; color:var(--utx) !important; }
+  html.ui-uj body #fcAdmin .ax-wk{ gap:8px !important; }
+  html.ui-uj body #fcAdmin .ax-wk button{ padding:8px 4px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; transform:none !important; }
+  html.ui-uj body #fcAdmin .ax-wk button small{ font-weight:600 !important; letter-spacing:.04em !important; }
+  html.ui-uj body #fcAdmin .ax-wk button b{ font:600 18px/24px 'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj body #fcAdmin .ax-wk button.on{ border-color:var(--uacc) !important; background:var(--u2) !important; }
+  html.ui-uj body #fcAdmin .ax-wk button.on b{ color:var(--uacc) !important; }
+  html.ui-uj body #fcAdmin .ax-kp{ gap:8px !important; margin-top:8px !important; }
+  html.ui-uj body #fcAdmin .ax-kp button{ min-height:0 !important; padding:10px 14px !important; border-radius:12px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-kp button.on{ border-color:var(--uacc) !important; }
+  html.ui-uj body #fcAdmin .ax-kp .ic{ display:none !important; }
+  html.ui-uj body #fcAdmin .ax-kp small{ font-weight:600 !important; color:var(--udim) !important; }
+  html.ui-uj body #fcAdmin .ax-kp b{ font-weight:700 !important; }
+  html.ui-uj body #fcAdmin .ax-tl{ padding:0 !important; }
+  html.ui-uj body #fcAdmin .ax-tlh{ padding:10px 20px !important; border-bottom:1px solid var(--u4) !important; margin:0 !important; }
+  html.ui-uj body #fcAdmin .ax-tlr{ padding:6px 20px !important; border-bottom:1px solid var(--u3) !important; }
+  html.ui-uj body #fcAdmin .ax-tlb{ background:var(--u3) !important; border:0 !important; border-radius:8px !important; animation:none !important; }
+  html.ui-uj body #fcAdmin .ax-tlb::before{ width:3px !important; }
+  html.ui-uj body #fcAdmin .ax-tlb b{ font-weight:600 !important; font-size:12px !important; }
+  html.ui-uj body #fcAdmin .ax-tlb small i{ background:var(--u4) !important; color:var(--utx) !important; font-weight:600 !important; }
+  /* táblázatok és listák */
+  html.ui-uj body #fcAdmin table{ border-collapse:separate !important; border-spacing:0 !important; }
+  html.ui-uj body #fcAdmin th{ background:transparent !important; font-size:12px !important; font-weight:600 !important; letter-spacing:.04em; text-transform:uppercase; color:var(--udim) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj body #fcAdmin td{ border-bottom:1px solid var(--u3) !important; background:transparent !important; }
+  html.ui-uj body #fcAdmin tr.go:hover td{ background:var(--u2) !important; }
+  html.ui-uj body #fcAdmin .ax-btn{ height:40px !important; border-radius:10px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; color:var(--utx) !important; font-weight:600 !important; }
+  html.ui-uj body #fcAdmin .ax-btn:hover{ background:var(--u3) !important; }
+  html.ui-uj body #fcAdmin .ax-btn.pri{ background:var(--uacc) !important; border-color:var(--uacc) !important; color:#000 !important; }
+  html.ui-uj body #fcAdmin .ax-in{ border-radius:10px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-in:focus{ border-color:var(--uacc) !important; outline:none !important; }
+  html.ui-uj body #fcAdmin .ax-b{ border-radius:9999px !important; font-weight:600 !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-scard{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj body #fcAdmin .ax-scard:hover{ border-color:var(--uacc) !important; transform:none !important; }
+  html.ui-uj body #fcAdmin .ax-li{ border-radius:12px !important; }
+  html.ui-uj body #fcAdmin .ax-li:hover{ background:var(--u2) !important; }
+
+  @media (min-width:900px){
+  html.ui-uj:not(.ui-rail) body #fcAdmin .ax-app{ padding-left:248px !important; }
+  html.ui-uj.ui-rail body #fcAdmin .ax-app{ padding-left:72px !important; }
+  html.ui-uj:not(.ui-rail) body #fcAdmin .ax-nav{ width:248px !important; }
+  html.ui-uj body #fcAdmin .ax-nav{ background:var(--u1) !important; }
+  html.ui-uj.ui-rail body #fcAdmin .ax-nav:hover{ width:248px !important; }
+  html.ui-uj body #fcAdmin .ax-main, html.ui-uj body #fcAdmin .ax-body{ max-width:none !important; width:auto !important; margin:0 !important; padding-left:0 !important; padding-right:0 !important; }
+  html.ui-uj body #fcAdmin .ax-body{ padding:0 32px 48px !important; }
+  html.ui-uj body #fcAdmin .ax-hdr{ position:sticky !important; top:0 !important; z-index:30 !important; margin:0 -32px !important; padding:0 32px !important; height:72px; display:flex !important; align-items:center !important; background:var(--u0) !important; border-bottom:1px solid var(--u4) !important; }
+  html.ui-uj body #fcAdmin .ax-app{ padding-right:0 !important; }
+  }
+
+  @media (max-width:899px){
+    html.ui-uj body #fcAdmin .ax-app, html.ui-uj.ui-rail body #fcAdmin .ax-app{ padding:0 0 84px !important; }
+    html.ui-uj body #fcAdmin .ax-nav, html.ui-uj.ui-rail body #fcAdmin .ax-nav, html.ui-uj.ui-rail body #fcAdmin .ax-nav:hover{ top:auto !important; bottom:8px !important; left:8px !important; right:8px !important; width:auto !important; height:64px !important; flex-direction:row !important; overflow-x:auto !important; overflow-y:hidden !important; padding:6px !important; border-radius:20px !important; border:1px solid var(--u4) !important; gap:2px !important; scrollbar-width:none; }
+    html.ui-uj body #fcAdmin .ax-nav .ui-navtop, html.ui-uj body #fcAdmin .ax-nav .ui-grp{ display:none !important; }
+    html.ui-uj body #fcAdmin .ax-nav > button{ flex:0 0 64px !important; width:64px !important; height:52px !important; min-height:52px !important; flex-direction:column !important; justify-content:center !important; gap:2px !important; padding:4px !important; }
+    html.ui-uj body #fcAdmin .ax-nav > button .ps-t{ opacity:1 !important; font-size:10px !important; line-height:14px !important; max-width:60px; text-align:center; }
+    html.ui-uj body #fcAdmin .ax-nav > button em{ position:absolute !important; top:2px; right:8px; }
+    html.ui-uj body #fcAdmin .ax-body{ padding:0 16px 24px !important; }
+    html.ui-uj body #fcAdmin .ax-hdr, html.ui-uj body #fcAdmin .ax-hrow, html.ui-uj body #fcAdmin .ax-main, html.ui-uj body #fcAdmin .ax-body, html.ui-uj body #fcAdmin .ax-app{ transform:none !important; filter:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; contain:none !important; will-change:auto !important; }
+    html.ui-uj body #fcAdmin .ax-hdr{ position:static !important; margin:0 -16px !important; padding:12px 16px !important; height:auto !important; }
+    html.ui-uj body #fcAdmin .ax-hdr .ax-search{ flex:1 1 auto !important; }
+    html.ui-uj body #fcAdmin .ax-rr{ position:static !important; padding:8px 16px 0 !important; }
+    html.ui-uj body #fcAdmin .ax-h1{ font-size:24px !important; line-height:32px !important; }
+    html.ui-uj body #fcAdmin .ax-ph{ padding:16px 0 12px !important; }
+    html.ui-uj body #fcAdmin .ax-phs{ display:none !important; }
+    html.ui-uj body #fcAdmin .ax-kpis{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+    html.ui-uj body #fcAdmin .ax-g2{ grid-template-columns:1fr !important; display:grid !important; }
+    html.ui-uj body #fcAdmin .ui-tl-g{ overflow-x:auto; }
+    html.ui-uj body #fcAdmin .ui-tl-hd, html.ui-uj body #fcAdmin .ui-tl-r{ min-width:760px; grid-template-columns:180px minmax(0,1fr); }
+    html.ui-uj body #fcAdmin .ax-pane[data-pane="sched"] > .ax-tb{ flex-wrap:wrap !important; }
+    html.ui-uj body:has(#fcAdmin) #uiUjBadge{ bottom:88px !important; }
+  }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -26298,8 +26579,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const sh2 = sxSheet(r2, SOP ? [13, 12, 12, 18, 12, 15] : [13, 12, 12, 18, 12], { freeze:3, merge:[SOP ? "A1:F1" : "A1:E1"], tall:{ 0:24 } });
     const styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
       + '<fonts count="4"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="14"/><name val="Calibri"/></font><font><i/><sz val="10"/><color rgb="FF666666"/><name val="Calibri"/></font></fonts>'
-      + '<fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF222222"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEDEDED"/></patternFill></fill></fills>'
-      + '<borders count="2"><border/><border><left style="thin"><color rgb="FFBBBBBB"/></left><right style="thin"><color rgb="FFBBBBBB"/></right><top style="thin"><color rgb="FFBBBBBB"/></top><bottom style="thin"><color rgb="FFBBBBBB"/></bottom></border></borders>'
+      + '<fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFBAC01"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEDEDED"/></patternFill></fill></fills>'
+      + '<borders count="2"><border/><border><left style="thin"><color rgb="FFD9D9D9"/></left><right style="thin"><color rgb="FFD9D9D9"/></right><top style="thin"><color rgb="FFD9D9D9"/></top><bottom style="thin"><color rgb="FFD9D9D9"/></bottom></border></borders>'
       + '<cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="10">'
       + '<xf/>'
       + '<xf fontId="2" applyFont="1"><alignment vertical="center"/></xf>'
@@ -26313,7 +26594,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       + '<xf numFmtId="3" fontId="1" fillId="3" borderId="1" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"><alignment horizontal="right"/></xf>'
       + '</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
     /* a fejléc sor fehér betűs: külön betűtípus a 2-es stílushoz */
-    const stylesW = styles.replace('<fonts count="4">', '<fonts count="5">').replace('</fonts>', '<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts>').replace('<xf fontId="1" fillId="2"', '<xf fontId="4" fillId="2"');
+    const stylesW = styles.replace('<fonts count="4">', '<fonts count="5">').replace('</fonts>', '<font><b/><sz val="11"/><color rgb="FF000000"/><name val="Calibri"/></font></fonts>').replace('<xf fontId="1" fillId="2"', '<xf fontId="4" fillId="2"');
     const files = [
       ["[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>'],
       ["_rels/.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>'],
@@ -27576,11 +27857,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     red:"#e2585a", text:"#f6f5f2", textDim:"#b3b1ba", textFaint:"#75737e"
   };
   /* a letöltött beosztás stílusa: ⚫ fekete (sötét, mint az oldal) vagy ⚪ fehér (világos, nyomtatásbarát) — a választás megmarad */
-  const pdfTheme = ()=>{ try{ return localStorage.getItem("fp_pdf_theme") === "light" ? "light" : "dark"; }catch(e){ return "dark"; } };
+  const pdfTheme = ()=>{ try{ return localStorage.getItem("fp_pdf_theme") === "dark" ? "dark" : "light"; }catch(e){ return "light"; } };
   const pdfThemeSet = v=>{ try{ localStorage.setItem("fp_pdf_theme", v === "light" ? "light" : "dark"); }catch(e){} };
   function pdfPal(){
-    if(pdfTheme() === "light") return { light:true, bg:"#ffffff", bgCell:"#f6f6f9", border:"#dedee6", borderSoft:"#e3e3ea", gold:"#b8862a", goldLight:"#d9ad46", teal:"#1f8fa3", tealLight:"#1f8fa3", red:"#d64545", text:"#16161c", textDim:"#5d5d68", textFaint:"#9a9aa6",
-      head:"#ffffff", we:"#eef7f9", foot:"#f6f6f9", pill:"rgba(0,0,0,.07)", sh:"rgba(0,0,0,0.10)", shCell:"rgba(0,0,0,0.05)" };
+    if(pdfTheme() === "light") return { light:true, bg:"#ffffff", bgCell:"#f5f5f5", border:"#dddddd", borderSoft:"#e6e6e6", gold:"#9a6a00", goldLight:"#FBAC01", teal:"#FBAC01", tealLight:"#6b6b6b", red:"#c62828", text:"#111111", textDim:"#555555", textFaint:"#999999",
+      head:"#ffffff", we:"#f3f3f3", foot:"#f5f5f5", pill:"rgba(0,0,0,.07)", sh:"rgba(0,0,0,0.10)", shCell:"rgba(0,0,0,0.05)" };
     return Object.assign({ light:false, head:"#17171c", we:"#20232a", foot:"#14141a", pill:"rgba(255,255,255,.12)", sh:"rgba(0,0,0,0.55)", shCell:"rgba(0,0,0,0.35)" }, BRAND);
   }
 
@@ -27634,14 +27915,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     return drawMonthGrid({ y:state.year, m:state.month, people, counts, days, start, total, rows, hours:hoursSummary(), place:workplaceName(), address:state.settings.address || "" });
   }
   /* a havi rács rajzolása (a bolt saját beosztása és az admin „minden bolt” letöltése is ezt használja) */
-  async function drawMonthGrid(M){
+  async function drawMonthGrid(M){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const { people, counts, days, rows } = M;
     const SC = M.sc || 1, W = Math.round(5432 * SC), H = Math.round(7680 * SC);
     const canvas = document.createElement("canvas"); canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
     const C = pdfPal(), LT = C.light;
-    const INK = C.text, DIM = C.textDim, FAINT = C.textFaint, LINE = C.border, GOLD = LT ? "#b8862a" : C.goldLight, TEAL = LT ? "#1f8fa3" : C.tealLight, RED = LT ? "#c0392b" : "#ff8a8c";
-    const F = (w, px)=> `${w} ${Math.round(px)}px Arial, "Helvetica Neue", sans-serif`;
+    const INK = C.text, DIM = C.textDim, FAINT = C.textFaint, LINE = C.border, GOLD = LT ? "#8a5d00" : C.goldLight, TEAL = LT ? "#555555" : C.tealLight, RED = LT ? "#c0392b" : "#ff8a8c";
+    const F = (w, px)=> `${w} ${Math.round(px)}px Manrope, Arial, "Helvetica Neue", sans-serif`;
     const BASE = LT ? [255, 255, 255] : [28, 28, 35];
     const deep = hex=>{ const c = hexToRgb(hex); return `rgb(${c.map(v=> Math.round(v * 0.62)).join(",")})`; };
     const tint = (hex, a)=>{ const c = hexToRgb(hex); return `rgb(${c.map((v, k)=> Math.round(BASE[k] + (v - BASE[k]) * a)).join(",")})`; };
@@ -27675,8 +27956,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     /* --- napok fejléce --- */
     const gap = W * 0.006, gridW = W - mX * 2, cellW = (gridW - gap * 6) / 7;
     const DN = ["HÉTFŐ","KEDD","SZERDA","CSÜTÖRTÖK","PÉNTEK","SZOMBAT","VASÁRNAP"];
-    DN.forEach((d, i)=>{ const cx = mX + i * (cellW + gap); roundRectPath(ctx, cx, y, cellW, H * 0.026, H * 0.008); ctx.fillStyle = LT ? (i > 4 ? "#e3f3f6" : "#f1f1f5") : i > 4 ? "rgba(79,179,196,0.16)" : "#1a1a21"; ctx.fill();
-      ctx.lineWidth = 2; ctx.strokeStyle = LT ? (i > 4 ? "#c9e7ed" : "#e3e3ea") : i > 4 ? "rgba(79,179,196,0.35)" : C.borderSoft; ctx.stroke();
+    DN.forEach((d, i)=>{ const cx = mX + i * (cellW + gap); roundRectPath(ctx, cx, y, cellW, H * 0.026, H * 0.008); ctx.fillStyle = LT ? (i > 4 ? "#ececec" : "#f4f4f4") : i > 4 ? "rgba(79,179,196,0.16)" : "#1a1a21"; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = LT ? (i > 4 ? "#dddddd" : "#e6e6e6") : i > 4 ? "rgba(79,179,196,0.35)" : C.borderSoft; ctx.stroke();
       ctx.font = F(800, W * 0.0135); ctx.fillStyle = i > 4 ? TEAL : GOLD; ctx.textAlign = "center"; ctx.fillText(d, cx + cellW / 2, y + H * 0.0178); ctx.textAlign = "left"; });
     y += H * 0.026 + gap;
     const legendRows = Math.ceil(people.length / 3), legendH = H * 0.05 + legendRows * H * 0.03;
@@ -27693,7 +27974,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     let sc = 1.4, LY = layout(sc); while(LY.worst > cellH - cellW * 0.03 && sc > 0.5){ sc -= 0.04; LY = layout(sc); }
     days.forEach(dy=>{
       const cx = mX + dy.c * (cellW + gap), cy = y + dy.r * (cellH + gap), we = dy.c > 4;
-      roundRectPath(ctx, cx, cy, cellW, cellH, cellW * 0.07); ctx.fillStyle = LT ? (dy.hol ? "#fdeeee" : we ? "#f4fafb" : "#fafafc") : dy.hol ? "#2a1719" : we ? "#161d21" : "#18181f"; ctx.fill();
+      roundRectPath(ctx, cx, cy, cellW, cellH, cellW * 0.07); ctx.fillStyle = LT ? (dy.hol ? "#fdeeee" : we ? "#f4f4f4" : "#fcfcfc") : dy.hol ? "#2a1719" : we ? "#161d21" : "#18181f"; ctx.fill();
       ctx.lineWidth = 3; ctx.strokeStyle = LT ? (dy.hol ? "#f1b9b9" : LINE) : dy.hol ? "rgba(226,88,90,0.55)" : we ? "rgba(79,179,196,0.22)" : LINE; ctx.stroke();
       ctx.font = F(900, cellW * 0.16); ctx.fillStyle = dy.hol ? RED : we ? TEAL : INK; ctx.fillText(String(dy.d), cx + pad, cy + cellW * 0.17);
       let ey = cy + cellW * 0.22;
@@ -27738,10 +28019,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   window.fpTeamCanvas = ids=> drawTeamScheduleCanvas(ids);
   /* 🕘 admin: napi áttekintés minden boltról — idővonalon (A4 álló, több oldal, ha sok a bolt) */
-  async function drawDayGrid(D){
+  async function drawDayGrid(D){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const SC = D.sc || 1, W = Math.round(2480 * SC), H = Math.round(3508 * SC);
-    const C = pdfPal(), LT = C.light, INK = C.text, DIM = C.textDim, FAINT = C.textFaint, LINE = C.border, GOLD = LT ? "#b8862a" : C.goldLight, TEAL = LT ? "#1f8fa3" : C.tealLight, RED = LT ? "#c0392b" : "#ff8a8c";
-    const F = (w, px)=> `${w} ${Math.round(px)}px Arial, "Helvetica Neue", sans-serif`;
+    const C = pdfPal(), LT = C.light, INK = C.text, DIM = C.textDim, FAINT = C.textFaint, LINE = C.border, GOLD = LT ? "#8a5d00" : C.goldLight, TEAL = LT ? "#555555" : C.tealLight, RED = LT ? "#c0392b" : "#ff8a8c";
+    const F = (w, px)=> `${w} ${Math.round(px)}px Manrope, Arial, "Helvetica Neue", sans-serif`;
     const BASE = LT ? [255, 255, 255] : [28, 28, 35];
     const tint = (hex, a)=>{ const c = hexToRgb(hex); return `rgb(${c.map((v, k)=> Math.round(BASE[k] + (v - BASE[k]) * a)).join(",")})`; };
     const hm = v=> `${Math.floor(v / 60)}:${pad2(v % 60)}`;
@@ -27829,7 +28110,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   window.fpAdmPdf = { month:M=> drawMonthGrid(M), day:D=> drawDayGrid(D), page:(cv, q)=> canvasPage(cv, q), build:(pages, w, h)=> buildMultiImagePdf(pages, w || 595.28, h || 841.89), theme:()=> pdfTheme(), setTheme:v=> pdfThemeSet(v) };
   /* 📄 általános kimutatás PDF (A4 fekvő, nyomtatóbarát fehér): fejléc + összegző kártyák + táblázatok, oldaltöréssel */
   async function drawReportPdf(R){
-    const land = R.land !== false, W = land ? 2339 : 1654, H = land ? 1654 : 2339, mX = 96, mT = 84, mB = 96, FONT = "'Inter','Segoe UI',Arial,sans-serif";
+    const land = R.land !== false, W = land ? 2339 : 1654, H = land ? 1654 : 2339, mX = 96, mT = 84, mB = 96, FONT = "Manrope,'Inter',Arial,sans-serif"; try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const logo = await new Promise(res=>{ const im = new Image(); im.onload = ()=> res(im); im.onerror = ()=> res(null); im.src = FP_BLACK_URI; });
     const pages = []; let cv, c, y, pg = 0;
     const fmt = v=> v == null ? "" : typeof v === "object" ? (v.t != null ? String(v.t) : v.v == null ? "" : (Math.round(v.v * 10) / 10).toString().replace(".", ",") + (v.u || "")) : typeof v === "number" ? (Math.round(v * 10) / 10).toString().replace(".", ",") : String(v);
@@ -27838,20 +28119,20 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const newPage = first=>{ cv = document.createElement("canvas"); cv.width = W; cv.height = H; c = cv.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, W, H); pg++;
       if(first){ if(logo){ const lh = 64, lw = logo.width * lh / logo.height; c.drawImage(logo, W - mX - lw, mT - 6, lw, lh); }
         c.fillStyle = "#111"; c.font = `800 50px ${FONT}`; c.fillText(R.title, mX, mT + 44); c.fillStyle = "#5b6070"; c.font = `500 26px ${FONT}`; c.fillText(R.sub || "", mX, mT + 86);
-        c.fillStyle = "#d9ad46"; c.fillRect(mX, mT + 108, W - 2 * mX, 5); y = mT + 140; }
+        c.fillStyle = "#FBAC01"; c.fillRect(mX, mT + 108, W - 2 * mX, 5); y = mT + 140; }
       else { c.fillStyle = "#111"; c.font = `800 28px ${FONT}`; c.fillText(R.title, mX, mT + 22); c.fillStyle = "#8a8f99"; c.font = `500 20px ${FONT}`; c.textAlign = "right"; c.fillText(R.sub || "", W - mX, mT + 22); c.textAlign = "left";
-        c.fillStyle = "#d9ad46"; c.fillRect(mX, mT + 40, W - 2 * mX, 3); y = mT + 70; }
+        c.fillStyle = "#FBAC01"; c.fillRect(mX, mT + 40, W - 2 * mX, 3); y = mT + 70; }
       pages.push(cv); };
     newPage(true);
     if(R.kpis && R.kpis.length){ const n = R.kpis.length, g = 22, bw = (W - 2 * mX - g * (n - 1)) / n, bh = 128;
-      R.kpis.forEach((k, i)=>{ const x = mX + i * (bw + g); c.fillStyle = "#f6f7f9"; c.strokeStyle = k.c === "r" ? "#e57373" : "#dfe2e8"; c.lineWidth = 2; c.beginPath(); c.roundRect ? c.roundRect(x, y, bw, bh, 16) : c.rect(x, y, bw, bh); c.fill(); c.stroke();
+      R.kpis.forEach((k, i)=>{ const x = mX + i * (bw + g); c.fillStyle = "#ffffff"; c.strokeStyle = k.c === "r" ? "#e57373" : "#dddddd"; c.lineWidth = 2; c.beginPath(); c.roundRect ? c.roundRect(x, y, bw, bh, 16) : c.rect(x, y, bw, bh); c.fill(); c.stroke();
         c.fillStyle = "#6b7080"; c.font = `700 19px ${FONT}`; c.fillText(fit(String(k.l).toUpperCase(), bw - 40), x + 22, y + 36); c.fillStyle = k.c === "r" ? "#c62828" : "#111"; c.font = `800 40px ${FONT}`; c.fillText(fit(k.v, bw - 40), x + 22, y + 84);
         if(k.s){ c.fillStyle = "#6b7080"; c.font = `500 18px ${FONT}`; c.fillText(fit(k.s, bw - 40), x + 22, y + 112); } });
       y += bh + 34; }
     const bottom = H - mB;
     for(const S of R.sections || []){
       const tw = W - 2 * mX, tot = S.cols.reduce((a, k)=> a + (k.w || 1), 0), CW = S.cols.map(k=> tw * (k.w || 1) / tot), rh = S.rh || 38, hh = 44;
-      const head = ()=>{ c.fillStyle = "#1f2430"; c.fillRect(mX, y, tw, hh); c.fillStyle = "#fff"; c.font = `700 18px ${FONT}`; let x = mX; S.cols.forEach((k, i)=>{ c.textAlign = k.al === "r" ? "right" : k.al === "c" ? "center" : "left"; const tx = k.al === "r" ? x + CW[i] - 12 : k.al === "c" ? x + CW[i] / 2 : x + 12; c.fillText(fit(k.h, CW[i] - 24), tx, y + 29); x += CW[i]; }); c.textAlign = "left"; y += hh; };
+      const head = ()=>{ c.fillStyle = "#f2f2f2"; c.fillRect(mX, y, tw, hh); c.fillStyle = "#FBAC01"; c.fillRect(mX, y + hh - 3, tw, 3); c.fillStyle = "#111"; c.font = `700 18px ${FONT}`; let x = mX; S.cols.forEach((k, i)=>{ c.textAlign = k.al === "r" ? "right" : k.al === "c" ? "center" : "left"; const tx = k.al === "r" ? x + CW[i] - 12 : k.al === "c" ? x + CW[i] / 2 : x + 12; c.fillText(fit(k.h, CW[i] - 24), tx, y + 29); x += CW[i]; }); c.textAlign = "left"; y += hh; };
       if(y + 60 + hh + rh * 2 > bottom) newPage(false);
       c.fillStyle = "#111"; c.font = `800 30px ${FONT}`; c.fillText(S.title, mX, y + 30); y += 42;
       if(S.note){ c.fillStyle = "#6b7080"; c.font = `500 18px ${FONT}`; c.fillText(fit(S.note, tw), mX, y + 14); y += 28; }
@@ -27887,7 +28168,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       ws.mergeCells(2, 1, 2, Math.max(1, nC)); ws.getCell(2, 1).value = [R.sub, S.note].filter(Boolean).join(" · "); ws.getCell(2, 1).font = { size:10, color:{ argb:"FF5B6070" } };
       let hr = 4;
       if(si === 0 && R.kpis){ ws.mergeCells(3, 1, 3, Math.max(1, nC)); ws.getCell(3, 1).value = R.kpis.map(k=> `${k.l}: ${k.v}${k.s ? " (" + k.s + ")" : ""}`).join("   ·   "); ws.getCell(3, 1).font = { bold:true, size:10 }; hr = 5; }
-      const h = ws.getRow(hr); S.cols.forEach((k, i)=>{ const cl = h.getCell(i + 1); cl.value = k.h; cl.font = { bold:true, color:{ argb:"FFFFFFFF" } }; cl.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FF1F2430" } }; cl.alignment = { vertical:"middle", horizontal:k.al === "r" ? "right" : k.al === "c" ? "center" : "left", wrapText:true }; cl.border = { top:thin, bottom:thin, left:thin, right:thin }; });
+      const h = ws.getRow(hr); S.cols.forEach((k, i)=>{ const cl = h.getCell(i + 1); cl.value = k.h; cl.font = { bold:true, color:{ argb:"FF000000" } }; cl.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FFFBAC01" } }; cl.alignment = { vertical:"middle", horizontal:k.al === "r" ? "right" : k.al === "c" ? "center" : "left", wrapText:true }; cl.border = { top:thin, bottom:thin, left:thin, right:thin }; });
       h.height = 22;
       (S.rows || []).forEach((r, ri)=>{ const row = ws.getRow(hr + 1 + ri);
         r.c.forEach((v, i)=>{ const cl = row.getCell(i + 1), k = S.cols[i] || {};
@@ -27973,7 +28254,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const now = new Date();
     const css = `@page{size:A4 landscape;margin:9mm}
       *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      body{margin:0;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;color:#111;background:#fff}
+      body{margin:0;font-family:Manrope,Arial,"Helvetica Neue",Helvetica,sans-serif;color:#111;background:#fff}
       .pg{display:flex;flex-direction:column;gap:7px}
       header{display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #111;padding-bottom:6px}
       header img{height:40px;filter:grayscale(1) contrast(1.4)}
@@ -28007,7 +28288,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       footer .sm{display:flex;gap:12px;flex-wrap:wrap} footer .sm b{font-weight:900}
       footer .r{margin-left:auto;color:#555;font-size:8.5px}
       .lg{display:flex;gap:10px;font-size:8.5px;color:#333} .lg i{font-style:normal;font-weight:900;border:1px solid #111;border-radius:3px;padding:0 2px}`;
-    const html = `<!doctype html><html lang="hu"><head><meta charset="utf-8"><title>Havi beosztás — ${y}. ${HU_MONTHS[m - 1].toLowerCase()}</title><style>${css}</style></head><body><div class="pg">
+    const html = `<!doctype html><html lang="hu"><head><meta charset="utf-8"><title>Havi beosztás — ${y}. ${HU_MONTHS[m - 1].toLowerCase()}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style>${css}</style></head><body><div class="pg">
       <header>${logo ? `<img src="${logo}" alt="FirstPhone">` : `<b style="font-size:20px">FirstPhone</b>`}<div class="s">${esc(shop)}</div><div class="t"><h1>Havi beosztás</h1><span>${y}. ${HU_MONTHS[m - 1].toLowerCase()}</span></div></header>
       <div class="dlh">⚠ Fontos határidők</div><div class="dls">${dlBox}</div>
       <table><thead><tr>${HU_WEEKDAYS.map(w=> `<th>${w}</th>`).join("")}</tr></thead><tbody><tr>${cells}</tr></tbody></table>
@@ -28025,7 +28306,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   window.fpPrintSchedule = fpPrintSchedule;
   { const pb = document.getElementById("printBtn"); if(pb) pb.onclick = ()=>{ fpPrintSchedule().catch(e=> toast("Nyomtatás hiba: " + (e && e.message || e))); }; }
   window.fpSubIds = ()=> subIdsInMonth();
-  async function drawScheduleCanvas(personKey){
+  async function drawScheduleCanvas(personKey){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const W = 5432, H = 7680; // 8K-class raster, A4 aspect ratio
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
@@ -28077,10 +28358,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const p = personById(personKey);
     const textRightX = W - marginX - padIn;
     ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    ctx.font = `800 ${Math.round(W*0.03)}px Arial, sans-serif`;
+    ctx.font = `800 ${Math.round(W*0.03)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = p.hex;
     ctx.fillText(p.name, textRightX, y+headerH*0.5);
-    ctx.font = `600 ${Math.round(W*0.018)}px Arial, sans-serif`;
+    ctx.font = `600 ${Math.round(W*0.018)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = C.textDim;
     ctx.fillText(`${HU_MONTHS[state.month-1]} ${state.year} · Havi munkarend`, textRightX, y+headerH*0.72);
     ctx.textAlign = "left";
@@ -28088,7 +28369,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     y += headerH + H*0.032;
 
     // ---- Address row ----
-    ctx.font = `500 ${Math.round(W*0.014)}px Arial, sans-serif`;
+    ctx.font = `500 ${Math.round(W*0.014)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = C.textDim; ctx.textAlign = "left";
     ctx.fillText(`📍 ${state.settings.address || ""}${state.settings.placeDetail ? ` (${state.settings.placeDetail})` : ""}`, marginX, y);
     ctx.textAlign = "right";
@@ -28106,7 +28387,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     // ---- Weekday header ----
     const gridX = marginX, gridW = W - marginX*2;
     const colW = gridW/7;
-    ctx.font = `700 ${Math.round(W*0.0135)}px Arial, sans-serif`;
+    ctx.font = `700 ${Math.round(W*0.0135)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = C.gold; ctx.textAlign = "center";
     HU_DAYS_SHORT.forEach((d,i)=> ctx.fillText(d.toUpperCase(), gridX+colW*i+colW/2, y));
     ctx.textAlign = "left";
@@ -28142,7 +28423,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         roundRectPath(ctx, cx, cy, cellW, cellH, cellW*0.15);
         ctx.lineWidth = 1.2; ctx.strokeStyle = C.borderSoft; ctx.stroke();
 
-        ctx.font = `800 ${Math.round(cellW*0.19)}px Arial, sans-serif`;
+        ctx.font = `800 ${Math.round(cellW*0.19)}px Manrope, Arial, sans-serif`;
         ctx.fillStyle = (c===5||c===6) ? C.tealLight : C.text;
         ctx.textAlign = "left";
         ctx.fillText(String(dayNum), cx+cellW*0.11, cy+cellH*0.28);
@@ -28151,7 +28432,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         const part = personPart(personKey, a, key);
         const others = part && !part.holiday ? dayPeople(parseAssign(a)).filter(x=> x.id !== personKey).length : 0;
         if(others){
-          ctx.font = `800 ${Math.round(cellW*0.085)}px Arial, sans-serif`;
+          ctx.font = `800 ${Math.round(cellW*0.085)}px Manrope, Arial, sans-serif`;
           const tx = `+${others} fő`, tw = ctx.measureText(tx).width + cellW*0.08, th = cellW*0.13;
           roundRectPath(ctx, cx+cellW-tw-cellW*0.08, cy+cellH*0.1, tw, th, th/2);
           ctx.fillStyle = C.pill; ctx.fill();
@@ -28169,13 +28450,13 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           roundRectPath(ctx, cx+cellW*0.09, chipY, cellW-cellW*0.18, chipH, chipH*0.3);
           ctx.fillStyle = chipColor; ctx.fill();
           ctx.fillStyle = textColor; ctx.textAlign = "center";
-          ctx.font = `800 ${Math.round(cellW*0.095)}px Arial, sans-serif`;
+          ctx.font = `800 ${Math.round(cellW*0.095)}px Manrope, Arial, sans-serif`;
           ctx.fillText(chipLabel, cx+cellW/2, chipY+chipH*0.42);
-          { let fs = Math.round(cellW*0.12); ctx.font = `700 ${fs}px Arial, sans-serif`; while(fs > 7 && ctx.measureText(timeLabel).width > cellW*0.78){ fs--; ctx.font = `700 ${fs}px Arial, sans-serif`; } }
+          { let fs = Math.round(cellW*0.12); ctx.font = `700 ${fs}px Manrope, Arial, sans-serif`; while(fs > 7 && ctx.measureText(timeLabel).width > cellW*0.78){ fs--; ctx.font = `700 ${fs}px Manrope, Arial, sans-serif`; } }
           ctx.fillText(timeLabel, cx+cellW/2, chipY+chipH*0.82);
           ctx.textAlign = "left";
         } else {
-          ctx.font = `600 ${Math.round(cellW*0.105)}px Arial, sans-serif`;
+          ctx.font = `600 ${Math.round(cellW*0.105)}px Manrope, Arial, sans-serif`;
           ctx.fillStyle = C.textFaint; ctx.textAlign = "center";
           ctx.fillText(dt ? "szabadnap" : "zárva", cx+cellW/2, cy+cellH*0.75);
           ctx.textAlign = "left";
@@ -28187,7 +28468,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     y = y + rows*(cellH+gap) + H*0.022;
 
     // ---- Legend row ----
-    ctx.font = `600 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+    ctx.font = `600 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
     const legendItems = [
       { c:p.hex, t:"Munkanap" },
       { c:C.red, t:"Ünnep (zárva)" },
@@ -28223,11 +28504,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.strokeStyle = C.borderSoft; ctx.lineWidth = 1; ctx.stroke();
 
     const padY = footH*0.28;
-    ctx.font = `500 ${Math.round(W*0.012)}px Arial, sans-serif`;
+    ctx.font = `500 ${Math.round(W*0.012)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = C.textDim; ctx.textAlign = "left";
     wrapText(ctx, `Ez a dokumentum ${p.name} ${HU_MONTHS[state.month-1].toLowerCase()} havi tervezett beosztását tartalmazza. A beosztás előzetes tervezés, a tényleges munkarend eltérhet.`, marginX+W*0.02, y+padY, W-marginX*2-W*0.04, H*0.018);
 
-    ctx.font = `500 ${Math.round(W*0.0108)}px Arial, sans-serif`;
+    ctx.font = `500 ${Math.round(W*0.0108)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = C.textFaint;
     ctx.textAlign = "left";
     ctx.fillText(companyLine() || workplaceName(), marginX+W*0.02, y+footH*0.8);
@@ -28467,10 +28748,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       ctx.drawImage(logo, marginX, y, logoW, logoH);
     }
     ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    ctx.font = `800 ${Math.round(W*0.030)}px Arial, sans-serif`;
+    ctx.font = `800 ${Math.round(W*0.030)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = BLACK;
     ctx.fillText("JELENLÉTI ÍV", W-marginX, y+logoH*0.5);
-    ctx.font = `700 ${Math.round(W*0.0155)}px Arial, sans-serif`;
+    ctx.font = `700 ${Math.round(W*0.0155)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = GREY;
     ctx.fillText(`${HU_MONTHS[state.month-1].toUpperCase()} ${state.year}`, W-marginX, y+logoH*0.5+H*0.027);
     ctx.textAlign = "left";
@@ -28487,11 +28768,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     let yLeft = y, yRight = y;
 
     function infoRow(x, yy, label, value, bold){
-      ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+      ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
       ctx.fillStyle = GREY;
       ctx.textAlign = "left";
       ctx.fillText(label.toUpperCase(), x, yy);
-      ctx.font = `${bold?"800":"600"} ${Math.round(W*0.0175)}px Arial, sans-serif`;
+      ctx.font = `${bold?"800":"600"} ${Math.round(W*0.0175)}px Manrope, Arial, sans-serif`;
       ctx.fillStyle = BLACK;
       ctx.fillText(value, x, yy+H*0.023);
       return yy + infoLineH;
@@ -28528,7 +28809,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     { let cx = marginX; cols.forEach(c=>{ colX.push(cx); cx += tableW*c.w; }); }
 
     const headerRowH = H*0.030;
-    ctx.font = `800 ${Math.round(W*0.0135)}px Arial, sans-serif`;
+    ctx.font = `800 ${Math.round(W*0.0135)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = BLACK;
     ctx.fillRect(marginX, y, tableW, headerRowH);
     ctx.fillStyle = "#ffffff";
@@ -28591,13 +28872,13 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const dateStr = `${pad2(d)}.`;
       const wdStr = HU_WD_SHORT[dow];
 
-      ctx.font = `700 ${Math.round(W*0.0135)}px Arial, sans-serif`;
+      ctx.font = `700 ${Math.round(W*0.0135)}px Manrope, Arial, sans-serif`;
       ctx.fillStyle = isHoliday ? HOLIDAY_TEXT : (isWeekendDay ? GREY : BLACK);
       ctx.textAlign = "left";
       ctx.fillText(`${dateStr} ${wdStr}`, colX[0]+W*0.008, rowY+rowH*0.64);
 
       if(isHoliday || isVacation){
-        ctx.font = `800 ${Math.round(W*0.0135)}px Arial, sans-serif`;
+        ctx.font = `800 ${Math.round(W*0.0135)}px Manrope, Arial, sans-serif`;
         ctx.fillStyle = isHoliday ? HOLIDAY_TEXT : VACATION_TEXT;
         ctx.textAlign = "center";
         { const hn = isHoliday ? holName(key, a) : ""; ctx.fillText(isHoliday ? "ÜNNEP" + (hn ? " — " + hn : "") : "SZABADSÁG", (colX[1]+colX[7])/2, rowY+rowH*0.64); }
@@ -28644,7 +28925,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     function legendItem(lx, color, textColor, label){
       ctx.fillStyle = color; ctx.fillRect(lx, legendY-legendBoxS*0.8, legendBoxS, legendBoxS);
       ctx.strokeStyle = BLACK; ctx.lineWidth = 1.2; ctx.strokeRect(lx, legendY-legendBoxS*0.8, legendBoxS, legendBoxS);
-      ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+      ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
       ctx.fillStyle = GREY; ctx.textAlign = "left";
       ctx.fillText(label, lx+legendBoxS*1.4, legendY);
       return lx + legendBoxS*1.4 + ctx.measureText(label).width + W*0.03;
@@ -28652,10 +28933,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     let lx = marginX;
     if(BLANK){
       /* üres ív: jelmagyarázat helyett kézzel kitölthető összesítő */
-      ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`; ctx.fillStyle = GREY; ctx.textAlign = "left";
+      ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`; ctx.fillStyle = GREY; ctx.textAlign = "left";
       ctx.fillText("Szabadság / ünnep / szabadnap: a Megjegyzés rovatba írd be.", lx, legendY);
       const lbl = "LEDOLGOZOTT:", t1 = "nap", t2 = "óra";
-      ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+      ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
       const wl = ctx.measureText(lbl + " ").width, w1 = ctx.measureText(t1).width, w2 = ctx.measureText(t2).width;
       const gap = W*0.11, padX = W*0.014, bh = H*0.03, bw = wl + gap + w1 + W*0.02 + gap + w2 + padX*2;
       const bx = marginX + tableW - bw, by = legendY - bh*0.72, base = by + bh*0.7;
@@ -28681,10 +28962,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const sumValue = `${String(workedDays).replace(".", ",")} nap · ${wh}${wm ? ":" + pad2(wm) : ""} óra`;
     const sumNote = "";
     ctx.textAlign = "left";
-    ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+    ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
     const wLabel = ctx.measureText(sumLabel).width;
     const wNote = ctx.measureText(sumNote).width;
-    ctx.font = `800 ${Math.round(W*0.019)}px Arial, sans-serif`;
+    ctx.font = `800 ${Math.round(W*0.019)}px Manrope, Arial, sans-serif`;
     const wValue = ctx.measureText(sumValue).width;
     const boxPadX = W*0.014, boxH = H*0.03;
     const boxW = wLabel + wValue + wNote + boxPadX*2;
@@ -28692,14 +28973,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.strokeStyle = BLACK; ctx.lineWidth = 3;
     ctx.strokeRect(boxX, boxY, boxW, boxH);
     const baseY = boxY + boxH*0.7;
-    ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+    ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = GREY;
     ctx.fillText(sumLabel, boxX+boxPadX, baseY);
-    ctx.font = `800 ${Math.round(W*0.019)}px Arial, sans-serif`;
+    ctx.font = `800 ${Math.round(W*0.019)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = BLACK;
     ctx.fillText(sumValue, boxX+boxPadX+wLabel, baseY);
     if(sumNote){
-      ctx.font = `700 ${Math.round(W*0.0115)}px Arial, sans-serif`;
+      ctx.font = `700 ${Math.round(W*0.0115)}px Manrope, Arial, sans-serif`;
       ctx.fillStyle = GREY;
       ctx.fillText(sumNote, boxX+boxPadX+wLabel+wValue, baseY);
     }
@@ -28834,21 +29115,21 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   let efoBW = (()=>{ try{ return localStorage.getItem("fp_efo_bw") !== "0"; }catch(e){ return true; } })();
   const EFO_BW = { "#1f8fa3":"#444444", "#38b2c6":"#111111", "#e9b949":"#111111", "#b8862a":"#111111", "#c0392b":"#111111", "#d9ad46":"#111111", "#efeff3":"#ebebeb", "#f4fafb":"#f6f6f6", "#fdeeee":"#d4d4d4", "#fff8e6":"#efefef" };
   const EK = c=> efoBW ? (EFO_BW[c] || c) : c;
-  async function efoHead(ctx, W, H, mX, title, sub){
+  async function efoHead(ctx, W, H, mX, title, sub){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     let y = H * 0.034;
     let logo = null; try{ logo = await loadImage(await getLogoDataUrl(efoBW ? "black" : "color")); }catch(e){}
     const lh = H * 0.05; if(logo){ const lw = lh * (logo.width / logo.height); ctx.drawImage(logo, mX, y, Math.min(lw, W * 0.4), lh * Math.min(1, W * 0.4 / lw)); }
-    ctx.textAlign = "right"; ctx.fillStyle = "#16161c"; ctx.font = `900 ${Math.round(W * 0.0245)}px Arial, sans-serif`;
+    ctx.textAlign = "right"; ctx.fillStyle = "#16161c"; ctx.font = `900 ${Math.round(W * 0.0245)}px Manrope, Arial, sans-serif`;
     title.forEach((t, i)=> ctx.fillText(t, W - mX, y + H * 0.02 + i * H * 0.026));
-    ctx.font = `800 ${Math.round(W * 0.0165)}px Arial, sans-serif`; ctx.fillStyle = EK("#b8862a"); ctx.fillText(sub, W - mX, y + H * 0.02 + title.length * H * 0.026 + H * 0.002);
+    ctx.font = `800 ${Math.round(W * 0.0165)}px Manrope, Arial, sans-serif`; ctx.fillStyle = EK("#b8862a"); ctx.fillText(sub, W - mX, y + H * 0.02 + title.length * H * 0.026 + H * 0.002);
     ctx.textAlign = "left"; y += Math.max(lh, H * 0.02 + title.length * H * 0.026) + H * 0.016;
     const gl = ctx.createLinearGradient(mX, 0, W - mX, 0); gl.addColorStop(0, EK("#e9b949")); gl.addColorStop(1, EK("#38b2c6")); ctx.fillStyle = gl; roundRectPath(ctx, mX, y, W - mX * 2, H * 0.0042, H * 0.002); ctx.fill();
     return y + H * 0.022;
   }
-  async function drawEfoCanvas(d){
+  async function drawEfoCanvas(d){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const W = 4200, H = 5940, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const ctx = cv.getContext("2d");
     const INK = "#16161c", DIM = "#5d5d68", FAINT = "#9a9aa6", LINE = "#2f2f38", GOLD = EK("#b8862a");
-    const F = (w, px)=> `${w} ${Math.round(px)}px Arial, "Helvetica Neue", sans-serif`;
+    const F = (w, px)=> `${w} ${Math.round(px)}px Manrope, Arial, "Helvetica Neue", sans-serif`;
     ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
     const mX = W * 0.048, mn = HU_MONTHS[state.month - 1].toLowerCase();
     let y = await efoHead(ctx, W, H, mX, ["EGYSZERŰSÍTETT FOGLALKOZTATOTT", "JELENLÉTI ÍV"], `${state.year}. év ${mn} hó`);
@@ -28915,10 +29196,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     [["munkáltató aláírása", mX + tw * 0.04], ["munkavállaló aláírása", mX + tw * 0.56]].forEach(([t, x])=>{ ctx.strokeStyle = "#16161c"; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(x, sgY - H * 0.012); ctx.lineTo(x + tw * 0.4, sgY - H * 0.012); ctx.stroke(); ctx.font = F(700, W * 0.0105); ctx.fillStyle = DIM; ctx.textAlign = "center"; ctx.fillText(t, x + tw * 0.2, sgY + H * 0.004); ctx.textAlign = "left"; });
     return cv;
   }
-  async function drawEfoInfoCanvas(d){
+  async function drawEfoInfoCanvas(d){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const W = 4200, H = 5940, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const ctx = cv.getContext("2d");
     const INK = "#16161c", DIM = "#5d5d68", GOLD = EK("#b8862a");
-    const F = (w, px, it)=> `${it ? "italic " : ""}${w} ${Math.round(px)}px Arial, "Helvetica Neue", sans-serif`;
+    const F = (w, px, it)=> `${it ? "italic " : ""}${w} ${Math.round(px)}px Manrope, Arial, "Helvetica Neue", sans-serif`;
     ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
     const mX = W * 0.075; let y = await efoHead(ctx, W, H, mX * 0.64, ["TÁJÉKOZTATÓ"], "egyszerűsített foglalkoztatás") + H * 0.01;
     const maxW = W - mX * 2, fs = W * 0.0158, lh = fs * 1.5;
@@ -30168,37 +30449,37 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   /* 🖨 Klasszikus — fekete-fehér nyomtatóra: tiszta fekete szöveg, vékony keretek, halvány sávok, nagy ár dupla keretben */
   const SHEET_CSS = `
-    .sk-sheet{width:210mm;height:297mm;box-sizing:border-box;padding:6mm 6mm 5mm;background:#fff;color:#000;display:flex;flex-direction:column;gap:2.6mm;overflow:hidden;font-family:'Inter',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .sk-sheet{width:210mm;height:297mm;box-sizing:border-box;padding:6mm 6mm 5mm;background:#fff;color:#000;display:flex;flex-direction:column;gap:2.6mm;overflow:hidden;font-family:'Manrope',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .sk-sheet *{box-sizing:border-box;border-radius:0 !important;}
     .sk-head{flex:none;display:flex;align-items:center;gap:4mm;min-height:10mm;padding-bottom:1.6mm;border-bottom:.8mm solid #000;}
     .sk-head img{height:8.6mm;width:auto;max-width:62mm;object-fit:contain;}
-    .sk-head b{flex:1;font:800 5.6mm/1 'Poppins',Arial,sans-serif;letter-spacing:.015em;text-transform:uppercase;}
-    .sk-head span{padding:1.3mm 3mm;border:.45mm solid #000;font:800 3.2mm/1 'Poppins',Arial,sans-serif;letter-spacing:.03em;white-space:nowrap;}
+    .sk-head b{flex:1;font:800 5.6mm/1 'Manrope',Arial,sans-serif;letter-spacing:.015em;text-transform:uppercase;}
+    .sk-head span{padding:1.3mm 3mm;border:.45mm solid #000;font:800 3.2mm/1 'Manrope',Arial,sans-serif;letter-spacing:.03em;white-space:nowrap;}
     .sk-grid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-template-rows:repeat(var(--rows),minmax(0,1fr));gap:3mm;}
     .sk-card{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;border:.55mm solid #000;background:#fff;font-size:var(--fs);overflow:hidden;}
     .sk-top{flex:none;padding:2.4mm 2mm 0;text-align:center;}
     .sk-lg{height:var(--lh);display:flex;align-items:center;justify-content:center;padding:0 1.5mm;}
     .sk-lg img{max-width:100%;max-height:100%;object-fit:contain;}
     .sk-lg:empty{display:none;}
-    .sk-nm{margin-top:1.8mm;padding:1.2mm .3mm 1.1mm;border-top:.4mm solid #000;border-bottom:.4mm solid #000;font:800 .84em/1.16 'Poppins',Arial,sans-serif;letter-spacing:.01em;text-transform:uppercase;overflow-wrap:break-word;}
+    .sk-nm{margin-top:1.8mm;padding:1.2mm .3mm 1.1mm;border-top:.4mm solid #000;border-bottom:.4mm solid #000;font:800 .84em/1.16 'Manrope',Arial,sans-serif;letter-spacing:.01em;text-transform:uppercase;overflow-wrap:break-word;}
     .sk-lg:empty + .sk-nm{margin-top:0;font-size:1.05em;}
     .sk-rows{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:1mm 0 .8mm;overflow:hidden;}
     .sk-row{flex:1 1 auto;display:grid;grid-template-columns:1.3em minmax(0,1fr);column-gap:1.5mm;align-items:center;padding:.35mm 2mm;}
     .sk-row:nth-child(even){background:#e8e8e8;}
     .sk-row i{display:block;width:1.3em;height:1.3em;color:#000;}
     .sk-row i svg{display:block;width:100%;height:100%;}
-    .sk-row b{display:block;min-width:0;font:700 1em/1.16 'Inter',Arial,sans-serif;color:#000;overflow-wrap:break-word;}
-    .sk-note{flex:none;margin:0 2mm 1.2mm;padding:1mm 1.4mm;border:.4mm dashed #000;font:800 .92em/1.25 'Inter',Arial,sans-serif;text-align:center;}
+    .sk-row b{display:block;min-width:0;font:700 1em/1.16 'Manrope',Arial,sans-serif;color:#000;overflow-wrap:break-word;}
+    .sk-note{flex:none;margin:0 2mm 1.2mm;padding:1mm 1.4mm;border:.4mm dashed #000;font:800 .92em/1.25 'Manrope',Arial,sans-serif;text-align:center;}
     .sk-pbox{flex:none;padding:0 1.7mm 1.8mm;}
-    .sk-old{text-align:center;padding-bottom:.6mm;font:800 .95em/1.1 'Poppins',Arial,sans-serif;color:#444;text-decoration:line-through;}
+    .sk-old{text-align:center;padding-bottom:.6mm;font:800 .95em/1.1 'Manrope',Arial,sans-serif;color:#444;text-decoration:line-through;}
     .sk-price{position:relative;display:flex;align-items:baseline;justify-content:center;gap:1.2mm;padding:1.6mm 1.1mm 1.8mm;border:1mm solid #000;background:#fff;color:#000;font-size:var(--pf);}
     .sk-price::before{content:"";position:absolute;inset:.55mm;border:.25mm solid #000;pointer-events:none;}
-    .sk-price .n{font:900 2.4em/1 'Poppins',Arial,sans-serif;letter-spacing:-.02em;white-space:nowrap;}
-    .sk-price .c{font:800 .95em/1 'Poppins',Arial,sans-serif;}
-    .sk-badge{position:absolute;top:0;left:0;z-index:2;padding:1.1mm 2.6mm;background:#000;color:#fff;font:900 .74em/1 'Poppins',Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;}
+    .sk-price .n{font:900 2.4em/1 'Manrope',Arial,sans-serif;letter-spacing:-.02em;white-space:nowrap;}
+    .sk-price .c{font:800 .95em/1 'Manrope',Arial,sans-serif;}
+    .sk-badge{position:absolute;top:0;left:0;z-index:2;padding:1.1mm 2.6mm;background:#000;color:#fff;font:900 .74em/1 'Manrope',Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;}
     .sk-badge + .sk-top{padding-top:6.2mm;}
-    .sk-foot{flex:none;font:600 2.6mm/1.3 'Inter',Arial,sans-serif;color:#333;text-align:center;}
-    .sk-empty{grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;border:.5mm dashed #bbb;color:#888;font:700 5mm 'Inter',sans-serif;}`;
+    .sk-foot{flex:none;font:600 2.6mm/1.3 'Manrope',Arial,sans-serif;color:#333;text-align:center;}
+    .sk-empty{grid-column:1/-1;grid-row:1/-1;display:grid;place-items:center;border:.5mm dashed #bbb;color:#888;font:700 5mm 'Manrope',sans-serif;}`;
   /* a betűt kártyánként a lehető legnagyobbra állítja, hogy minden kiférjen; az árat külön, hogy ne lógjon ki */
   function fit(host){ const fs = {}, s = D.set, base = LAY[s.per][2] * (s.scale || 1);
     host.querySelectorAll(".sk-card").forEach(el=>{ let f = base, pf = base * 1.3; const rw = el.querySelector(".sk-rows"), pr = el.querySelector(".sk-price");
@@ -30272,7 +30553,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     }, 60); }
   /* ===================== nyomtatás / PDF ===================== */
   function printDoc(){
-    return `<!doctype html><html><head><meta charset="utf-8"><title>Speckó</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Inter:wght@500;600;700;800&display=swap"><style>@page{size:A4;margin:0;}html,body{margin:0;padding:0;background:#fff;}.sk-sheet{page-break-after:always;break-after:page;}.sk-sheet:last-child{page-break-after:auto;}${SHEET_CSS}</style></head><body>${sheetsHTML(lastFs)}</body></html>`; }
+    return `<!doctype html><html><head><meta charset="utf-8"><title>Speckó</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Inter:wght@500;600;700;800&display=swap"><style>@page{size:A4;margin:0;}html,body{margin:0;padding:0;background:#fff;}.sk-sheet{page-break-after:always;break-after:page;}.sk-sheet:last-child{page-break-after:auto;}${SHEET_CSS}</style></head><body>${sheetsHTML(lastFs)}</body></html>`; }
   async function doPrint(){
     if(!D.cards.length){ note("Előbb adj hozzá telefont."); return; }
     ownLogoUrl = await ownLogo();
@@ -30678,5 +30959,49 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const a = x.animate([{ opacity:0, transform:"translateX(-34px) scale(.96)" }, { opacity:1, transform:"none" }], { duration:420, delay:i * 55, easing:"cubic-bezier(.2,.9,.25,1)", fill:"backwards" }); a.onfinish = ()=>{ x.style.transformOrigin = ""; }; }
       }catch(_){ } }); }, 30); }, true);
 })();</script>
+<script>/* PRÓBA: admin irányítópult — „Ma a boltokban” idővonal */
+window.uiAxTL = function(list, axAv, shortN, root){
+  try{
+    const pane = root.querySelector('.ax-pane[data-pane="dash"]'); if(!pane) return;
+    let card = pane.querySelector('.ui-tl');
+    if(!card){ card = document.createElement('div'); card.className = 'ax-card ui-tl'; const k = pane.querySelector('.ax-kpis'); k ? k.after(card) : pane.prepend(card); }
+    const now = new Date(), key = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    const dow = (now.getDay()+6)%7, tm = s=>{ const m = /^(\d{1,2}):?(\d{2})?/.exec(String(s||'')); return m ? (+m[1])*60 + (+(m[2]||0)) : null; };
+    const fm = v=> Math.floor(v/60) + ':' + String(v%60).padStart(2,'0');
+    const esc = t=> String(t==null?'':t).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const rows = []; let H0 = 24*60, H1 = 0, open = 0, miss = 0;
+    list.slice().sort((a,c)=> shortN(a).localeCompare(shortN(c),'hu')).forEach(x=>{
+      let st = null; try{ st = JSON.parse((x.raw||{}).firstphone_beosztas_tervezo_v2 || 'null'); }catch(e){}
+      const se = st && st.settings || {}, E = se.employees || [], dh = st && st.dayHrs && st.dayHrs[key];
+      const h = dh && tm(dh.open)!=null ? dh : (se.hours || [])[dow];
+      const r = { x, bars:[], open:null };
+      if(h && !h.closed && tm(h.open)!=null && tm(h.close)!=null){
+        const a = tm(h.open), c = tm(h.close), mid = tm(h.mid) > a && tm(h.mid) < c ? tm(h.mid) : Math.round(((a+c)/2)/15)*15;
+        r.open = [a,c]; open++; H0 = Math.min(H0,a); H1 = Math.max(H1,c);
+        const as = st && st.schedule && st.schedule[key], nm = id=>{ if(String(id).indexOf('sub:')===0) return { name:String(id).slice(4), hex:'#9B9B9B' }; return E.find(e=> e.id===id) || { name:'?', hex:'#9B9B9B' }; };
+        const add = (id, part)=>{ const p = nm(id), s = part==='pm' ? mid : a, e = part==='am' ? mid : c; r.bars.push({ s, e, t:p.name + (part==='am' ? ' · DE' : part==='pm' ? ' · DU' : ''), c:p.hex || '#9B9B9B' }); };
+        if(as && as.type==='unnep'){ r.hol = true; }
+        else if(as && as.type==='split'){ as.am ? add(as.am,'am') : r.bars.push({ s:a, e:mid, t:'Nincs beosztva', warn:1 }); as.pm ? add(as.pm,'pm') : r.bars.push({ s:mid, e:c, t:'Nincs beosztva', warn:1 }); }
+        else if(as && as.type==='multi'){ (as.full||[]).forEach(i=>add(i,'full')); (as.am||[]).forEach(i=>add(i,'am')); (as.pm||[]).forEach(i=>add(i,'pm')); }
+        else if(as && as.type){ add(as.type,'full'); }
+        else r.bars.push({ s:a, e:c, t:'Nincs beosztva', warn:1 });
+        if(r.bars.some(b=> b.warn)) miss++;
+      }
+      rows.push(r);
+    });
+    if(H1 <= H0){ H0 = 8*60; H1 = 20*60; } H0 = Math.floor(H0/60)*60; H1 = Math.ceil(H1/60)*60;
+    const span = H1 - H0, pct = v=> ((v - H0) / span * 100);
+    const hrs = []; for(let v = H0; v < H1; v += 60) hrs.push(v);
+    const lane = r=>{ const out = []; const L = r.bars.slice().sort((p,q)=> p.s-q.s); const lanes = []; L.forEach(b=>{ let i = lanes.findIndex(e=> e <= b.s); if(i<0){ i = lanes.length; lanes.push(0); } lanes[i] = b.e; b.l = i; }); r.ln = Math.max(1, lanes.length); return L; };
+    const nowM = now.getHours()*60 + now.getMinutes();
+    card.innerHTML = `<div class="ax-ch"><h3>Ma a boltokban</h3><small>${open} nyitva${miss ? ` · <b class="ui-tl-miss">${miss} hiány</b>` : ''}</small><span class="ax-sp"></span><button type="button" class="ax-lnk" data-go="sched">Beosztás →</button></div>
+      <div class="ui-tl-g" style="--n:${hrs.length}"><div class="ui-tl-hd"><span>Bolt</span><div class="ui-tl-hrs">${hrs.map(v=>`<i>${fm(v)}</i>`).join('')}</div></div>
+      ${rows.map(r=>{ const L = lane(r); return `<div class="ui-tl-r" data-uid="${esc(r.x.uid)}"><div class="ui-tl-s">${axAv(r.x)}<span><b>${esc(shortN(r.x))}</b><small>${r.hol ? 'Ünnepnap' : r.open ? fm(r.open[0]) + '–' + fm(r.open[1]) : 'Zárva'}</small></span></div>
+        <div class="ui-tl-t" style="--ln:${r.ln||1}">${nowM > H0 && nowM < H1 ? `<s class="ui-tl-now" style="left:${pct(nowM)}%"></s>` : ''}${L.map(b=>`<div class="ui-tl-b${b.warn ? ' w' : ''}" style="left:calc(${pct(b.s)}% + 3px);width:calc(${pct(b.e)-pct(b.s)}% - 6px);top:calc(${b.l} * (100% / var(--ln)) + 6px);height:calc(100% / var(--ln) - 12px);--c:${b.warn ? '#FF6B6B' : esc(b.c)}"><span>${esc(b.t)}</span><em>${fm(b.s)}–${fm(b.e)}</em></div>`).join('')}</div></div>`; }).join('') || '<div class="ax-empty">Még nincs bolt.</div>'}</div>`;
+  }catch(e){ console.warn('uiAxTL', e); }
+};
+/* PRÓBA: dokumentumok betűje (Manrope) — betöltés a rajzolás előtt */
+window.fpDocFonts = function(){ try{ if(!document.fonts) return Promise.resolve(); return Promise.all(["400","500","600","700","800"].map(function(w){ return document.fonts.load(w + " 40px Manrope"); })).catch(function(){}); }catch(e){ return Promise.resolve(); } };
+</script>
 </body>
 </html>
