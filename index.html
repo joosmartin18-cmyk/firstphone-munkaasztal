@@ -6239,7 +6239,7 @@
 </style>
 <!-- PRÓBA: új kinézet (csak a proba ágon) -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
-<script>window.fpKapUj=function(){return (function(){if(Date.now()>=Date.UTC(2026,10,9,6,0,0))return true;/* 2026.11.09. 7:00-tól (budapesti idő) mindenkinek */try{var s=JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2")||"null");return !!(s&&s.settings&&/^kaposv[aá]r/i.test(String(s.settings.location||"").trim()));}catch(e){return false;}})();};if(window.fpKapUj())document.documentElement.classList.add("ui-uj");setInterval(function(){var k=window.fpKapUj(),H=document.documentElement;if(H.classList.contains("ui-uj")!==k){if(k&&window.fpUjStart&&Date.now()>=Date.UTC(2026,10,9,6,0,0)&&window.fpUjStart<Date.UTC(2026,10,9,6,0,0)){var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;location.reload();return;}H.classList.toggle("ui-uj",k);try{window.dispatchEvent(new Event("resize"));}catch(e){}}},2000);window.fpUjStart=Date.now();</script>
+<script>window.fpKapUj=function(){return (function(){if(Date.now()>=Date.UTC(2026,10,9,6,0,0))return true;/* 2026.11.09. 7:00-tól (budapesti idő) mindenkinek */try{var s=JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2")||"null");return !!(s&&s.settings&&/^kaposv[aá]r/i.test(String(s.settings.location||"").trim()));}catch(e){return false;}})();};if(window.fpKapUj())document.documentElement.classList.add("ui-uj");setInterval(function(){var k=window.fpKapUj()||!!document.getElementById("fcLogin"),H=document.documentElement;if(H.classList.contains("ui-uj")!==k){if(k&&window.fpUjStart&&Date.now()>=Date.UTC(2026,10,9,6,0,0)&&window.fpUjStart<Date.UTC(2026,10,9,6,0,0)){var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;location.reload();return;}H.classList.toggle("ui-uj",k);try{window.dispatchEvent(new Event("resize"));}catch(e){}}},500);window.fpUjStart=Date.now();</script>
 <style id="uiUjSkin">
   html.ui-uj{ --u0:#000000; --u1:#181818; --u2:#1F1F1F; --u3:#272727; --u4:#313131; --utx:#FFFFFF; --udim:#9B9B9B; --ufaint:#707070; --uacc:#FBAC01; --uacctx:#000000; --ulink:#FBAC01; }
   html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"], html.ui-uj .th-light{ --u0:#F2F2F2; --u1:#FFFFFF; --u2:#F6F6F6; --u3:#ECECEC; --u4:#DDDDDD; --utx:#111111; --udim:#5C5C5C; --ufaint:#8A8A8A; --uacc:#FBAC01; --uacctx:#000000; --ulink:#8A5A00; }
@@ -7975,7 +7975,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-203739";</script>
+<script>window.FP_BUILD="20261108-203921";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -8491,7 +8491,7 @@
   function login(msg){
     css();
     if(document.getElementById("fcLogin")) return;
-    const b = document.createElement("div"); b.className = "fc-full"; b.id = "fcLogin";
+    const b = document.createElement("div"); b.className = "fc-full"; b.id = "fcLogin"; document.documentElement.classList.add("ui-uj");
     const lg = document.querySelector("#logoInner img"), logo = lg && lg.getAttribute("src");
     const feats = [["📅","Beosztás"],["🏷️","Cetli generátor"],["📋","Leltár"],["💰","Kassza"],["📦","Csomag"],["🗑️","Selejt"],["✅","Teendők"],["📚","Tudástár"]];
     b.classList.add("fc-login");
