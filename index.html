@@ -7838,6 +7838,21 @@
   /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
   html body #nwBtn, html body .nw-hb, html body .nw-float, html body .nw-back{ display:none !important; }
   html body #fcAdmin.fc-admin button[data-nav="news"], html body #fcAdmin button[data-nav="news"][data-nav], html body #fcAdmin section.ax-pane[data-pane="news"], html body #fcAdmin div.ax-op:has(button[data-go="news"]), html body #fcAdmin section.ax-dc[style*="#d6589a"]{ display:none !important; }
+  /* ===== PRÓBA 24 — Beosztás: a mai nap új kiemelése ===== */
+  @keyframes tdPulse{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--uacc) 60%,transparent); } 100%{ box-shadow:0 0 0 12px transparent; } }
+  @keyframes tdSheen{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+  @keyframes tdIn{ from{ opacity:0; transform:translateY(-6px) scale(.9); } to{ opacity:1; transform:none; } }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today{ position:relative; border:0 !important; outline:0 !important;
+    background:radial-gradient(circle,color-mix(in srgb,var(--uacc) 30%,transparent) 1px,transparent 1.6px) 0 0/12px 12px,
+               linear-gradient(160deg,color-mix(in srgb,var(--uacc) 20%,var(--u2)),color-mix(in srgb,var(--uacc) 6%,var(--u1)) 70%) !important;
+    box-shadow:inset 0 0 0 2px var(--uacc), 0 14px 34px -14px color-mix(in srgb,var(--uacc) 75%,transparent) !important; z-index:2; }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today::before{ content:"MA"; position:absolute; top:8px; right:8px; z-index:3; padding:3px 9px 3px 20px; border-radius:999px; background:var(--uacc); color:var(--uacctx,#111);
+    font:900 10.5px/1.2 'Manrope',sans-serif; letter-spacing:.14em; pointer-events:none; animation:tdIn .5s cubic-bezier(.22,1,.36,1) both;
+    background-image:radial-gradient(circle at 10px 50%,var(--uacctx,#111) 0 3px,transparent 3.5px); }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today .day-num{ background:var(--uacc) !important; color:#111 !important; font-weight:900 !important; border-radius:50% !important; animation:tdPulse 2s ease-out infinite; }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today::after{ display:none !important; }
+  html.ui-uj body.light-theme #calGrid#calGrid .day-cell.today.today{ background:radial-gradient(circle,color-mix(in srgb,var(--uacc) 45%,transparent) 1px,transparent 1.6px) 0 0/12px 12px, linear-gradient(160deg,color-mix(in srgb,var(--uacc) 22%,#fff),#fff 75%) !important; }
+  html.ui-uj.m-app #calGrid#calGrid .day-cell.today.today::before{ top:4px; right:4px; padding:2px 6px; font-size:8.5px; letter-spacing:.08em; background-image:none; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -7960,7 +7975,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-185817";</script>
+<script>window.FP_BUILD="20261108-203739";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -18959,6 +18974,21 @@ service cloud.firestore {
   /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
   html body #nwBtn, html body .nw-hb, html body .nw-float, html body .nw-back{ display:none !important; }
   html body #fcAdmin.fc-admin button[data-nav="news"], html body #fcAdmin button[data-nav="news"][data-nav], html body #fcAdmin section.ax-pane[data-pane="news"], html body #fcAdmin div.ax-op:has(button[data-go="news"]), html body #fcAdmin section.ax-dc[style*="#d6589a"]{ display:none !important; }
+  /* ===== PRÓBA 24 — Beosztás: a mai nap új kiemelése ===== */
+  @keyframes tdPulse{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--uacc) 60%,transparent); } 100%{ box-shadow:0 0 0 12px transparent; } }
+  @keyframes tdSheen{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+  @keyframes tdIn{ from{ opacity:0; transform:translateY(-6px) scale(.9); } to{ opacity:1; transform:none; } }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today{ position:relative; border:0 !important; outline:0 !important;
+    background:radial-gradient(circle,color-mix(in srgb,var(--uacc) 30%,transparent) 1px,transparent 1.6px) 0 0/12px 12px,
+               linear-gradient(160deg,color-mix(in srgb,var(--uacc) 20%,var(--u2)),color-mix(in srgb,var(--uacc) 6%,var(--u1)) 70%) !important;
+    box-shadow:inset 0 0 0 2px var(--uacc), 0 14px 34px -14px color-mix(in srgb,var(--uacc) 75%,transparent) !important; z-index:2; }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today::before{ content:"MA"; position:absolute; top:8px; right:8px; z-index:3; padding:3px 9px 3px 20px; border-radius:999px; background:var(--uacc); color:var(--uacctx,#111);
+    font:900 10.5px/1.2 'Manrope',sans-serif; letter-spacing:.14em; pointer-events:none; animation:tdIn .5s cubic-bezier(.22,1,.36,1) both;
+    background-image:radial-gradient(circle at 10px 50%,var(--uacctx,#111) 0 3px,transparent 3.5px); }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today .day-num{ background:var(--uacc) !important; color:#111 !important; font-weight:900 !important; border-radius:50% !important; animation:tdPulse 2s ease-out infinite; }
+  html.ui-uj #calGrid#calGrid .day-cell.today.today::after{ display:none !important; }
+  html.ui-uj body.light-theme #calGrid#calGrid .day-cell.today.today{ background:radial-gradient(circle,color-mix(in srgb,var(--uacc) 45%,transparent) 1px,transparent 1.6px) 0 0/12px 12px, linear-gradient(160deg,color-mix(in srgb,var(--uacc) 22%,#fff),#fff 75%) !important; }
+  html.ui-uj.m-app #calGrid#calGrid .day-cell.today.today::before{ top:4px; right:4px; padding:2px 6px; font-size:8.5px; letter-spacing:.08em; background-image:none; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -29970,14 +30000,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const mX = W * 0.045; let y = H * 0.026;
     /* --- fejléc-kártya: logó balra, cím jobbra, alul cím + nyitvatartás --- */
     const headH = H * 0.1, hr = headH * 0.16;
-    ctx.save(); ctx.shadowColor = C.sh; ctx.shadowBlur = 40; ctx.shadowOffsetY = 14;
+    ctx.save(); ctx.shadowColor = C.light ? "transparent" : C.sh; ctx.shadowBlur = 40; ctx.shadowOffsetY = 14;
     roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.fillStyle = C.head; ctx.fill(); ctx.restore();
     roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.strokeStyle = LT ? LINE : C.borderSoft; ctx.lineWidth = 3; ctx.stroke();
     ctx.save(); roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.clip();
-    let gl = ctx.createLinearGradient(mX, 0, W - mX, 0); gl.addColorStop(0, C.goldLight); gl.addColorStop(.55, C.gold); gl.addColorStop(1, C.teal); ctx.fillStyle = gl; ctx.fillRect(mX, y, W - mX * 2, headH * 0.05);
+    let gl = ctx.createLinearGradient(mX, 0, W - mX, 0); gl.addColorStop(0, C.goldLight); gl.addColorStop(.55, C.gold); gl.addColorStop(1, C.teal); ctx.fillStyle = LT ? "#111111" : gl; ctx.fillRect(mX, y, W - mX * 2, headH * (LT ? 0.03 : 0.05));
     ctx.restore();
     const pin = headH * 0.17;
-    let logo = null; try{ logo = await loadImage(await getLogoDataUrl("color", M.loc)); }catch(e){}
+    let logo = null; try{ logo = await loadImage(await getLogoDataUrl(LT ? "black" : "color", M.loc)); }catch(e){}
     if(logo){ const lh = headH * 0.56, lw = lh * (logo.width / logo.height), k = Math.min(1, W * 0.36 / lw); ctx.drawImage(logo, mX + pin, y + headH * 0.13, lw * k, lh * k); }
     ctx.textAlign = "right"; ctx.fillStyle = INK; ctx.font = F(900, W * 0.04);
     ctx.fillText("Havi beosztás", W - mX - pin, y + headH * 0.45);
@@ -29991,7 +30021,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     /* --- napok fejléce --- */
     const gap = W * 0.006, gridW = W - mX * 2, cellW = (gridW - gap * 6) / 7;
     const DN = ["HÉTFŐ","KEDD","SZERDA","CSÜTÖRTÖK","PÉNTEK","SZOMBAT","VASÁRNAP"];
-    DN.forEach((d, i)=>{ const cx = mX + i * (cellW + gap); roundRectPath(ctx, cx, y, cellW, H * 0.026, H * 0.008); ctx.fillStyle = LT ? (i > 4 ? "#ececec" : "#f4f4f4") : i > 4 ? "rgba(79,179,196,0.16)" : "#1a1a21"; ctx.fill();
+    DN.forEach((d, i)=>{ const cx = mX + i * (cellW + gap); roundRectPath(ctx, cx, y, cellW, H * 0.026, H * 0.008); ctx.fillStyle = LT ? "#ffffff" : i > 4 ? "rgba(79,179,196,0.16)" : "#1a1a21"; ctx.fill();
       ctx.lineWidth = 2; ctx.strokeStyle = LT ? (i > 4 ? "#dddddd" : "#e6e6e6") : i > 4 ? "rgba(79,179,196,0.35)" : C.borderSoft; ctx.stroke();
       ctx.font = F(800, W * 0.0135); ctx.fillStyle = i > 4 ? TEAL : GOLD; ctx.textAlign = "center"; ctx.fillText(d, cx + cellW / 2, y + H * 0.0178); ctx.textAlign = "left"; });
     y += H * 0.026 + gap;
@@ -30009,9 +30039,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     let sc = 1.4, LY = layout(sc); while(LY.worst > cellH - cellW * 0.03 && sc > 0.5){ sc -= 0.04; LY = layout(sc); }
     days.forEach(dy=>{
       const cx = mX + dy.c * (cellW + gap), cy = y + dy.r * (cellH + gap), we = dy.c > 4;
-      roundRectPath(ctx, cx, cy, cellW, cellH, cellW * 0.07); ctx.fillStyle = LT ? (dy.hol ? "#fdeeee" : we ? "#f4f4f4" : "#fcfcfc") : dy.hol ? "#2a1719" : we ? "#161d21" : "#18181f"; ctx.fill();
-      ctx.lineWidth = 3; ctx.strokeStyle = LT ? (dy.hol ? "#f1b9b9" : LINE) : dy.hol ? "rgba(226,88,90,0.55)" : we ? "rgba(79,179,196,0.22)" : LINE; ctx.stroke();
-      ctx.font = F(900, cellW * 0.16); ctx.fillStyle = dy.hol ? RED : we ? TEAL : INK; ctx.fillText(String(dy.d), cx + pad, cy + cellW * 0.17);
+      roundRectPath(ctx, cx, cy, cellW, cellH, cellW * 0.07); ctx.fillStyle = LT ? "#ffffff" : dy.hol ? "#2a1719" : we ? "#161d21" : "#18181f"; ctx.fill(); if(LT && dy.hol){ ctx.save(); ctx.clip(); ctx.strokeStyle = "#cfcfcf"; ctx.lineWidth = 3; for(let k = -cellH; k < cellW + cellH; k += cellW * 0.09){ ctx.beginPath(); ctx.moveTo(cx + k, cy); ctx.lineTo(cx + k - cellH, cy + cellH); ctx.stroke(); } ctx.restore(); roundRectPath(ctx, cx, cy, cellW, cellH, cellW * 0.07); }
+      ctx.lineWidth = 3; if(LT && we) ctx.setLineDash([14, 10]); ctx.strokeStyle = LT ? (dy.hol ? "#777777" : we ? "#9a9a9a" : "#c4c4c4") : dy.hol ? "rgba(226,88,90,0.55)" : we ? "rgba(79,179,196,0.22)" : LINE; ctx.stroke();
+      ctx.setLineDash([]); ctx.font = F(900, cellW * 0.16); ctx.fillStyle = LT ? INK : dy.hol ? RED : we ? TEAL : INK; ctx.fillText(String(dy.d), cx + pad, cy + cellW * 0.17);
       let ey = cy + cellW * 0.22;
       if(dy.hol){ ctx.font = F(800, cellW * 0.1); ctx.fillStyle = RED; ctx.textAlign = "center"; const hy = cy + cellH * (dy.hn ? 0.46 : 0.55); ctx.fillText("ÜNNEP", cx + cellW / 2, hy); ctx.font = F(600, cellW * 0.08); ctx.fillStyle = LT ? "#c0392b" : "#e9a3a4"; ctx.fillText("zárva", cx + cellW / 2, hy + cellW * (dy.hn ? 0.25 : 0.11));
         if(dy.hn){ let fs = cellW * 0.085; ctx.font = F(700, fs); while(fs > cellW * 0.05 && ctx.measureText(dy.hn).width > cellW - pad * 2){ fs -= 1; ctx.font = F(700, fs); } ctx.fillStyle = LT ? "#a33a2e" : "#f3b6b7"; ctx.fillText(dy.hn, cx + cellW / 2, hy + cellW * 0.13); }
@@ -30019,15 +30049,15 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(!dy.ent.length){ ctx.font = F(600, cellW * 0.09); ctx.fillStyle = FAINT; ctx.textAlign = "center"; ctx.fillText(dy.closed ? "zárva" : "—", cx + cellW / 2, cy + cellH * 0.58); ctx.textAlign = "left"; return; }
       dy.ent.forEach(({ e, L, z, eh })=>{
         const ex = cx + pad, hx = e.pp.hex;
-        roundRectPath(ctx, ex, ey, innerW, eh, cellW * 0.045); ctx.fillStyle = tint(hx, e.pp.sub ? 0.16 : LT ? 0.22 : 0.24); ctx.fill();
-        ctx.lineWidth = 2; ctx.strokeStyle = tint(hx, LT ? 0.5 : 0.55); ctx.stroke();
+        roundRectPath(ctx, ex, ey, innerW, eh, cellW * 0.045); ctx.fillStyle = LT ? "#ffffff" : tint(hx, e.pp.sub ? 0.16 : 0.24); ctx.fill();
+        ctx.lineWidth = LT ? 2.5 : 2; ctx.strokeStyle = LT ? "#9a9a9a" : tint(hx, 0.55); if(LT && e.pp.sub) ctx.setLineDash([10, 7]); ctx.stroke(); ctx.setLineDash([]);
         roundRectPath(ctx, ex, ey, barW, eh, cellW * 0.02); ctx.fillStyle = hx; ctx.fill();
         const tx = ex + barW + cellW * 0.04; let ty = ey + LY.ep + z * 0.9;
         ctx.fillStyle = INK; ctx.font = F(800, z);
         L.forEach(line=>{ ctx.fillText(line, tx, ty); ty += z * 1.14; }); ty += LY.ts - z * 1.14 + z * 0.14;
         if(e.tm){ ty += LY.ts * 0.12; let x2 = tx;
           if(e.part !== "full" || e.pp.sub){ const tag = e.pp.sub ? "HELY." : e.part === "am" ? "DE" : "DU"; ctx.font = F(900, LY.ts * 0.82); const tw = ctx.measureText(tag).width + LY.ts * 0.5;
-            roundRectPath(ctx, x2, ty - LY.ts * 0.84, tw, LY.ts * 1.05, LY.ts * 0.25); ctx.fillStyle = LT ? (e.pp.sub ? "#6b7280" : deep(hx)) : e.pp.sub ? "#9ca3af" : hx; ctx.fill(); ctx.fillStyle = LT ? "#fff" : textOn(e.pp.sub ? "#9ca3af" : hx); ctx.fillText(tag, x2 + LY.ts * 0.25, ty - LY.ts * 0.06); x2 += tw + LY.ts * 0.3; }
+            roundRectPath(ctx, x2, ty - LY.ts * 0.84, tw, LY.ts * 1.05, LY.ts * 0.25); if(LT){ ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = "#111111"; ctx.stroke(); } else { ctx.fillStyle = e.pp.sub ? "#9ca3af" : hx; ctx.fill(); } ctx.fillStyle = LT ? "#111111" : textOn(e.pp.sub ? "#9ca3af" : hx); ctx.fillText(tag, x2 + LY.ts * 0.25, ty - LY.ts * 0.06); x2 += tw + LY.ts * 0.3; }
           let tz = LY.ts; ctx.font = F(700, tz); const room = tx + txtW + cellW * 0.03 - x2; while(ctx.measureText(e.tm).width > room && tz > LY.ts * 0.6){ tz *= 0.94; ctx.font = F(700, tz); }
           ctx.fillStyle = LT ? "#33333d" : "#d4d2da"; ctx.fillText(e.tm, x2, ty); }
         ey += eh + LY.eg;
@@ -30040,7 +30070,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.fillText(`${people.filter(p=> !p.sub).length} dolgozó${people.some(p=> p.sub) ? ` + ${people.filter(p=> p.sub).length} helyettesítő` : ""}`, W - mX, y + H * 0.018); ctx.textAlign = "left";
     y += H * 0.028; const colL = (W - mX * 2 - gap * 2) / 3, chipH = H * 0.026;
     people.forEach((pp, i)=>{ const lx = mX + (i % 3) * (colL + gap), ly = y + Math.floor(i / 3) * (chipH + H * 0.005);
-      roundRectPath(ctx, lx, ly, colL, chipH, chipH * 0.3); ctx.fillStyle = tint(pp.hex, LT ? 0.18 : 0.2); ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = tint(pp.hex, LT ? 0.45 : 0.5); ctx.stroke();
+      roundRectPath(ctx, lx, ly, colL, chipH, chipH * 0.3); ctx.fillStyle = LT ? "#ffffff" : tint(pp.hex, 0.2); ctx.fill(); ctx.lineWidth = LT ? 2.5 : 2; ctx.strokeStyle = LT ? "#9a9a9a" : tint(pp.hex, 0.5); ctx.stroke();
       roundRectPath(ctx, lx, ly, chipH * 0.28, chipH, chipH * 0.14); ctx.fillStyle = pp.hex; ctx.fill();
       const nm = pp.sub ? `${pp.name} (helyettesítő)` : pp.name; ctx.font = F(800, W * 0.0135); let t = nm; const maxW = colL - chipH * 0.6 - W * 0.07; while(ctx.measureText(t).width > maxW && t.length > 3) t = t.slice(0, -2) + "…";
       ctx.fillStyle = INK; ctx.fillText(t, lx + chipH * 0.55, ly + chipH * 0.66);
@@ -30078,7 +30108,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(!LT){ let g1 = ctx.createRadialGradient(W * 0.12, H * 0.03, 10, W * 0.12, H * 0.03, W * 0.8); g1.addColorStop(0, "rgba(217,173,70,0.15)"); g1.addColorStop(1, "rgba(217,173,70,0)"); ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
         let g2 = ctx.createRadialGradient(W * 0.94, H * 0.05, 10, W * 0.94, H * 0.05, W * 0.6); g2.addColorStop(0, "rgba(79,179,196,0.12)"); g2.addColorStop(1, "rgba(79,179,196,0)"); ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H); }
       y = H * 0.026; const headH = first ? H * 0.085 : H * 0.055, hr = headH * 0.18, pin = W * 0.025;
-      ctx.save(); ctx.shadowColor = C.sh; ctx.shadowBlur = 30 * SC; ctx.shadowOffsetY = 10 * SC; roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.fillStyle = C.head; ctx.fill(); ctx.restore();
+      ctx.save(); ctx.shadowColor = C.light ? "transparent" : C.sh; ctx.shadowBlur = 30 * SC; ctx.shadowOffsetY = 10 * SC; roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.fillStyle = C.head; ctx.fill(); ctx.restore();
       roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.strokeStyle = LT ? LINE : C.borderSoft; ctx.lineWidth = 2 * SC; ctx.stroke();
       ctx.save(); roundRectPath(ctx, mX, y, W - mX * 2, headH, hr); ctx.clip(); let gl = ctx.createLinearGradient(mX, 0, W - mX, 0); gl.addColorStop(0, C.goldLight); gl.addColorStop(.55, C.gold); gl.addColorStop(1, C.teal); ctx.fillStyle = gl; ctx.fillRect(mX, y, W - mX * 2, headH * 0.06); ctx.restore();
       if(logo){ const lh = headH * (first ? 0.5 : 0.56), lw = lh * (logo.width / logo.height), k = Math.min(1, W * 0.34 / lw); ctx.drawImage(logo, mX + pin, y + (headH - lh * k) / 2 + headH * 0.02, lw * k, lh * k); }
@@ -30291,34 +30321,34 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
       body{margin:0;font-family:Manrope,Arial,"Helvetica Neue",Helvetica,sans-serif;color:#111;background:#fff}
       .pg{display:flex;flex-direction:column;gap:7px}
-      header{display:flex;align-items:center;gap:14px;border-bottom:2.5px solid #111;padding-bottom:6px}
-      header img{height:40px;filter:grayscale(1) contrast(1.4)}
+      header{display:flex;align-items:center;gap:14px;border-bottom:1.5px solid #111;padding-bottom:6px}
+      header img{height:38px;filter:grayscale(1) contrast(1.6) brightness(.9)}
       header .t{margin-left:auto;text-align:right} header h1{margin:0;font-size:24px;letter-spacing:-.01em;font-weight:900}
       header .t span{display:block;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
       header .s{font-size:10px;color:#444;font-weight:600;max-width:46%}
       .dls{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-      .dlb{display:flex;align-items:center;gap:9px;border:2px solid #111;border-radius:9px;padding:5px 9px}
+      .dlb{display:flex;align-items:center;gap:9px;border:1.2px solid #111;border-radius:12px;padding:5px 9px}
       .dlb.mv{border-style:dashed}
-      .dd{display:flex;flex-direction:column;align-items:center;justify-content:center;width:40px;height:40px;border-radius:7px;background:#111;color:#fff;flex:none}
+      .dd{display:flex;flex-direction:column;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:2px solid #111;background:#fff;color:#111;flex:none}
       .dd b{font-size:19px;line-height:1} .dd span{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
       .dt b{display:block;font-size:11.5px} .dt span{display:block;font-size:10px;font-weight:600} .dt small{display:block;font-size:8.5px;color:#444;margin-top:1px}
       .dlh{font-size:8.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin:0 0 -3px}
       table{width:100%;border-collapse:collapse;table-layout:fixed}
-      th{font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:4px 0;border:1px solid #111;background:#e9e9e9}
-      td{border:1px solid #111;vertical-align:top;padding:2px 4px;height:${(132 / rows).toFixed(1)}mm;overflow:hidden}
+      th{font-size:9px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding:5px 0 4px;border:0;border-bottom:2px solid #111;background:none}
+      td{border:.8px solid #9a9a9a;vertical-align:top;padding:2px 4px;height:${(132 / rows).toFixed(1)}mm;overflow:hidden}
       .cin{height:${(132 / rows - 1.2).toFixed(1)}mm;overflow:hidden}
-      td.x{background:repeating-linear-gradient(45deg,#fff 0 5px,#f1f1f1 5px 6px)}
-      td.we{background:#f6f6f6}
-      td.h{background:repeating-linear-gradient(135deg,#fff 0 6px,#e4e4e4 6px 8px)}
-      td.dlc{box-shadow:inset 0 0 0 2px #111}
-      .dn b{font-size:12px;font-weight:900;line-height:1.1}
-      .p{margin-top:1.5px;padding:0 0 0 4px;border-left:2.5px solid #111;line-height:1.1}
+      td.x{background:none;border-color:#e0e0e0}
+      td.we{background:none;border-style:dashed}
+      td.h{background:repeating-linear-gradient(135deg,#fff 0 7px,#d4d4d4 7px 8px)}
+      td.dlc{box-shadow:inset 0 0 0 1.6px #111}
+      .dn b{font-size:12px;font-weight:900;line-height:1.1;display:inline-block;min-width:16px;border-bottom:1.5px solid #111}
+      .p{margin-top:2px;padding:0 0 0 5px;border-left:1.5px solid #111;line-height:1.1}
       .p b{display:block;font-size:${rows > 5 ? 8.5 : 9}px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .p span{display:block;font-size:${rows > 5 ? 7.5 : 8}px;line-height:1.3;font-weight:700;color:#333;white-space:nowrap} .e{font-style:normal;filter:grayscale(1)}
       .p i{font-style:normal;font-size:7.5px;font-weight:900;border:1px solid #111;border-radius:3px;padding:0 2px;margin-right:3px}
-      .p.sub{border-left-style:dashed} .p i.h{background:#111;color:#fff} .p .fr{display:block;font-style:normal;font-size:7.5px;font-weight:800;margin:1px 0;letter-spacing:.01em}
+      .p.sub{border-left-style:dashed} .p i.h{background:none;color:#111;border-style:dashed} .p .fr{display:block;font-style:normal;font-size:7.5px;font-weight:800;margin:1px 0;letter-spacing:.01em}
       .hol{text-align:center;margin-top:3px} .hol b{display:block;font-size:12px;letter-spacing:.12em} .hol span{display:block;font-size:9px;font-weight:800;margin-top:1px} .hol small{font-size:8px;color:#444}
       .cls,.emp{text-align:center;color:#666;font-size:9px;margin-top:10px}
-      .dl{margin:2px 0 2px;font-size:7.5px;font-weight:900;background:#111;color:#fff;border-radius:3px;padding:1.5px 4px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .dl{margin:2px 0 2px;font-size:7.5px;font-weight:900;background:none;color:#111;border:1px solid #111;border-radius:999px;padding:1.5px 4px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:9.5px;border-top:1px solid #111;padding-top:5px}
       footer .sm{display:flex;gap:12px;flex-wrap:wrap} footer .sm b{font-weight:900}
       footer .r{margin-left:auto;color:#555;font-size:8.5px}
@@ -30327,7 +30357,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       <header>${logo ? `<img src="${logo}" alt="FirstPhone">` : `<b style="font-size:20px">FirstPhone</b>`}<div class="s">${esc(shop)}</div><div class="t"><h1>Havi beosztás</h1><span>${y}. ${HU_MONTHS[m - 1].toLowerCase()}</span></div></header>
       <div class="dlh">⚠ Fontos határidők</div><div class="dls">${dlBox}</div>
       <table><thead><tr>${HU_WEEKDAYS.map(w=> `<th>${w}</th>`).join("")}</tr></thead><tbody><tr>${cells}</tr></tbody></table>
-      <footer><div class="sm">${sum}</div><div class="lg"><span><i>DE</i> délelőtt</span><span><i>DU</i> délután</span><span><i style="background:#111;color:#fff">HELY.</i> helyettes</span><span>▨ ünnep</span><span>▣ határidő</span></div><div class="r">Nyomtatva: ${now.getFullYear()}.${pad2(now.getMonth() + 1)}.${pad2(now.getDate())}. · FirstPhone Munkaasztal</div></footer>
+      <footer><div class="sm">${sum}</div><div class="lg"><span><i>DE</i> délelőtt</span><span><i>DU</i> délután</span><span><i style="border-style:dashed">HELY.</i> helyettes</span><span>▨ ünnep</span><span>▣ határidő</span></div><div class="r">Nyomtatva: ${now.getFullYear()}.${pad2(now.getMonth() + 1)}.${pad2(now.getDate())}. · FirstPhone Munkaasztal</div></footer>
     </div></body></html>`;
     const old = document.getElementById("fpPrintFrame"); if(old) old.remove();
     const fr = document.createElement("iframe"); fr.id = "fpPrintFrame"; fr.setAttribute("aria-hidden", "true");
@@ -30365,7 +30395,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     // ---- Header card (with real logo) ----
     const headerH = H*0.135;
     ctx.save();
-    ctx.shadowColor = C.sh;
+    ctx.shadowColor = C.light ? "transparent" : C.sh;
     ctx.shadowBlur = 34;
     ctx.shadowOffsetY = 12;
     roundRectPath(ctx, marginX, y, W-marginX*2, headerH, headerH*0.2);
@@ -30378,10 +30408,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     roundRectPath(ctx, marginX, y, W-marginX*2, headerH*0.045, headerH*0.02);
     let barGrad = ctx.createLinearGradient(marginX,0,W-marginX,0);
     barGrad.addColorStop(0,C.goldLight); barGrad.addColorStop(1,C.teal);
-    ctx.fillStyle = barGrad; ctx.fill();
+    if(C.light){ ctx.fillStyle = "#111111"; ctx.fillRect(marginX + headerH*0.2, y, W - marginX*2 - headerH*0.4, 9); } else { ctx.fillStyle = barGrad; ctx.fill(); }
 
     let logo = null;
-    try{ logo = await loadImage(await getLogoDataUrl("color")); }catch(e){ /* logo optional */ }
+    try{ logo = await loadImage(await getLogoDataUrl(C.light ? "black" : "color")); }catch(e){ /* logo optional */ }
     const padIn = headerH*0.18;
     if(logo){
       const logoH = headerH - padIn*2.2;
@@ -30394,7 +30424,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const textRightX = W - marginX - padIn;
     ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
     ctx.font = `800 ${Math.round(W*0.03)}px Manrope, Arial, sans-serif`;
-    ctx.fillStyle = p.hex;
+    ctx.fillStyle = C.light ? "#111111" : p.hex;
     ctx.fillText(p.name, textRightX, y+headerH*0.5);
     ctx.font = `600 ${Math.round(W*0.018)}px Manrope, Arial, sans-serif`;
     ctx.fillStyle = C.textDim;
@@ -30414,8 +30444,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     y += H*0.02;
     let dividerGrad = ctx.createLinearGradient(marginX,0,W-marginX,0);
     dividerGrad.addColorStop(0,C.gold); dividerGrad.addColorStop(1,C.teal);
-    ctx.strokeStyle = dividerGrad; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(marginX,y); ctx.lineTo(W-marginX,y); ctx.stroke();
+    ctx.strokeStyle = C.light ? "#111111" : dividerGrad; ctx.lineWidth = C.light ? 5 : 3; if(C.light){ ctx.setLineDash([2, 14]); ctx.lineCap = "round"; }
+    ctx.beginPath(); ctx.moveTo(marginX,y); ctx.lineTo(W-marginX,y); ctx.stroke(); ctx.setLineDash([]); ctx.lineCap = "butt";
 
     y += H*0.034;
 
@@ -30449,14 +30479,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         const dt = dayTimesK(key);
 
         ctx.save();
-        ctx.shadowColor = C.shCell;
+        ctx.shadowColor = C.light ? "transparent" : C.shCell;
         ctx.shadowBlur = 12;
         ctx.shadowOffsetY = 5;
         roundRectPath(ctx, cx, cy, cellW, cellH, cellW*0.15);
-        ctx.fillStyle = (c===5||c===6) ? C.we : C.bgCell; ctx.fill();
+        ctx.fillStyle = C.light ? "#ffffff" : (c===5||c===6) ? C.we : C.bgCell; ctx.fill();
         ctx.restore();
         roundRectPath(ctx, cx, cy, cellW, cellH, cellW*0.15);
-        ctx.lineWidth = 1.2; ctx.strokeStyle = C.borderSoft; ctx.stroke();
+        ctx.lineWidth = C.light ? 3 : 1.2; ctx.strokeStyle = C.light ? ((c===5||c===6) ? "#9a9a9a" : "#c4c4c4") : C.borderSoft; if(C.light && (c===5||c===6)) ctx.setLineDash([14, 10]); ctx.stroke(); ctx.setLineDash([]);
 
         ctx.font = `800 ${Math.round(cellW*0.19)}px Manrope, Arial, sans-serif`;
         ctx.fillStyle = (c===5||c===6) ? C.tealLight : C.text;
@@ -30470,7 +30500,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           ctx.font = `800 ${Math.round(cellW*0.085)}px Manrope, Arial, sans-serif`;
           const tx = `+${others} fő`, tw = ctx.measureText(tx).width + cellW*0.08, th = cellW*0.13;
           roundRectPath(ctx, cx+cellW-tw-cellW*0.08, cy+cellH*0.1, tw, th, th/2);
-          ctx.fillStyle = C.pill; ctx.fill();
+          ctx.fillStyle = C.light ? "#ffffff" : C.pill; ctx.fill(); if(C.light){ ctx.lineWidth = 2.5; ctx.strokeStyle = "#111111"; ctx.stroke(); }
           ctx.fillStyle = C.text; ctx.textAlign = "center";
           ctx.fillText(tx, cx+cellW-tw/2-cellW*0.08, cy+cellH*0.1+th*0.74); ctx.textAlign = "left";
         }
@@ -30483,8 +30513,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const chipH = cellH*0.42;
           const chipY = cy+cellH-chipH-cellH*0.1;
           roundRectPath(ctx, cx+cellW*0.09, chipY, cellW-cellW*0.18, chipH, chipH*0.3);
-          ctx.fillStyle = chipColor; ctx.fill();
-          ctx.fillStyle = textColor; ctx.textAlign = "center";
+          if(C.light){ ctx.fillStyle = "#ffffff"; ctx.fill(); ctx.lineWidth = 6; ctx.strokeStyle = "#111111"; if(part && part.holiday) ctx.setLineDash([16, 11]); ctx.stroke(); ctx.setLineDash([]);
+            ctx.save(); roundRectPath(ctx, cx+cellW*0.09, chipY, cellW-cellW*0.18, chipH, chipH*0.3); ctx.clip(); ctx.fillStyle = chipColor; ctx.fillRect(cx+cellW*0.09, chipY, cellW*0.045, chipH); ctx.restore();
+            ctx.fillStyle = "#111111"; }
+          else { ctx.fillStyle = chipColor; ctx.fill(); ctx.fillStyle = textColor; }
+          ctx.textAlign = "center";
           ctx.font = `800 ${Math.round(cellW*0.095)}px Manrope, Arial, sans-serif`;
           ctx.fillText(chipLabel, cx+cellW/2, chipY+chipH*0.42);
           { let fs = Math.round(cellW*0.12); ctx.font = `700 ${fs}px Manrope, Arial, sans-serif`; while(fs > 7 && ctx.measureText(timeLabel).width > cellW*0.78){ fs--; ctx.font = `700 ${fs}px Manrope, Arial, sans-serif`; } }
@@ -30529,11 +30562,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     // ---- Footer card ----
     const footH = H*0.1;
     ctx.save();
-    ctx.shadowColor = C.light ? "rgba(0,0,0,0.06)" : "rgba(0,0,0,0.4)";
+    ctx.shadowColor = C.light ? "transparent" : "rgba(0,0,0,0.4)";
     ctx.shadowBlur = 22;
     ctx.shadowOffsetY = 8;
     roundRectPath(ctx, marginX, y, W-marginX*2, footH, footH*0.18);
-    ctx.fillStyle = C.foot; ctx.fill();
+    ctx.fillStyle = C.light ? "#ffffff" : C.foot; ctx.fill();
     ctx.restore();
     roundRectPath(ctx, marginX, y, W-marginX*2, footH, footH*0.18);
     ctx.strokeStyle = C.borderSoft; ctx.lineWidth = 1; ctx.stroke();
@@ -30766,8 +30799,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
     const BLACK = "#111111", GREY = "#5a5a5a", LIGHTGREY = "#9a9a9a";
-    const VACATION_BG = "#d6d6d6", VACATION_TEXT = "#111111";
-    const HOLIDAY_BG = "#6e6e6e", HOLIDAY_TEXT = "#ffffff";
+    const VACATION_TEXT = "#111111", HOLIDAY_TEXT = "#111111";
+    const fpPat = (kind)=>{ const s = 28, pc = document.createElement("canvas"); pc.width = s; pc.height = s; const px = pc.getContext("2d"); px.fillStyle = "#ffffff"; px.fillRect(0, 0, s, s);
+      if(kind === "hol"){ px.strokeStyle = "#9a9a9a"; px.lineWidth = 2.2; px.beginPath(); px.moveTo(-4, s + 4); px.lineTo(s + 4, -4); px.moveTo(-4, 4); px.lineTo(4, -4); px.moveTo(s - 4, s + 4); px.lineTo(s + 4, s - 4); px.stroke(); }
+      else { px.fillStyle = "#a8a8a8"; px.beginPath(); px.arc(s / 2, s / 2, 2.4, 0, Math.PI * 2); px.fill(); px.beginPath(); px.arc(0, 0, 2.4, 0, Math.PI * 2); px.arc(s, 0, 2.4, 0, Math.PI * 2); px.fill(); px.beginPath(); px.arc(0, s, 2.4, 0, Math.PI * 2); px.arc(s, s, 2.4, 0, Math.PI * 2); px.fill(); }
+      return ctx.createPattern(pc, "repeat"); };
+    const VACATION_BG = fpPat("vac"), HOLIDAY_BG = fpPat("hol");
 
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,W,H);
 
@@ -30845,9 +30882,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
     const headerRowH = H*0.030;
     ctx.font = `800 ${Math.round(W*0.0135)}px Manrope, Arial, sans-serif`;
-    ctx.fillStyle = BLACK;
-    ctx.fillRect(marginX, y, tableW, headerRowH);
     ctx.fillStyle = "#ffffff";
+    ctx.fillRect(marginX, y, tableW, headerRowH);
+    ctx.fillStyle = BLACK; ctx.fillRect(marginX, y, tableW, 5); ctx.fillRect(marginX, y + headerRowH - 5, tableW, 5);
+    ctx.fillStyle = BLACK;
     cols.forEach((c,i)=>{
       ctx.textAlign = c.align;
       const tx = c.align==="center" ? colX[i]+tableW*c.w/2 : colX[i]+W*0.008;
@@ -30898,7 +30936,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         const a0 = tm(info.start), b0 = tm(info.end); if(a0 !== null && b0 !== null && b0 > a0) workedMin += b0 - a0; }
 
       // finom, halvány csíkozás minden második munkanapi soron — modern, de nyomtatva is nyugodt
-      if(!isHoliday && !isVacation && d%2===0){ ctx.fillStyle = "#f5f5f5"; ctx.fillRect(marginX, rowY, tableW, rowH); }
+      if(!isHoliday && !isVacation && d%2===0){ ctx.fillStyle = "#fbfbfb"; ctx.fillRect(marginX, rowY, tableW, rowH); }
       // kiemelt háttér: ünnep (sötétszürke) / szabadság (szürke)
       if(isHoliday){ ctx.fillStyle = HOLIDAY_BG; ctx.fillRect(marginX, rowY, tableW, rowH); }
       else if(isVacation){ ctx.fillStyle = VACATION_BG; ctx.fillRect(marginX, rowY, tableW, rowH); }
