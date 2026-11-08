@@ -7064,6 +7064,131 @@
   html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button{ color:#C8C8C8 !important; background:#181818 !important; } html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button.on{ color:#FFFFFF !important; background:#272727 !important; border-color:#3A3A3A !important; }
   html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:not(.run) i{ width:0 !important; animation:none !important; }
   html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:focus, html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:active, html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:hover{ color:#FFFFFF !important; background:#272727 !important; opacity:1 !important; filter:none !important; }
+
+  /* ===== PRÓBA 17: Leltár, Csomag, Eladás, Tudástár, Teendők és a külön Rendelés — új elrendezés és kinézet ===== */
+  /* menü: Rendelés külön pont, a fülek eltűnnek */
+  html.ui-uj #tdTabs{ display:none !important; }
+  html.ui-uj body #pageSwitch .ps-btn.ui-off[data-page]{ background:transparent !important; color:var(--udim) !important; box-shadow:none !important; }
+  html.ui-uj body #pageSwitch .ps-btn.ui-off[data-page] .ps-i{ background-color:var(--udim) !important; }
+  html.ui-uj body #pageSwitch .ps-btn.ui-nav-rend[data-page] .ps-i{ font-size:0 !important; -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='80' cy='216' r='16'/%3E%3Ccircle cx='184' cy='216' r='16'/%3E%3Cpath d='M42.3 72h179.4a8 8 0 0 1 7.7 10.2l-24.3 85.6A16 16 0 0 1 189.7 180H82.5a16 16 0 0 1-15.4-11.6L32.4 46A8 8 0 0 0 24.6 40H8'/%3E%3C/svg%3E") center/contain no-repeat !important; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='80' cy='216' r='16'/%3E%3Ccircle cx='184' cy='216' r='16'/%3E%3Cpath d='M42.3 72h179.4a8 8 0 0 1 7.7 10.2l-24.3 85.6A16 16 0 0 1 189.7 180H82.5a16 16 0 0 1-15.4-11.6L32.4 46A8 8 0 0 0 24.6 40H8'/%3E%3C/svg%3E") center/contain no-repeat !important; background-color:currentColor !important; }
+
+  /* ✅ Teendők: felül egy nagy „felíró” sáv, alatta szűrő-csíkok, majd a 3 oszlopos tábla színes fejlécekkel */
+  html.ui-uj:not(.m-app) #todoCard .tdn{ display:flex !important; flex-direction:column !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-add{ order:1; padding:20px !important; border-radius:20px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj:not(.m-app) .tdn-add .tdn-in{ height:56px !important; border-radius:16px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .tdn-add .tdn-in:focus-within{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .tdn-add input.tdn-text{ font-size:17px !important; }
+  html.ui-uj:not(.m-app) .tdn-add .tdn-go{ height:44px !important; border-radius:12px !important; }
+  html.ui-uj:not(.m-app) .tdn-flt{ order:2; position:static !important; flex-direction:row !important; flex-wrap:wrap !important; align-items:center !important; gap:8px !important; padding:0 !important; background:transparent !important; border:0 !important; }
+  html.ui-uj:not(.m-app) .tdn-flt .tdn-fl{ padding:0 8px 0 0 !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button{ width:auto !important; height:40px !important; padding:0 8px 0 6px !important; border-radius:9999px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button.on{ background:var(--uacc) !important; border-color:var(--uacc) !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button.on em{ background:#000 !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button em{ margin-left:4px !important; }
+  html.ui-uj:not(.m-app) .tdn-board{ order:3; gap:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-col{ padding:0 !important; overflow:hidden; background:var(--u1) !important; gap:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tdn-col > header{ padding:14px 16px !important; color:#000 !important; font-weight:700 !important; background:var(--hc,#9B9B9B) !important; }
+  html.ui-uj:not(.m-app) .tdn-col > header *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) .tdn-col.c-today{ --hc:#FBAC01; box-shadow:none !important; } html.ui-uj:not(.m-app) .tdn-col.c-soon{ --hc:#8DB8FF; } html.ui-uj:not(.m-app) .tdn-col.c-none{ --hc:#C8C8C8; }
+  html.ui-uj:not(.m-app) .tdn-col > .tdn-cl{ padding:12px !important; display:flex !important; flex-direction:column !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .tdn-it{ border-radius:14px !important; background:var(--u2) !important; border:0 !important; box-shadow:inset 3px 0 0 var(--hc,#9B9B9B) !important; }
+  html.ui-uj:not(.m-app) .tdn-col.c-today .tdn-it{ --hc:#FBAC01; } html.ui-uj:not(.m-app) .tdn-col.c-soon .tdn-it{ --hc:#8DB8FF; }
+
+  /* 🛒 Rendelés: balra rögzített felíró űrlap, jobbra a lista */
+  html.ui-uj:not(.m-app) #orderCard{ background:transparent !important; border:0 !important; padding:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn{ display:grid !important; grid-template-columns:420px minmax(0,1fr) !important; gap:24px !important; align-items:start !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-new{ position:sticky; top:16px; margin:0 !important; padding:20px !important; border-radius:20px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:inset 0 4px 0 var(--c,#FBAC01) !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:8px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button{ height:64px !important; min-height:0 !important; flex-direction:row !important; justify-content:flex-start !important; gap:10px !important; padding:0 14px !important; border-radius:14px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; position:relative; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button i{ width:36px !important; height:36px !important; border-radius:10px !important; display:grid !important; place-items:center !important; background:color-mix(in srgb,var(--c) 22%,var(--u2)) !important; font-style:normal; font-size:18px; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button.on{ border-color:var(--c) !important; background:color-mix(in srgb,var(--c) 12%,var(--u1)) !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button em{ position:absolute !important; top:8px !important; right:8px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-su{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:6px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-su button{ min-height:44px !important; padding:6px 10px !important; border-radius:10px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-foot{ display:grid !important; grid-template-columns:1fr !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-foot .orn-f{ width:auto !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-add{ width:100% !important; height:52px !important; border-radius:14px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-list{ margin:0 !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; display:flex; flex-direction:column; gap:12px; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px !important; padding:0 !important; background:transparent !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button{ height:64px !important; border-radius:16px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; color:var(--udim) !important; font-weight:600 !important; box-shadow:none !important; justify-content:flex-start !important; padding:0 18px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on.t-need{ background:#FBAC01 !important; border-color:#FBAC01 !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on.t-ord{ background:#8DB8FF !important; border-color:#8DB8FF !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on.t-got{ background:#34C38F !important; border-color:#34C38F !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-rows{ padding:8px !important; border-radius:20px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; min-height:240px; }
+  html.ui-uj:not(.m-app) #orderCard .orn-fl button{ height:34px !important; border-radius:9999px !important; }
+
+  /* 📋 Leltár: széles „következő leltár” sáv, alatta 4 oszlopos idővonal */
+  html.ui-uj:not(.m-app) #ltStart:not([hidden]){ grid-template-columns:1fr !important; }
+  html.ui-uj:not(.m-app) #ltHero{ padding:28px 32px !important; border-radius:24px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-hero-main{ display:grid !important; grid-template-columns:auto minmax(0,1fr) auto !important; align-items:center !important; gap:28px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-badge{ width:120px !important; height:120px !important; border-radius:28px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-badge b{ font-size:52px !important; line-height:56px !important; }
+  html.ui-uj:not(.m-app) #ltHero h2{ font-size:34px !important; line-height:40px !important; letter-spacing:-0.02em !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-date{ font-size:15px !important; margin:4px 0 12px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-count{ text-align:right !important; padding:16px 24px !important; border-radius:20px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-count b{ font-size:64px !important; line-height:64px !important; color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-hero-foot{ margin-top:24px !important; padding-top:20px !important; border-top:1px solid var(--u4) !important; display:flex !important; align-items:center !important; justify-content:space-between !important; background:transparent !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-adhoc-btn{ height:48px !important; border-radius:14px !important; padding:0 20px !important; }
+  html.ui-uj:not(.m-app) .lt-start-grid{ display:block !important; }
+  html.ui-uj:not(.m-app) .lt-upcoming{ padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .lt-upcoming .lt-h{ font-size:12px !important; letter-spacing:.06em !important; text-transform:uppercase !important; color:var(--ufaint) !important; margin:8px 0 12px !important; }
+  html.ui-uj:not(.m-app) #ltSchedule{ display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row{ position:relative; display:flex !important; flex-direction:column !important; align-items:flex-start !important; gap:10px !important; padding:18px !important; min-height:150px; border-radius:18px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .d{ width:auto !important; height:auto !important; background:none !important; border:0 !important; display:flex !important; align-items:baseline !important; gap:8px !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .d b, html.ui-uj:not(.m-app) #ltSchedule .lt-row .d > :first-child{ font-size:40px !important; line-height:44px !important; font-weight:700 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .t{ font-size:13px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .k{ position:absolute !important; top:16px !important; right:16px !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row:first-child{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .lt-upcoming .lt-note, html.ui-uj:not(.m-app) .lt-upcoming > p{ margin-top:12px !important; color:var(--ufaint) !important; }
+
+  /* 📦 Csomag: lapos szállító-kártyák színes felső csíkkal, nagy „szkenner” sáv */
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-top{ padding:20px !important; border-radius:20px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-scan{ height:auto !important; background:transparent !important; border:0 !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; gap:8px !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-scan-in{ height:64px !important; border-radius:18px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csMsg{ padding:0 4px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-scan-in:focus-within{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csScan{ font-size:18px !important; }
+  html.ui-uj:not(.m-app) .cs2-car{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:18px !important; box-shadow:inset 0 4px 0 var(--cc,#9B9B9B) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .cs2-car::before, html.ui-uj:not(.m-app) .cs2-car::after{ display:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car.gls{ --cc:#FBAC01; } html.ui-uj:not(.m-app) .cs2-car.mpl{ --cc:#FF6B6B; } html.ui-uj:not(.m-app) .cs2-car.dpd{ --cc:#C8C8C8; } html.ui-uj:not(.m-app) .cs2-car.tot{ --cc:#34C38F; }
+  html.ui-uj:not(.m-app) .cs2-car *{ color:inherit; }
+  html.ui-uj:not(.m-app) .cs2-car [class*="stat"], html.ui-uj:not(.m-app) .cs2-car .cs2-kv > *{ background:var(--u2) !important; background-image:none !important; border:0 !important; border-radius:12px !important; }
+  html.ui-uj:not(.m-app) .cs2-car button{ background:transparent !important; background-image:none !important; border:1px solid var(--cc) !important; color:var(--utx) !important; border-radius:12px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car button:hover{ background:color-mix(in srgb,var(--cc) 14%,transparent) !important; }
+
+  /* 💡 Eladásegéd: kereső-központú nyitó: középen nagy kereső */
+  html.ui-uj:not(.m-app) .ea-side > .panel{ flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:14px !important; padding:44px 24px !important; border-radius:24px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj:not(.m-app) .ea-side > .panel::after{ order:-1; display:block !important; content:"Melyik terméket adnád el?"; font:700 30px/36px 'Manrope',system-ui,sans-serif; letter-spacing:-0.02em; color:var(--utx); }
+  html.ui-uj:not(.m-app) .ea-side .ea-search{ width:min(100%,720px) !important; flex:none !important; display:flex !important; gap:8px !important; padding:6px !important; border-radius:9999px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search:focus-within{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search input{ height:52px !important; border:0 !important; background:transparent !important; border-radius:9999px !important; padding:0 20px !important; font-size:17px !important; box-shadow:none !important; outline:none !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search button{ height:52px !important; padding:0 28px !important; border-radius:9999px !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-hint{ max-width:560px !important; text-align:center !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #eaCard:has(.ea-wel){ background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-wel h3, html.ui-uj:not(.m-app) #eaCard .ea-wel > p, html.ui-uj:not(.m-app) #eaCard .ea-wel .ea-wic{ display:none !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-steps{ display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:12px !important; width:min(100%,900px) !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-steps span{ min-height:96px !important; padding:18px !important; border-radius:18px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:center !important; gap:8px !important; font-size:15px !important; font-weight:600 !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-wel{ width:100% !important; max-width:none !important; display:flex !important; justify-content:center !important; }
+
+  /* 📚 Tudástár: nagy kereső-sáv, áttekintésnél a tartalomjegyzék helyett nagy fejezet-kártyák */
+  html.ui-uj:not(.m-app) .tt-hero{ padding:24px !important; border-radius:24px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .tt-hero #ttSearchWrap{ height:56px !important; border-radius:16px !important; background:var(--u0) !important; }
+  html.ui-uj:not(.m-app) .tt-grid:has(#tt-ov){ grid-template-columns:1fr !important; }
+  html.ui-uj:not(.m-app) .tt-grid:has(#tt-ov) #ttToc{ display:none !important; }
+  html.ui-uj:not(.m-app) .tt-ovg{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) .tt-oc{ min-height:84px !important; padding:16px 18px !important; border-radius:18px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; display:flex !important; align-items:center !important; gap:16px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1), transform .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj:not(.m-app) .tt-oc:hover{ border-color:var(--uacc) !important; transform:translateY(-2px) !important; }
+  html.ui-uj:not(.m-app) .tt-oc .ic{ width:52px !important; height:52px !important; border-radius:9999px !important; background:var(--u3) !important; background-image:none !important; border:0 !important; box-shadow:none !important; font-size:24px !important; }
+  html.ui-uj:not(.m-app) .tt-oc .tx{ font-size:15px !important; }
+  @media (max-width:1300px){ html.ui-uj:not(.m-app) .tt-ovg{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; } html.ui-uj:not(.m-app) #ltSchedule{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; } html.ui-uj:not(.m-app) #orderCard .orn{ grid-template-columns:1fr !important; } html.ui-uj:not(.m-app) #orderCard .orn-new{ position:static; } }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-top{ height:auto !important; min-height:0 !important; display:flex !important; flex-direction:column !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-top > *{ position:static !important; }
+  html.ui-uj:not(.m-app) #eaCard:has(.ea-wel){ padding:0 !important; min-height:0 !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-wel{ margin:0 !important; padding:0 !important; min-height:0 !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn-add{ width:auto !important; max-width:none !important; align-self:stretch !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn-add .tdn-in{ width:100% !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn-board{ width:100% !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -7106,6 +7231,20 @@
       if(anchor.nextSibling !== h) anchor.after(h); anchor = h;
       g[1].forEach(function(k){ var b = ps.querySelector('.ps-btn[data-page="' + k + '"]'); if(b){ if(anchor.nextSibling !== b) anchor.after(b); anchor = b; } });
     });
+    /* Rendelés külön menüpontként (a Teendők oldal rendelés-fülét nyitja) */
+    var tb = ps.querySelector('.ps-btn[data-page="teendo"]:not(.ui-nav-rend)'), rb = ps.querySelector(".ui-nav-rend"), rtab = document.querySelector('#tdTabs [data-tab="rend"]');
+    if(tb && rtab){
+      if(!rb){ rb = document.createElement("button"); rb.type = "button"; rb.className = "ps-btn ui-nav-rend"; rb.setAttribute("data-page", "teendo"); rb.title = "Rendelés — ShieldUp, üvegfólia, tok, tartozék"; rb.innerHTML = '<i class="ps-i">🛒</i> <span class="ps-t">Rendelés</span>';
+        rb.addEventListener("click", function(){ rb.__now = 1; var t = document.querySelector('.ps-btn[data-page="teendo"]:not(.ui-nav-rend)'); if(t && !document.body.classList.contains("page-teendo")) t.click(); setTimeout(function(){ try{ group(); }catch(e){} }, 120); setTimeout(function(){ rb.__now = 0; var r = document.querySelector('#tdTabs [data-tab="rend"]'); if(r && !document.getElementById("tdPage").classList.contains("rend")) r.click(); try{ group(); }catch(e){} }, 60); });
+        tb.addEventListener("click", function(){ if(rb.__go) return; setTimeout(function(){ var pg = document.getElementById("tdPage"), t = document.querySelector('#tdTabs [data-tab="todo"]'); if(pg && pg.classList.contains("rend") && t && !rb.__now) t.click(); rb.__now = 0; try{ group(); }catch(e){} }, 30); });
+      }
+      if(tb.nextSibling !== rb) tb.after(rb);
+      rb.hidden = getComputedStyle(rtab).display === "none" || tb.hidden || getComputedStyle(tb).display === "none";
+      var onT = document.body.classList.contains("page-teendo"), isR = !!(document.getElementById("tdPage") && document.getElementById("tdPage").classList.contains("rend"));
+      rb.classList.toggle("active", onT && isR); tb.classList.toggle("ui-off", onT && isR);
+      if(onT){ var pt = document.getElementById("pageTitle"), psb = document.getElementById("pageSub"), want = isR ? "Rendelés" : "Teendők";
+        if(pt && pt.textContent !== want){ pt.textContent = want; if(psb) psb.textContent = isR ? "ShieldUp, üvegfólia, tok, tartozék — rendelni kell → megrendelve → megjött" : "Közös to-do lista · dolgozónként vagy mindkettőnek · határidővel"; } }
+    }
     ps.querySelectorAll(".ui-grp").forEach(function(h){ var n = h.nextElementSibling, any = false;
       while(n && !n.classList.contains("ui-grp")){ if(n.classList.contains("ps-btn") && getComputedStyle(n).display !== "none") any = true; n = n.nextElementSibling; }
       h.hidden = !any; });
@@ -17602,6 +17741,131 @@ service cloud.firestore {
   html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button{ color:#C8C8C8 !important; background:#181818 !important; } html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button.on{ color:#FFFFFF !important; background:#272727 !important; border-color:#3A3A3A !important; }
   html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:not(.run) i{ width:0 !important; animation:none !important; }
   html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:focus, html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:active, html.ui-uj #fcLogin .ui-lgx .ui-lgx-tabs button:hover{ color:#FFFFFF !important; background:#272727 !important; opacity:1 !important; filter:none !important; }
+
+  /* ===== PRÓBA 17: Leltár, Csomag, Eladás, Tudástár, Teendők és a külön Rendelés — új elrendezés és kinézet ===== */
+  /* menü: Rendelés külön pont, a fülek eltűnnek */
+  html.ui-uj #tdTabs{ display:none !important; }
+  html.ui-uj body #pageSwitch .ps-btn.ui-off[data-page]{ background:transparent !important; color:var(--udim) !important; box-shadow:none !important; }
+  html.ui-uj body #pageSwitch .ps-btn.ui-off[data-page] .ps-i{ background-color:var(--udim) !important; }
+  html.ui-uj body #pageSwitch .ps-btn.ui-nav-rend[data-page] .ps-i{ font-size:0 !important; -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='80' cy='216' r='16'/%3E%3Ccircle cx='184' cy='216' r='16'/%3E%3Cpath d='M42.3 72h179.4a8 8 0 0 1 7.7 10.2l-24.3 85.6A16 16 0 0 1 189.7 180H82.5a16 16 0 0 1-15.4-11.6L32.4 46A8 8 0 0 0 24.6 40H8'/%3E%3C/svg%3E") center/contain no-repeat !important; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='80' cy='216' r='16'/%3E%3Ccircle cx='184' cy='216' r='16'/%3E%3Cpath d='M42.3 72h179.4a8 8 0 0 1 7.7 10.2l-24.3 85.6A16 16 0 0 1 189.7 180H82.5a16 16 0 0 1-15.4-11.6L32.4 46A8 8 0 0 0 24.6 40H8'/%3E%3C/svg%3E") center/contain no-repeat !important; background-color:currentColor !important; }
+
+  /* ✅ Teendők: felül egy nagy „felíró” sáv, alatta szűrő-csíkok, majd a 3 oszlopos tábla színes fejlécekkel */
+  html.ui-uj:not(.m-app) #todoCard .tdn{ display:flex !important; flex-direction:column !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-add{ order:1; padding:20px !important; border-radius:20px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj:not(.m-app) .tdn-add .tdn-in{ height:56px !important; border-radius:16px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .tdn-add .tdn-in:focus-within{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .tdn-add input.tdn-text{ font-size:17px !important; }
+  html.ui-uj:not(.m-app) .tdn-add .tdn-go{ height:44px !important; border-radius:12px !important; }
+  html.ui-uj:not(.m-app) .tdn-flt{ order:2; position:static !important; flex-direction:row !important; flex-wrap:wrap !important; align-items:center !important; gap:8px !important; padding:0 !important; background:transparent !important; border:0 !important; }
+  html.ui-uj:not(.m-app) .tdn-flt .tdn-fl{ padding:0 8px 0 0 !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button{ width:auto !important; height:40px !important; padding:0 8px 0 6px !important; border-radius:9999px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button.on{ background:var(--uacc) !important; border-color:var(--uacc) !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button.on em{ background:#000 !important; color:#fff !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button em{ margin-left:4px !important; }
+  html.ui-uj:not(.m-app) .tdn-board{ order:3; gap:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-col{ padding:0 !important; overflow:hidden; background:var(--u1) !important; gap:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tdn-col > header{ padding:14px 16px !important; color:#000 !important; font-weight:700 !important; background:var(--hc,#9B9B9B) !important; }
+  html.ui-uj:not(.m-app) .tdn-col > header *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) .tdn-col.c-today{ --hc:#FBAC01; box-shadow:none !important; } html.ui-uj:not(.m-app) .tdn-col.c-soon{ --hc:#8DB8FF; } html.ui-uj:not(.m-app) .tdn-col.c-none{ --hc:#C8C8C8; }
+  html.ui-uj:not(.m-app) .tdn-col > .tdn-cl{ padding:12px !important; display:flex !important; flex-direction:column !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) .tdn-it{ border-radius:14px !important; background:var(--u2) !important; border:0 !important; box-shadow:inset 3px 0 0 var(--hc,#9B9B9B) !important; }
+  html.ui-uj:not(.m-app) .tdn-col.c-today .tdn-it{ --hc:#FBAC01; } html.ui-uj:not(.m-app) .tdn-col.c-soon .tdn-it{ --hc:#8DB8FF; }
+
+  /* 🛒 Rendelés: balra rögzített felíró űrlap, jobbra a lista */
+  html.ui-uj:not(.m-app) #orderCard{ background:transparent !important; border:0 !important; padding:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn{ display:grid !important; grid-template-columns:420px minmax(0,1fr) !important; gap:24px !important; align-items:start !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-new{ position:sticky; top:16px; margin:0 !important; padding:20px !important; border-radius:20px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:inset 0 4px 0 var(--c,#FBAC01) !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:8px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button{ height:64px !important; min-height:0 !important; flex-direction:row !important; justify-content:flex-start !important; gap:10px !important; padding:0 14px !important; border-radius:14px !important; background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; position:relative; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button i{ width:36px !important; height:36px !important; border-radius:10px !important; display:grid !important; place-items:center !important; background:color-mix(in srgb,var(--c) 22%,var(--u2)) !important; font-style:normal; font-size:18px; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button.on{ border-color:var(--c) !important; background:color-mix(in srgb,var(--c) 12%,var(--u1)) !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-cats button em{ position:absolute !important; top:8px !important; right:8px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-su{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:6px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-su button{ min-height:44px !important; padding:6px 10px !important; border-radius:10px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-foot{ display:grid !important; grid-template-columns:1fr !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-foot .orn-f{ width:auto !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-add{ width:100% !important; height:52px !important; border-radius:14px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-list{ margin:0 !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; display:flex; flex-direction:column; gap:12px; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px !important; padding:0 !important; background:transparent !important; border:0 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button{ height:64px !important; border-radius:16px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; color:var(--udim) !important; font-weight:600 !important; box-shadow:none !important; justify-content:flex-start !important; padding:0 18px !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on.t-need{ background:#FBAC01 !important; border-color:#FBAC01 !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on.t-ord{ background:#8DB8FF !important; border-color:#8DB8FF !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on.t-got{ background:#34C38F !important; border-color:#34C38F !important; color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-tabs button.on *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) #orderCard .orn-rows{ padding:8px !important; border-radius:20px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; min-height:240px; }
+  html.ui-uj:not(.m-app) #orderCard .orn-fl button{ height:34px !important; border-radius:9999px !important; }
+
+  /* 📋 Leltár: széles „következő leltár” sáv, alatta 4 oszlopos idővonal */
+  html.ui-uj:not(.m-app) #ltStart:not([hidden]){ grid-template-columns:1fr !important; }
+  html.ui-uj:not(.m-app) #ltHero{ padding:28px 32px !important; border-radius:24px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-hero-main{ display:grid !important; grid-template-columns:auto minmax(0,1fr) auto !important; align-items:center !important; gap:28px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-badge{ width:120px !important; height:120px !important; border-radius:28px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-badge b{ font-size:52px !important; line-height:56px !important; }
+  html.ui-uj:not(.m-app) #ltHero h2{ font-size:34px !important; line-height:40px !important; letter-spacing:-0.02em !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-date{ font-size:15px !important; margin:4px 0 12px !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-count{ text-align:right !important; padding:16px 24px !important; border-radius:20px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-count b{ font-size:64px !important; line-height:64px !important; color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-hero-foot{ margin-top:24px !important; padding-top:20px !important; border-top:1px solid var(--u4) !important; display:flex !important; align-items:center !important; justify-content:space-between !important; background:transparent !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-adhoc-btn{ height:48px !important; border-radius:14px !important; padding:0 20px !important; }
+  html.ui-uj:not(.m-app) .lt-start-grid{ display:block !important; }
+  html.ui-uj:not(.m-app) .lt-upcoming{ padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .lt-upcoming .lt-h{ font-size:12px !important; letter-spacing:.06em !important; text-transform:uppercase !important; color:var(--ufaint) !important; margin:8px 0 12px !important; }
+  html.ui-uj:not(.m-app) #ltSchedule{ display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row{ position:relative; display:flex !important; flex-direction:column !important; align-items:flex-start !important; gap:10px !important; padding:18px !important; min-height:150px; border-radius:18px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .d{ width:auto !important; height:auto !important; background:none !important; border:0 !important; display:flex !important; align-items:baseline !important; gap:8px !important; padding:0 !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .d b, html.ui-uj:not(.m-app) #ltSchedule .lt-row .d > :first-child{ font-size:40px !important; line-height:44px !important; font-weight:700 !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .t{ font-size:13px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row .k{ position:absolute !important; top:16px !important; right:16px !important; }
+  html.ui-uj:not(.m-app) #ltSchedule .lt-row:first-child{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .lt-upcoming .lt-note, html.ui-uj:not(.m-app) .lt-upcoming > p{ margin-top:12px !important; color:var(--ufaint) !important; }
+
+  /* 📦 Csomag: lapos szállító-kártyák színes felső csíkkal, nagy „szkenner” sáv */
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-top{ padding:20px !important; border-radius:20px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-scan{ height:auto !important; background:transparent !important; border:0 !important; box-shadow:none !important; display:flex !important; flex-direction:column !important; gap:8px !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-scan-in{ height:64px !important; border-radius:18px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csMsg{ padding:0 4px !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-scan-in:focus-within{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csScan{ font-size:18px !important; }
+  html.ui-uj:not(.m-app) .cs2-car{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:18px !important; box-shadow:inset 0 4px 0 var(--cc,#9B9B9B) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .cs2-car::before, html.ui-uj:not(.m-app) .cs2-car::after{ display:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car.gls{ --cc:#FBAC01; } html.ui-uj:not(.m-app) .cs2-car.mpl{ --cc:#FF6B6B; } html.ui-uj:not(.m-app) .cs2-car.dpd{ --cc:#C8C8C8; } html.ui-uj:not(.m-app) .cs2-car.tot{ --cc:#34C38F; }
+  html.ui-uj:not(.m-app) .cs2-car *{ color:inherit; }
+  html.ui-uj:not(.m-app) .cs2-car [class*="stat"], html.ui-uj:not(.m-app) .cs2-car .cs2-kv > *{ background:var(--u2) !important; background-image:none !important; border:0 !important; border-radius:12px !important; }
+  html.ui-uj:not(.m-app) .cs2-car button{ background:transparent !important; background-image:none !important; border:1px solid var(--cc) !important; color:var(--utx) !important; border-radius:12px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .cs2-car button:hover{ background:color-mix(in srgb,var(--cc) 14%,transparent) !important; }
+
+  /* 💡 Eladásegéd: kereső-központú nyitó: középen nagy kereső */
+  html.ui-uj:not(.m-app) .ea-side > .panel{ flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:14px !important; padding:44px 24px !important; border-radius:24px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; }
+  html.ui-uj:not(.m-app) .ea-side > .panel::after{ order:-1; display:block !important; content:"Melyik terméket adnád el?"; font:700 30px/36px 'Manrope',system-ui,sans-serif; letter-spacing:-0.02em; color:var(--utx); }
+  html.ui-uj:not(.m-app) .ea-side .ea-search{ width:min(100%,720px) !important; flex:none !important; display:flex !important; gap:8px !important; padding:6px !important; border-radius:9999px !important; background:var(--u0) !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search:focus-within{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search input{ height:52px !important; border:0 !important; background:transparent !important; border-radius:9999px !important; padding:0 20px !important; font-size:17px !important; box-shadow:none !important; outline:none !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search button{ height:52px !important; padding:0 28px !important; border-radius:9999px !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-hint{ max-width:560px !important; text-align:center !important; color:var(--udim) !important; }
+  html.ui-uj:not(.m-app) #eaCard:has(.ea-wel){ background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-wel h3, html.ui-uj:not(.m-app) #eaCard .ea-wel > p, html.ui-uj:not(.m-app) #eaCard .ea-wel .ea-wic{ display:none !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-steps{ display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:12px !important; width:min(100%,900px) !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-steps span{ min-height:96px !important; padding:18px !important; border-radius:18px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; justify-content:center !important; gap:8px !important; font-size:15px !important; font-weight:600 !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-wel{ width:100% !important; max-width:none !important; display:flex !important; justify-content:center !important; }
+
+  /* 📚 Tudástár: nagy kereső-sáv, áttekintésnél a tartalomjegyzék helyett nagy fejezet-kártyák */
+  html.ui-uj:not(.m-app) .tt-hero{ padding:24px !important; border-radius:24px !important; background:var(--u1) radial-gradient(circle,var(--u3) 1px,transparent 1.5px) 0 0/16px 16px !important; border:1px solid var(--u4) !important; }
+  html.ui-uj:not(.m-app) .tt-hero #ttSearchWrap{ height:56px !important; border-radius:16px !important; background:var(--u0) !important; }
+  html.ui-uj:not(.m-app) .tt-grid:has(#tt-ov){ grid-template-columns:1fr !important; }
+  html.ui-uj:not(.m-app) .tt-grid:has(#tt-ov) #ttToc{ display:none !important; }
+  html.ui-uj:not(.m-app) .tt-ovg{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) .tt-oc{ min-height:84px !important; padding:16px 18px !important; border-radius:18px !important; background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; box-shadow:none !important; display:flex !important; align-items:center !important; gap:16px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1), transform .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj:not(.m-app) .tt-oc:hover{ border-color:var(--uacc) !important; transform:translateY(-2px) !important; }
+  html.ui-uj:not(.m-app) .tt-oc .ic{ width:52px !important; height:52px !important; border-radius:9999px !important; background:var(--u3) !important; background-image:none !important; border:0 !important; box-shadow:none !important; font-size:24px !important; }
+  html.ui-uj:not(.m-app) .tt-oc .tx{ font-size:15px !important; }
+  @media (max-width:1300px){ html.ui-uj:not(.m-app) .tt-ovg{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; } html.ui-uj:not(.m-app) #ltSchedule{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; } html.ui-uj:not(.m-app) #orderCard .orn{ grid-template-columns:1fr !important; } html.ui-uj:not(.m-app) #orderCard .orn-new{ position:static; } }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-top{ height:auto !important; min-height:0 !important; display:flex !important; flex-direction:column !important; gap:10px !important; }
+  html.ui-uj:not(.m-app) body.page-csomag .cs2-top > *{ position:static !important; }
+  html.ui-uj:not(.m-app) #eaCard:has(.ea-wel){ padding:0 !important; min-height:0 !important; }
+  html.ui-uj:not(.m-app) #eaCard .ea-wel{ margin:0 !important; padding:0 !important; min-height:0 !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn-add{ width:auto !important; max-width:none !important; align-self:stretch !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn-add .tdn-in{ width:100% !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn-board{ width:100% !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
