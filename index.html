@@ -6446,6 +6446,102 @@
   html.ui-uj.m-app body #mTab button[data-p="tudastar"] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); }
   html.ui-uj.m-app body #mTab button[data-more] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); }
 
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -7792,7 +7888,7 @@
   html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
     background:radial-gradient(120% 80% at 50% 0%,color-mix(in srgb,var(--kc) 26%,transparent),transparent 70%); animation:kwWash .7s cubic-bezier(.22,1,.36,1) both; }
   /* alsó színvonal kihúzódik */
-  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; left:18%; right:18%; bottom:0; height:4px; border-radius:4px 4px 0 0; background:var(--kc); transform-origin:center; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both; }
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ content:""; position:absolute; left:18%; right:18%; bottom:0; height:4px; border-radius:4px 4px 0 0; background:var(--kc); transform-origin:center; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both; }
   /* ikon: kártyaként befordul, utána lassan „lélegzik” */
   html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ width:76px !important; height:76px !important; min-width:76px !important; flex:0 0 76px !important; border-radius:24px !important; font-size:36px !important; font-weight:900 !important;
     background:linear-gradient(150deg,color-mix(in srgb,var(--kc) 70%,#fff),var(--kc)) !important; color:#0d1712 !important; display:grid !important; place-items:center !important; position:relative;
@@ -7804,6 +7900,37 @@
   /* szöveg */
   html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ font-size:24px !important; font-weight:800 !important; animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both; }
   html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResS#ksResS{ animation:kwUp .45s cubic-bezier(.22,1,.36,1) .25s both; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
   @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
   /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
   html body #nwBtn, html body .nw-hb, html body .nw-float, html body .nw-back{ display:none !important; }
@@ -7945,7 +8072,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-212839";</script>
+<script>window.FP_BUILD="20261108-213234";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -17587,6 +17714,102 @@ service cloud.firestore {
   html.ui-uj.m-app body #mTab button[data-p="tudastar"] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M128 88a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8v128a8 8 0 0 1-8 8h-64a32 32 0 0 0-32 32'/%3E%3Cpath d='M24 192a8 8 0 0 0 8 8h64a32 32 0 0 1 32 32V88a32 32 0 0 0-32-32H32a8 8 0 0 0-8 8Z'/%3E%3C/svg%3E"); }
   html.ui-uj.m-app body #mTab button[data-more] i::before{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='black' stroke-width='16' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='128' cy='128' r='12' fill='black'/%3E%3Ccircle cx='196' cy='128' r='12' fill='black'/%3E%3Ccircle cx='60' cy='128' r='12' fill='black'/%3E%3C/svg%3E"); }
 
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); mask:linear-gradient(0deg,transparent,#000 25%,#000 75%,transparent); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -18933,7 +19156,7 @@ service cloud.firestore {
   html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
     background:radial-gradient(120% 80% at 50% 0%,color-mix(in srgb,var(--kc) 26%,transparent),transparent 70%); animation:kwWash .7s cubic-bezier(.22,1,.36,1) both; }
   /* alsó színvonal kihúzódik */
-  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; left:18%; right:18%; bottom:0; height:4px; border-radius:4px 4px 0 0; background:var(--kc); transform-origin:center; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both; }
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ content:""; position:absolute; left:18%; right:18%; bottom:0; height:4px; border-radius:4px 4px 0 0; background:var(--kc); transform-origin:center; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both; }
   /* ikon: kártyaként befordul, utána lassan „lélegzik” */
   html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ width:76px !important; height:76px !important; min-width:76px !important; flex:0 0 76px !important; border-radius:24px !important; font-size:36px !important; font-weight:900 !important;
     background:linear-gradient(150deg,color-mix(in srgb,var(--kc) 70%,#fff),var(--kc)) !important; color:#0d1712 !important; display:grid !important; place-items:center !important; position:relative;
@@ -18945,6 +19168,37 @@ service cloud.firestore {
   /* szöveg */
   html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ font-size:24px !important; font-weight:800 !important; animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both; }
   html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResS#ksResS{ animation:kwUp .45s cubic-bezier(.22,1,.36,1) .25s both; }
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
   @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
   /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
   html body #nwBtn, html body .nw-hb, html body .nw-float, html body .nw-back{ display:none !important; }
