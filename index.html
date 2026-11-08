@@ -6523,6 +6523,69 @@
   /* Eladás: kereső oldalsáv és kártya */
   html.ui-uj:not(.m-app) .ea-tabs{ margin-left:auto !important; }
   html.ui-uj:not(.m-app) .sk-hb{ margin-left:auto !important; display:flex !important; gap:8px !important; }
+
+  /* ===== PRÓBA 12: új elrendezések programonként ===== */
+  /* ✅ Teendők: bal oldalt szűrő-lista, jobbra felírás + 3 oszlopos tábla */
+  html.ui-uj:not(.m-app) #todoCard{ background:transparent !important; border:0 !important; padding:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn{ display:grid !important; grid-template-columns:240px minmax(0,1fr) !important; grid-template-areas:"flt add" "flt board" !important; gap:16px 24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .tdn-add{ grid-area:add; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; padding:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tdn-flt{ grid-area:flt; display:flex !important; flex-direction:column !important; align-items:stretch !important; gap:4px !important; position:sticky; top:16px; padding:16px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-flt .tdn-fl{ font-size:12px !important; font-weight:600 !important; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint) !important; padding:0 8px 8px !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button{ display:flex !important; align-items:center !important; gap:10px !important; width:100% !important; height:44px !important; padding:0 12px !important; border-radius:10px !important; background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:600 !important; justify-content:flex-start !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button:hover{ background:var(--u2) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button.on{ background:var(--u3) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button em{ margin-left:auto !important; font-style:normal; font-size:12px !important; background:var(--u4) !important; color:var(--utx) !important; border-radius:9999px !important; padding:0 8px !important; min-width:20px; text-align:center; }
+  html.ui-uj:not(.m-app) .tdn-board{ grid-area:board; display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-col{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; padding:12px !important; box-shadow:none !important; min-height:360px; display:flex; flex-direction:column; gap:12px; }
+  html.ui-uj:not(.m-app) .tdn-col > header{ font-size:12px !important; font-weight:600 !important; letter-spacing:.06em; text-transform:uppercase; color:var(--udim) !important; padding:4px 4px 0 !important; display:flex; justify-content:space-between; }
+  html.ui-uj:not(.m-app) .tdn-col.c-today{ box-shadow:inset 0 3px 0 var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .tdn-it{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:14px !important; box-shadow:none !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1); }
+  html.ui-uj:not(.m-app) .tdn-it:hover{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .tdn-it > p{ font-size:15px !important; line-height:22px !important; font-weight:500 !important; margin:8px 0 12px !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tdn-chk button{ border-radius:9999px !important; background:var(--u3) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  /* 💰 Kassza: bankjegyek és érmék egymás mellett, jobbra rögzített összesítő */
+  html.ui-uj:not(.m-app) .ks-grid{ display:grid !important; grid-template-columns:minmax(0,1fr) 360px !important; gap:24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .ks-main{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:16px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; }
+  html.ui-uj:not(.m-app) .ks-row{ min-height:52px !important; padding:6px 8px !important; border-radius:10px !important; background:transparent !important; border:0 !important; box-shadow:inset 0 -1px 0 var(--u4) !important; }
+  html.ui-uj:not(.m-app) .ks-side{ position:sticky !important; top:16px !important; }
+  html.ui-uj:not(.m-app) #ksHero{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ksHero *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) #ksAll{ font-size:40px !important; line-height:44px !important; font-weight:700 !important; }
+  /* 📦 Csomag: beolvasás fent, balra a lista, jobbra a szállítók és az összesítő */
+  html.ui-uj:not(.m-app) body.page-csomag #csPage{ display:grid !important; grid-template-columns:minmax(0,1fr) 340px !important; gap:16px 24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > *{ grid-column:1 / -1; min-width:0; margin:0 !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > .cs2-grid{ display:contents !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage .cs2-list-card{ grid-column:1 !important; grid-row:4 / span 2 !important; margin:0 !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > .cs2-cars{ grid-column:2 !important; grid-row:4 !important; display:flex !important; flex-direction:column !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage .cs2-side{ grid-column:2 !important; grid-row:5 !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > .cs2-months{ grid-row:3; }
+  html.ui-uj:not(.m-app) .cs2-car{ min-height:0 !important; padding:14px !important; }
+  /* 🗑 Selejt: keskeny űrlap balra, széles mai lista jobbra */
+  html.ui-uj:not(.m-app) .sx-grid{ display:grid !important; grid-template-columns:400px minmax(0,1fr) 300px !important; gap:20px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-main{ display:contents !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd{ grid-column:1; grid-row:1 / span 2; position:sticky; top:16px; margin:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecList{ grid-column:2; grid-row:1; margin:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecChk{ grid-column:2; grid-row:2; margin:0 !important; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-side{ grid-column:3; grid-row:1 / span 2; display:flex !important; flex-direction:column; gap:16px; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-side > *{ margin:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-row2, html.ui-uj:not(.m-app) #sxSecAdd .sx-row3{ grid-template-columns:1fr !important; display:grid !important; }
+  /* 📋 Leltár: a következő leltár és a lista egymás mellett */
+  html.ui-uj:not(.m-app) #ltStart:not([hidden]){ display:grid !important; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) !important; gap:24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) #ltStart > *{ margin:0 !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-hero-main{ flex-wrap:wrap !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-count{ margin-left:auto !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-badge{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:16px !important; box-shadow:none !important; }
+  /* 💡 Eladás: nagy keresősáv felül, alatta teljes szélességű kártya */
+  html.ui-uj:not(.m-app) .ea-wrap{ display:flex !important; flex-direction:column !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) .ea-wrap > .ea-side{ width:100% !important; max-width:none !important; position:static !important; }
+  html.ui-uj:not(.m-app) .ea-side > .panel{ display:flex !important; align-items:center !important; gap:16px !important; padding:12px 16px !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search{ flex:1 !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search input{ height:48px !important; font-size:16px !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-hint{ max-width:320px; }
+  html.ui-uj:not(.m-app) .ea-wrap > .ea-card{ width:100% !important; }
+  /* 📱 Speckó: keskenyebb lista, nagyobb előnézet */
+  html.ui-uj:not(.m-app) .sk-wrap{ grid-template-columns:340px minmax(0,1fr) !important; gap:24px !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -16519,6 +16582,69 @@ service cloud.firestore {
   /* Eladás: kereső oldalsáv és kártya */
   html.ui-uj:not(.m-app) .ea-tabs{ margin-left:auto !important; }
   html.ui-uj:not(.m-app) .sk-hb{ margin-left:auto !important; display:flex !important; gap:8px !important; }
+
+  /* ===== PRÓBA 12: új elrendezések programonként ===== */
+  /* ✅ Teendők: bal oldalt szűrő-lista, jobbra felírás + 3 oszlopos tábla */
+  html.ui-uj:not(.m-app) #todoCard{ background:transparent !important; border:0 !important; padding:0 !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #todoCard .tdn{ display:grid !important; grid-template-columns:240px minmax(0,1fr) !important; grid-template-areas:"flt add" "flt board" !important; gap:16px 24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .tdn-add{ grid-area:add; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; padding:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) .tdn-flt{ grid-area:flt; display:flex !important; flex-direction:column !important; align-items:stretch !important; gap:4px !important; position:sticky; top:16px; padding:16px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-flt .tdn-fl{ font-size:12px !important; font-weight:600 !important; letter-spacing:.06em; text-transform:uppercase; color:var(--ufaint) !important; padding:0 8px 8px !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button{ display:flex !important; align-items:center !important; gap:10px !important; width:100% !important; height:44px !important; padding:0 12px !important; border-radius:10px !important; background:transparent !important; background-image:none !important; border:0 !important; box-shadow:none !important; color:var(--udim) !important; font-weight:600 !important; justify-content:flex-start !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button:hover{ background:var(--u2) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button.on{ background:var(--u3) !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tdn-flt > button em{ margin-left:auto !important; font-style:normal; font-size:12px !important; background:var(--u4) !important; color:var(--utx) !important; border-radius:9999px !important; padding:0 8px !important; min-width:20px; text-align:center; }
+  html.ui-uj:not(.m-app) .tdn-board{ grid-area:board; display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) .tdn-col{ background:var(--u1) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:16px !important; padding:12px !important; box-shadow:none !important; min-height:360px; display:flex; flex-direction:column; gap:12px; }
+  html.ui-uj:not(.m-app) .tdn-col > header{ font-size:12px !important; font-weight:600 !important; letter-spacing:.06em; text-transform:uppercase; color:var(--udim) !important; padding:4px 4px 0 !important; display:flex; justify-content:space-between; }
+  html.ui-uj:not(.m-app) .tdn-col.c-today{ box-shadow:inset 0 3px 0 var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .tdn-it{ background:var(--u2) !important; background-image:none !important; border:1px solid var(--u4) !important; border-radius:12px !important; padding:14px !important; box-shadow:none !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1); }
+  html.ui-uj:not(.m-app) .tdn-it:hover{ border-color:var(--uacc) !important; }
+  html.ui-uj:not(.m-app) .tdn-it > p{ font-size:15px !important; line-height:22px !important; font-weight:500 !important; margin:8px 0 12px !important; color:var(--utx) !important; }
+  html.ui-uj:not(.m-app) .tdn-chk button{ border-radius:9999px !important; background:var(--u3) !important; border:1px solid var(--u4) !important; box-shadow:none !important; }
+  /* 💰 Kassza: bankjegyek és érmék egymás mellett, jobbra rögzített összesítő */
+  html.ui-uj:not(.m-app) .ks-grid{ display:grid !important; grid-template-columns:minmax(0,1fr) 360px !important; gap:24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .ks-main{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:16px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .ks-main > .ks-card{ margin:0 !important; }
+  html.ui-uj:not(.m-app) .ks-row{ min-height:52px !important; padding:6px 8px !important; border-radius:10px !important; background:transparent !important; border:0 !important; box-shadow:inset 0 -1px 0 var(--u4) !important; }
+  html.ui-uj:not(.m-app) .ks-side{ position:sticky !important; top:16px !important; }
+  html.ui-uj:not(.m-app) #ksHero{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:16px !important; box-shadow:none !important; }
+  html.ui-uj:not(.m-app) #ksHero *{ color:#000 !important; }
+  html.ui-uj:not(.m-app) #ksAll{ font-size:40px !important; line-height:44px !important; font-weight:700 !important; }
+  /* 📦 Csomag: beolvasás fent, balra a lista, jobbra a szállítók és az összesítő */
+  html.ui-uj:not(.m-app) body.page-csomag #csPage{ display:grid !important; grid-template-columns:minmax(0,1fr) 340px !important; gap:16px 24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > *{ grid-column:1 / -1; min-width:0; margin:0 !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > .cs2-grid{ display:contents !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage .cs2-list-card{ grid-column:1 !important; grid-row:4 / span 2 !important; margin:0 !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > .cs2-cars{ grid-column:2 !important; grid-row:4 !important; display:flex !important; flex-direction:column !important; gap:12px !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage .cs2-side{ grid-column:2 !important; grid-row:5 !important; }
+  html.ui-uj:not(.m-app) body.page-csomag #csPage > .cs2-months{ grid-row:3; }
+  html.ui-uj:not(.m-app) .cs2-car{ min-height:0 !important; padding:14px !important; }
+  /* 🗑 Selejt: keskeny űrlap balra, széles mai lista jobbra */
+  html.ui-uj:not(.m-app) .sx-grid{ display:grid !important; grid-template-columns:400px minmax(0,1fr) 300px !important; gap:20px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-main{ display:contents !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd{ grid-column:1; grid-row:1 / span 2; position:sticky; top:16px; margin:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecList{ grid-column:2; grid-row:1; margin:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecChk{ grid-column:2; grid-row:2; margin:0 !important; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-side{ grid-column:3; grid-row:1 / span 2; display:flex !important; flex-direction:column; gap:16px; }
+  html.ui-uj:not(.m-app) .sx-grid > .sx-side > *{ margin:0 !important; }
+  html.ui-uj:not(.m-app) #sxSecAdd .sx-row2, html.ui-uj:not(.m-app) #sxSecAdd .sx-row3{ grid-template-columns:1fr !important; display:grid !important; }
+  /* 📋 Leltár: a következő leltár és a lista egymás mellett */
+  html.ui-uj:not(.m-app) #ltStart:not([hidden]){ display:grid !important; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) !important; gap:24px !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) #ltStart > *{ margin:0 !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-hero-main{ flex-wrap:wrap !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-count{ margin-left:auto !important; }
+  html.ui-uj:not(.m-app) #ltHero .lt-badge{ background:var(--uacc) !important; background-image:none !important; color:#000 !important; border-radius:16px !important; box-shadow:none !important; }
+  /* 💡 Eladás: nagy keresősáv felül, alatta teljes szélességű kártya */
+  html.ui-uj:not(.m-app) .ea-wrap{ display:flex !important; flex-direction:column !important; gap:16px !important; }
+  html.ui-uj:not(.m-app) .ea-wrap > .ea-side{ width:100% !important; max-width:none !important; position:static !important; }
+  html.ui-uj:not(.m-app) .ea-side > .panel{ display:flex !important; align-items:center !important; gap:16px !important; padding:12px 16px !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search{ flex:1 !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-search input{ height:48px !important; font-size:16px !important; }
+  html.ui-uj:not(.m-app) .ea-side .ea-hint{ max-width:320px; }
+  html.ui-uj:not(.m-app) .ea-wrap > .ea-card{ width:100% !important; }
+  /* 📱 Speckó: keskenyebb lista, nagyobb előnézet */
+  html.ui-uj:not(.m-app) .sk-wrap{ grid-template-columns:340px minmax(0,1fr) !important; gap:24px !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
