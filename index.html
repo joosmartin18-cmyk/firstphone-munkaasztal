@@ -7975,7 +7975,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-203921";</script>
+<script>window.FP_BUILD="20261108-204147";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -8025,7 +8025,7 @@
   /* a munkaasztal mentései: ha közös kulcs, feltöltjük (kicsit késleltetve, hogy a gyors gépelés egy mentés legyen) */
   P.setItem = function(k, v){ rawSet.call(this, k, v); if(this === LS && SYNC.includes(k)) queue(k); };
   P.removeItem = function(k){ rawRemove.call(this, k); if(this === LS && SYNC.includes(k)) queue(k); };
-  function queue(k){ if(!S.on) return; S.pending.add(k); clearTimeout(S.timers[k]); S.timers[k] = setTimeout(()=> push(k), 900); status(); }
+  function queue(k){ if(!S.on) return; if(!S.pending.size) S.pendAt = Date.now(); S.pending.add(k); clearTimeout(S.timers[k]); S.timers[k] = setTimeout(()=> push(k), 900); status(); }
   const colFor = uid=> S.db.collection("boltok").doc(uid).collection("kv");
   const col = ()=> colFor(S.target || S.user.uid);
   /* a bolt névjegye (a boltlistához): hely, e-mail, utolsó mentés */
@@ -8068,7 +8068,8 @@
         await batch.commit();
       }
       S.pending.delete(k); S.lastErr = ""; writeMeta(k === "firstphone_beosztas_tervezo_v2");
-    }catch(e){ S.lastErr = e && e.message || String(e); setTimeout(()=> queue(k), 8000); }
+    }catch(e){ S.lastErr = e && e.message || String(e); S.errAt = S.errAt || Date.now(); setTimeout(()=> queue(k), S.pushFail = Math.min(15000, (S.pushFail || 1500) * 2)); status(); return; }
+    S.pushFail = 0; S.errAt = 0; if(!S.pending.size) S.pendAt = 0;
     status();
   }
   async function readDoc(id, d, c){
@@ -8122,7 +8123,36 @@
           v === null ? lsDel(id) : lsSet(id, v); changed = true; }
       }
       if(changed) remoteChanged();
-    }, err=>{ S.lastErr = err && err.message || String(err); status(); });
+      S.listenFail = 0; S.lastSnap = Date.now();
+      if(!(snap.metadata && snap.metadata.fromCache) && S.lastErr && !S.pending.size){ S.lastErr = ""; S.errAt = 0; status(); }
+    }, err=>{ S.lastErr = err && err.message || String(err); S.errAt = S.errAt || Date.now(); status();
+      if(S.unsub){ try{ S.unsub(); }catch(e){} S.unsub = null; }
+      S.listenFail = (S.listenFail || 0) + 1; clearTimeout(S.relT);
+      S.relT = setTimeout(()=>{ if(S.on && S.user && S.db) listen(); }, Math.min(30000, 1500 * Math.pow(2, S.listenFail - 1))); });
+  }
+  /* 🩺 felhő-öngyógyítás: ha a kapcsolat beragad (net visszajött, gép felébredt, sokáig függ a mentés), azonnal újracsatlakozik — nem kell újratölteni az oldalt */
+  let healAt = 0;
+  async function cloudKick(why){
+    if(!S.db || Date.now() - healAt < 15000) return; healAt = Date.now();
+    try{ await S.db.disableNetwork(); }catch(e){}
+    try{ await S.db.enableNetwork(); }catch(e){}
+    if(S.on && S.user){ try{ listen(); }catch(e){} Array.from(S.pending).forEach(k=>{ clearTimeout(S.timers[k]); S.timers[k] = setTimeout(()=> push(k), 300); }); }
+    try{ console.info("[felhő] újracsatlakozás:", why); }catch(e){}
+  }
+  window.fpCloudKick = cloudKick;
+  function cloudHeal(){
+    if(S.healOn) return; S.healOn = true;
+    window.addEventListener("online", ()=> setTimeout(()=> cloudKick("online"), 600));
+    let hidAt = 0;
+    document.addEventListener("visibilitychange", ()=>{ if(document.hidden){ hidAt = Date.now(); return; } if(hidAt && Date.now() - hidAt > 60000) cloudKick("ébredés"); hidAt = 0; });
+    let tick = Date.now();
+    setInterval(()=>{
+      const now = Date.now(), slept = now - tick > 45000; tick = now;   /* alvó gép: az időzítő sokáig nem futott */
+      if(!S.on || !S.user || !S.db || navigator.onLine === false) return;
+      if(slept){ cloudKick("alvás után"); return; }
+      if(S.pending.size && S.pendAt && now - S.pendAt > 20000) cloudKick("függő mentés");
+      else if(S.lastErr && S.errAt && now - S.errAt > 15000) cloudKick("hiba");
+    }, 10000);
   }
   /* másik gépen változott: ha épp nem gépelsz és nincs nyitott ablak, frissítjük az oldalt */
   let reloadT = null;
@@ -13881,10 +13911,15 @@ service cloud.firestore {
   async function start(){
     document.readyState === "loading" ? await new Promise(r=> document.addEventListener("DOMContentLoaded", r)) : 0;
     status();
-    if(!(await loadSdk())){ S.state = "offl"; S.lastErr = "A felhő nem érhető el (nincs internet?)"; status(); return; }
+    if(!(await loadSdk())){ S.state = "offl"; S.lastErr = "A felhő nem érhető el (nincs internet?)"; status();
+      S.sdkTry = (S.sdkTry || 0) + 1; const again = ()=>{ window.removeEventListener("online", again); clearTimeout(S.sdkT); start(); };
+      window.addEventListener("online", again); S.sdkT = setTimeout(again, Math.min(60000, 5000 * S.sdkTry)); return; }
+    S.lastErr = "";
     firebase.initializeApp(CFG);
     S.db = firebase.firestore();
+    try{ S.db.settings({ experimentalAutoDetectLongPolling:true, merge:true }); }catch(e){}
     try{ S.db.enablePersistence({ synchronizeTabs:true }).catch(()=>{}); }catch(e){}
+    try{ cloudHeal(); }catch(e){}
     firebase.auth().onAuthStateChanged(async u=>{
       S.authKnown = true;
       S.user = u || null;
