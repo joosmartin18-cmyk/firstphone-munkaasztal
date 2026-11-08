@@ -7756,6 +7756,53 @@
   html.ui-uj.m-app #scPanel .sc-grid{ grid-auto-rows:auto !important; grid-template-rows:none !important; align-items:start !important; overflow:visible !important; height:auto !important; max-height:none !important; }
   html.ui-uj.m-app #scPanel .sc-it{ max-height:none !important; }
   html.ui-uj.m-app .help-modal .help-count{ display:none !important; }
+  /* ===== PRÓBA 22 — Kassza eredmény-kártya: animált ===== */
+  @keyframes ksPopIn{ 0%{ transform:scale(.3) rotate(-40deg); opacity:0; } 55%{ transform:scale(1.18) rotate(8deg); opacity:1; } 75%{ transform:scale(.94) rotate(-3deg); } 100%{ transform:scale(1) rotate(0); } }
+  @keyframes ksRing{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 55%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 35%,transparent); } 70%{ box-shadow:0 0 0 16px transparent, 0 0 0 30px transparent; } 100%{ box-shadow:0 0 0 0 transparent, 0 0 0 0 transparent; } }
+  @keyframes ksFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
+  @keyframes ksSweep{ 0%{ transform:translateX(-120%) skewX(-18deg); } 60%,100%{ transform:translateX(320%) skewX(-18deg); } }
+  @keyframes ksUp{ from{ opacity:0; transform:translateY(12px); filter:blur(4px); } to{ opacity:1; transform:none; filter:none; } }
+  @keyframes ksGlow{ 0%,100%{ background-position:0% 0%; } 50%{ background-position:100% 100%; } }
+  @keyframes ksSpark{ 0%{ background-position:0 0, 0 0, 0 0; } 100%{ background-position:0 -220px, 0 -160px, 0 -300px; } }
+  @keyframes ksShake{ 0%,100%{ transform:translateX(0); } 15%{ transform:translateX(-7px) rotate(-1deg); } 30%{ transform:translateX(6px) rotate(1deg); } 45%{ transform:translateX(-4px); } 60%{ transform:translateX(3px); } 75%{ transform:translateX(-1px); } }
+  @keyframes ksStripe{ to{ background-position:40px 0; } }
+  @keyframes ksCoin{ 0%{ transform:translateY(0) scale(.6); opacity:0; } 20%{ opacity:1; } 100%{ transform:translateY(-120px) scale(1); opacity:0; } }
+  @keyframes ksConf{ 0%{ transform:translate(0,0) rotate(0) scale(1); opacity:1; } 100%{ transform:translate(var(--dx),var(--dy)) rotate(var(--rr)) scale(.6); opacity:0; } }
+  @keyframes ksDraw{ from{ clip-path:inset(0 100% 0 0); } to{ clip-path:inset(0 0 0 0); } }
+
+  html.ui-uj #ksRes{ position:relative !important; overflow:hidden !important; isolation:isolate; transition:background-color .4s, border-color .4s !important; }
+  html.ui-uj #ksRes.ok{ --kc:#34C38F; } html.ui-uj #ksRes.plus{ --kc:#F5A55A; } html.ui-uj #ksRes.minus{ --kc:#FF6B6B; }
+  /* háttér: lassan mozgó fény + felszálló szikrák */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ content:""; position:absolute; inset:-1px; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 50% at 20% 25%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(50% 45% at 85% 85%,color-mix(in srgb,var(--kc) 20%,transparent),transparent 70%);
+    background-size:200% 200%; animation:ksGlow 6s ease-in-out infinite; }
+  html.ui-uj #ksRes.ok::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.7;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 85%,#fff) 1.4px,transparent 2px), radial-gradient(circle,#fff 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2px,transparent 2.6px);
+    background-size:70px 110px, 110px 80px, 150px 150px; background-position:0 0, 30px 40px, 60px 10px; animation:ksSpark 9s linear infinite;
+    -webkit-mask:linear-gradient(0deg,transparent,#000 30%,#000 70%,transparent); mask:linear-gradient(0deg,transparent,#000 30%,#000 70%,transparent); }
+  /* fénycsík átsuhan */
+  html.ui-uj #ksRes:is(.ok,.plus) .ks-res-tx::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:30%; z-index:-1; pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent); animation:ksSweep 4.5s cubic-bezier(.4,0,.2,1) .6s infinite; }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: berobban, körök hullámzanak, lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc{ width:56px !important; height:56px !important; min-width:56px !important; border-radius:18px !important; font-size:26px !important; font-weight:900 !important;
+    animation:ksPopIn .7s cubic-bezier(.34,1.56,.64,1) both, ksRing 2.2s ease-out .5s infinite, ksFloat 3.2s ease-in-out 1.2s infinite !important; }
+  html.ui-uj #ksRes.ok #ksResIc{ background:linear-gradient(145deg,#4fe0a8,#22a06b) !important; color:#06281a !important; }
+  html.ui-uj #ksRes.plus #ksResIc{ background:linear-gradient(145deg,#ffc27d,#e88a2e) !important; }
+  html.ui-uj #ksRes.minus #ksResIc{ background:linear-gradient(145deg,#ff8a8a,#e04848) !important; animation:ksPopIn .7s cubic-bezier(.34,1.56,.64,1) both, ksRing 1.4s ease-out .5s infinite !important; }
+  /* szöveg: beúszik, a cím kitöltődik */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT{ animation:ksUp .55s cubic-bezier(.22,1,.36,1) .18s both; }
+  html.ui-uj #ksRes.ok #ksResT{ background:linear-gradient(90deg,#34C38F,#8ff0c6,#34C38F); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; color:transparent !important; -webkit-text-fill-color:transparent; animation:ksUp .55s cubic-bezier(.22,1,.36,1) .18s both, ksGlow 3s linear infinite; }
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResS{ animation:ksUp .55s cubic-bezier(.22,1,.36,1) .3s both; }
+  /* hiány: megrázza, piros csíkozás mozog */
+  html.ui-uj #ksRes.minus{ animation:ksShake .55s ease .1s both !important; }
+  html.ui-uj #ksRes.minus::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:-1; background:repeating-linear-gradient(-45deg,#FF6B6B 0 10px,transparent 10px 20px); background-size:40px 5px; animation:ksStripe 1s linear infinite; opacity:.8; }
+  /* többlet: érmék szállnak fel */
+  html.ui-uj #ksRes.plus::after{ content:"🪙  🪙   🪙"; position:absolute; right:18px; bottom:-10px; z-index:-1; font-size:18px; letter-spacing:6px; white-space:pre; animation:ksCoin 2.6s ease-out .4s infinite; opacity:0; }
+  /* konfetti-darabok (a JS rakja be egyezéskor) */
+  html.ui-uj #ksRes .ks-cf{ position:absolute; left:var(--x); top:var(--y); width:8px; height:12px; border-radius:2px; background:var(--c); pointer-events:none; z-index:2; animation:ksConf 1.3s cubic-bezier(.15,.7,.3,1) var(--d) forwards; }
+  html.ui-uj #ksRes .ks-cf.r{ border-radius:50%; width:8px; height:8px; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -19000,6 +19047,53 @@ service cloud.firestore {
   html.ui-uj.m-app #scPanel .sc-grid{ grid-auto-rows:auto !important; grid-template-rows:none !important; align-items:start !important; overflow:visible !important; height:auto !important; max-height:none !important; }
   html.ui-uj.m-app #scPanel .sc-it{ max-height:none !important; }
   html.ui-uj.m-app .help-modal .help-count{ display:none !important; }
+  /* ===== PRÓBA 22 — Kassza eredmény-kártya: animált ===== */
+  @keyframes ksPopIn{ 0%{ transform:scale(.3) rotate(-40deg); opacity:0; } 55%{ transform:scale(1.18) rotate(8deg); opacity:1; } 75%{ transform:scale(.94) rotate(-3deg); } 100%{ transform:scale(1) rotate(0); } }
+  @keyframes ksRing{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 55%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 35%,transparent); } 70%{ box-shadow:0 0 0 16px transparent, 0 0 0 30px transparent; } 100%{ box-shadow:0 0 0 0 transparent, 0 0 0 0 transparent; } }
+  @keyframes ksFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
+  @keyframes ksSweep{ 0%{ transform:translateX(-120%) skewX(-18deg); } 60%,100%{ transform:translateX(320%) skewX(-18deg); } }
+  @keyframes ksUp{ from{ opacity:0; transform:translateY(12px); filter:blur(4px); } to{ opacity:1; transform:none; filter:none; } }
+  @keyframes ksGlow{ 0%,100%{ background-position:0% 0%; } 50%{ background-position:100% 100%; } }
+  @keyframes ksSpark{ 0%{ background-position:0 0, 0 0, 0 0; } 100%{ background-position:0 -220px, 0 -160px, 0 -300px; } }
+  @keyframes ksShake{ 0%,100%{ transform:translateX(0); } 15%{ transform:translateX(-7px) rotate(-1deg); } 30%{ transform:translateX(6px) rotate(1deg); } 45%{ transform:translateX(-4px); } 60%{ transform:translateX(3px); } 75%{ transform:translateX(-1px); } }
+  @keyframes ksStripe{ to{ background-position:40px 0; } }
+  @keyframes ksCoin{ 0%{ transform:translateY(0) scale(.6); opacity:0; } 20%{ opacity:1; } 100%{ transform:translateY(-120px) scale(1); opacity:0; } }
+  @keyframes ksConf{ 0%{ transform:translate(0,0) rotate(0) scale(1); opacity:1; } 100%{ transform:translate(var(--dx),var(--dy)) rotate(var(--rr)) scale(.6); opacity:0; } }
+  @keyframes ksDraw{ from{ clip-path:inset(0 100% 0 0); } to{ clip-path:inset(0 0 0 0); } }
+
+  html.ui-uj #ksRes{ position:relative !important; overflow:hidden !important; isolation:isolate; transition:background-color .4s, border-color .4s !important; }
+  html.ui-uj #ksRes.ok{ --kc:#34C38F; } html.ui-uj #ksRes.plus{ --kc:#F5A55A; } html.ui-uj #ksRes.minus{ --kc:#FF6B6B; }
+  /* háttér: lassan mozgó fény + felszálló szikrák */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ content:""; position:absolute; inset:-1px; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 50% at 20% 25%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(50% 45% at 85% 85%,color-mix(in srgb,var(--kc) 20%,transparent),transparent 70%);
+    background-size:200% 200%; animation:ksGlow 6s ease-in-out infinite; }
+  html.ui-uj #ksRes.ok::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.7;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 85%,#fff) 1.4px,transparent 2px), radial-gradient(circle,#fff 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2px,transparent 2.6px);
+    background-size:70px 110px, 110px 80px, 150px 150px; background-position:0 0, 30px 40px, 60px 10px; animation:ksSpark 9s linear infinite;
+    -webkit-mask:linear-gradient(0deg,transparent,#000 30%,#000 70%,transparent); mask:linear-gradient(0deg,transparent,#000 30%,#000 70%,transparent); }
+  /* fénycsík átsuhan */
+  html.ui-uj #ksRes:is(.ok,.plus) .ks-res-tx::before{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:30%; z-index:-1; pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent); animation:ksSweep 4.5s cubic-bezier(.4,0,.2,1) .6s infinite; }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: berobban, körök hullámzanak, lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc{ width:56px !important; height:56px !important; min-width:56px !important; border-radius:18px !important; font-size:26px !important; font-weight:900 !important;
+    animation:ksPopIn .7s cubic-bezier(.34,1.56,.64,1) both, ksRing 2.2s ease-out .5s infinite, ksFloat 3.2s ease-in-out 1.2s infinite !important; }
+  html.ui-uj #ksRes.ok #ksResIc{ background:linear-gradient(145deg,#4fe0a8,#22a06b) !important; color:#06281a !important; }
+  html.ui-uj #ksRes.plus #ksResIc{ background:linear-gradient(145deg,#ffc27d,#e88a2e) !important; }
+  html.ui-uj #ksRes.minus #ksResIc{ background:linear-gradient(145deg,#ff8a8a,#e04848) !important; animation:ksPopIn .7s cubic-bezier(.34,1.56,.64,1) both, ksRing 1.4s ease-out .5s infinite !important; }
+  /* szöveg: beúszik, a cím kitöltődik */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT{ animation:ksUp .55s cubic-bezier(.22,1,.36,1) .18s both; }
+  html.ui-uj #ksRes.ok #ksResT{ background:linear-gradient(90deg,#34C38F,#8ff0c6,#34C38F); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; color:transparent !important; -webkit-text-fill-color:transparent; animation:ksUp .55s cubic-bezier(.22,1,.36,1) .18s both, ksGlow 3s linear infinite; }
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResS{ animation:ksUp .55s cubic-bezier(.22,1,.36,1) .3s both; }
+  /* hiány: megrázza, piros csíkozás mozog */
+  html.ui-uj #ksRes.minus{ animation:ksShake .55s ease .1s both !important; }
+  html.ui-uj #ksRes.minus::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:5px; z-index:-1; background:repeating-linear-gradient(-45deg,#FF6B6B 0 10px,transparent 10px 20px); background-size:40px 5px; animation:ksStripe 1s linear infinite; opacity:.8; }
+  /* többlet: érmék szállnak fel */
+  html.ui-uj #ksRes.plus::after{ content:"🪙  🪙   🪙"; position:absolute; right:18px; bottom:-10px; z-index:-1; font-size:18px; letter-spacing:6px; white-space:pre; animation:ksCoin 2.6s ease-out .4s infinite; opacity:0; }
+  /* konfetti-darabok (a JS rakja be egyezéskor) */
+  html.ui-uj #ksRes .ks-cf{ position:absolute; left:var(--x); top:var(--y); width:8px; height:12px; border-radius:2px; background:var(--c); pointer-events:none; z-index:2; animation:ksConf 1.3s cubic-bezier(.15,.7,.3,1) var(--d) forwards; }
+  html.ui-uj #ksRes .ks-cf.r{ border-radius:50%; width:8px; height:8px; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -33201,6 +33295,27 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
   /* kézi váltás → a mostani dolgozónál megjegyzi */
   document.addEventListener("click", function(e){ if(auto || !e.target.closest || !e.target.closest("#themeToggle")) return; setTimeout(function(){ var w = who(); if(!w) return; var o = load(); o[w.key] = cur(); save(o); }, 900); }, true);
   setInterval(tick, 1500); setTimeout(tick, 2500);
+})();
+
+/* PRÓBA: Kassza — egyezéskor konfetti-robbanás az eredmény-kártyán */
+(function(){
+  var last = "";
+  function burst(r){
+    var ic = document.getElementById("ksResIc"); if(!ic) return;
+    var rb = r.getBoundingClientRect(), ib = ic.getBoundingClientRect(), cx = ib.left - rb.left + ib.width / 2, cy = ib.top - rb.top + ib.height / 2;
+    var C = ["#34C38F","#8ff0c6","#FBAC01","#ffffff","#5B9CF5","#ff8ad1"];
+    for(var i = 0; i < 34; i++){ var s = document.createElement("i"), a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 170;
+      s.className = "ks-cf" + (i % 3 ? "" : " r");
+      s.style.cssText = "--x:" + cx + "px;--y:" + cy + "px;--c:" + C[i % C.length] + ";--dx:" + Math.round(Math.cos(a) * d) + "px;--dy:" + Math.round(Math.sin(a) * d * .8 + 40) + "px;--rr:" + Math.round(Math.random() * 720 - 360) + "deg;--d:" + (Math.random() * .12).toFixed(2) + "s";
+      r.appendChild(s); }
+    setTimeout(function(){ r.querySelectorAll(".ks-cf").forEach(function(x){ x.remove(); }); }, 1700);
+  }
+  setInterval(function(){
+    var r = document.getElementById("ksRes"); if(!r || !document.documentElement.classList.contains("ui-uj")) return;
+    var st = r.classList.contains("ok") ? "ok" : r.classList.contains("plus") ? "plus" : r.classList.contains("minus") ? "minus" : "none";
+    if(st === "ok" && last !== "ok" && r.offsetParent){ try{ burst(r); }catch(e){} }
+    last = st;
+  }, 250);
 })();
 </script>
 </body>
