@@ -7840,7 +7840,7 @@
   html.ui-uj #ksRes .kc-lbl{ font:800 11px 'Manrope',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--udim); }
   html.ui-uj #ksRes .kc-lbl i{ font-style:normal; animation:kcDot 1.2s ease-in-out infinite; } html.ui-uj #ksRes .kc-lbl i:nth-child(2){ animation-delay:.2s; } html.ui-uj #ksRes .kc-lbl i:nth-child(3){ animation-delay:.4s; }
   html.ui-uj #ksRes .kc-bar{ width:min(220px,80%); height:6px; border-radius:6px; background:var(--u3); overflow:hidden; }
-  html.ui-uj #ksRes .kc-bar b{ display:block; height:100%; border-radius:6px; background:linear-gradient(90deg,var(--uacc),#ffd76a); transform-origin:left; transform:scaleX(0); animation:kcBar var(--dur,2.4s) cubic-bezier(.4,0,.2,1) forwards; }
+  html.ui-uj #ksRes .kc-bar b{ display:block; height:100%; border-radius:6px; background:linear-gradient(90deg,var(--uacc),#ffd76a); transform-origin:left; transform:scaleX(0); transition:transform .15s linear; }
   html.ui-uj #ksRes .kc-steps{ display:flex; gap:6px; font:700 11px 'Manrope',sans-serif; color:var(--ufaint,#777); }
   html.ui-uj #ksRes .kc-steps span{ transition:color .25s; } html.ui-uj #ksRes .kc-steps span.on{ color:var(--utx); }
   /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
@@ -7983,7 +7983,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-204935";</script>
+<script>window.FP_BUILD="20261108-205415";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -19019,7 +19019,7 @@ service cloud.firestore {
   html.ui-uj #ksRes .kc-lbl{ font:800 11px 'Manrope',sans-serif; letter-spacing:.14em; text-transform:uppercase; color:var(--udim); }
   html.ui-uj #ksRes .kc-lbl i{ font-style:normal; animation:kcDot 1.2s ease-in-out infinite; } html.ui-uj #ksRes .kc-lbl i:nth-child(2){ animation-delay:.2s; } html.ui-uj #ksRes .kc-lbl i:nth-child(3){ animation-delay:.4s; }
   html.ui-uj #ksRes .kc-bar{ width:min(220px,80%); height:6px; border-radius:6px; background:var(--u3); overflow:hidden; }
-  html.ui-uj #ksRes .kc-bar b{ display:block; height:100%; border-radius:6px; background:linear-gradient(90deg,var(--uacc),#ffd76a); transform-origin:left; transform:scaleX(0); animation:kcBar var(--dur,2.4s) cubic-bezier(.4,0,.2,1) forwards; }
+  html.ui-uj #ksRes .kc-bar b{ display:block; height:100%; border-radius:6px; background:linear-gradient(90deg,var(--uacc),#ffd76a); transform-origin:left; transform:scaleX(0); transition:transform .15s linear; }
   html.ui-uj #ksRes .kc-steps{ display:flex; gap:6px; font:700 11px 'Manrope',sans-serif; color:var(--ufaint,#777); }
   html.ui-uj #ksRes .kc-steps span{ transition:color .25s; } html.ui-uj #ksRes .kc-steps span.on{ color:var(--utx); }
   /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
@@ -33300,23 +33300,30 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
     var tx = r.querySelector(".ks-res-tx"); r.insertBefore(v, tx || r.firstChild);
   }
   /* számolás-fázis: az eredmény előtt kb. 2–3 mp „számol” (érme pörög, az összeg felpörög, csík töltődik) */
-  var until = 0, raf = 0;
+  var until = 0, raf = 0, lastKey = 0, IDLE = 2000;
+  /* bármelyik kassza-mező gépelése: újraindul / folytatódik a számolás, és csak 2 mp csend után jön az eredmény */
+  document.addEventListener("input", function(e){ var t = e.target; if(!t || !t.closest || !t.closest("#ksPage")) return; if(!document.documentElement.classList.contains("ui-uj")) return;
+    lastKey = Date.now(); until = lastKey + IDLE; var r = document.getElementById("ksRes"); if(!r) return;
+    if(!r.hasAttribute("data-calc")){ try{ calc(r); }catch(_){} } else { var c = r.querySelector(".ks-calc"); if(c) c.setAttribute("data-live", "1"); } }, true);
   function ft(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
   function calc(r){
     var c = r.querySelector(".ks-calc"), v = r.querySelector(".ks-viz"); if(v) v.remove();
-    var dur = 2000 + Math.round(Math.random() * 1200); until = Date.now() + dur;
+    if(c && r.hasAttribute("data-calc")){ until = Math.max(Date.now() + 1200, lastKey + IDLE); return; }
+    var dur = 2000; until = Math.max(Date.now() + 1200, lastKey + IDLE);
     var tot = 0; try{ tot = parseInt((document.getElementById("ksCmpAll").textContent || "").replace(/[^0-9]/g, ""), 10) || 0; }catch(e){}
     if(c) c.remove();
     c = document.createElement("div"); c.className = "ks-calc"; c.style.setProperty("--dur", dur + "ms");
     c.innerHTML = '<div class="kc-stage"><i class="kc-shadow"></i><i class="kc-coin">Ft</i></div><div class="kc-num"><span>0</span><small>Ft</small></div>'
       + '<div class="kc-lbl">Számolás<i>.</i><i>.</i><i>.</i></div><div class="kc-bar"><b></b></div><div class="kc-steps"><span class="on">bankjegyek</span>·<span>érmék</span>·<span>összevetés</span></div>';
     r.setAttribute("data-calc", "1"); r.insertBefore(c, r.firstChild);
-    var t0 = performance.now(), num = c.querySelector(".kc-num span"), steps = c.querySelectorAll(".kc-steps span");
+    var num = c.querySelector(".kc-num span"), steps = c.querySelectorAll(".kc-steps span"), shown = 0, bar = c.querySelector(".kc-bar b"), t0 = Date.now();
     cancelAnimationFrame(raf);
-    (function fr(t){ var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
-      num.textContent = ft(tot * Math.min(1, e * 1.08));
+    (function fr(){ if(!c.isConnected) return;
+      var target = 0; try{ target = parseInt((document.getElementById("ksCmpAll").textContent || "").replace(/[^0-9]/g, ""), 10) || 0; }catch(e){}
+      shown += (target - shown) * 0.12; if(Math.abs(target - shown) < 1) shown = target; num.textContent = ft(shown);
+      var span = Math.max(1, until - t0), k = Math.min(1, (Date.now() - t0) / span); bar.style.transform = "scaleX(" + k.toFixed(3) + ")";
       steps.forEach(function(s, i){ s.classList.toggle("on", k >= i / 3); });
-      if(k < 1 && c.isConnected) raf = requestAnimationFrame(fr); })(t0);
+      raf = requestAnimationFrame(fr); })();
   }
   setInterval(function(){
     var r = document.getElementById("ksRes"); if(!r || !document.documentElement.classList.contains("ui-uj")) return;
