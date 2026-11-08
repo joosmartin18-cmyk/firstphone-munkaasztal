@@ -7823,6 +7823,9 @@
     animation:ksConf2 var(--t,1.6s) cubic-bezier(.12,.75,.3,1) var(--d) both, ksFlut .35s linear infinite; }
   html.ui-uj #ksRes .ks-cf.r{ border-radius:50%; width:8px; height:8px; animation:ksConf2 var(--t,1.6s) cubic-bezier(.12,.75,.3,1) var(--d) both; }
   @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes *::before, html.ui-uj #ksRes *::after{ animation-duration:.01s !important; animation-iteration-count:1 !important; } }
+  /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
+  html body #nwBtn, html body .nw-hb, html body .nw-float, html body .nw-back{ display:none !important; }
+  html body #fcAdmin.fc-admin button[data-nav="news"], html body #fcAdmin button[data-nav="news"][data-nav], html body #fcAdmin section.ax-pane[data-pane="news"], html body #fcAdmin div.ax-op:has(button[data-go="news"]), html body #fcAdmin section.ax-dc[style*="#d6589a"]{ display:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -7945,7 +7948,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261108-184413";</script>
+<script>window.FP_BUILD="20261108-185329";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -18929,6 +18932,9 @@ service cloud.firestore {
     animation:ksConf2 var(--t,1.6s) cubic-bezier(.12,.75,.3,1) var(--d) both, ksFlut .35s linear infinite; }
   html.ui-uj #ksRes .ks-cf.r{ border-radius:50%; width:8px; height:8px; animation:ksConf2 var(--t,1.6s) cubic-bezier(.12,.75,.3,1) var(--d) both; }
   @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes *::before, html.ui-uj #ksRes *::after{ animation-duration:.01s !important; animation-iteration-count:1 !important; } }
+  /* ===== PRÓBA 23 — a régi „Újdonságok” (diák) kivéve: fejléc-gomb, felugró, admin menüpont/oldal/kártya ===== */
+  html body #nwBtn, html body .nw-hb, html body .nw-float, html body .nw-back{ display:none !important; }
+  html body #fcAdmin.fc-admin button[data-nav="news"], html body #fcAdmin button[data-nav="news"][data-nav], html body #fcAdmin section.ax-pane[data-pane="news"], html body #fcAdmin div.ax-op:has(button[data-go="news"]), html body #fcAdmin section.ax-dc[style*="#d6589a"]{ display:none !important; }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -33103,11 +33109,11 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
 })();
 /* PRÓBA: újdonság — egyszerű felugró ablak (a régi diás bemutató helyett) */
 (function(){
-  var NEWS = [{ id:"uj-kinezet-2026-11", tag:"Újdonság", t:"Megújult a Munkaasztal", x:"Új, egységes kinézetet kapott minden program — gyorsabb, átláthatóbb, kevesebb görgetéssel.",
-    p:["Bal oldalt összecsukható menü, felül a „Ma” kezdőlap","Minden program új elrendezést kapott: Beosztás, Kassza, Cetli és a többi","Világos és sötét módban is működik — minden dolgozó a sajátját kapja"] }];
+  var NEWS = [{ id:"uj-kinezet-2026-11-09", tag:"Újdonság", t:"Megújult a Munkaasztal", x:"Új megjelenés — egyszerűbb, átláthatóbb.",
+    p:["Új megjelenés: egyszerűbb, átláthatóbb — bal oldalt összecsukható menü, felül a „Ma” kezdőlap","A Teendők és a Rendelés külön lett szedve — mindkettő saját menüpontot kapott","Az Eladás még teszt üzemben van"] }];
   var K = "fp_ui_news_seen";
   function seen(){ try{ return JSON.parse(localStorage.getItem(K) || "[]"); }catch(e){ return []; } }
-  function show(){ if(!document.documentElement.classList.contains("ui-uj") || document.getElementById("fcLogin") || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
+  function show(){ if(!document.documentElement.classList.contains("ui-uj") || document.getElementById("fcLogin") || (function(){ var a = document.getElementById("fcAdmin"); return !!(a && a.getClientRects().length && getComputedStyle(a).display !== "none" && getComputedStyle(a).visibility !== "hidden"); })() || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
     var S = seen(), n = NEWS.filter(function(x){ return S.indexOf(x.id) < 0; })[0]; if(!n) return true;
     var b = document.createElement("div"); b.className = "ui-newsback";
     b.innerHTML = '<div class="ui-news" role="dialog" aria-modal="true" aria-labelledby="uiNewsT"><div class="ui-news-anim" aria-hidden="true"><div class="w o"><div class="rl"><i></i><i></i><i></i><i></i></div><div class="mn"><b></b><span></span><span></span><span></span><s></s></div></div><div class="w n"><div class="rl"><i class="y"></i><i></i><i></i><i></i></div><div class="mn"><b></b><span></span><span></span><span></span><s></s></div></div><i class="sw"></i><span class="lb a">Régi</span><span class="lb b">Új kinézet</span></div><span class="tag">✨ ' + n.tag + '</span><h3 id="uiNewsT"></h3><p></p><ul></ul><button type="button">Rendben</button></div>';
@@ -33129,7 +33135,7 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
       var p = Array.isArray(o.ppl) && o.ppl.length ? o.ppl[0] : o; var nm = String(p.name || o.name).trim(); return nm ? { key:(p.id ? "id:" + p.id : "n:" + nm.toLowerCase()), name:nm } : null; }catch(e){ return null; } }
   function cur(){ return document.body.classList.contains("light-theme") ? "light" : "dark"; }
   function apply(t){ if(cur() === t) return; var b = document.getElementById("themeToggle"); if(!b) return; auto = true; b.click(); setTimeout(function(){ auto = false; }, 50); }
-  function busy(){ return !document.documentElement.classList.contains("ui-uj") || document.getElementById("fcLogin") || document.getElementById("shiftModal") || document.querySelector(".ui-newsback, .ui-thback, .modal-backdrop.show, .help-modal.show"); }
+  function busy(){ return !document.documentElement.classList.contains("ui-uj") || document.getElementById("fcLogin") || (function(){ var a = document.getElementById("fcAdmin"); return !!(a && a.getClientRects().length && getComputedStyle(a).display !== "none" && getComputedStyle(a).visibility !== "hidden"); })() || document.getElementById("shiftModal") || document.querySelector(".ui-newsback, .ui-thback, .modal-backdrop.show, .help-modal.show"); }
   function ask(w){
     asking = true;
     var b = document.createElement("div"); b.className = "ui-thback";
