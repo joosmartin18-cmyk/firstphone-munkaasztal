@@ -6931,6 +6931,78 @@
   html.ui-uj .nw-box .nw-cap{ position:static !important; margin:0 !important; font-size:11px !important; letter-spacing:.06em !important; }
   html.ui-uj .nw-box .nw-ic{ outline:6px solid color-mix(in srgb,var(--uacc) 18%,transparent) !important; outline-offset:0 !important; }
   html.ui-uj .nw-box .nw-tx > .nw-ic + *{ margin-top:8px !important; }
+
+  /* ===== PRÓBA 16: belépés — balra animált bemutató az új felületről, jobbra a belépő űrlap ===== */
+  html.ui-uj #fcLogin.fc-login{ display:grid !important; grid-template-columns:minmax(0,1fr) minmax(400px,500px) !important; background:#000 !important; background-image:none !important; padding:16px !important; gap:16px !important; font-family:'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj #fcLogin .fc-glow, html.ui-uj #fcLogin .lg-orb, html.ui-uj #fcLogin .lg-stack, html.ui-uj #fcLogin .lg-tabs, html.ui-uj #fcLogin .lg-safe{ display:none !important; }
+  html.ui-uj #fcLogin .lg-show{ order:1; display:flex !important; min-height:calc(100vh - 32px) !important; padding:48px clamp(24px,4vw,64px) !important; border-radius:28px !important; background:#111 radial-gradient(circle,#2A2A2A 1px,transparent 1.5px) 0 0/18px 18px !important; border:1px solid #232323 !important; overflow:hidden; justify-content:center !important; align-items:flex-start !important; gap:32px !important; }
+  html.ui-uj #fcLogin .lg-show > h2{ margin:0 !important; font:700 clamp(32px,3.4vw,48px)/1.1 'Manrope',system-ui,sans-serif !important; letter-spacing:-0.02em !important; color:#fff !important; text-align:left !important; }
+  html.ui-uj #fcLogin .lg-show > h2 span{ color:#FBAC01 !important; background:none !important; -webkit-text-fill-color:currentColor !important; }
+  html.ui-uj #fcLogin .lg-pane{ order:2; min-height:calc(100vh - 32px) !important; max-width:none !important; margin:0 !important; padding:40px 48px 28px !important; border-radius:28px !important; background:#181818 !important; border:1px solid #272727 !important; box-shadow:none !important; }
+  html.ui-uj #fcLogin .lg-top img{ height:32px !important; width:auto !important; }
+  html.ui-uj #fcLogin .lg-clock .lg-t{ font:600 22px/28px 'Manrope',system-ui,sans-serif !important; color:#fff !important; }
+  html.ui-uj #fcLogin .lg-clock .lg-d{ color:#9B9B9B !important; }
+  html.ui-uj #fcLogin .lg-hi{ font:700 34px/40px 'Manrope',system-ui,sans-serif !important; letter-spacing:-0.02em !important; color:#fff !important; margin:0 0 8px !important; }
+  html.ui-uj #fcLogin .lg-hi span{ color:#9B9B9B !important; font-weight:600 !important; background:none !important; -webkit-text-fill-color:currentColor !important; }
+  html.ui-uj #fcLogin .lg-lead{ color:#9B9B9B !important; font-size:14px !important; line-height:20px !important; margin:0 0 24px !important; }
+  html.ui-uj #fcLogin .fc-form label{ font:600 12px/16px 'Manrope',system-ui,sans-serif !important; letter-spacing:.06em !important; color:#9B9B9B !important; margin:16px 0 8px !important; }
+  html.ui-uj #fcLogin .fc-in{ height:52px !important; border-radius:14px !important; background:#1F1F1F !important; border:1px solid #313131 !important; box-shadow:none !important; padding:0 8px 0 16px !important; display:flex !important; align-items:center !important; gap:10px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj #fcLogin .fc-in:focus-within{ border-color:#FBAC01 !important; box-shadow:0 0 0 4px rgba(251,172,1,.12) !important; }
+  html.ui-uj #fcLogin .fc-in input{ background:transparent !important; border:0 !important; outline:none !important; box-shadow:none !important; height:100% !important; font:500 16px/24px 'Manrope',system-ui,sans-serif !important; color:#fff !important; padding:0 !important; }
+  html.ui-uj #fcLogin .fc-in > i{ font-style:normal; opacity:.8; }
+  html.ui-uj #fcLogin .fc-eye{ background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj #fcLogin .fc-go{ height:52px !important; margin-top:24px !important; border-radius:14px !important; background:#FBAC01 !important; background-image:none !important; color:#000 !important; border:0 !important; box-shadow:none !important; font:700 16px/24px 'Manrope',system-ui,sans-serif !important; transition:transform .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj #fcLogin .fc-go:hover{ transform:translateY(-1px); }
+  html.ui-uj #fcLogin .lg-off{ color:#9B9B9B !important; font-size:13px !important; }
+  html.ui-uj #fcLogin .lg-foot{ border-top:1px solid #272727 !important; color:#707070 !important; font-size:12px !important; }
+  html.ui-uj #fcLogin .lg-sug button, html.ui-uj #fcLogin .lg-sug > *{ border-radius:9999px !important; background:#272727 !important; border:0 !important; color:#fff !important; }
+  /* az animált mini-alkalmazás */
+  .ui-lgx{ position:relative; width:min(100%,640px); }
+  .ui-lgx-win{ position:relative; display:grid; grid-template-columns:52px 1fr; height:320px; border-radius:20px; background:#000; border:1px solid #2A2A2A; box-shadow:0 30px 80px rgba(0,0,0,.6); overflow:hidden; animation:lgxIn .8s cubic-bezier(0.22,1,0.36,1) both; }
+  .ui-lgx-rail{ background:#141414; border-right:1px solid #222; display:flex; flex-direction:column; align-items:center; gap:10px; padding:14px 0; }
+  .ui-lgx-rail i{ width:24px; height:24px; border-radius:8px; background:#232323; }
+  .ui-lgx-rail i.on{ background:#FBAC01; animation:lgxRail 8s cubic-bezier(0.22,1,0.36,1) infinite; }
+  .ui-lgx-main{ padding:18px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .ui-lgx-hd{ display:flex; align-items:baseline; gap:10px; } .ui-lgx-hd b{ font:700 20px/24px 'Manrope',system-ui,sans-serif; color:#fff; } .ui-lgx-hd small{ font:500 12px 'Manrope',system-ui,sans-serif; color:#9B9B9B; }
+  .ui-lgx-kp{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .ui-lgx-kp div{ background:#181818; border:1px solid #272727; border-radius:12px; padding:10px 12px; animation:lgxUp .6s cubic-bezier(0.22,1,0.36,1) both; animation-delay:var(--d); }
+  .ui-lgx-kp small{ display:flex; align-items:center; gap:6px; font:600 10px/14px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9B9B9B; }
+  .ui-lgx-kp small::before{ content:""; width:6px; height:6px; border-radius:9999px; background:var(--c); }
+  .ui-lgx-kp b{ display:block; font:700 24px/30px 'Manrope',system-ui,sans-serif; color:#fff; font-variant-numeric:tabular-nums; }
+  .ui-lgx-tl{ background:#181818; border:1px solid #272727; border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:8px; position:relative; animation:lgxUp .6s cubic-bezier(0.22,1,0.36,1) .5s both; }
+  .ui-lgx-tl > small{ font:600 10px/14px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9B9B9B; }
+  .ui-lgx-row{ display:grid; grid-template-columns:72px 1fr; align-items:center; gap:8px; font:600 11px 'Manrope',system-ui,sans-serif; color:#C8C8C8; }
+  .ui-lgx-trk{ position:relative; height:26px; border-radius:8px; background:repeating-linear-gradient(90deg,#222 0 1px,transparent 1px 12.5%); }
+  .ui-lgx-bar{ position:absolute; top:3px; bottom:3px; left:var(--l); width:0; border-radius:6px; background:#2C2C2C; box-shadow:inset 3px 0 0 var(--c); display:flex; align-items:center; padding-left:10px; font:600 10px 'Manrope',system-ui,sans-serif; color:#fff; white-space:nowrap; overflow:hidden; animation:lgxBar 8s cubic-bezier(0.22,1,0.36,1) infinite; animation-delay:var(--d); }
+  .ui-lgx-now{ position:absolute; top:28px; bottom:8px; left:calc(84px + 30%); width:2px; background:#FBAC01; border-radius:2px; animation:lgxNow 8s linear infinite; }
+  .ui-lgx-toast{ position:absolute; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; background:#FBAC01; color:#000; font:700 12px 'Manrope',system-ui,sans-serif; box-shadow:0 12px 32px rgba(0,0,0,.45); animation:lgxToast 8s cubic-bezier(0.22,1,0.36,1) infinite; }
+  .ui-lgx-chip{ position:absolute; display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:9999px; background:#181818; border:1px solid #2A2A2A; color:#fff; font:600 12px 'Manrope',system-ui,sans-serif; box-shadow:0 10px 30px rgba(0,0,0,.4); animation:lgxBob 5s ease-in-out infinite; animation-delay:var(--d); white-space:nowrap; }
+  .ui-lgx-chip s{ width:8px; height:8px; border-radius:9999px; background:var(--c); }
+  .ui-lgx-feat{ display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
+  .ui-lgx-feat span{ padding:6px 12px; border-radius:9999px; background:#181818; border:1px solid #272727; color:#C8C8C8; font:600 12px 'Manrope',system-ui,sans-serif; }
+  @keyframes lgxIn{ from{ opacity:0; transform:translateY(16px) scale(.98); } to{ opacity:1; transform:none; } }
+  @keyframes lgxUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  @keyframes lgxBar{ 0%,6%{ width:0; opacity:1; } 22%,88%{ width:var(--w); opacity:1; } 100%{ width:var(--w); opacity:0; } }
+  @keyframes lgxNow{ 0%{ transform:translateX(0); } 100%{ transform:translateX(160px); } }
+  @keyframes lgxToast{ 0%,40%{ opacity:0; transform:translateY(12px) scale(.96); } 46%,86%{ opacity:1; transform:none; } 94%,100%{ opacity:0; transform:translateY(-6px); } }
+  @keyframes lgxBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+  @keyframes lgxRail{ 0%,30%{ transform:none; } 35%,60%{ transform:translateY(34px); } 65%,100%{ transform:none; } }
+  @media (prefers-reduced-motion:reduce){ .ui-lgx *{ animation:none !important; } .ui-lgx-bar{ width:var(--w) !important; } }
+  @media (max-width:900px){ html.ui-uj #fcLogin.fc-login{ grid-template-columns:1fr !important; padding:0 !important; } html.ui-uj #fcLogin .lg-show{ display:none !important; } html.ui-uj #fcLogin .lg-pane{ border-radius:0 !important; border:0 !important; min-height:100vh !important; padding:28px 20px !important; } }
+  /* 🔔 egyszerű újdonság-ablak (a régi diás bemutató helyett) */
+  html.ui-uj .nw-back, html.ui-uj #nwBtn, html.ui-uj .nw-btn, html.ui-uj .nw-float{ display:none !important; }
+  .ui-newsback{ position:fixed; inset:0; z-index:5000; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); animation:lgxFade .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  .ui-news{ width:min(100%,460px); background:var(--u1,#181818); color:var(--utx,#fff); border:1px solid var(--u4,#313131); border-radius:24px; padding:28px; box-shadow:0 24px 64px rgba(0,0,0,.5); animation:lgxPop .45s cubic-bezier(0.22,1,0.36,1) both; }
+  .ui-news .tag{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px; background:var(--uacc,#FBAC01); color:#000; font:700 11px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+  .ui-news h3{ margin:14px 0 6px; font:700 24px/30px 'Manrope',system-ui,sans-serif; letter-spacing:-0.01em; }
+  .ui-news p{ margin:0 0 16px; color:var(--udim,#9B9B9B); font-size:14px; line-height:20px; }
+  .ui-news ul{ list-style:none; margin:0 0 24px; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .ui-news li{ display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:12px; background:var(--u2,#1F1F1F); font-size:14px; line-height:20px; animation:lgxUp .5s cubic-bezier(0.22,1,0.36,1) both; animation-delay:var(--d); }
+  .ui-news li::before{ content:""; flex:none; width:8px; height:8px; margin-top:6px; border-radius:9999px; background:var(--uacc,#FBAC01); }
+  .ui-news button{ width:100%; height:48px; border:0; border-radius:12px; background:var(--uacc,#FBAC01); color:#000; font:700 15px 'Manrope',system-ui,sans-serif; cursor:pointer; }
+  .ui-news button:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+  @keyframes lgxFade{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes lgxPop{ from{ opacity:0; transform:translateY(16px) scale(.97); } to{ opacity:1; transform:none; } }
   #uiUjBadge{ position:fixed; z-index:2147483000; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -9303,7 +9375,7 @@
     document.head.appendChild(st);
   }
   function newsById(id){ return NEWS.find(n=> n.id === id) || NEWS[0]; }
-  function newsShow(id, opt){
+  function newsShow(id, opt){ if(document.documentElement.classList.contains("ui-uj")) return;   /* PRÓBA: diás újdonság helyett egyszerű ablak */
     newsCss(); const N = newsFor(id && typeof id === "object" ? id : newsById(id)); if(!N || !N.slides || !N.slides.length) return;
     const old = document.getElementById("nwBack"); if(old) old.remove();
     const b = document.createElement("div"); b.className = "nw-back"; b.id = "nwBack";
@@ -17336,6 +17408,78 @@ service cloud.firestore {
   html.ui-uj .nw-box .nw-cap{ position:static !important; margin:0 !important; font-size:11px !important; letter-spacing:.06em !important; }
   html.ui-uj .nw-box .nw-ic{ outline:6px solid color-mix(in srgb,var(--uacc) 18%,transparent) !important; outline-offset:0 !important; }
   html.ui-uj .nw-box .nw-tx > .nw-ic + *{ margin-top:8px !important; }
+
+  /* ===== PRÓBA 16: belépés — balra animált bemutató az új felületről, jobbra a belépő űrlap ===== */
+  html.ui-uj #fcLogin.fc-login{ display:grid !important; grid-template-columns:minmax(0,1fr) minmax(400px,500px) !important; background:#000 !important; background-image:none !important; padding:16px !important; gap:16px !important; font-family:'Manrope',system-ui,sans-serif !important; }
+  html.ui-uj #fcLogin .fc-glow, html.ui-uj #fcLogin .lg-orb, html.ui-uj #fcLogin .lg-stack, html.ui-uj #fcLogin .lg-tabs, html.ui-uj #fcLogin .lg-safe{ display:none !important; }
+  html.ui-uj #fcLogin .lg-show{ order:1; display:flex !important; min-height:calc(100vh - 32px) !important; padding:48px clamp(24px,4vw,64px) !important; border-radius:28px !important; background:#111 radial-gradient(circle,#2A2A2A 1px,transparent 1.5px) 0 0/18px 18px !important; border:1px solid #232323 !important; overflow:hidden; justify-content:center !important; align-items:flex-start !important; gap:32px !important; }
+  html.ui-uj #fcLogin .lg-show > h2{ margin:0 !important; font:700 clamp(32px,3.4vw,48px)/1.1 'Manrope',system-ui,sans-serif !important; letter-spacing:-0.02em !important; color:#fff !important; text-align:left !important; }
+  html.ui-uj #fcLogin .lg-show > h2 span{ color:#FBAC01 !important; background:none !important; -webkit-text-fill-color:currentColor !important; }
+  html.ui-uj #fcLogin .lg-pane{ order:2; min-height:calc(100vh - 32px) !important; max-width:none !important; margin:0 !important; padding:40px 48px 28px !important; border-radius:28px !important; background:#181818 !important; border:1px solid #272727 !important; box-shadow:none !important; }
+  html.ui-uj #fcLogin .lg-top img{ height:32px !important; width:auto !important; }
+  html.ui-uj #fcLogin .lg-clock .lg-t{ font:600 22px/28px 'Manrope',system-ui,sans-serif !important; color:#fff !important; }
+  html.ui-uj #fcLogin .lg-clock .lg-d{ color:#9B9B9B !important; }
+  html.ui-uj #fcLogin .lg-hi{ font:700 34px/40px 'Manrope',system-ui,sans-serif !important; letter-spacing:-0.02em !important; color:#fff !important; margin:0 0 8px !important; }
+  html.ui-uj #fcLogin .lg-hi span{ color:#9B9B9B !important; font-weight:600 !important; background:none !important; -webkit-text-fill-color:currentColor !important; }
+  html.ui-uj #fcLogin .lg-lead{ color:#9B9B9B !important; font-size:14px !important; line-height:20px !important; margin:0 0 24px !important; }
+  html.ui-uj #fcLogin .fc-form label{ font:600 12px/16px 'Manrope',system-ui,sans-serif !important; letter-spacing:.06em !important; color:#9B9B9B !important; margin:16px 0 8px !important; }
+  html.ui-uj #fcLogin .fc-in{ height:52px !important; border-radius:14px !important; background:#1F1F1F !important; border:1px solid #313131 !important; box-shadow:none !important; padding:0 8px 0 16px !important; display:flex !important; align-items:center !important; gap:10px !important; transition:border-color .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj #fcLogin .fc-in:focus-within{ border-color:#FBAC01 !important; box-shadow:0 0 0 4px rgba(251,172,1,.12) !important; }
+  html.ui-uj #fcLogin .fc-in input{ background:transparent !important; border:0 !important; outline:none !important; box-shadow:none !important; height:100% !important; font:500 16px/24px 'Manrope',system-ui,sans-serif !important; color:#fff !important; padding:0 !important; }
+  html.ui-uj #fcLogin .fc-in > i{ font-style:normal; opacity:.8; }
+  html.ui-uj #fcLogin .fc-eye{ background:transparent !important; border:0 !important; box-shadow:none !important; }
+  html.ui-uj #fcLogin .fc-go{ height:52px !important; margin-top:24px !important; border-radius:14px !important; background:#FBAC01 !important; background-image:none !important; color:#000 !important; border:0 !important; box-shadow:none !important; font:700 16px/24px 'Manrope',system-ui,sans-serif !important; transition:transform .3s cubic-bezier(0.22,1,0.36,1) !important; }
+  html.ui-uj #fcLogin .fc-go:hover{ transform:translateY(-1px); }
+  html.ui-uj #fcLogin .lg-off{ color:#9B9B9B !important; font-size:13px !important; }
+  html.ui-uj #fcLogin .lg-foot{ border-top:1px solid #272727 !important; color:#707070 !important; font-size:12px !important; }
+  html.ui-uj #fcLogin .lg-sug button, html.ui-uj #fcLogin .lg-sug > *{ border-radius:9999px !important; background:#272727 !important; border:0 !important; color:#fff !important; }
+  /* az animált mini-alkalmazás */
+  .ui-lgx{ position:relative; width:min(100%,640px); }
+  .ui-lgx-win{ position:relative; display:grid; grid-template-columns:52px 1fr; height:320px; border-radius:20px; background:#000; border:1px solid #2A2A2A; box-shadow:0 30px 80px rgba(0,0,0,.6); overflow:hidden; animation:lgxIn .8s cubic-bezier(0.22,1,0.36,1) both; }
+  .ui-lgx-rail{ background:#141414; border-right:1px solid #222; display:flex; flex-direction:column; align-items:center; gap:10px; padding:14px 0; }
+  .ui-lgx-rail i{ width:24px; height:24px; border-radius:8px; background:#232323; }
+  .ui-lgx-rail i.on{ background:#FBAC01; animation:lgxRail 8s cubic-bezier(0.22,1,0.36,1) infinite; }
+  .ui-lgx-main{ padding:18px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .ui-lgx-hd{ display:flex; align-items:baseline; gap:10px; } .ui-lgx-hd b{ font:700 20px/24px 'Manrope',system-ui,sans-serif; color:#fff; } .ui-lgx-hd small{ font:500 12px 'Manrope',system-ui,sans-serif; color:#9B9B9B; }
+  .ui-lgx-kp{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .ui-lgx-kp div{ background:#181818; border:1px solid #272727; border-radius:12px; padding:10px 12px; animation:lgxUp .6s cubic-bezier(0.22,1,0.36,1) both; animation-delay:var(--d); }
+  .ui-lgx-kp small{ display:flex; align-items:center; gap:6px; font:600 10px/14px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9B9B9B; }
+  .ui-lgx-kp small::before{ content:""; width:6px; height:6px; border-radius:9999px; background:var(--c); }
+  .ui-lgx-kp b{ display:block; font:700 24px/30px 'Manrope',system-ui,sans-serif; color:#fff; font-variant-numeric:tabular-nums; }
+  .ui-lgx-tl{ background:#181818; border:1px solid #272727; border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:8px; position:relative; animation:lgxUp .6s cubic-bezier(0.22,1,0.36,1) .5s both; }
+  .ui-lgx-tl > small{ font:600 10px/14px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; color:#9B9B9B; }
+  .ui-lgx-row{ display:grid; grid-template-columns:72px 1fr; align-items:center; gap:8px; font:600 11px 'Manrope',system-ui,sans-serif; color:#C8C8C8; }
+  .ui-lgx-trk{ position:relative; height:26px; border-radius:8px; background:repeating-linear-gradient(90deg,#222 0 1px,transparent 1px 12.5%); }
+  .ui-lgx-bar{ position:absolute; top:3px; bottom:3px; left:var(--l); width:0; border-radius:6px; background:#2C2C2C; box-shadow:inset 3px 0 0 var(--c); display:flex; align-items:center; padding-left:10px; font:600 10px 'Manrope',system-ui,sans-serif; color:#fff; white-space:nowrap; overflow:hidden; animation:lgxBar 8s cubic-bezier(0.22,1,0.36,1) infinite; animation-delay:var(--d); }
+  .ui-lgx-now{ position:absolute; top:28px; bottom:8px; left:calc(84px + 30%); width:2px; background:#FBAC01; border-radius:2px; animation:lgxNow 8s linear infinite; }
+  .ui-lgx-toast{ position:absolute; right:16px; bottom:16px; display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; background:#FBAC01; color:#000; font:700 12px 'Manrope',system-ui,sans-serif; box-shadow:0 12px 32px rgba(0,0,0,.45); animation:lgxToast 8s cubic-bezier(0.22,1,0.36,1) infinite; }
+  .ui-lgx-chip{ position:absolute; display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:9999px; background:#181818; border:1px solid #2A2A2A; color:#fff; font:600 12px 'Manrope',system-ui,sans-serif; box-shadow:0 10px 30px rgba(0,0,0,.4); animation:lgxBob 5s ease-in-out infinite; animation-delay:var(--d); white-space:nowrap; }
+  .ui-lgx-chip s{ width:8px; height:8px; border-radius:9999px; background:var(--c); }
+  .ui-lgx-feat{ display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
+  .ui-lgx-feat span{ padding:6px 12px; border-radius:9999px; background:#181818; border:1px solid #272727; color:#C8C8C8; font:600 12px 'Manrope',system-ui,sans-serif; }
+  @keyframes lgxIn{ from{ opacity:0; transform:translateY(16px) scale(.98); } to{ opacity:1; transform:none; } }
+  @keyframes lgxUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  @keyframes lgxBar{ 0%,6%{ width:0; opacity:1; } 22%,88%{ width:var(--w); opacity:1; } 100%{ width:var(--w); opacity:0; } }
+  @keyframes lgxNow{ 0%{ transform:translateX(0); } 100%{ transform:translateX(160px); } }
+  @keyframes lgxToast{ 0%,40%{ opacity:0; transform:translateY(12px) scale(.96); } 46%,86%{ opacity:1; transform:none; } 94%,100%{ opacity:0; transform:translateY(-6px); } }
+  @keyframes lgxBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+  @keyframes lgxRail{ 0%,30%{ transform:none; } 35%,60%{ transform:translateY(34px); } 65%,100%{ transform:none; } }
+  @media (prefers-reduced-motion:reduce){ .ui-lgx *{ animation:none !important; } .ui-lgx-bar{ width:var(--w) !important; } }
+  @media (max-width:900px){ html.ui-uj #fcLogin.fc-login{ grid-template-columns:1fr !important; padding:0 !important; } html.ui-uj #fcLogin .lg-show{ display:none !important; } html.ui-uj #fcLogin .lg-pane{ border-radius:0 !important; border:0 !important; min-height:100vh !important; padding:28px 20px !important; } }
+  /* 🔔 egyszerű újdonság-ablak (a régi diás bemutató helyett) */
+  html.ui-uj .nw-back, html.ui-uj #nwBtn, html.ui-uj .nw-btn, html.ui-uj .nw-float{ display:none !important; }
+  .ui-newsback{ position:fixed; inset:0; z-index:5000; display:grid; place-items:center; padding:16px; background:rgba(0,0,0,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); animation:lgxFade .3s ease both; font-family:'Manrope',system-ui,sans-serif; }
+  .ui-news{ width:min(100%,460px); background:var(--u1,#181818); color:var(--utx,#fff); border:1px solid var(--u4,#313131); border-radius:24px; padding:28px; box-shadow:0 24px 64px rgba(0,0,0,.5); animation:lgxPop .45s cubic-bezier(0.22,1,0.36,1) both; }
+  .ui-news .tag{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9999px; background:var(--uacc,#FBAC01); color:#000; font:700 11px/16px 'Manrope',system-ui,sans-serif; letter-spacing:.06em; text-transform:uppercase; }
+  .ui-news h3{ margin:14px 0 6px; font:700 24px/30px 'Manrope',system-ui,sans-serif; letter-spacing:-0.01em; }
+  .ui-news p{ margin:0 0 16px; color:var(--udim,#9B9B9B); font-size:14px; line-height:20px; }
+  .ui-news ul{ list-style:none; margin:0 0 24px; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .ui-news li{ display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:12px; background:var(--u2,#1F1F1F); font-size:14px; line-height:20px; animation:lgxUp .5s cubic-bezier(0.22,1,0.36,1) both; animation-delay:var(--d); }
+  .ui-news li::before{ content:""; flex:none; width:8px; height:8px; margin-top:6px; border-radius:9999px; background:var(--uacc,#FBAC01); }
+  .ui-news button{ width:100%; height:48px; border:0; border-radius:12px; background:var(--uacc,#FBAC01); color:#000; font:700 15px 'Manrope',system-ui,sans-serif; cursor:pointer; }
+  .ui-news button:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+  @keyframes lgxFade{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes lgxPop{ from{ opacity:0; transform:translateY(16px) scale(.97); } to{ opacity:1; transform:none; } }
   #uiUjBadge{ position:fixed; z-index:2147483000; left:50%; bottom:16px; transform:translateX(-50%); display:flex; align-items:center; gap:8px; padding:4px 4px 4px 12px; border-radius:9999px; background:var(--u1); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--u4); color:var(--utx); font:600 12px/16px 'Manrope',system-ui,sans-serif; box-shadow:0 8px 24px rgba(0,0,0,.35); }
   #uiUjBadge i{ font-style:normal; color:#000; background:#FBAC01; padding:2px 8px; border-radius:6px; }
   #uiUjBadge button{ font:600 12px/16px 'Manrope',system-ui,sans-serif; color:var(--utx); background:var(--u3); border:1px solid var(--u4); border-radius:9999px; padding:6px 12px; cursor:pointer; }
@@ -31419,6 +31563,48 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
   var a = n((document.getElementById("ksBack") || {}).value), b = n((document.getElementById("ksDrawer") || {}).textContent), s = a + b;
   bar.querySelector("i.a").style.width = (s ? a / s * 100 : 0) + "%"; bar.querySelector("i.b").style.width = (s ? b / s * 100 : 0) + "%";
   bar.querySelector(".va").textContent = f(a); bar.querySelector(".vb").textContent = f(b); }catch(e){} }, 400);
+/* PRÓBA: belépés — animált mini-alkalmazás az új kinézetről */
+(function(){
+  function build(){ var L = document.getElementById("fcLogin"); if(!L || !document.documentElement.classList.contains("ui-uj")) return; var sh = L.querySelector(".lg-show"); if(!sh || sh.querySelector(".ui-lgx")) return;
+    var w = document.createElement("div"); w.className = "ui-lgx";
+    w.innerHTML = '<div class="ui-lgx-win"><div class="ui-lgx-rail"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div><div class="ui-lgx-main">'
+      + '<div class="ui-lgx-hd"><b>Ma</b><small class="ui-lgx-day"></small></div>'
+      + '<div class="ui-lgx-kp"><div style="--d:.2s;--c:#2FA3B6"><small>Csomag vár</small><b data-n="12">0</b></div><div style="--d:.3s;--c:#E0B04A"><small>Selejt ma</small><b data-n="3">0</b></div><div style="--d:.4s;--c:#34C38F"><small>Teendő</small><b data-n="4">0</b></div></div>'
+      + '<div class="ui-lgx-tl"><small>Ki dolgozik ma</small>'
+      + '<div class="ui-lgx-row"><span>Délelőtt</span><div class="ui-lgx-trk"><div class="ui-lgx-bar" style="--l:0%;--w:48%;--c:#A78BFA;--d:.6s">Kiss Anna · 9:00–14:30</div></div></div>'
+      + '<div class="ui-lgx-row"><span>Délután</span><div class="ui-lgx-trk"><div class="ui-lgx-bar" style="--l:50%;--w:50%;--c:#34C38F;--d:1s">Nagy Bence · 14:30–20:00</div></div></div>'
+      + '<i class="ui-lgx-now"></i></div></div>'
+      + '<div class="ui-lgx-toast">✓ Kasszajelentés egyezik</div></div>'
+      + '<span class="ui-lgx-chip" style="left:-18px;top:-18px;--c:#FBAC01;--d:0s"><s></s>Beosztás kész</span>'
+      + '<span class="ui-lgx-chip" style="right:-20px;top:236px;--c:#2FA3B6;--d:1.2s"><s></s>📦 GLS csomag beolvasva</span>'
+      + '<span class="ui-lgx-chip" style="left:36px;top:302px;--c:#34C38F;--d:2.4s"><s></s>🏷 Cetli nyomtatva</span>'
+      + '<div class="ui-lgx-feat" style="margin-top:48px"><span>☁️ Felhőben mentve</span><span>📱 Telefonon is</span><span>🔄 Mindig friss</span><span>❓ Animált súgó</span></div>';
+    sh.appendChild(w);
+    try{ w.querySelector(".ui-lgx-day").textContent = new Date().toLocaleDateString("hu-HU", { weekday:"long", month:"long", day:"numeric" }); }catch(e){}
+    var cnt = function(){ Array.prototype.forEach.call(w.querySelectorAll("[data-n]"), function(n){ var to = +n.getAttribute("data-n"), t0 = performance.now() + 300;
+      (function st(now){ if(!n.isConnected) return; var p = Math.max(0, Math.min(1, (now - t0) / 1200)); n.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if(p < 1) requestAnimationFrame(st); })(performance.now()); }); };
+    cnt(); var iv = setInterval(function(){ if(!w.isConnected) return clearInterval(iv); cnt(); }, 8000);
+  }
+  setInterval(build, 400);
+})();
+/* PRÓBA: újdonság — egyszerű felugró ablak (a régi diás bemutató helyett) */
+(function(){
+  var NEWS = [{ id:"uj-kinezet-2026-11", tag:"Újdonság", t:"Megújult a Munkaasztal", x:"Új, egységes kinézetet kapott minden program — gyorsabb, átláthatóbb, kevesebb görgetéssel.",
+    p:["Bal oldalt összecsukható menü, felül a „Ma” kezdőlap","Minden program új elrendezést kapott: Beosztás, Kassza, Cetli és a többi","Világos és sötét módban is működik — a régire a jobb alsó sarokban válthatsz vissza"] }];
+  var K = "fp_ui_news_seen";
+  function seen(){ try{ return JSON.parse(localStorage.getItem(K) || "[]"); }catch(e){ return []; } }
+  function show(){ if(!document.documentElement.classList.contains("ui-uj") || document.getElementById("fcLogin") || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
+    var S = seen(), n = NEWS.filter(function(x){ return S.indexOf(x.id) < 0; })[0]; if(!n) return true;
+    var b = document.createElement("div"); b.className = "ui-newsback";
+    b.innerHTML = '<div class="ui-news" role="dialog" aria-modal="true" aria-labelledby="uiNewsT"><span class="tag">✨ ' + n.tag + '</span><h3 id="uiNewsT"></h3><p></p><ul></ul><button type="button">Rendben</button></div>';
+    b.querySelector("h3").textContent = n.t; b.querySelector("p").textContent = n.x;
+    n.p.forEach(function(t, i){ var li = document.createElement("li"); li.style.setProperty("--d", (0.15 + i * 0.08) + "s"); li.textContent = t; b.querySelector("ul").appendChild(li); });
+    var close = function(){ S.push(n.id); try{ localStorage.setItem(K, JSON.stringify(S)); }catch(e){} b.remove(); };
+    b.querySelector("button").onclick = close; b.addEventListener("click", function(e){ if(e.target === b) close(); });
+    document.addEventListener("keydown", function esc(e){ if(e.key === "Escape" && b.isConnected){ close(); document.removeEventListener("keydown", esc); } });
+    document.body.appendChild(b); setTimeout(function(){ try{ b.querySelector("button").focus(); }catch(e){} }, 60); return true; }
+  var tries = 0, iv = setInterval(function(){ tries++; if(show() || tries > 120) clearInterval(iv); }, 2500);
+})();
 </script>
 </body>
 </html>
