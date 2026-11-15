@@ -44,6 +44,7 @@ A tulajdonos (Martin) nem programozó: ő mondja meg, mit szeretne, te csinálod
 | `.github/workflows/hatarido.yml` | 20 percenként szól a szervernek a határidő-emlékeztetők miatt. |
 | `.assetsignore` | Ami itt szerepel, azt a Cloudflare nem teszi ki a weboldalra (ez a fájl és a `tools/` is itt van). |
 | `tools/shot.js` | Gyors böngészős próba + képernyőkép (lásd Tesztelés). |
+| `tools/admin-shot.js`, `tools/admin-all.sh` | Az **admin felület** helyi próbája belépés nélkül, ál-felhővel és kitalált boltokkal (`NAV=shops TH=light LK=old W=390 O=kep.png node tools/admin-shot.js`; az `admin-all.sh <mappa> [W H TH LK]` mind a 11 oldalt lefényképezi). |
 
 ## Tokentakarékos munkamód (fontos, a fájl óriási)
 
@@ -70,7 +71,7 @@ Sorszámok helyett ezekre keress rá (a sorok folyamatosan csúsznak):
 - `const TT_BOOKS` — a Tudástár tartalma (`sg` Segédlet, `kk` Kézikönyv, `sh` boltok). `window.ttSlides` / `<style id="ttsCss">` — a ▶ Diás segédlet, ami a fejezetek blokkjaiból magától épít animált diákat.
 - `function keepScroll`, `function chatHtml`, `function drawMsgs`, `async function send` — bolti chat; `csGo` — admin chat. A `keepScroll` csak akkor rajzol újra, ha a tartalom változott, és csak az új üzenet animál (villogás ellen) — ezt ne rontsd el. Csatolmány: `att:{k:"img"|"file", d, n, s, t}`, legfeljebb ~700 KB.
 - `var NEWS = [` — Újdonságok bejegyzések (`both:true` = mindkét kinézetben megjelenik). `id="thelpBody"` és a többi `help-slide` — súgók.
-- `#fcAdmin.ax` — admin felület (`ax-` kezdetű osztályok). Boltválasztó: `storeList()`.
+- `#fcAdmin.ax` — admin felület (`ax-` kezdetű osztályok). Boltválasztó: `storeList()`. Az admin **egységes stílusa** (gomb, mező, fül, kártya mérete/lekerekítése) egy helyen van: `function axUni()` — új admin-elemnél a meglévő `ax-btn` / `ax-in` / `ax-seg` / `ax-card` / `ax-ch` osztályokat használd, ne írj külön stílust.
 - `fpBrkNote()` — a munkaközi szünet (6 óra felett 1 óra) szövege; **nyomtatványonként csak egyszer, lábjegyzetként** szerepeljen.
 - `const FEATS`, `function fpApplyFeats()` — boltonként ki-bekapcsolható programok.
 - Telefonos nézet: `html.m-app`.
