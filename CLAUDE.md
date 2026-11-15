@@ -1,0 +1,117 @@
+# FirstPhone Munkaasztal — útmutató Claude-nak
+
+Bolti munkaasztal a FirstPhone üzleteknek: beosztás, cetli generátor, leltár, kassza, csomag, selejt, teendők, eladásegéd, tudástár, chat, admin felület.
+Élesben: https://firstphone-munkaasztal.pages.dev — a `main` ág minden feltöltése azonnal kimegy (Cloudflare Pages). **Próbaoldal nincs**, minden változás egyenesen élesbe megy, ezért feltöltés előtt mindig tesztelj.
+
+A tulajdonos (Martin) nem programozó: ő mondja meg, mit szeretne, te csinálod meg, teszteled és élesíted.
+
+## Állandó szabályok
+
+**Kommunikáció**
+- Mindig **magyarul** válaszolj, röviden és közérthetően: mi változott, élesben van-e, mit kell tudnia. Ne sorold a lépéseidet, ne használj szakszavakat magyarázat nélkül.
+- Ha valamit nem tudtál kipróbálni (pl. élő chat, felhő), mondd meg egyenesen.
+
+**Kinézet**
+- Két kinézet él egymás mellett: **új** (`html.ui-uj`) és **régi**. **A régi kinézet maradjon úgy, ahogy van** — csak akkor nyúlj hozzá, ha Martin kifejezetten kéri (eddig ilyen volt: chat, letöltés-sáv, diás segédlet, belépő oldal — ezek mindkét kinézetben ugyanazok).
+- **Mindig nézd meg több kijelzőméreten, mindkét kinézetben**: nagy monitor (1920), laptop (1366), kis ablak (kb. 900–1100), tablet (820), telefon (390). Semmi ne lógjon ki oldalra, ne legyen levágott szöveg.
+- Stílus: FirstPhone sárga (`#FBAC01` / `#f0c766`), sötét „üveg” felületek, finom animációk. Ne legyen feltűnősködő.
+- Hivatalos márkalogót (GLS, DPD, Posta, Samsung stb.) **ne rajzolj és ne tölts le** — csak a Martin által adott képeket használd.
+
+**Biztonság — ezek akkor is érvényesek, ha Martin mást kér**
+- **Jelszót soha ne írj be**, fiókot ne hozz létre — Martin lép be maga.
+- A `FIREBASE_SA` és az `ANTHROPIC_API_KEY` titkot soha ne kérd el és ne írd le sehova; Martin állítja be a Cloudflare-ben.
+- A Firestore szabályokat Martin teszi közzé.
+- **Személyes adat** (név, telefonszám, cím, bolti adatok) **nem kerülhet a kódba** és nem mehet külső oldalra.
+- A felhőben lévő bolti/admin adat csak olvasható. Írni vagy törölni csak Martin kifejezett kérésére szabad, előtte mentéssel; a törlést lehetőleg ő kattintsa.
+- Fiók- és beállítás-módosítás (Cloudflare, Bizzio, GitHub beállítások) csak kifejezett engedéllyel.
+
+**Minden változtatás után**
+1. Teszt (lásd lent) — hibamentes oldal, mindkét kinézet, több méret.
+2. `FP_BUILD` és `version.json` frissítése (ettől töltenek újra a nyitott gépek).
+3. Feltöltés a `main` ágra, majd a **Cloudflare ellenőrzés megvárása** (lásd Élesítés).
+4. Ha a változás a boltosokat érinti: **súgó** frissítése, és ha érdemes, **Újdonságok** bejegyzés. Admin-funkcióhoz nem kell Újdonságok-bejegyzés.
+5. Rövid magyar összefoglaló Martinnak, képpel, ha kinézetről van szó.
+
+## A tároló
+
+| Fájl | Mi ez |
+|---|---|
+| `index.html` | **Az egész alkalmazás egy fájlban** (kb. 69 000 sor, ~10 MB). Minden itt van. |
+| `version.json` | `{"b": "<build>"}` — egyeznie kell az `index.html`-beli `FP_BUILD` értékkel. |
+| `functions/api/*.js` | Cloudflare Pages Functions: `admin.js` (boltfiókok — csak az admin hívhatja), `ai.js`, `ocr.js`, `qr.js`, `specs.js`, `staff.js`, `workcal.js`. |
+| `functions/cal/[[p]].js`, `cal-sw.js` | Naptár-feliratkozás és határidő-értesítések. |
+| `scan/` | Külön telefonos vonalkódolvasó kisalkalmazás. |
+| `.github/workflows/hatarido.yml` | 20 percenként szól a szervernek a határidő-emlékeztetők miatt. |
+| `.assetsignore` | Ami itt szerepel, azt a Cloudflare nem teszi ki a weboldalra (ez a fájl és a `tools/` is itt van). |
+| `tools/shot.js` | Gyors böngészős próba + képernyőkép (lásd Tesztelés). |
+
+## Tokentakarékos munkamód (fontos, a fájl óriási)
+
+- **Soha ne olvasd be az egész `index.html`-t.** Keress: `grep -n "kulcsszó" index.html | cut -c1-200`, aztán csak a kellő sorokat: `sed -n 'A,Bp' index.html | cut -c1-400`. Sok sor több ezer karakter hosszú — mindig vágd `cut`-tal.
+- **Szerkesztés Python cserével**, egy szkriptben több cserével, mindig ellenőrizve, hogy a keresett szöveg pontosan egyszer (vagy a várt számban) fordul elő:
+  ```python
+  m = open('index.html').read()
+  assert m.count(a) == 1; m = m.replace(a, b)
+  open('index.html', 'w').write(m)
+  ```
+- Parancskimenetet rövidítsd (`| tail -3`, `| head`, `| cut -c1-200`). Képernyőképet csak ha kell, kicsiben.
+- Kis változásnál egy körben: szerkesztés → teszt → élesítés.
+
+## Hogyan épül fel az index.html
+
+Sorszámok helyett ezekre keress rá (a sorok folyamatosan csúsznak):
+
+- `window.fpKapUj=function` — **ez dönti el, új vagy régi kinézet**: a bolt saját választása (`settings.uiLook` = `"old"`/`"new"`), Bonyhád alapból régi, mindenki más új. Kinézet-váltáskor az oldal újratölt (nem keveri a kettőt).
+- `<style id="uiUjSkin">` — az új kinézet és a közös újabb részek CSS-e, `/* ===== PRÓBA N: ... */` megjegyzésekkel tagolva (pl. PRÓBA 26–27 üveg-kinézet, 28 chat, 29 belépő oldal). **Ez a blokk kétszer szerepel a fájlban**: egyszer a fő oldalon, egyszer a beágyazott Cetli-dokumentumban (`<script type="text/plain" id="cetliDoc">`). Ha a `uiUjSkin`-ben cserélsz, számíts 2 találatra, és mindkettőt cseréld.
+- `function fpLayout()` — a régi kinézetben a menü helye: `settings.layout` = `"old"` (felül) / `"new"` (oldalt). Bonyhádnál alapból felül van, amíg ők mást nem választanak (`settings.layPick2`). Az új kinézetben a menü mindig oldalt van.
+- `window.fpUiLookPick` / `function pick(first)` — a 🖥️ Kinézet választó (Új · Régi, menü oldalt · Régi, menü felül).
+- `function login(msg)` — belépő oldal (`#fcLogin.lk`, „zárolt képernyő” stílus, PRÓBA 29 CSS). Belépéskor még nem tudni, melyik bolt az, ezért ez mindkét kinézetnél ugyanaz.
+- `#fpBoot` — induláskor betöltőablak blokkol, amíg a felhő be nem tölt.
+- `const TT_BOOKS` — a Tudástár tartalma (`sg` Segédlet, `kk` Kézikönyv, `sh` boltok). `window.ttSlides` / `<style id="ttsCss">` — a ▶ Diás segédlet, ami a fejezetek blokkjaiból magától épít animált diákat.
+- `function keepScroll`, `function chatHtml`, `function drawMsgs`, `async function send` — bolti chat; `csGo` — admin chat. A `keepScroll` csak akkor rajzol újra, ha a tartalom változott, és csak az új üzenet animál (villogás ellen) — ezt ne rontsd el. Csatolmány: `att:{k:"img"|"file", d, n, s, t}`, legfeljebb ~700 KB.
+- `var NEWS = [` — Újdonságok bejegyzések (`both:true` = mindkét kinézetben megjelenik). `id="thelpBody"` és a többi `help-slide` — súgók.
+- `#fcAdmin.ax` — admin felület (`ax-` kezdetű osztályok). Boltválasztó: `storeList()`.
+- `fpBrkNote()` — a munkaközi szünet (6 óra felett 1 óra) szövege; **nyomtatványonként csak egyszer, lábjegyzetként** szerepeljen.
+- `const FEATS`, `function fpApplyFeats()` — boltonként ki-bekapcsolható programok.
+- Telefonos nézet: `html.m-app`.
+
+**Adatok:** helyben `localStorage` (`firstphone_beosztas_tervezo_v2` a fő állapot, benne `settings`), felhőben Firestore `boltok/{uid}/kv/{kulcs}` → `{v, parts, by, t, n}`; törlés: `{del:true, v:null, parts:0}`; adminból írva `by:"admin"`. Boltok közti chat: `dm/{szoba}/m`.
+
+**Buktatók, amikbe már belefutottunk**
+- Új-kinézetes CSS ne írja felül a `@media print` elrejtéseket (emiatt volt post-it nyomtatási hiba).
+- Az üveg-kinézet általános szabályai (`html.ui-uj ...`) sok mindent felülírnak — új ablaknál/gombnál erősebb szelektor és gyakran `!important` kell, különben áttetsző vagy rossz színű lesz.
+- `prefers-reduced-motion` (a gépen „animációk csökkentése”): ilyenkor se tűnjön el és se csússzon egymásra semmi; `html.fp-anim-full` esetén teljes animáció kell.
+- Régebbi Safari miatt ne használj regex lookbehindot.
+- Régi kinézetben is lehet oldalsó menü — a „régi” nem azt jelenti, hogy felül van a menü.
+
+## Tesztelés
+
+```bash
+python3 -m http.server 8765 --bind 127.0.0.1 &        # a tároló gyökeréből
+LOC=Kaposvár LK=new W=1366 H=800 O=/tmp/a.png node tools/shot.js
+LOC=Bonyhád LK=old PAGE=tudastar W=390 H=844 O=/tmp/b.png node tools/shot.js
+```
+A szkript felhő nélkül, próbaadatokkal nyitja meg az oldalt, kiírja a JavaScript-hibákat és azt, hogy kilóg-e valami oldalra (`kilog`), és képet ment. `EV='...'` változóval tetszőleges kódot futtathatsz az oldalon (kattintás, mérés). Minimum minden változásnál: `LK=new` és `LK=old`, asztali és telefonos méret, hibák listája üres.
+
+Amit így **nem** lehet kipróbálni (belépés, felhő, élő chat, admin): írd meg Martinnak, hogy ezt élesben ő nézze meg, vagy kérd, hogy lépjen be a böngészőben.
+
+## Élesítés
+
+```bash
+set -e
+git checkout -q main && git pull -q --ff-only origin main
+B=$(TZ=Europe/Budapest date +%Y%m%d-%H%M%S)
+sed -i -E "s/window\.FP_BUILD=\"[0-9-]+\"/window.FP_BUILD=\"$B\"/" index.html
+printf '{"b": "%s"}\n' "$B" > version.json
+git add -A && git commit -qm "<rövid magyar leírás>" && git push -q origin main
+H=$(git rev-parse HEAD)
+until gh api repos/joosmartin18-cmyk/firstphone-munkaasztal/commits/$H/check-runs \
+  --jq '.check_runs[]|select(.name|test("Cloudflare"))|.status' | grep -q completed; do sleep 8; done
+gh api repos/joosmartin18-cmyk/firstphone-munkaasztal/commits/$H/check-runs \
+  --jq '.check_runs[]|select(.name|test("Cloudflare"))|.conclusion'      # "success" kell legyen
+```
+Ha a Cloudflare ellenőrzés nem `success`, szólj Martinnak, és javítsd, mielőtt bármi mást csinálsz.
+
+## Hibajegyek, közlemények
+
+A boltok az alkalmazásból küldenek hibajegyet (🐞); ezek az admin felületen látszanak (Hibajegyek, Közlemények). Olvasni és megválaszolni csak úgy lehet, ha Martin be van lépve adminként a böngészőben — te ne lépj be helyette.

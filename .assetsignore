@@ -8,3 +8,6 @@ node_modules
 .wrangler
 .github
 .github/*
+CLAUDE.md
+tools
+tools/*
