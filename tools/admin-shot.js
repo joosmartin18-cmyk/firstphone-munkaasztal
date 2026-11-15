@@ -5,12 +5,15 @@ const FAKE = `(function(){
   var names=["Minta A","Minta B","Minta C","Minta D","Minta E","Minta F"];
   var boltok={}, kv={};
   names.forEach(function(n,i){ var uid="u"+i; boltok[uid]={email:"minta"+i+"@bolt.hu",loc:n,place:"Pláza",addr:"Minta utca "+(i+1),ms:now-i*day*2};
-    var d=new Date(), sch={}; for(var k=1;k<=28;k++){ sch[d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(k).padStart(2,"0")]={a:{start:"09:00",end:"17:00"},b:{start:"12:00",end:"20:00"}}; }
-    var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:true,location:n,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
+    var d=new Date(), sch={}, T=["a","b","split","multi"]; for(var k=1;k<=31;k++){ if((k+i)%9===0) continue; var t=T[(k+i)%4]; sch[d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(k).padStart(2,"0")]= t==="split"?{type:"split",am:"a",pm:"c"}: t==="multi"?{type:"multi",full:["b"],am:["c"]}:{type:t}; }
+    var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:true,location:n,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
     kv[uid]={firstphone_beosztas_tervezo_v2:{v:JSON.stringify(st),parts:0,by:"dev123456",n:now-i*day*2,t:now},
       firstphone_csomag:{v:JSON.stringify({items:[{id:1},{id:2,outAt:1},{id:3}]}),parts:0,by:"dev",n:now},
       firstphone_kassza:{v:JSON.stringify({n:{"1000":12,"5000":3},back:"20000",report:i%2?"47000":"46000"}),parts:0,by:"dev",n:now}};
   });
+  var chat={u0:[{from:"s",name:"Teszt Elek · Minta A",text:"Szia! Megjött a heti áru, mindent bevételeztünk.",ms:now-3600e3},{from:"a",name:"Admin",text:"Köszönöm, szuper!",ms:now-3000e3},{from:"s",name:"Teszt Elek · Minta A",text:"A kassza ma 1000 Ft-tal több, holnap átnézem.",ms:now-600e3}],
+    u1:[{from:"s",name:"Próba Anna · Minta B",text:"A nyomtató nem húzza be a papírt a cetlinél.",ms:now-7200e3,type:"bug",cat:"nyomtatas",page:"cetli",st:"new",prio:"hi"}],
+    u2:[{from:"s",name:"Minta Béla · Minta C",text:"A leltár exportnál üres sor jelenik meg a végén.",ms:now-86400e3,type:"bug",cat:"hiba",page:"leltar",st:"wip"}]};
   function dsnap(path,data){ return {exists:!!data,id:path.split("/").pop(),data:function(){return data},get:function(k){return data&&data[k]},ref:mk(path)}; }
   function qsnap(docs){ return {docs:docs,empty:!docs.length,size:docs.length,forEach:function(f){docs.forEach(f)},docChanges:function(){return docs.map(function(d){return {type:"added",doc:d}})},metadata:{}}; }
   function read(path,grp){
@@ -20,6 +23,7 @@ const FAKE = `(function(){
     if(p.length===1&&p[0]==="boltok") return qsnap(Object.keys(boltok).map(function(u){return dsnap("boltok/"+u,boltok[u])}));
     if(p.length===2&&p[0]==="boltok") return dsnap(path,boltok[p[1]]);
     if(p.length===3&&p[0]==="boltok"&&p[2]==="kv") return qsnap(Object.keys(kv[p[1]]||{}).map(function(k){return dsnap(path+"/"+k,kv[p[1]][k])}));
+    if(p.length===3&&p[0]==="boltok"&&p[2]==="chat") return qsnap((chat[p[1]]||[]).map(function(x,j){return dsnap(path+"/"+x.ms+"_"+j,x)}));
     if(p.length===4&&p[0]==="boltok"&&p[2]==="kv") return dsnap(path,(kv[p[1]]||{})[p[3]]);
     return p.length%2 ? qsnap([]) : dsnap(path,undefined);
   }
@@ -54,10 +58,10 @@ const FAKE = `(function(){
     localStorage.setItem('firstphone_beosztas_tervezo_v2', JSON.stringify({ year: d.getFullYear(), month: d.getMonth() + 1, schedule: {}, settings: s }));
     localStorage.setItem('firstphone_welcome_seen', '1');
     localStorage.setItem('fp_ui_news_seen', JSON.stringify(['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15']));
-    if (pin) localStorage.setItem('fp_ax_nav', 'pin');
+    if (pin) localStorage.setItem('fp_ax_nav2', pin === 'rail' ? 'rail' : 'pin');
   }, [LK, process.env.PIN || '']);
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.goto('http://127.0.0.1:8765/index.html'); await p.waitForTimeout(4000);
+  await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(4000);
   const r = await p.evaluate(async ([nav, th, ev]) => {
     const A = document.getElementById('fcAdmin'); if (!A) return 'NINCS ADMIN';
     if (th === 'light') { A.classList.remove('th-dark'); A.classList.add('th-light'); }
