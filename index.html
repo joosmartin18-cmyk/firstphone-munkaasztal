@@ -16381,6 +16381,198 @@
   html.ui-uj #fcLogin input{ background-color:rgba(255,255,255,.06) !important; border-color:var(--gl-bd) !important; }
   @media (max-width:760px){ html.ui-uj #fcLogin .lg-pane{ background:radial-gradient(70vw 50vh at 20% 0%, rgba(251,172,1,.22), transparent 70%), radial-gradient(60vw 40vh at 100% 100%, rgba(255,106,40,.16), transparent 70%), #0b0a08 !important; } }
 
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== mindenhol: üveg felületek (változókon keresztül minden oldal, ablak, admin) ===== */
+  html.ui-uj body{ --u1:rgba(28,24,19,.66); --u2:rgba(255,255,255,.055); --u3:rgba(255,255,255,.085); --u4:rgba(255,255,255,.12); --radius:20px;
+    --bg-panel:var(--u1); --bg-panel2:var(--u2); --bg-cell:var(--u2); --border:var(--u4); --border-soft:var(--u3); }
+  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ --u1:rgba(255,255,255,.66); --u2:rgba(255,255,255,.6); --u3:rgba(20,14,0,.05); --u4:rgba(20,14,0,.09); }
+  html.ui-uj body.light-theme::before, html.ui-uj body[data-theme="light"]::before{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.34), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,140,60,.24), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.22), transparent 70%), radial-gradient(32vmax 28vmax at 2% 82%, rgba(255,170,90,.2), transparent 70%), #F4EFE6; }
+  /* panelek: valódi üveg (homályosítás, csillanó felső él, mély árnyék, nagy lekerekítés) */
+  html.ui-uj body :is(.panel, #tabs, #summary, #actionsWrap, #calGrid, .td-stat, .ks-side, .cs2-car, .sx-kpis, .ea-tabs, .tt-seg, .tt-oc, .lt-row, .ax-card, .ax-dc, .ax-side, .ax-kpi){
+    -webkit-backdrop-filter:var(--gl-blur); backdrop-filter:var(--gl-blur); border-color:var(--gl-bd) !important;
+    box-shadow:var(--gl-sh), inset 0 1px 0 var(--gl-hi) !important; }
+  html.ui-uj body :is(.panel, #summary, #actionsWrap, #calGrid, .ks-side, .sx-kpis){ border-radius:24px !important; }
+  html.ui-uj body :is(.td-stat, .cs2-car, .tt-oc, .lt-row){ border-radius:20px !important; transition:transform .35s cubic-bezier(.2,.9,.3,1.25), box-shadow .35s, border-color .35s !important; }
+  html.ui-uj body :is(.td-stat, .cs2-car, .tt-oc, .lt-row):hover{ transform:translateY(-4px); border-color:rgba(251,172,1,.5) !important; box-shadow:0 26px 44px -22px rgba(251,172,1,.35), inset 0 1px 0 var(--gl-hi) !important; }
+  /* oldalváltáskor a panelek beúsznak */
+  html.ui-uj body .app :is(.panel, #summary, #actionsWrap, #calGrid, .td-stat, .cs2-car, .sx-kpis, .tt-oc, .lt-row){ animation:glUp .6s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj body .app :is(.td-stat, .cs2-car, .tt-oc, .lt-row):nth-child(2){ animation-delay:.06s; } html.ui-uj body .app :is(.td-stat, .cs2-car, .tt-oc, .lt-row):nth-child(3){ animation-delay:.12s; } html.ui-uj body .app :is(.td-stat, .cs2-car, .tt-oc, .lt-row):nth-child(n+4){ animation-delay:.18s; }
+  /* gombok: elsődleges = sárga, fényes, izzó; másodlagos = üveg kapszula */
+  html.ui-uj body :is(.action-btn.primary, .act.primary, .ax-btn.pri){ background:linear-gradient(180deg,#FFC93D 0%,#FBAC01 55%,#F09A00 100%) !important; color:#000 !important; border:0 !important; border-radius:9999px !important;
+    box-shadow:0 12px 26px -12px rgba(251,172,1,.85), inset 0 1px 0 rgba(255,255,255,.55) !important; transition:transform .2s cubic-bezier(.2,.9,.3,1.3), box-shadow .2s !important; }
+  html.ui-uj body :is(.action-btn, .act, .ax-btn):not(.primary):not(.pri):not(.danger){ border-radius:9999px !important; background:var(--u2) !important; border:1px solid var(--gl-bd) !important; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); transition:transform .2s cubic-bezier(.2,.9,.3,1.3), background .2s, border-color .2s !important; }
+  html.ui-uj body :is(.action-btn, .act, .ax-btn):hover{ transform:translateY(-2px); } html.ui-uj body :is(.action-btn, .act, .ax-btn):active{ transform:scale(.97); }
+  html.ui-uj body :is(.action-btn, .act, .ax-btn):not(.primary):not(.pri):not(.danger):hover{ border-color:rgba(251,172,1,.55) !important; }
+  /* beviteli mezők: üveg */
+  html.ui-uj body :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), select, textarea){ background-color:var(--u2) !important; border-color:var(--gl-bd) !important; border-radius:12px; transition:border-color .2s, box-shadow .2s; }
+  html.ui-uj body :is(input, select, textarea):focus{ border-color:#FBAC01 !important; box-shadow:0 0 0 4px rgba(251,172,1,.18) !important; outline:none; }
+  html.ui-uj body select option{ background:#1b1813; color:#fff; } html.ui-uj body.light-theme select option{ background:#fff; color:#111; }
+  /* felugró ablakok: sötétebb, erősen homályosított üveg */
+  html.ui-uj .modal-backdrop > .modal:not(.help-modal), html.ui-uj #assignBackdrop > .popup, html.ui-uj .shift-back > :first-child, html.ui-uj .fc-full:not(.fc-login) > .fc-card, html.ui-uj .ulk-c, html.ui-uj #fpBoot .fpb-c{
+    background:rgba(22,19,15,.80) !important; -webkit-backdrop-filter:blur(30px) saturate(1.4) !important; backdrop-filter:blur(30px) saturate(1.4) !important; border-color:var(--gl-bd) !important; box-shadow:0 40px 100px -20px rgba(0,0,0,.75), inset 0 1px 0 var(--gl-hi) !important; }
+  html.ui-uj body.light-theme .modal-backdrop > .modal:not(.help-modal), html.ui-uj body.light-theme #assignBackdrop > .popup, html.ui-uj body.light-theme .shift-back > :first-child, html.ui-uj body.light-theme .fc-full:not(.fc-login) > .fc-card, html.ui-uj body.light-theme .ulk-c{ background:rgba(255,255,255,.82) !important; }
+  html.ui-uj .modal-backdrop > .modal .dm-head{ background:transparent !important; }
+  /* admin: a háttér fényei átlátszanak, a panelek üvegből */
+  html.ui-uj .ax, html.ui-uj .ax-drw, html.ui-uj .ax-swin{ --ax-bg:transparent; --ax-side:var(--u1); --ax-panel:var(--u1); --ax-panel2:var(--u2); --ax-line:var(--u4); --ax-line2:var(--u4); }
+  html.ui-uj #fcAdmin.ax, html.ui-uj .ax-drw, html.ui-uj .ax-swin{ --u1:rgba(28,24,19,.66); --u2:rgba(255,255,255,.055); --u3:rgba(255,255,255,.085); --u4:rgba(255,255,255,.12); }
+  html.ui-uj #fcAdmin.ax.th-light, html.ui-uj .ax-drw.th-light, html.ui-uj .ax-swin.th-light{ --u1:rgba(255,255,255,.66); --u2:rgba(255,255,255,.6); --u3:rgba(20,14,0,.05); --u4:rgba(20,14,0,.09); }
+  html.ui-uj #fcAdmin.ax{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.26), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,106,40,.18), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.18), transparent 70%), radial-gradient(44vmax 34vmax at 50% 52%, rgba(251,172,1,.08), transparent 72%), #000 !important; }
+  html.ui-uj #fcAdmin.ax.th-light{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.26), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,106,40,.18), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.18), transparent 70%), radial-gradient(44vmax 34vmax at 50% 52%, rgba(251,172,1,.08), transparent 72%), #F4EFE6 !important; }
+  html.ui-uj .ax-drw:not(.th-light), html.ui-uj .ax-swin:not(.th-light){ background-color:rgba(18,16,13,.86) !important; -webkit-backdrop-filter:blur(30px); backdrop-filter:blur(30px); }
+  html.ui-uj .ax-drw.th-light, html.ui-uj .ax-swin.th-light{ background-color:rgba(255,255,255,.86) !important; -webkit-backdrop-filter:blur(30px); backdrop-filter:blur(30px); }
+  html.ui-uj .ax-card{ border-radius:22px !important; }
+  /* telefon: alsó sáv üveg */
+  html.ui-uj.m-app #mTab{ background:rgba(16,14,11,.72) !important; -webkit-backdrop-filter:blur(24px) saturate(1.4); backdrop-filter:blur(24px) saturate(1.4); border-top:1px solid var(--gl-bd) !important; }
+  html.ui-uj.m-app body.light-theme #mTab{ background:rgba(255,255,255,.72) !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj body .app :is(.panel, #summary, #actionsWrap, #calGrid, .td-stat, .cs2-car, .sx-kpis, .tt-oc, .lt-row){ animation:none !important; } }
+
+  /* bejelentkezés: üveg */
+  html.ui-uj #fcLogin.fc-login{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.26), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,106,40,.18), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.18), transparent 70%), radial-gradient(44vmax 34vmax at 50% 52%, rgba(251,172,1,.08), transparent 72%), #000 !important; }
+  html.ui-uj #fcLogin :is(.lg-show, .lg-pane){ background:rgba(28,24,19,.55) !important; -webkit-backdrop-filter:blur(26px) saturate(1.35) !important; backdrop-filter:blur(26px) saturate(1.35) !important; border:1px solid var(--gl-bd) !important; box-shadow:var(--gl-sh), inset 0 1px 0 var(--gl-hi) !important; animation:glUp .8s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj #fcLogin .lg-pane{ animation-delay:.1s; }
+  html.ui-uj #fcLogin .fc-go{ background:linear-gradient(180deg,#FFC93D 0%,#FBAC01 55%,#F09A00 100%) !important; border-radius:9999px !important; box-shadow:0 14px 30px -12px rgba(251,172,1,.85), inset 0 1px 0 rgba(255,255,255,.55) !important; transition:transform .2s cubic-bezier(.2,.9,.3,1.3) !important; }
+  html.ui-uj #fcLogin .fc-go:hover{ transform:translateY(-2px); }
+  html.ui-uj #fcLogin input{ background-color:rgba(255,255,255,.06) !important; border-color:var(--gl-bd) !important; }
+  @media (max-width:760px){ html.ui-uj #fcLogin .lg-pane{ background:radial-gradient(70vw 50vh at 20% 0%, rgba(251,172,1,.22), transparent 70%), radial-gradient(60vw 40vh at 100% 100%, rgba(255,106,40,.16), transparent 70%), #0b0a08 !important; } }
+
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -18333,6 +18525,50 @@
   html.ui-uj #fcAdmin .ax-rr{ transform:translate(-76px, 26px) !important; }
   @media (max-width:900px){ html.ui-uj #fcAdmin .ax-rr{ transform:none !important; } }
   html.ui-uj body #calGrid#calGrid .day-cell .badge:not(.empty){ align-self:stretch !important; width:auto !important; max-width:none !important; margin-left:0 !important; margin-right:0 !important; }
+  /* ---------- BEOSZTÁS: nap-választó ablak (v2) ---------- */
+  html.ui-uj #assignBackdrop > .popup{ width:min(720px, calc(100vw - 24px)) !important; max-width:none !important; max-height:min(88vh, 900px) !important; overflow-y:auto !important; overflow-x:hidden !important; padding:0 !important; box-sizing:border-box; scrollbar-width:thin; }
+  html.ui-uj #assignBackdrop .popup *{ box-sizing:border-box; }
+  html.ui-uj #assignBackdrop .popup > h3#popupTitle{ position:sticky; top:0; z-index:3; margin:0 !important; padding:24px 28px 2px !important; font-size:28px !important; letter-spacing:-.03em; background:linear-gradient(180deg, rgba(22,19,15,.97) 70%, rgba(22,19,15,0)); }
+  html.ui-uj body.light-theme #assignBackdrop .popup > h3#popupTitle{ background:linear-gradient(180deg, rgba(255,255,255,.97) 70%, rgba(255,255,255,0)); }
+  html.ui-uj #assignBackdrop .popup > #popupSub{ padding:4px 28px 16px !important; margin:0 !important; border:0 !important; font-size:13px !important; font-weight:600; color:var(--text-dim) !important; }
+  html.ui-uj #assignBackdrop .popup > #popupOptions{ padding:0 28px 8px !important; }
+  html.ui-uj #assignBackdrop .opt-lab{ display:flex !important; align-items:center; gap:10px; margin:18px 0 10px !important; font-size:11.5px !important; font-weight:800 !important; letter-spacing:.12em !important; color:var(--text-dim) !important; text-transform:uppercase; }
+  html.ui-uj #assignBackdrop .opt-lab::after{ content:""; flex:1; height:1px; background:var(--gl-bd); }
+  html.ui-uj #assignBackdrop .opt-lab:first-child{ margin-top:4px !important; }
+  /* egész napos dolgozók: kompakt kártyák, 3 egy sorban */
+  html.ui-uj #assignBackdrop .opt-grid{ display:grid !important; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)) !important; gap:10px !important; }
+  html.ui-uj #assignBackdrop .opt-btn{ border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:rgba(255,255,255,.045) !important; min-height:0 !important; padding:12px 14px !important; text-align:left !important; justify-content:flex-start !important;
+    transition:transform .2s cubic-bezier(.2,.9,.3,1.3), border-color .2s, background .2s !important; font-size:13.5px !important; font-weight:700 !important; line-height:1.3 !important; }
+  html.ui-uj body.light-theme #assignBackdrop .opt-btn{ background:rgba(20,14,0,.035) !important; }
+  html.ui-uj #assignBackdrop .opt-btn:hover{ transform:translateY(-2px); border-color:rgba(251,172,1,.6) !important; background:rgba(251,172,1,.08) !important; }
+  html.ui-uj #assignBackdrop .opt-btn.cur, html.ui-uj #assignBackdrop .opt-btn.on, html.ui-uj #assignBackdrop .opt-btn.sel{ border:2px solid #FBAC01 !important; background:rgba(251,172,1,.13) !important; box-shadow:0 10px 24px -14px rgba(251,172,1,.8) !important; }
+  html.ui-uj #assignBackdrop .opt-person{ display:flex !important; align-items:center; gap:12px; }
+  html.ui-uj #assignBackdrop .opt-person .op-av{ width:40px !important; height:40px !important; flex:none; font-size:13px !important; font-weight:800 !important; box-shadow:0 0 0 2px rgba(255,255,255,.14) !important; }
+  html.ui-uj #assignBackdrop .opt-person .op-tx{ display:flex; flex-direction:column; min-width:0; } html.ui-uj #assignBackdrop .opt-person .op-tx small{ font-size:12px !important; font-weight:600 !important; color:var(--text-dim) !important; }
+  /* együtt / félnap és egyéb: rács */
+  html.ui-uj #assignBackdrop .opt-row{ display:grid !important; grid-template-columns:repeat(3, minmax(0, 1fr)) !important; gap:10px !important; }
+  html.ui-uj #assignBackdrop .opt-row .opt-btn{ display:flex !important; flex-direction:column; align-items:flex-start !important; gap:8px; min-height:76px !important; }
+  html.ui-uj #assignBackdrop .opt-row .opt-btn .opt-swatch{ width:12px !important; height:12px !important; margin:0 !important; flex:none; box-shadow:0 0 0 3px rgba(255,255,255,.06); }
+  html.ui-uj #assignBackdrop .opt-row .opt-btn > span:not(.opt-swatch){ text-align:left !important; }
+  html.ui-uj #assignBackdrop .opt-btn.clear{ border-style:dashed !important; color:var(--text-dim) !important; }
+  html.ui-uj #assignBackdrop .opt-btn.clear:hover{ border-color:#FF6B6B !important; background:rgba(255,107,107,.08) !important; color:#FF8A8A !important; }
+  /* lenyíló panelek (több dolgozó, kérések, nyitvatartás, helyettesítés) */
+  html.ui-uj #assignBackdrop .multi-pick.open, html.ui-uj #assignBackdrop .multi-pick[style*="block"]{ width:100% !important; margin:14px 0 4px !important; padding:16px !important; border-radius:20px !important; border:1px solid rgba(251,172,1,.35) !important; background:rgba(251,172,1,.05) !important; animation:glUp .4s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj #assignBackdrop .mp-head{ display:flex !important; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 12px; margin-bottom:12px !important; }
+  html.ui-uj #assignBackdrop .mp-head span{ font-size:15px !important; font-weight:800 !important; } html.ui-uj #assignBackdrop .mp-head small{ font-size:12px !important; color:var(--text-dim) !important; white-space:normal !important; }
+  html.ui-uj #assignBackdrop .mp-row{ display:flex !important; align-items:center; justify-content:space-between; gap:10px; width:100% !important; padding:8px 8px 8px 12px !important; margin:0 0 8px !important; border-radius:14px !important; border:1px solid var(--gl-bd) !important; background:rgba(255,255,255,.035) !important; }
+  html.ui-uj #assignBackdrop .mp-row.on{ border-color:rgba(251,172,1,.5) !important; background:rgba(251,172,1,.08) !important; }
+  html.ui-uj #assignBackdrop .mp-name{ font-weight:700 !important; font-size:13.5px !important; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  html.ui-uj #assignBackdrop .mp-seg{ display:inline-flex !important; flex:none; padding:3px !important; border-radius:99px !important; background:rgba(127,127,127,.15) !important; gap:2px; }
+  html.ui-uj #assignBackdrop .mp-seg > *{ border-radius:99px !important; padding:6px 12px !important; font-size:12px !important; font-weight:800 !important; }
+  html.ui-uj #assignBackdrop .mp-sum{ margin:6px 0 12px !important; font-size:12.5px !important; color:var(--text-dim) !important; }
+  html.ui-uj #assignBackdrop .mp-save{ width:100% !important; max-width:100% !important; margin:0 !important; height:46px; }
+  html.ui-uj #assignBackdrop :is(.rq-form, .sp-form, .hr-row){ display:grid !important; gap:8px !important; }
+  html.ui-uj #assignBackdrop .hr-pre{ display:flex !important; flex-wrap:wrap; gap:6px !important; margin-bottom:10px; } html.ui-uj #assignBackdrop .hr-pre button{ border-radius:99px !important; padding:6px 12px !important; }
+  /* Mégse: rögzített alsó sáv */
+  html.ui-uj #assignBackdrop .popup > #popupClose{ position:sticky; bottom:0; display:block; width:calc(100% - 56px) !important; margin:8px 28px 22px !important; height:46px; border-radius:99px !important; border:1px solid var(--gl-bd) !important; background:rgba(30,27,22,.96) !important; font-weight:700 !important; z-index:3; box-shadow:0 -14px 24px -8px rgba(16,14,11,.9) !important; }
+  html.ui-uj body.light-theme #assignBackdrop .popup > #popupClose{ background:rgba(255,255,255,.97) !important; box-shadow:0 -14px 24px -8px rgba(255,255,255,.9) !important; }
+  @media (max-width:640px){ html.ui-uj #assignBackdrop .opt-row{ grid-template-columns:repeat(2, minmax(0,1fr)) !important; } html.ui-uj #assignBackdrop .popup > h3#popupTitle{ padding:20px 20px 2px !important; font-size:24px !important; } html.ui-uj #assignBackdrop .popup > #popupSub, html.ui-uj #assignBackdrop .popup > #popupOptions{ padding-left:20px !important; padding-right:20px !important; } html.ui-uj #assignBackdrop .popup > #popupClose{ width:calc(100% - 40px) !important; margin:8px 20px 16px !important; } }
 
   /* ===== PRÓBA 28: 💬 Üzenetek v3 — mindkét kinézetben: FirstPhone sárga, sötét üveg, csatolmányok ===== */
   html body .ch-btn, html body #chBtn{ background:linear-gradient(160deg,#FFD45C,#FBAC01 55%,#F08A12) !important; color:#000 !important; box-shadow:0 16px 34px -12px rgba(251,172,1,.75), inset 0 1px 0 rgba(255,255,255,.55) !important; border:0 !important; }
@@ -18534,7 +18770,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261115-140419";</script>
+<script>window.FP_BUILD="20261115-140740";</script>
 <script>
 /* ===================== Felhő: boltonkénti belépés + közös mentés (Firebase) =====================
    Minden bolt egy saját belépéssel (e-mail + jelszó) lép be; az adatai a boltok/{uid} alá kerülnek,
@@ -38203,6 +38439,198 @@ service cloud.firestore {
   html.ui-uj #fcLogin input{ background-color:rgba(255,255,255,.06) !important; border-color:var(--gl-bd) !important; }
   @media (max-width:760px){ html.ui-uj #fcLogin .lg-pane{ background:radial-gradient(70vw 50vh at 20% 0%, rgba(251,172,1,.22), transparent 70%), radial-gradient(60vw 40vh at 100% 100%, rgba(255,106,40,.16), transparent 70%), #0b0a08 !important; } }
 
+  /* ===== több mozgás ===== */
+  @keyframes kwAur{ 0%{ background-position:0% 0%, 100% 100%; } 50%{ background-position:100% 30%, 0% 70%; } 100%{ background-position:0% 0%, 100% 100%; } }
+  @keyframes kwRise{ from{ background-position:0 0, 40px 30px, 80px 60px; } to{ background-position:0 -260px, 40px -170px, 80px -340px; } }
+  @keyframes kwSway{ 0%,100%{ transform:perspective(500px) rotateY(-12deg) rotateX(4deg) translateY(0); } 50%{ transform:perspective(500px) rotateY(12deg) rotateX(-4deg) translateY(-6px); } }
+  @keyframes kwBurst{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--kc) 70%,transparent), 0 0 0 0 color-mix(in srgb,var(--kc) 45%,transparent); } 100%{ box-shadow:0 0 0 46px transparent, 0 0 0 90px transparent; } }
+  @keyframes kwShim{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+  @keyframes kwBarShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes kwShakeLoop{ 0%,82%,100%{ transform:translateX(0) rotate(0); } 85%{ transform:translateX(-5px) rotate(-6deg); } 88%{ transform:translateX(5px) rotate(6deg); } 91%{ transform:translateX(-3px) rotate(-3deg); } 94%{ transform:translateX(2px) rotate(2deg); } }
+  @keyframes kwHop{ 0%,70%,100%{ transform:translateY(0) scale(1); } 78%{ transform:translateY(-12px) scale(1.06,.96); } 86%{ transform:translateY(0) scale(1.08,.92); } 92%{ transform:translateY(-4px) scale(1); } }
+  @keyframes kwOrbit{ from{ transform:rotate(0) translateX(54px) rotate(0); } to{ transform:rotate(360deg) translateX(54px) rotate(-360deg); } }
+  /* mozgó, „aurora” háttér */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::before{ background:radial-gradient(60% 55% at 30% 20%,color-mix(in srgb,var(--kc) 30%,transparent),transparent 70%), radial-gradient(55% 50% at 75% 80%,color-mix(in srgb,var(--kc) 22%,transparent),transparent 70%) !important;
+    background-size:180% 180%, 180% 180% !important; animation:kwWash .7s cubic-bezier(.22,1,.36,1) both, kwAur 7s ease-in-out .7s infinite !important; }
+  /* felszálló fénypöttyök */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.85;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--kc) 90%,#fff) 1.6px,transparent 2.3px), radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.7px), radial-gradient(circle,color-mix(in srgb,var(--kc) 70%,transparent) 2.4px,transparent 3px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 8s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); mask:linear-gradient(180deg,transparent,#000 8%,#000 38%,transparent 52%); }
+  html.ui-uj #ksRes .ks-res-tx{ position:static !important; }
+  /* ikon: befordul + fénygyűrű-robbanás, utána 3D-ben ring és lebeg */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwSway 3.6s ease-in-out 1s infinite !important; }
+  html.ui-uj #ksRes.minus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwShakeLoop 3s ease 1s infinite !important; }
+  html.ui-uj #ksRes.plus #ksResIc#ksResIc{ animation:kwFlip .6s cubic-bezier(.3,1.3,.5,1) both, kwBurst .9s ease-out .35s 1, kwHop 2.4s ease 1s infinite !important; }
+  /* csillanások körpályán (egyezés) */
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::before{ top:50%; left:50%; right:auto; margin:-8px 0 0 -6px; animation:kwOrbit 4s linear .8s infinite, kwTw 2s ease-in-out .8s infinite !important; opacity:1; }
+  html.ui-uj #ksRes.ok #ksResIc#ksResIc::after{ top:50%; left:50%; bottom:auto; margin:-6px 0 0 -4px; animation:kwOrbit 5.5s linear .8s infinite reverse, kwTw 2.6s ease-in-out 1.4s infinite !important; }
+  /* cím: csillogó színátmenet */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) #ksResT#ksResT{ background:linear-gradient(100deg,var(--kc) 0 40%,color-mix(in srgb,var(--kc) 30%,#fff) 50%,var(--kc) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent !important;
+    animation:kwUp .45s cubic-bezier(.22,1,.36,1) .15s both, kwShim 3.2s linear 1s infinite !important; }
+  /* alsó csík: fény fut rajta */
+  html.ui-uj #ksRes:is(.ok,.plus,.minus) .ks-res-tx::after{ background:linear-gradient(90deg,var(--kc) 0 35%,#fff 50%,var(--kc) 65% 100%) !important; background-size:200% 100% !important; animation:kwLine .6s cubic-bezier(.22,1,.36,1) .25s both, kwBarShine 2.4s linear 1s infinite !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj #ksRes, html.ui-uj #ksRes *, html.ui-uj #ksRes::before, html.ui-uj #ksRes::after{ animation:none !important; } }
+
+  /* ===== Csomag: havi összesítő kártya — animált, mint a kassza eredménye ===== */
+  @keyframes csTruck{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(3px) rotate(-3deg); } 50%{ transform:translateX(6px) rotate(0); } 75%{ transform:translateX(3px) rotate(2deg); } }
+  @keyframes csHour{ 0%,40%{ transform:rotate(0); } 50%,90%{ transform:rotate(180deg); } 100%{ transform:rotate(360deg); } }
+  @keyframes csRingGlow{ 0%,100%{ filter:drop-shadow(0 0 0 transparent); } 50%{ filter:drop-shadow(0 0 7px color-mix(in srgb,var(--cc) 80%,transparent)); } }
+  @keyframes csHalo{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes csPop{ 0%{ transform:scale(.5); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  @keyframes csChip{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  html.ui-uj .cs2-car.tot{ --cc:#34C38F; position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.tot::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 25%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 80%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px), radial-gradient(circle,color-mix(in srgb,var(--cc) 70%,transparent) 2.2px,transparent 2.8px);
+    background-size:90px 130px, 120px 90px, 160px 170px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); mask:linear-gradient(180deg,transparent,#000 10%,#000 45%,transparent 65%); }
+  /* felső színcsík: fény fut rajta */
+  html.ui-uj:not(.m-app) .cs2-car.tot{ box-shadow:inset 0 4px 0 var(--cc) !important; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n::before{ content:""; position:absolute; left:0; right:0; top:0; height:4px; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(255,255,255,.85) 50%,transparent 65% 100%); background-size:200% 100%; animation:kwBarShine 3s linear infinite; }
+  /* nagy szám: csillogó */
+  html.ui-uj .cs2-car.tot #csTot{ background:linear-gradient(100deg,var(--utx) 0 40%,color-mix(in srgb,var(--cc) 60%,#fff) 50%,var(--utx) 60% 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:kwShim 4s linear infinite; }
+  /* gyűrű: kirajzolódik, lüktető fény, forgó halo mögötte */
+  html.ui-uj .cs2-car.tot .cs2-ring{ position:relative; animation:csPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+  html.ui-uj .cs2-car.tot .cs2-ring::before{ content:""; position:absolute; inset:-8px; z-index:-1; border-radius:50%; pointer-events:none;
+    background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--cc) 45%,transparent) 85%,transparent 100%); -webkit-mask:radial-gradient(circle,transparent 58%,#000 60%); mask:radial-gradient(circle,transparent 58%,#000 60%); animation:csHalo 3.5s linear infinite; }
+  html.ui-uj .cs2-car.tot #csRing{ transition:stroke-dasharray 1.2s cubic-bezier(.22,1,.36,1) !important; animation:csRingGlow 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot #csRingTx{ animation:csPop .5s cubic-bezier(.3,1.4,.5,1) .35s both; }
+  /* chipek: beúsznak; a teherautó „gurul”, a homokóra fordul */
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span{ animation:csChip .45s cubic-bezier(.22,1,.36,1) both; transition:transform .2s, border-color .2s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:nth-child(2){ animation-delay:.1s; }
+  html.ui-uj .cs2-car.tot .cs2-tot-st > span:hover{ transform:translateY(-2px); }
+  html.ui-uj .cs2-car.tot .cs-em{ display:inline-block; font-style:normal; }
+  html.ui-uj .cs2-car.tot .o .cs-em{ animation:csTruck 1.4s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot .w .cs-em{ animation:csHour 3s ease-in-out infinite; }
+  html.ui-uj .cs2-car.tot > .cs2-car-n{ position:static !important; }
+
+  /* ===== Csomag: szállító kártya, ha van futárra váró csomag ===== */
+  @keyframes csLogoBob{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes csNumPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.14); } }
+  @keyframes csBtnShine{ 0%{ background-position:-150% 0; } 100%{ background-position:250% 0; } }
+  @keyframes csDot{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 70%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  html.ui-uj .cs2-car.cs-live:not(.tot){ position:relative; overflow:hidden; isolation:isolate; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 25% 20%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 14%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 8s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot)::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.75;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 90%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 130px, 120px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); mask:linear-gradient(180deg,transparent,#000 10%,#000 40%,transparent 60%); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-logo{ animation:csLogoBob 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]{ display:inline-block; animation:csNumPulse 1.6s ease-in-out infinite; color:var(--utx); }
+  html.ui-uj .cs2-car.cs-live:not(.tot) [id^="csW"]::after{ content:""; display:inline-block; width:7px; height:7px; margin-left:7px; vertical-align:middle; border-radius:50%; background:var(--cc); animation:csDot 1.6s ease-out infinite; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled){ background-image:linear-gradient(100deg,transparent 0 35%,color-mix(in srgb,var(--cc) 35%,transparent) 50%,transparent 65% 100%) !important; background-size:200% 100% !important; animation:csBtnShine 2.4s linear infinite; border-color:var(--cc) !important; }
+  html.ui-uj .cs2-car.cs-live:not(.tot) .cs2-hand:not(:disabled):hover{ transform:translateY(-2px); }
+
+  /* ===== Csomag: szállító-kártya, ha van futárra váró csomag — látványos, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -14px color-mix(in srgb,var(--cc) 70%,transparent); }
+                     50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 85%,transparent), 0 14px 40px -10px color-mix(in srgb,var(--cc) 90%,transparent); } }
+  @keyframes cwLogo{ 0%,100%{ transform:translateY(0) rotate(0); } 25%{ transform:translateY(-4px) rotate(-2deg); } 75%{ transform:translateY(-2px) rotate(2deg); } }
+  @keyframes cwNum{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); } }
+  @keyframes cwBox{ 0%{ transform:translate(0,0) rotate(-8deg); opacity:0; } 15%{ opacity:1; } 50%{ transform:translate(-6px,-14px) rotate(6deg); } 85%{ opacity:1; } 100%{ transform:translate(0,0) rotate(-8deg); opacity:0; } }
+  @keyframes cwBtnShine{ 0%{ background-position:-150% 0; } 60%,100%{ background-position:250% 0; } }
+  @keyframes cwBtnPulse{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)){ position:relative; isolation:isolate; overflow:hidden; animation:cwGlow 2.2s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 26%,transparent),transparent 70%), radial-gradient(55% 55% at 90% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 6s ease-in-out infinite; }
+  /* kis 📦 csomagok szállnak fel a sarokban */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled))::after{ content:"📦"; position:absolute; right:16px; top:58px; font-size:20px; pointer-events:none; animation:cwBox 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-logo{ animation:cwLogo 3s ease-in-out infinite; }
+  /* „Futárra vár” szám kiemelve, lüktet */
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w{ border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 14%,var(--u2)) !important; }
+  html.ui-uj .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ display:inline-block; color:var(--cc) !important; animation:cwNum 1.6s ease-in-out infinite; }
+  html.ui-uj body.light-theme .cs2-car:not(.tot):has(.cs2-hand:not(:disabled)) .cs2-car-st .w b{ color:color-mix(in srgb,var(--cc) 75%,#000) !important; }
+  /* futár-gomb: kitöltve a szállító színével, fény fut rajta */
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled){ position:relative; overflow:hidden; background:var(--cc) !important; border-color:var(--cc) !important; color:#fff !important; font-weight:800 !important;
+    background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%) !important; background-size:200% 100% !important; background-repeat:no-repeat !important;
+    animation:cwBtnShine 2.4s ease-in-out infinite, cwBtnPulse 1.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car.dpd .cs2-hand:not(:disabled){ background-color:#DC0032 !important; }
+  html.ui-uj .cs2-car:not(.tot) .cs2-hand:not(:disabled):hover{ filter:brightness(1.08); }
+
+  /* ===== Csomag: szállító-kártya, amelyiknél futárra váró csomag van — élénkebb, animált ===== */
+  @keyframes cwGlow{ 0%,100%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 1px color-mix(in srgb,var(--cc) 45%,transparent), 0 10px 30px -18px var(--cc); } 50%{ box-shadow:inset 0 4px 0 var(--cc), 0 0 0 2px color-mix(in srgb,var(--cc) 75%,transparent), 0 14px 40px -12px var(--cc); } }
+  @keyframes cwFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-4px) rotate(-1.5deg); } }
+  @keyframes cwSweep{ 0%,60%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(260%) skewX(-20deg); } }
+  @keyframes cwBtn{ 0%,100%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cc) 55%,transparent); } 50%{ box-shadow:0 0 0 6px transparent; } }
+  @keyframes cwNum{ 0%,70%,100%{ transform:translateY(0) scale(1); } 80%{ transform:translateY(-6px) scale(1.15); } 90%{ transform:translateY(0) scale(.95); } }
+  @keyframes cwDrive{ 0%{ transform:translateX(-4px); } 50%{ transform:translateX(4px); } 100%{ transform:translateX(-4px); } }
+  html.ui-uj .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj .cs2-car.dpd{ --cc:#DC0032; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled)){ position:relative; overflow:hidden; isolation:isolate; animation:cwGlow 2.4s ease-in-out infinite !important; border-color:color-mix(in srgb,var(--cc) 55%,var(--u4)) !important; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(60% 60% at 20% 20%,color-mix(in srgb,var(--cc) 24%,transparent),transparent 70%), radial-gradient(55% 55% at 85% 85%,color-mix(in srgb,var(--cc) 16%,transparent),transparent 70%);
+    background-size:180% 180%, 180% 180%; animation:kwAur 7s ease-in-out infinite; }
+  html.ui-uj .cs2-car:is(.gls,.mpl,.dpd):has(.cs2-hand:not(:disabled))::after{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.8;
+    background-image:radial-gradient(circle,color-mix(in srgb,var(--cc) 85%,#fff) 1.5px,transparent 2.2px), radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);
+    background-size:90px 120px, 130px 90px; animation:kwRise 9s linear infinite;
+    -webkit-mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); mask:linear-gradient(180deg,transparent,#000 15%,#000 50%,transparent 70%); }
+  /* logó lebeg + fény suhan át rajta */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo{ animation:cwFloat 3s ease-in-out infinite !important; overflow:hidden; position:relative; }
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) button.cs2-logo::after{ content:""; position:absolute; top:-20%; bottom:-20%; left:0; width:35%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:cwSweep 3.2s ease-in-out infinite; }
+  /* „Futárra vár” szám ugrál */
+  html.ui-uj .cs2-car:has(.cs2-hand:not(:disabled)) :is(#csWGls,#csWMpl,#csWDpd){ display:inline-block; color:var(--utx); animation:cwNum 2.2s ease infinite; }
+  /* „Itt a futár” gomb: lüktet + fény fut rajta, a teherautó jön-megy */
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled){ position:relative; overflow:hidden; border-color:var(--cc) !important; background:color-mix(in srgb,var(--cc) 16%,transparent) !important; animation:cwBtn 1.8s ease-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled)::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); animation:cwSweep 2.6s ease-in-out infinite; }
+  html.ui-uj .cs2-car .cs2-hand:not(:disabled):hover{ background:color-mix(in srgb,var(--cc) 28%,transparent) !important; }
+  html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.gls{ --cc:#2f5bff; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.mpl{ --cc:#3EAD2B; } html.ui-uj:is(.m-app,:not(.m-app)) .cs2-car.dpd{ --cc:#DC0032; }
+  /* ===== mindenhol: üveg felületek (változókon keresztül minden oldal, ablak, admin) ===== */
+  html.ui-uj body{ --u1:rgba(28,24,19,.66); --u2:rgba(255,255,255,.055); --u3:rgba(255,255,255,.085); --u4:rgba(255,255,255,.12); --radius:20px;
+    --bg-panel:var(--u1); --bg-panel2:var(--u2); --bg-cell:var(--u2); --border:var(--u4); --border-soft:var(--u3); }
+  html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"]{ --u1:rgba(255,255,255,.66); --u2:rgba(255,255,255,.6); --u3:rgba(20,14,0,.05); --u4:rgba(20,14,0,.09); }
+  html.ui-uj body.light-theme::before, html.ui-uj body[data-theme="light"]::before{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.34), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,140,60,.24), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.22), transparent 70%), radial-gradient(32vmax 28vmax at 2% 82%, rgba(255,170,90,.2), transparent 70%), #F4EFE6; }
+  /* panelek: valódi üveg (homályosítás, csillanó felső él, mély árnyék, nagy lekerekítés) */
+  html.ui-uj body :is(.panel, #tabs, #summary, #actionsWrap, #calGrid, .td-stat, .ks-side, .cs2-car, .sx-kpis, .ea-tabs, .tt-seg, .tt-oc, .lt-row, .ax-card, .ax-dc, .ax-side, .ax-kpi){
+    -webkit-backdrop-filter:var(--gl-blur); backdrop-filter:var(--gl-blur); border-color:var(--gl-bd) !important;
+    box-shadow:var(--gl-sh), inset 0 1px 0 var(--gl-hi) !important; }
+  html.ui-uj body :is(.panel, #summary, #actionsWrap, #calGrid, .ks-side, .sx-kpis){ border-radius:24px !important; }
+  html.ui-uj body :is(.td-stat, .cs2-car, .tt-oc, .lt-row){ border-radius:20px !important; transition:transform .35s cubic-bezier(.2,.9,.3,1.25), box-shadow .35s, border-color .35s !important; }
+  html.ui-uj body :is(.td-stat, .cs2-car, .tt-oc, .lt-row):hover{ transform:translateY(-4px); border-color:rgba(251,172,1,.5) !important; box-shadow:0 26px 44px -22px rgba(251,172,1,.35), inset 0 1px 0 var(--gl-hi) !important; }
+  /* oldalváltáskor a panelek beúsznak */
+  html.ui-uj body .app :is(.panel, #summary, #actionsWrap, #calGrid, .td-stat, .cs2-car, .sx-kpis, .tt-oc, .lt-row){ animation:glUp .6s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj body .app :is(.td-stat, .cs2-car, .tt-oc, .lt-row):nth-child(2){ animation-delay:.06s; } html.ui-uj body .app :is(.td-stat, .cs2-car, .tt-oc, .lt-row):nth-child(3){ animation-delay:.12s; } html.ui-uj body .app :is(.td-stat, .cs2-car, .tt-oc, .lt-row):nth-child(n+4){ animation-delay:.18s; }
+  /* gombok: elsődleges = sárga, fényes, izzó; másodlagos = üveg kapszula */
+  html.ui-uj body :is(.action-btn.primary, .act.primary, .ax-btn.pri){ background:linear-gradient(180deg,#FFC93D 0%,#FBAC01 55%,#F09A00 100%) !important; color:#000 !important; border:0 !important; border-radius:9999px !important;
+    box-shadow:0 12px 26px -12px rgba(251,172,1,.85), inset 0 1px 0 rgba(255,255,255,.55) !important; transition:transform .2s cubic-bezier(.2,.9,.3,1.3), box-shadow .2s !important; }
+  html.ui-uj body :is(.action-btn, .act, .ax-btn):not(.primary):not(.pri):not(.danger){ border-radius:9999px !important; background:var(--u2) !important; border:1px solid var(--gl-bd) !important; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); transition:transform .2s cubic-bezier(.2,.9,.3,1.3), background .2s, border-color .2s !important; }
+  html.ui-uj body :is(.action-btn, .act, .ax-btn):hover{ transform:translateY(-2px); } html.ui-uj body :is(.action-btn, .act, .ax-btn):active{ transform:scale(.97); }
+  html.ui-uj body :is(.action-btn, .act, .ax-btn):not(.primary):not(.pri):not(.danger):hover{ border-color:rgba(251,172,1,.55) !important; }
+  /* beviteli mezők: üveg */
+  html.ui-uj body :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]), select, textarea){ background-color:var(--u2) !important; border-color:var(--gl-bd) !important; border-radius:12px; transition:border-color .2s, box-shadow .2s; }
+  html.ui-uj body :is(input, select, textarea):focus{ border-color:#FBAC01 !important; box-shadow:0 0 0 4px rgba(251,172,1,.18) !important; outline:none; }
+  html.ui-uj body select option{ background:#1b1813; color:#fff; } html.ui-uj body.light-theme select option{ background:#fff; color:#111; }
+  /* felugró ablakok: sötétebb, erősen homályosított üveg */
+  html.ui-uj .modal-backdrop > .modal:not(.help-modal), html.ui-uj #assignBackdrop > .popup, html.ui-uj .shift-back > :first-child, html.ui-uj .fc-full:not(.fc-login) > .fc-card, html.ui-uj .ulk-c, html.ui-uj #fpBoot .fpb-c{
+    background:rgba(22,19,15,.80) !important; -webkit-backdrop-filter:blur(30px) saturate(1.4) !important; backdrop-filter:blur(30px) saturate(1.4) !important; border-color:var(--gl-bd) !important; box-shadow:0 40px 100px -20px rgba(0,0,0,.75), inset 0 1px 0 var(--gl-hi) !important; }
+  html.ui-uj body.light-theme .modal-backdrop > .modal:not(.help-modal), html.ui-uj body.light-theme #assignBackdrop > .popup, html.ui-uj body.light-theme .shift-back > :first-child, html.ui-uj body.light-theme .fc-full:not(.fc-login) > .fc-card, html.ui-uj body.light-theme .ulk-c{ background:rgba(255,255,255,.82) !important; }
+  html.ui-uj .modal-backdrop > .modal .dm-head{ background:transparent !important; }
+  /* admin: a háttér fényei átlátszanak, a panelek üvegből */
+  html.ui-uj .ax, html.ui-uj .ax-drw, html.ui-uj .ax-swin{ --ax-bg:transparent; --ax-side:var(--u1); --ax-panel:var(--u1); --ax-panel2:var(--u2); --ax-line:var(--u4); --ax-line2:var(--u4); }
+  html.ui-uj #fcAdmin.ax, html.ui-uj .ax-drw, html.ui-uj .ax-swin{ --u1:rgba(28,24,19,.66); --u2:rgba(255,255,255,.055); --u3:rgba(255,255,255,.085); --u4:rgba(255,255,255,.12); }
+  html.ui-uj #fcAdmin.ax.th-light, html.ui-uj .ax-drw.th-light, html.ui-uj .ax-swin.th-light{ --u1:rgba(255,255,255,.66); --u2:rgba(255,255,255,.6); --u3:rgba(20,14,0,.05); --u4:rgba(20,14,0,.09); }
+  html.ui-uj #fcAdmin.ax{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.26), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,106,40,.18), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.18), transparent 70%), radial-gradient(44vmax 34vmax at 50% 52%, rgba(251,172,1,.08), transparent 72%), #000 !important; }
+  html.ui-uj #fcAdmin.ax.th-light{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.26), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,106,40,.18), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.18), transparent 70%), radial-gradient(44vmax 34vmax at 50% 52%, rgba(251,172,1,.08), transparent 72%), #F4EFE6 !important; }
+  html.ui-uj .ax-drw:not(.th-light), html.ui-uj .ax-swin:not(.th-light){ background-color:rgba(18,16,13,.86) !important; -webkit-backdrop-filter:blur(30px); backdrop-filter:blur(30px); }
+  html.ui-uj .ax-drw.th-light, html.ui-uj .ax-swin.th-light{ background-color:rgba(255,255,255,.86) !important; -webkit-backdrop-filter:blur(30px); backdrop-filter:blur(30px); }
+  html.ui-uj .ax-card{ border-radius:22px !important; }
+  /* telefon: alsó sáv üveg */
+  html.ui-uj.m-app #mTab{ background:rgba(16,14,11,.72) !important; -webkit-backdrop-filter:blur(24px) saturate(1.4); backdrop-filter:blur(24px) saturate(1.4); border-top:1px solid var(--gl-bd) !important; }
+  html.ui-uj.m-app body.light-theme #mTab{ background:rgba(255,255,255,.72) !important; }
+  @media (prefers-reduced-motion:reduce){ html.ui-uj body .app :is(.panel, #summary, #actionsWrap, #calGrid, .td-stat, .cs2-car, .sx-kpis, .tt-oc, .lt-row){ animation:none !important; } }
+
+  /* bejelentkezés: üveg */
+  html.ui-uj #fcLogin.fc-login{ background:radial-gradient(42vmax 32vmax at 22% 8%, rgba(251,172,1,.26), transparent 70%), radial-gradient(36vmax 30vmax at 92% 22%, rgba(255,106,40,.18), transparent 70%), radial-gradient(46vmax 36vmax at 62% 104%, rgba(251,172,1,.18), transparent 70%), radial-gradient(44vmax 34vmax at 50% 52%, rgba(251,172,1,.08), transparent 72%), #000 !important; }
+  html.ui-uj #fcLogin :is(.lg-show, .lg-pane){ background:rgba(28,24,19,.55) !important; -webkit-backdrop-filter:blur(26px) saturate(1.35) !important; backdrop-filter:blur(26px) saturate(1.35) !important; border:1px solid var(--gl-bd) !important; box-shadow:var(--gl-sh), inset 0 1px 0 var(--gl-hi) !important; animation:glUp .8s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj #fcLogin .lg-pane{ animation-delay:.1s; }
+  html.ui-uj #fcLogin .fc-go{ background:linear-gradient(180deg,#FFC93D 0%,#FBAC01 55%,#F09A00 100%) !important; border-radius:9999px !important; box-shadow:0 14px 30px -12px rgba(251,172,1,.85), inset 0 1px 0 rgba(255,255,255,.55) !important; transition:transform .2s cubic-bezier(.2,.9,.3,1.3) !important; }
+  html.ui-uj #fcLogin .fc-go:hover{ transform:translateY(-2px); }
+  html.ui-uj #fcLogin input{ background-color:rgba(255,255,255,.06) !important; border-color:var(--gl-bd) !important; }
+  @media (max-width:760px){ html.ui-uj #fcLogin .lg-pane{ background:radial-gradient(70vw 50vh at 20% 0%, rgba(251,172,1,.22), transparent 70%), radial-gradient(60vw 40vh at 100% 100%, rgba(255,106,40,.16), transparent 70%), #0b0a08 !important; } }
+
   /* ===== PRÓBA X: egységesítő osztályok (a flat.js teszi rá) ===== */
   html.ui-uj .ui-fp{ background-image:none !important; background-color:var(--u1) !important; border-color:var(--u4) !important; box-shadow:none !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
   html.ui-uj .ui-fp2{ background-image:none !important; background-color:var(--u2) !important; border-color:var(--u4) !important; box-shadow:none !important; }
@@ -40155,6 +40583,50 @@ service cloud.firestore {
   html.ui-uj #fcAdmin .ax-rr{ transform:translate(-76px, 26px) !important; }
   @media (max-width:900px){ html.ui-uj #fcAdmin .ax-rr{ transform:none !important; } }
   html.ui-uj body #calGrid#calGrid .day-cell .badge:not(.empty){ align-self:stretch !important; width:auto !important; max-width:none !important; margin-left:0 !important; margin-right:0 !important; }
+  /* ---------- BEOSZTÁS: nap-választó ablak (v2) ---------- */
+  html.ui-uj #assignBackdrop > .popup{ width:min(720px, calc(100vw - 24px)) !important; max-width:none !important; max-height:min(88vh, 900px) !important; overflow-y:auto !important; overflow-x:hidden !important; padding:0 !important; box-sizing:border-box; scrollbar-width:thin; }
+  html.ui-uj #assignBackdrop .popup *{ box-sizing:border-box; }
+  html.ui-uj #assignBackdrop .popup > h3#popupTitle{ position:sticky; top:0; z-index:3; margin:0 !important; padding:24px 28px 2px !important; font-size:28px !important; letter-spacing:-.03em; background:linear-gradient(180deg, rgba(22,19,15,.97) 70%, rgba(22,19,15,0)); }
+  html.ui-uj body.light-theme #assignBackdrop .popup > h3#popupTitle{ background:linear-gradient(180deg, rgba(255,255,255,.97) 70%, rgba(255,255,255,0)); }
+  html.ui-uj #assignBackdrop .popup > #popupSub{ padding:4px 28px 16px !important; margin:0 !important; border:0 !important; font-size:13px !important; font-weight:600; color:var(--text-dim) !important; }
+  html.ui-uj #assignBackdrop .popup > #popupOptions{ padding:0 28px 8px !important; }
+  html.ui-uj #assignBackdrop .opt-lab{ display:flex !important; align-items:center; gap:10px; margin:18px 0 10px !important; font-size:11.5px !important; font-weight:800 !important; letter-spacing:.12em !important; color:var(--text-dim) !important; text-transform:uppercase; }
+  html.ui-uj #assignBackdrop .opt-lab::after{ content:""; flex:1; height:1px; background:var(--gl-bd); }
+  html.ui-uj #assignBackdrop .opt-lab:first-child{ margin-top:4px !important; }
+  /* egész napos dolgozók: kompakt kártyák, 3 egy sorban */
+  html.ui-uj #assignBackdrop .opt-grid{ display:grid !important; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)) !important; gap:10px !important; }
+  html.ui-uj #assignBackdrop .opt-btn{ border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:rgba(255,255,255,.045) !important; min-height:0 !important; padding:12px 14px !important; text-align:left !important; justify-content:flex-start !important;
+    transition:transform .2s cubic-bezier(.2,.9,.3,1.3), border-color .2s, background .2s !important; font-size:13.5px !important; font-weight:700 !important; line-height:1.3 !important; }
+  html.ui-uj body.light-theme #assignBackdrop .opt-btn{ background:rgba(20,14,0,.035) !important; }
+  html.ui-uj #assignBackdrop .opt-btn:hover{ transform:translateY(-2px); border-color:rgba(251,172,1,.6) !important; background:rgba(251,172,1,.08) !important; }
+  html.ui-uj #assignBackdrop .opt-btn.cur, html.ui-uj #assignBackdrop .opt-btn.on, html.ui-uj #assignBackdrop .opt-btn.sel{ border:2px solid #FBAC01 !important; background:rgba(251,172,1,.13) !important; box-shadow:0 10px 24px -14px rgba(251,172,1,.8) !important; }
+  html.ui-uj #assignBackdrop .opt-person{ display:flex !important; align-items:center; gap:12px; }
+  html.ui-uj #assignBackdrop .opt-person .op-av{ width:40px !important; height:40px !important; flex:none; font-size:13px !important; font-weight:800 !important; box-shadow:0 0 0 2px rgba(255,255,255,.14) !important; }
+  html.ui-uj #assignBackdrop .opt-person .op-tx{ display:flex; flex-direction:column; min-width:0; } html.ui-uj #assignBackdrop .opt-person .op-tx small{ font-size:12px !important; font-weight:600 !important; color:var(--text-dim) !important; }
+  /* együtt / félnap és egyéb: rács */
+  html.ui-uj #assignBackdrop .opt-row{ display:grid !important; grid-template-columns:repeat(3, minmax(0, 1fr)) !important; gap:10px !important; }
+  html.ui-uj #assignBackdrop .opt-row .opt-btn{ display:flex !important; flex-direction:column; align-items:flex-start !important; gap:8px; min-height:76px !important; }
+  html.ui-uj #assignBackdrop .opt-row .opt-btn .opt-swatch{ width:12px !important; height:12px !important; margin:0 !important; flex:none; box-shadow:0 0 0 3px rgba(255,255,255,.06); }
+  html.ui-uj #assignBackdrop .opt-row .opt-btn > span:not(.opt-swatch){ text-align:left !important; }
+  html.ui-uj #assignBackdrop .opt-btn.clear{ border-style:dashed !important; color:var(--text-dim) !important; }
+  html.ui-uj #assignBackdrop .opt-btn.clear:hover{ border-color:#FF6B6B !important; background:rgba(255,107,107,.08) !important; color:#FF8A8A !important; }
+  /* lenyíló panelek (több dolgozó, kérések, nyitvatartás, helyettesítés) */
+  html.ui-uj #assignBackdrop .multi-pick.open, html.ui-uj #assignBackdrop .multi-pick[style*="block"]{ width:100% !important; margin:14px 0 4px !important; padding:16px !important; border-radius:20px !important; border:1px solid rgba(251,172,1,.35) !important; background:rgba(251,172,1,.05) !important; animation:glUp .4s cubic-bezier(.22,1,.36,1) both; }
+  html.ui-uj #assignBackdrop .mp-head{ display:flex !important; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 12px; margin-bottom:12px !important; }
+  html.ui-uj #assignBackdrop .mp-head span{ font-size:15px !important; font-weight:800 !important; } html.ui-uj #assignBackdrop .mp-head small{ font-size:12px !important; color:var(--text-dim) !important; white-space:normal !important; }
+  html.ui-uj #assignBackdrop .mp-row{ display:flex !important; align-items:center; justify-content:space-between; gap:10px; width:100% !important; padding:8px 8px 8px 12px !important; margin:0 0 8px !important; border-radius:14px !important; border:1px solid var(--gl-bd) !important; background:rgba(255,255,255,.035) !important; }
+  html.ui-uj #assignBackdrop .mp-row.on{ border-color:rgba(251,172,1,.5) !important; background:rgba(251,172,1,.08) !important; }
+  html.ui-uj #assignBackdrop .mp-name{ font-weight:700 !important; font-size:13.5px !important; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  html.ui-uj #assignBackdrop .mp-seg{ display:inline-flex !important; flex:none; padding:3px !important; border-radius:99px !important; background:rgba(127,127,127,.15) !important; gap:2px; }
+  html.ui-uj #assignBackdrop .mp-seg > *{ border-radius:99px !important; padding:6px 12px !important; font-size:12px !important; font-weight:800 !important; }
+  html.ui-uj #assignBackdrop .mp-sum{ margin:6px 0 12px !important; font-size:12.5px !important; color:var(--text-dim) !important; }
+  html.ui-uj #assignBackdrop .mp-save{ width:100% !important; max-width:100% !important; margin:0 !important; height:46px; }
+  html.ui-uj #assignBackdrop :is(.rq-form, .sp-form, .hr-row){ display:grid !important; gap:8px !important; }
+  html.ui-uj #assignBackdrop .hr-pre{ display:flex !important; flex-wrap:wrap; gap:6px !important; margin-bottom:10px; } html.ui-uj #assignBackdrop .hr-pre button{ border-radius:99px !important; padding:6px 12px !important; }
+  /* Mégse: rögzített alsó sáv */
+  html.ui-uj #assignBackdrop .popup > #popupClose{ position:sticky; bottom:0; display:block; width:calc(100% - 56px) !important; margin:8px 28px 22px !important; height:46px; border-radius:99px !important; border:1px solid var(--gl-bd) !important; background:rgba(30,27,22,.96) !important; font-weight:700 !important; z-index:3; box-shadow:0 -14px 24px -8px rgba(16,14,11,.9) !important; }
+  html.ui-uj body.light-theme #assignBackdrop .popup > #popupClose{ background:rgba(255,255,255,.97) !important; box-shadow:0 -14px 24px -8px rgba(255,255,255,.9) !important; }
+  @media (max-width:640px){ html.ui-uj #assignBackdrop .opt-row{ grid-template-columns:repeat(2, minmax(0,1fr)) !important; } html.ui-uj #assignBackdrop .popup > h3#popupTitle{ padding:20px 20px 2px !important; font-size:24px !important; } html.ui-uj #assignBackdrop .popup > #popupSub, html.ui-uj #assignBackdrop .popup > #popupOptions{ padding-left:20px !important; padding-right:20px !important; } html.ui-uj #assignBackdrop .popup > #popupClose{ width:calc(100% - 40px) !important; margin:8px 20px 16px !important; } }
 
   /* ===== PRÓBA 28: 💬 Üzenetek v3 — mindkét kinézetben: FirstPhone sárga, sötét üveg, csatolmányok ===== */
   html body .ch-btn, html body #chBtn{ background:linear-gradient(160deg,#FFD45C,#FBAC01 55%,#F08A12) !important; color:#000 !important; box-shadow:0 16px 34px -12px rgba(251,172,1,.75), inset 0 1px 0 rgba(255,255,255,.55) !important; border:0 !important; }
