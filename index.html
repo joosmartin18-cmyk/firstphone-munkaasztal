@@ -25159,6 +25159,10 @@
   html body.light-theme .ch-panel.v2 .ch-m.them div.ch-bb:not(.ch-media):not(.ch-big):not(.ch-stk){ background:#fff !important; border-color:rgba(20,14,0,.08) !important; }
   html body .ch-panel.v2 .ch-m.them.last div.ch-bb{ border-bottom-left-radius:6px !important; }
   html body .ch-panel.v2 .ch-m{ animation:chPop .38s cubic-bezier(.2,.9,.3,1.25) both !important; }
+  html body .ch-panel.v2 .ch-m.noan, html body .ax-cr .ch-m.noan, html body .ch-m.noan{ animation:none !important; }
+  /* régi kinézet, felső menüsor: a programnevek ne legyenek levágva */
+  html:not(.ui-uj):not(.m-app) body:not(.lay-new) #pageSwitch .ps-btn{ gap:5px !important; padding-left:3px !important; padding-right:3px !important; }
+  html:not(.ui-uj):not(.m-app) body:not(.lay-new) #pageSwitch .ps-btn .ps-t{ font-size:12.5px !important; letter-spacing:-.01em; }
   @keyframes chPop{ from{ opacity:0; transform:translateY(8px) scale(.96); } }
   html body .ch-panel.v2 .ch-m small{ color:rgba(160,155,145,.9) !important; }
   /* író sáv: kapszula, sárga küldés gomb */
@@ -25460,7 +25464,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261115-154649";</script>
+<script>window.FP_BUILD="20261115-175602";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -28137,7 +28141,16 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     if(w.innerHTML !== h) w.innerHTML = h;
   }
   /* görgetés megtartása újrarajzoláskor: ha fent olvasol, nem ugrik le */
-  function keepScroll(box, force, fn){ const nb = force || box.scrollHeight - box.scrollTop - box.clientHeight < 90, st = box.scrollTop; fn(); const sb = box.style.scrollBehavior; box.style.scrollBehavior = "auto"; box.scrollTop = nb ? box.scrollHeight : st; box.style.scrollBehavior = sb; }
+  function keepScroll(box, force, fn){ const nb = force || box.scrollHeight - box.scrollTop - box.clientHeight < 90, st = box.scrollTop;
+    /* villogás ellen: ha a tartalom ugyanaz, nem rajzolunk újra; ha változott, csak az ÚJ üzenetek úsznak be */
+    const html = fn();
+    if(typeof html === "string"){
+      if(box.__h === html && box.isConnected && box.__fc === box.firstChild){ if(force){ const sb0 = box.style.scrollBehavior; box.style.scrollBehavior = "auto"; box.scrollTop = box.scrollHeight; box.style.scrollBehavior = sb0; } return; }
+      const had = box.__h != null, old = new Set(); if(had) box.querySelectorAll(".ch-m[data-id]").forEach(e=> old.add(e.dataset.id));
+      box.innerHTML = html; box.__h = html; box.__fc = box.firstChild;
+      if(had) box.querySelectorAll(".ch-m").forEach(e=>{ const id = e.dataset.id; if(!id || old.has(id)) e.classList.add("noan"); });
+    }
+    const sb = box.style.scrollBehavior; box.style.scrollBehavior = "auto"; box.scrollTop = nb ? box.scrollHeight : st; box.style.scrollBehavior = sb; }
   /* nagyítás egy GIF-re kattintva */
   document.addEventListener("click", e=>{ const im = e.target.closest && e.target.closest(".ch-media img"); if(!im) return; const z = document.createElement("div"); z.className = "ch-zoom"; z.innerHTML = `<img src="${esc(im.src)}" alt="">`; z.onclick = ()=> z.remove(); document.body.appendChild(z); });
   /* 😊 emoji + GIF / matrica választó egy szövegdobozhoz. send(extra, szöveg) küldi el a GIF-et vagy matricát. */
@@ -28655,7 +28668,7 @@ service cloud.firestore {
     function openRoom(id){
       if(curUnsub){ try{ curUnsub(); }catch(e){} curUnsub = null; }
       if(cur !== id){ RS.re = null; if(panel) replyBar(panel.querySelector(".ch-f"), RS, null); tyW.stop(); }
-      cur = id; curMsgs = [];
+      cur = id; curMsgs = []; { const bx = panel && panel.querySelector(".ch-list"); if(bx) bx.__h = null; }
       if(id !== "hq"){
         const map = new Map(), emit = ()=>{ curMsgs = Array.from(map.values()).sort((a, b)=> a.ms - b.ms); drawMsgs(); };
         const col = S.db.collection("dm").doc(id).collection("m");
@@ -28680,20 +28693,20 @@ service cloud.firestore {
       if(CF.dm === false) h += `<div class="chs-hint">🔒 A boltok közti chatet az admin kikapcsolta — az adminnak továbbra is írhatsz.</div>`; else h += `<div class="chs-sep">✏️ Új beszélgetés</div>` + (NEWL.length ? `<div class="chs-new">${NEWL.map(d=> `<button type="button" data-new="${esc(d.e)}" title="${esc(d.n)} — új beszélgetés${presInfo(d.e).t ? " · " + esc(presInfo(d.e).t) : ""}"><i style="--av:${avCol(d.n)}">${esc(avIni(d.n))}${pdot(d.e)}</i>${esc(d.n.replace(/^FirstPhone\s+/i, ""))}</button>`).join("")}</div>`
         : `<div class="chs-hint">${KNOWN ? (f ? "Nincs ilyen nevű, már belépett bolt." : "Még nincs másik bolt, amelyik belépett volna — amint belépnek, itt megjelennek.") : "A belépett boltok listája az admin következő belépésekor töltődik be. Addig az adminnak és a már meglévő beszélgetésekben tudsz írni."}</div>`);
       if(dmErr && CF.dm !== false) h += `<div class="chs-err">⚠ A boltok közti chat még nincs bekapcsolva — az adminnak egyszer frissítenie kell a beállítást (Admin → Beállítások). Az adminnak addig is tudsz írni.</div>`;
-      L.innerHTML = h;
+      if(L.__h !== h || !L.firstChild){ L.innerHTML = h; L.__h = h; }
     }
     function drawMsgs(){
       if(!panel) return;
       const box = panel.querySelector(".ch-list"), hd = panel.querySelector(".chs-hd");
-      if(cur === "hq"){ hd.innerHTML = `<button type="button" class="chs-back" title="Vissza">←</button><i class="hq">👑${pdot("admin")}</i><div><b>Admin</b><small class="ch-pres">${esc(presInfo("admin").t || "üzenetek az adminnal")}</small></div>`;
-        keepScroll(box, forceBot, ()=>{ box.innerHTML = (CF.anote ? `<div class="ch-anote">🕘 <span>${esc(CF.anote)}</span></div>` : "") + (chatHtml(hq.filter(m=> m.type !== "bug"), "s", hqMeta._seen_a, m=> msgPh(m, myEmps(), myPhoto()), IXS) || `<div class="ch-empty"><span>👑</span>Írj az adminnak — kérdés, ötlet, bármi.${CF.bug ? "<br>Ha valami nem működik, fent a <b>🐞</b> gombbal jelezheted." : ""}</div>`); });
+      if(cur === "hq"){ { const hh = `<button type="button" class="chs-back" title="Vissza">←</button><i class="hq">👑${pdot("admin")}</i><div><b>Admin</b><small class="ch-pres">${esc(presInfo("admin").t || "üzenetek az adminnal")}</small></div>`; if(hd.__h !== hh){ hd.innerHTML = hh; hd.__h = hh; } }
+        keepScroll(box, forceBot, ()=> ((CF.anote ? `<div class="ch-anote">🕘 <span>${esc(CF.anote)}</span></div>` : "") + (chatHtml(hq.filter(m=> m.type !== "bug"), "s", hqMeta._seen_a, m=> msgPh(m, myEmps(), myPhoto()), IXS) || `<div class="ch-empty"><span>👑</span>Írj az adminnak — kérdés, ötlet, bármi.${CF.bug ? "<br>Ha valami nem működik, fent a <b>🐞</b> gombbal jelezheted." : ""}</div>`)));
         if(hq.length) lsSet(SEEN, String(hq[hq.length - 1].ms));
         { const la = hq.filter(x=> x.from === "a").slice(-1)[0]; if(la) chatSeenHq(S.user.uid, "s", la.ms); } }
       else { const r = rooms[cur] || {}; const other = (r.members || cur.split("__")).find(x=> x !== ME) || "";
         const lastM = curMsgs[curMsgs.length - 1];
-        hd.innerHTML = `<button type="button" class="chs-back" title="Vissza">←</button>${phOk(r[phKey(other)]) ? `<i class="ph" style="background-image:url('${phOk(r[phKey(other)])}')"></i>` : `<i style="--av:${avCol(nameOfE(other))}">${esc(avIni(nameOfE(other)))}</i>`}<div><b>${esc(nameOfE(other))}</b><small class="ch-pres">${esc(presInfo(other).t || (lastM ? "utolsó üzenet: " + dayLbl(lastM.ms).toLowerCase() + " " + hhmm(lastM.ms) : "még nincs üzenet"))}</small></div>`;
+        { const hh = `<button type="button" class="chs-back" title="Vissza">←</button>${phOk(r[phKey(other)]) ? `<i class="ph" style="background-image:url('${phOk(r[phKey(other)])}')"></i>` : `<i style="--av:${avCol(nameOfE(other))}">${esc(avIni(nameOfE(other)))}</i>`}<div><b>${esc(nameOfE(other))}</b><small class="ch-pres">${esc(presInfo(other).t || (lastM ? "utolsó üzenet: " + dayLbl(lastM.ms).toLowerCase() + " " + hhmm(lastM.ms) : "még nincs üzenet"))}</small></div>`; if(hd.__h !== hh){ hd.innerHTML = hh; hd.__h = hh; } }
         const M = dmView(r);
-        keepScroll(box, forceBot, ()=>{ box.innerHTML = chatHtml(M, "me", r[snKey(other)], m=> m.from === "me" ? msgPh(m, myEmps(), myPhoto()) : msgPh(m, r[ppKey(other)] || {}, r[phKey(other)]), IXD) || `<div class="ch-empty"><span>👋</span>Írj elsőként a(z) <b>${esc(nameOfE(other))}</b> boltnak!</div>`; });
+        keepScroll(box, forceBot, ()=> (chatHtml(M, "me", r[snKey(other)], m=> m.from === "me" ? msgPh(m, myEmps(), myPhoto()) : msgPh(m, r[ppKey(other)] || {}, r[phKey(other)]), IXD) || `<div class="ch-empty"><span>👋</span>Írj elsőként a(z) <b>${esc(nameOfE(other))}</b> boltnak!</div>`));
         if(r.last) lsSet(DSEEN + cur, String(r.last.ms));
         { const lo = curMsgs.filter(x=> x.from !== ME).slice(-1)[0]; if(lo && rooms[cur] && (r.members || []).length === 2){ const id = cur; markSeen("dm_" + id, lo.ms, v=> S.db.collection("dm").doc(id).set({ [snKey(ME)]:v }, { merge:true })); } } }
       forceBot = false; drawListBadges(); badge(); drawTyping();
@@ -28870,11 +28883,16 @@ service cloud.firestore {
         const nw = e.target.closest("[data-new]"); if(nw){ const id = roomId(ME, nw.dataset.new); if(!rooms[id]) rooms[id] = { id, members:[ME, nw.dataset.new].sort(), last:null }; openRoom(id); return; }
         if(e.target.closest(".chs-back")){ panel.classList.remove("conv"); return; }
       });
-      const go = async ()=>{ const t = ta.value.trim(); if(!t) return; sb.disabled = true;
-        try{ await send(t); ta.value = ""; ta.style.height = ""; if(sndOn() && window.fpSound) fpSound("send", .5); }
-        catch(e){ toast2(cur === "hq" ? "⚠ Nem ment el: " + (e && e.message || e) : "⚠ A boltok közti chat még nincs bekapcsolva (az adminnak kell beállítania)."); } sb.disabled = false; ta.focus(); };
+      let sending = false, lastSent = "", lastAt = 0;
+      const go = async ()=>{ const t = ta.value.trim(); if(!t || sending) return;
+        if(t === lastSent && Date.now() - lastAt < 1500) { ta.value = ""; ta.style.height = ""; return; }   /* ugyanaz 1,5 mp-en belül = véletlen dupla */
+        sending = true; sb.disabled = true; lastSent = t; lastAt = Date.now();
+        ta.value = ""; ta.style.height = "";   /* azonnal ürül: a második Enter már nem küldi el újra */
+        try{ await send(t); if(sndOn() && window.fpSound) fpSound("send", .5); }
+        catch(e){ if(!ta.value) ta.value = t; lastSent = ""; toast2(cur === "hq" ? "⚠ Nem ment el: " + (e && e.message || e) : "⚠ A boltok közti chat még nincs bekapcsolva (az adminnak kell beállítania)."); }
+        sending = false; sb.disabled = false; ta.focus(); };
       sb.onclick = go;
-      ta.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); go(); } });
+      ta.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); if(e.repeat || e.isComposing) return; go(); } });
       ta.addEventListener("input", ()=>{ ta.style.height = "auto"; ta.style.height = Math.min(120, ta.scrollHeight) + "px"; });
       panel.querySelector(".ch-x").onclick = ()=>{ tyW.stop(); if(curUnsub){ try{ curUnsub(); }catch(e){} curUnsub = null; } panel.remove(); panel = null; badge(); };
       wireTools(panel); titleFlash(0);
@@ -30459,7 +30477,7 @@ service cloud.firestore {
         $(".ax-cn").textContent = shortN(x); $(".ax-ce").textContent = [x.email, presT(x)].filter(Boolean).join(" · "); $(".ax-cav").innerHTML = axAv(x);
         const T = (threads[curU] || []).filter(m=> m.type !== "bug");
         const IXA = { key:"a", nameOf:k=> k === "a" ? "Admin" : shortN(x), delAny:true };
-        keepScroll(cl, aForce, ()=>{ cl.innerHTML = chatHtml(T, "a", (metas[curU] || {})._seen_s, m=> msgPh(m, empsOfState((x.raw || {}).firstphone_beosztas_tervezo_v2), phOfState((x.raw || {}).firstphone_beosztas_tervezo_v2)), IXA) || `<div class="ch-empty"><span>👋</span>Még nem írtatok egymásnak. Írj elsőként!</div>`; });
+        keepScroll(cl, aForce, ()=> (chatHtml(T, "a", (metas[curU] || {})._seen_s, m=> msgPh(m, empsOfState((x.raw || {}).firstphone_beosztas_tervezo_v2), phOfState((x.raw || {}).firstphone_beosztas_tervezo_v2)), IXA) || `<div class="ch-empty"><span>👋</span>Még nem írtatok egymásnak. Írj elsőként!</div>`));
         aForce = false; drawATyp();
         /* csak akkor olvasott, ha tényleg itt vagy és látod */
         if(paneOn("inbox") && !document.hidden && T.length){ lsSet(adSeenK(curU), String(T[T.length - 1].ms)); const ls = T.filter(m=> m.from === "s").slice(-1)[0]; if(ls) chatSeenHq(curU, "a", ls.ms); }
@@ -30485,14 +30503,17 @@ service cloud.firestore {
       }
       wireTools($(".ax-cr"));
       cq.oninput = drawCts;
-      const csGo = async (extra, ftxt)=>{ const t = extra ? ftxt : cta.value.trim(); if(!t && !extra) return; if(!curU) return; csend.disabled = true;
-        if(curU === "*"){ let ok = 0; for(const x of list){ try{ await chatSend(x.uid, "a", S.adminLbl || "Admin", t, extra); ok++; }catch(e){} } cta.value = ""; cta.style.height = ""; cl.innerHTML = `<div class="ch-empty"><span>✅</span>Elküldve ${ok} boltnak. A válaszok a boltok saját beszélgetésében jelennek meg.</div>`; csend.disabled = false; logAdd("💬", `Chat üzenet minden boltnak (${ok})`); return; }
+      let csBusy = false, csLast = "", csAt = 0;
+      const csGo = async (extra, ftxt)=>{ const t = extra ? ftxt : cta.value.trim(); if(!t && !extra) return; if(!curU) return;
+        if(!extra){ if(csBusy) return; if(t === csLast && Date.now() - csAt < 1500){ cta.value = ""; cta.style.height = ""; return; } csBusy = true; csLast = t; csAt = Date.now(); if(curU !== "*"){ cta.value = ""; cta.style.height = ""; } }
+        csend.disabled = true;
+        if(curU === "*"){ let ok = 0; for(const x of list){ try{ await chatSend(x.uid, "a", S.adminLbl || "Admin", t, extra); ok++; }catch(e){} } cta.value = ""; cta.style.height = ""; csBusy = false; cl.__h = null; cl.innerHTML = `<div class="ch-empty"><span>✅</span>Elküldve ${ok} boltnak. A válaszok a boltok saját beszélgetésében jelennek meg.</div>`; csend.disabled = false; logAdd("💬", `Chat üzenet minden boltnak (${ok})`); return; }
         const ex2 = Object.assign({}, extra || {}, ARS.re ? { re:ARS.re } : {}); const hadRe = !!ARS.re; ARS.re = null; if(hadRe) replyBar($(".ax-cr .ch-f"), ARS, null); aForce = true; aTy.stop();
-        try{ await chatSend(curU, "a", S.adminLbl || "Admin", t, Object.keys(ex2).length ? ex2 : undefined); if(!extra){ cta.value = ""; cta.style.height = ""; } try{ window.fpSound && fpSound("send", .5); }catch(_){} }catch(e){ cl.insertAdjacentHTML("beforeend", `<div class="ch-empty" style="color:#ef5a5a">⚠ Nem ment el: ${esc(e && e.message || e)}</div>`); }
-        csend.disabled = false; cta.focus(); };
+        try{ await chatSend(curU, "a", S.adminLbl || "Admin", t, Object.keys(ex2).length ? ex2 : undefined); try{ window.fpSound && fpSound("send", .5); }catch(_){} }catch(e){ if(!extra && !cta.value) cta.value = t; csLast = ""; cl.__h = null; cl.insertAdjacentHTML("beforeend", `<div class="ch-empty" style="color:#ef5a5a">⚠ Nem ment el: ${esc(e && e.message || e)}</div>`); }
+        csBusy = false; csend.disabled = false; cta.focus(); };
       csend.onclick = ()=> csGo();
       chatTools($(".ax-cr .ch-f"), cta, (extra, txt)=> csGo(extra, txt));
-      cta.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); csGo(); } });
+      cta.addEventListener("keydown", e=>{ if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); if(e.repeat || e.isComposing) return; csGo(); } });
       cta.addEventListener("input", ()=>{ cta.style.height = "auto"; cta.style.height = Math.min(120, cta.scrollHeight) + "px"; });
       document.addEventListener("visibilitychange", ()=>{ if(!document.hidden && b.isConnected && paneOn("inbox") && curU && curU !== "*") drawThread(); });
       /* --- 🐞 hibajegyek --- */
@@ -53908,6 +53929,10 @@ service cloud.firestore {
   html body.light-theme .ch-panel.v2 .ch-m.them div.ch-bb:not(.ch-media):not(.ch-big):not(.ch-stk){ background:#fff !important; border-color:rgba(20,14,0,.08) !important; }
   html body .ch-panel.v2 .ch-m.them.last div.ch-bb{ border-bottom-left-radius:6px !important; }
   html body .ch-panel.v2 .ch-m{ animation:chPop .38s cubic-bezier(.2,.9,.3,1.25) both !important; }
+  html body .ch-panel.v2 .ch-m.noan, html body .ax-cr .ch-m.noan, html body .ch-m.noan{ animation:none !important; }
+  /* régi kinézet, felső menüsor: a programnevek ne legyenek levágva */
+  html:not(.ui-uj):not(.m-app) body:not(.lay-new) #pageSwitch .ps-btn{ gap:5px !important; padding-left:3px !important; padding-right:3px !important; }
+  html:not(.ui-uj):not(.m-app) body:not(.lay-new) #pageSwitch .ps-btn .ps-t{ font-size:12.5px !important; letter-spacing:-.01em; }
   @keyframes chPop{ from{ opacity:0; transform:translateY(8px) scale(.96); } }
   html body .ch-panel.v2 .ch-m small{ color:rgba(160,155,145,.9) !important; }
   /* író sáv: kapszula, sárga küldés gomb */
@@ -59896,7 +59921,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* 🖥️ kinézet: „old” = klasszikus (felül a menüsor), „new” = oldalsávos (bal: programok, jobb: eszközök). Boltonként, a felhővel szinkronizálva.
      Ha még nem választott: minden boltnál az új (2026-10-24-től); a 🖥️ Kinézet gombbal visszaválthat a klasszikusra. */
   function fpLayout(){ if(document.documentElement.classList.contains("ui-uj")) return "new";   /* az új kinézetben a menü mindig oldalt van */
-    const v = state.settings.layout; return v === "new" || v === "old" ? v : "new"; }
+    const v = state.settings.layout;
+    /* Bonyhád kérése (2026-11-15): a régi kinézetben felül legyen a menü — amíg ők maguk mást nem választanak a 🖥️ Kinézet gombbal */
+    if(!state.settings.layPick2 && /^bonyh[aá]d/i.test(String(state.settings.location || "").trim())) return "old";
+    return v === "new" || v === "old" ? v : "new"; }
   window.fpLayoutGet = fpLayout;
   window.fpLayoutPick = function(){
     if(document.querySelector(".lay-back")) return;
@@ -68991,9 +69019,10 @@ setInterval(function(){
     var s = document.createElement("style"); s.id = "uiLookCss";
     s.textContent = ".ulk-back{position:fixed;inset:0;z-index:100001;display:grid;place-items:center;padding:16px;background:rgba(6,7,12,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-family:Manrope,Inter,system-ui,sans-serif;animation:ulkF .25s ease both}"
       + ".ulk-back.out{opacity:0;transition:opacity .2s}"
-      + ".ulk-c{width:min(560px,100%);border-radius:24px;padding:24px;background:var(--u1,var(--bg-panel,#17171c));color:var(--utx,var(--text,#ececf1));border:1px solid var(--u4,var(--border,#2b2b33));box-shadow:0 30px 80px rgba(0,0,0,.45);animation:ulkP .4s cubic-bezier(.2,.9,.3,1.2) both}"
+      + ".ulk-c{width:min(780px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:24px;padding:24px;background:var(--u1,var(--bg-panel,#17171c));color:var(--utx,var(--text,#ececf1));border:1px solid var(--u4,var(--border,#2b2b33));box-shadow:0 30px 80px rgba(0,0,0,.45);animation:ulkP .4s cubic-bezier(.2,.9,.3,1.2) both}"
       + ".ulk-c h2{margin:0 0 6px;font-size:21px;font-weight:800;letter-spacing:-.01em}.ulk-c p{margin:0 0 18px;font-size:13.5px;line-height:1.5;color:var(--udim,var(--text-dim,#9c9ca6))}"
-      + ".ulk-g{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:520px){.ulk-g{grid-template-columns:1fr}}"
+      + ".ulk-g{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:640px){.ulk-g{grid-template-columns:1fr}.ulk-pv{height:56px}}"
+      + ".ulk-pv.o.t i{left:8px;right:8px;top:8px;bottom:auto;width:auto;height:14px;border-radius:7px;background:linear-gradient(90deg,#7b8cff,#d6589a)}.ulk-pv.o.t s{left:8px}.ulk-pv.o.t s:nth-of-type(1){top:30px}.ulk-pv.o.t s:nth-of-type(2){top:50px}.ulk-pv.o.t s:nth-of-type(3){top:68px}"
       + ".ulk-o{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:18px;border:1.5px solid var(--u4,var(--border,#2b2b33));background:var(--u2,var(--bg-panel2,#1e1e25));transition:transform .15s,border-color .15s}"
       + ".ulk-o:hover,.ulk-o:focus-visible{transform:translateY(-2px);border-color:var(--uacc,#FBAC01)}.ulk-o.on{border-color:var(--uacc,#FBAC01);box-shadow:0 0 0 3px rgba(251,172,1,.18)}"
       + ".ulk-o b{font-size:15px;font-weight:800}.ulk-o small{font-size:12.5px;line-height:1.45;color:var(--udim,var(--text-dim,#9c9ca6))}.ulk-o em{font-style:normal;font-size:11px;font-weight:800;color:var(--uacc,#FBAC01)}"
@@ -69011,16 +69040,23 @@ setInterval(function(){
   function pick(first){
     if(document.querySelector(".ulk-back")) return;
     css(); var c = cur(), b = document.createElement("div"); b.className = "ulk-back";
-    var opt = function(k, t, d, pv){ return '<button type="button" class="ulk-o' + (!first && c === k ? " on" : "") + '" data-v="' + k + '"><span class="ulk-pv ' + pv + '"><i></i><s></s><s></s><s></s></span><b>' + t + (!first && c === k ? " <em>✓ most ez van</em>" : "") + '</b><small>' + d + '</small></button>'; };
+    var lay = "new"; try{ lay = window.fpLayoutGet ? fpLayoutGet() : "new"; }catch(e){}
+    var c3 = c === "new" ? "new" : (lay === "old" ? "oldtop" : "old");   /* új · régi, menü oldalt · régi, menü felül */
+    var opt = function(k, t, d, pv){ var on = !first && c3 === k; return '<button type="button" class="ulk-o' + (on ? " on" : "") + '" data-v="' + k + '"><span class="ulk-pv ' + pv + '"><i></i><s></s><s></s><s></s></span><b>' + t + (on ? " <em>✓ most ez van</em>" : "") + '</b><small>' + d + '</small></button>'; };
     b.innerHTML = '<div class="ulk-c" role="dialog" aria-label="Kinézet választása"><h2>' + (first ? "🖥️ Új kinézetet kapott a Munkaasztal" : "🖥️ Melyik kinézet legyen?") + '</h2><p>' + (first ? "Maradtok az újnál, vagy visszaváltotok a régire? " : "") + 'A bolt <b>minden gépén</b> ez lesz, és bármikor átválthatjátok: ' + "a bal oldali menü alján, a <b>🖥️ Kinézet</b> gombbal." + '</p><div class="ulk-g">'
       + opt("new", first ? "Maradok az újnál" : "Új kinézet", "Egyszerűbb, átláthatóbb: bal oldalt a menü, felül a fent maradó sáv, Ma kezdőlap.", "n")
-      + opt("old", first ? "Vissza a régire" : "Régi kinézet", "A megszokott, színes kinézet — minden funkció ugyanúgy megvan.", "o") + '</div>'
+      + opt("old", first ? "Vissza a régire" : "Régi kinézet — menü oldalt", "A megszokott, színes kinézet, a programok bal oldalt.", "o")
+      + opt("oldtop", "Régi kinézet — menü felül", "A megszokott, színes kinézet, a programok sora fent, a fejléc alatt.", "o t") + '</div>'
       + '<div class="ulk-ft"><span>' + (first ? "Ezt csak egyszer kérdezzük meg." : "") + '</span>' + (!first ? '<button type="button" data-v="x">Mégse</button>' : "") + '</div></div>';
     var close = function(){ b.classList.add("out"); setTimeout(function(){ b.remove(); }, 200); };
     b.addEventListener("click", function(e){
       var x = e.target.closest("[data-v]"); if(!x){ if(!first && e.target === b) close(); return; }
       var v = x.getAttribute("data-v"); if(v === "x"){ close(); return; }
-      save(v); close();
+      var look = v === "oldtop" ? "old" : v;
+      if(look === "old"){ try{ state.settings.layout = v === "oldtop" ? "old" : "new"; state.settings.layPick2 = 1; }catch(e){} }
+      save(look); close();
+      if(look === c && v !== c3){ try{ fpApplyFeats(); window.fpRightNav && fpRightNav(); window.dispatchEvent(new Event("resize")); (window.toast || function(){})(v === "oldtop" ? "🖥️ A menü mostantól felül van — a bolt minden gépén." : "🖥️ A menü mostantól oldalt van — a bolt minden gépén."); }catch(_){} }
+      v = look;
       if(v !== c){ try{ (window.toast || function(){})(v === "old" ? "🖥️ Visszaváltás a régi kinézetre…" : "🖥️ Új kinézet bekapcsolva."); }catch(_){}
         afterSync(function(){ location.reload(); }); }
     });
