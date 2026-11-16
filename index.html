@@ -29238,6 +29238,50 @@ html body #fcAdmin#fcAdmin#fcAdmin .wt2-cog:hover, html body #fcAdmin#fcAdmin#fc
 @media (max-width:700px){ html body #fcAdmin#fcAdmin#fcAdmin .wt2{ grid-template-columns:minmax(0,1fr); } html body #fcAdmin#fcAdmin#fcAdmin .wt2-h{ flex-wrap:wrap; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-big{ width:auto; } html body #fcAdmin#fcAdmin#fcAdmin .sm2{ grid-template-columns:minmax(0,1fr); } html body #fcAdmin#fcAdmin#fcAdmin .ax-mo:has(.sm2){ grid-template-columns:minmax(0,1fr) !important; } }
 html.fp-lite html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:none; }
 
+/* ===== Admin Beosztás — Napi: boltonként kártya ===== */
+html body #fcAdmin#fcAdmin#fcAdmin .nd{ display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:14px; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-c{ padding:16px 18px !important; min-width:0; display:flex; flex-direction:column; gap:12px; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-c.empty{ border-color:rgba(255,107,107,.55) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-c.closed{ opacity:.7; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-c > header{ display:flex; flex-direction:column; align-items:stretch; gap:8px; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-c > header .nd-st{ align-self:flex-start; max-width:100% !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-n{ all:unset; cursor:pointer; display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-n > span{ display:flex; flex-direction:column; min-width:0; } html body #fcAdmin#fcAdmin#fcAdmin .nd-n b{ font-size:15.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } html body #fcAdmin#fcAdmin#fcAdmin .nd-n small{ font-size:12px; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-n:hover b{ color:#FBAC01; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-st{ flex:none; display:inline-flex; align-items:center; gap:6px; max-width:52%; padding:4px 10px; border-radius:99px; font-size:11.5px; font-weight:800; background:var(--u2); border:1px solid var(--u4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-st i{ width:7px; height:7px; border-radius:50%; background:#8a8f98; flex:none; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-st.work i{ background:#FBAC01; } html body #fcAdmin#fcAdmin#fcAdmin .nd-st.live i{ background:#34C38F; box-shadow:0 0 0 3px rgba(52,195,143,.2); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-st.empty{ color:#FF6B6B; border-color:rgba(255,107,107,.5); background:rgba(255,107,107,.1); } html body #fcAdmin#fcAdmin#fcAdmin .nd-st.empty i{ background:#FF6B6B; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-bar{ position:relative; height:12px; border-radius:99px; background:rgba(127,127,127,.18); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-bar i{ position:absolute; top:0; bottom:0; border-radius:99px; background:var(--h); opacity:.9; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-bar b{ position:absolute; top:-4px; bottom:-4px; width:3px; margin-left:-1.5px; border-radius:3px; background:#fff; box-shadow:0 0 0 2px rgba(0,0,0,.4), 0 0 10px rgba(251,172,1,.8); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-ax{ display:flex; justify-content:space-between; margin-top:-8px; font-size:11px; font-weight:700; color:var(--ufaint); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-ps{ display:flex; flex-direction:column; gap:6px; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-p{ display:flex; align-items:center; gap:10px; padding:7px 10px; border-radius:12px; background:rgba(255,255,255,.035); border:1px solid var(--u4); border-left:4px solid var(--h); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-p > i{ font-style:normal; width:30px; height:30px; flex:none; border-radius:50%; display:grid; place-items:center; font-size:11px; font-weight:800; color:#fff; background:var(--h); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-p > span{ flex:1; min-width:0; display:flex; flex-direction:column; } html body #fcAdmin#fcAdmin#fcAdmin .nd-p b{ font-size:13.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } html body #fcAdmin#fcAdmin#fcAdmin .nd-p small{ font-size:12px; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-p > em{ font-style:normal; flex:none; font-size:11px; font-weight:800; padding:2px 8px; border-radius:99px; background:rgba(52,195,143,.18); color:#34C38F; }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-p.in{ background:rgba(52,195,143,.07); }
+html body #fcAdmin#fcAdmin#fcAdmin .nd-empty{ padding:12px; border-radius:12px; border:1px dashed rgba(255,107,107,.6); background:rgba(255,107,107,.07); color:#FF8A8A; font-size:13px; font-weight:600; }
+@media (max-width:700px){ html body #fcAdmin#fcAdmin#fcAdmin .nd{ grid-template-columns:minmax(0,1fr); } html body #fcAdmin#fcAdmin#fcAdmin .nd-st{ max-width:60%; } }
+
+/* ===== Admin Ünnepnapok — hónapok szerint, visszaszámlálással ===== */
+html body #fcAdmin#fcAdmin#fcAdmin .hol2{ display:flex; flex-direction:column; gap:14px; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-m h4{ margin:0 0 6px; font-size:11.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-m{ display:flex; flex-direction:column; gap:6px; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-i{ display:flex !important; align-items:center !important; gap:12px !important; padding:8px 10px !important; border-radius:14px !important; border:1px solid var(--u4) !important; background:rgba(255,255,255,.035) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-i.past{ opacity:.5; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-i.next{ border-color:rgba(251,172,1,.7) !important; background:rgba(251,172,1,.08) !important; box-shadow:0 0 0 3px rgba(251,172,1,.12); }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-d{ flex:none; width:44px; height:48px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(160deg, rgba(255,107,107,.25), rgba(255,107,107,.1)); border:1px solid rgba(255,107,107,.4); }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-i.next .hol2-d{ background:linear-gradient(145deg,#FFD45C,#FBAC01 55%,#F07F12); border-color:transparent; color:#000; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-d b{ font-size:19px; line-height:20px; font-weight:800; } html body #fcAdmin#fcAdmin#fcAdmin .hol2-d small{ font-size:10px; font-weight:800; text-transform:uppercase; opacity:.75; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-i .nm{ flex:1; min-width:0; display:flex; flex-direction:column; } html body #fcAdmin#fcAdmin#fcAdmin .hol2-i .nm b{ font-size:14px; font-weight:800; } html body #fcAdmin#fcAdmin#fcAdmin .hol2-i .nm small{ font-size:11.5px; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-w{ flex:none; font-style:normal; font-size:11.5px; font-weight:800; color:var(--udim); white-space:nowrap; } html body #fcAdmin#fcAdmin#fcAdmin .hol2-i.next .hol2-w{ color:#FBAC01; }
+@media (max-width:560px){ html body #fcAdmin#fcAdmin#fcAdmin .hol2-w{ display:none; } }
+
+html body #fcAdmin#fcAdmin#fcAdmin .hol2:not(.sp) .hol2-i.past, html body #fcAdmin#fcAdmin#fcAdmin .hol2:not(.sp) .hol2-m.allpast{ display:none !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .hol2-pb{ align-self:flex-start; }
+
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
@@ -30359,7 +30403,7 @@ html.fp-lite html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:none; }
         const [Y, Mo] = scYm.split("-").map(Number), nD = new Date(Y, Mo, 0).getDate();
         $(".ax-scml").textContent = scV === "today" ? dLbl(scDay) : scV === "hol" ? `${scYear}` : `${Y}. ${HU_M[Mo - 1]}`;
         $('[data-x="scnow"]').hidden = scV === "today" ? scDay === today : scV === "hol" ? scYear === new Date().getFullYear() : scYm === today.slice(0, 7);
-        $('[data-x="scpdf"]').hidden = false; $(".ax-scq").parentNode.hidden = scV === "hol" || scV === "cal"; $(".ax-scm").hidden = scV === "cal";
+        $('[data-x="scpdf"]').hidden = false; $(".ax-scq").parentNode.hidden = false; $(".ax-scq").placeholder = scV === "hol" ? "Ünnepnap keresése" : scV === "wt" ? "Bolt vagy dolgozó" : "Bolt vagy dolgozó"; $(".ax-scm").hidden = scV === "cal";
         const L = list.slice().sort((a, c)=> shortN(a).localeCompare(shortN(c), "hu")).filter(x=>{ if(!q) return true; if(shortN(x).toLowerCase().includes(q)) return true; return (((stOf(x).settings || {}).employees) || []).some(e=> String(e.name || "").toLowerCase().includes(q)); });
         if(scV === "hol"){ drawHol(box); drawHero(); return; }
         if(scV === "cal"){ drawCalAdm(box); drawHero(); return; }
@@ -30387,7 +30431,22 @@ html.fp-lite html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:none; }
             return `<div class="ax-tlr ${st2}${sd.adm ? " adm" : ""}"><button type="button" class="ax-tln" data-uid="${esc(x.uid)}">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${sd.adm ? "👑 admin · " : ""}${sd.hol ? "🎉 ünnep" : sd.closed ? "🔒 zárva" : st2 === "empty" ? "⚠ nincs beosztva · " + fromM(sd.open) + "–" + fromM(sd.close) : "🕘 " + fromM(sd.open) + "–" + fromM(sd.close)}</small></span>${sd.people.length ? `<em>${sd.people.length} fő</em>` : ""}</button>
               <div class="ax-tlt" style="--n:${h1 - h0};height:${hh}px">${band}${bars}${msg}${showNow ? `<i class="ax-tlnow" style="left:${pc(nowM)}%"></i>` : ""}</div></div>`; }).join("");
           const ticks = Array.from({ length:h1 - h0 + 1 }, (_, i)=> `<i style="left:${pc((h0 + i) * 60)}%">${h0 + i}:00</i>`).join("") + (showNow ? `<i class="now" style="left:${pc(nowM)}%">${fromM(nowM)}</i>` : "");
-          box.innerHTML = rows ? `<div class="ax-card ax-tl"><div class="ax-tlh"><span>Bolt · ${R.length}</span><div class="ax-tlx">${ticks}</div></div>${rows}</div>` : `<div class="ax-card"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></div>`;
+          /* napi: boltonként kártya — ki dolgozik, mettől meddig, ki van bent most; elöl a gondos boltok */
+          const fnmD = n=>{ const p = String(n || "").trim().split(/\s+/); return p[1] || p[0] || "?"; };
+          const isToday = scDay === today, ord = { empty:0, work:1, closed:2 };
+          const RS = R.slice().sort((a1, b1)=> ord[a1.st2] - ord[b1.st2] || shortN(a1.x).localeCompare(shortN(b1.x), "hu"));
+          const dcards = RS.map(({ x, sd, st2 })=>{
+            const op = sd.open != null && !sd.hol && !sd.closed, oc = op ? `${fromM(sd.open)}–${fromM(sd.close)}` : "";
+            const nowIn = isToday && op ? sd.people.filter(pp=> nowM >= pp.from && nowM < pp.to) : [];
+            const stTxt = st2 === "closed" ? (sd.hol ? "Ünnep" + (sd.hn ? " · " + esc(sd.hn) : "") : "Zárva") : st2 === "empty" ? "Nincs beosztva" : isToday ? (nowM < sd.open ? "Még nem nyitott" : nowM >= sd.close ? "Bezárt" : nowIn.length ? "Nyitva · bent: " + nowIn.map(pp=> esc(fnmD(pp.name))).join(", ") : "Nyitva · most senki") : `${sd.people.length} fő`;
+            const bar = op ? (()=>{ const sp = sd.close - sd.open || 1, P = v=> Math.max(0, Math.min(100, (v - sd.open) / sp * 100));
+              const segs = sd.people.map(pp=> `<i style="--h:${esc(pp.hex)};left:${P(pp.from)}%;width:${P(pp.to) - P(pp.from)}%" title="${esc(pp.name)} ${fromM(pp.from)}–${fromM(pp.to)}"></i>`).join("");
+              return `<div class="nd-bar">${segs}${isToday && nowM > sd.open && nowM < sd.close ? `<b style="left:${P(nowM)}%"></b>` : ""}</div><div class="nd-ax"><span>${fromM(sd.open)}</span><span>${fromM(sd.close)}</span></div>`; })() : "";
+            const ppl = sd.people.map(pp=>{ const inn = nowIn.includes(pp); return `<div class="nd-p${inn ? " in" : ""}${pp.sub ? " sub" : ""}" style="--h:${esc(pp.hex)}"><i>${esc(String(pp.name).split(/\s+/).map(s=> s[0]).join("").slice(0, 2).toUpperCase())}</i><span><b>${esc(pp.name)}</b><small>${pp.part === "am" ? "délelőtt" : pp.part === "pm" ? "délután" : "egész nap"} · ${fromM(pp.from)}–${fromM(pp.to)}${pp.sub ? " · helyettes" : ""}</small></span>${inn ? `<em>bent</em>` : ""}</div>`; }).join("");
+            return `<section class="ax-card nd-c ${st2}${sd.adm ? " adm" : ""}"><header><button type="button" class="ax-tln nd-n" data-uid="${esc(x.uid)}">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${oc ? "Nyitva " + oc : st2 === "closed" ? "ma nincs nyitva" : ""}${sd.adm ? " · admin rögzítette" : ""}</small></span></button><span class="nd-st ${st2}${nowIn.length ? " live" : ""}"><i></i>${stTxt}</span></header>
+              ${bar}${st2 === "empty" ? `<div class="nd-empty">Erre a napra nincs senki beosztva — kattints a bolt nevére a beosztáshoz.</div>` : ppl ? `<div class="nd-ps">${ppl}</div>` : ""}</section>`; }).join("");
+          box.innerHTML = dcards ? `<div class="nd">${dcards}</div>` : `<div class="ax-card"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></div>`;
+          void rows; void ticks;
         } else {
           $(".ax-scf").innerHTML = "";
           const dw = d=> (new Date(Y, Mo - 1, d).getDay() + 6) % 7, kOf = d=> `${Y}-${p2(Mo)}-${p2(d)}`;
@@ -30458,7 +30517,16 @@ html.fp-lite html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:none; }
             ${miss.length ? `<div class="ax-holhu"><div><b>🇭🇺 ${scYear}: ${miss.length} magyar ünnepnap még nincs a listán</b><small>${scYear >= Y0 + 3 || scYear < Y0 ? "erre az évre nem kerül be magától" : "az automatikus beírás ki van kapcsolva vagy törölted őket"}</small></div><button type="button" class="ax-btn" data-x="holhu">Mind hozzáadása</button></div>` : ""}
             <p class="ax-hint" style="margin-top:12px">A boltok beosztásában ezek a napok <b>ÜNNEP</b>-ként, <b>piros szaggatott kerettel</b> és „👑 admin” jellel jelennek meg — a bolt <b>átírhatja</b> (pl. ha mégis nyitva vannak), ekkor a jelölés eltűnik. Ha itt törlöd, a boltoknál is lekerül (kivéve, ahol átírták).</p></div>
           <div class="ax-card"><div class="ax-ch"><h3>🎉 Ünnepnapok — ${scYear}</h3><span class="ax-b">${L.length}</span></div>
-            <div class="ax-holl">${L.map(h=>{ const st2 = holStat(h.d); return `<div class="ax-hol"><span class="dt"><b>${h.d.slice(5).replace("-", ". ")}.</b><small>${wd(h.d)}</small></span><span class="nm"><b>${esc(h.n || "Ünnepnap")}${h.auto ? ` <i class="ax-hauto">🇭🇺 automatikus</i>` : ""}</b><small>✓ ${st2.on} boltnál beírva${st2.ch ? ` · ✏️ ${st2.ch} átírta` : ""}${st2.wait ? ` · ⏳ ${st2.wait} a következő belépéskor` : ""}</small></span><button type="button" class="ax-btn sm danger" data-hdel="${h.d}">${holArm === h.d ? "Biztos? Kattints újra" : "🗑"}</button></div>`; }).join("") || `<div class="ax-empty">Erre az évre még nincs ünnepnap. Bal oldalt adhatsz hozzá — vagy egy kattintással az összes magyar ünnepnapot.</div>`}</div></div></div>`;
+            <div class="ax-holl hol2${window.__holPast || ((($(".ax-scq") || {}).value || "").trim()) ? " sp" : ""}">${(()=>{ const qh = (($(".ax-scq") || {}).value || "").trim().toLowerCase(), MO2 = ["január","február","március","április","május","június","július","augusztus","szeptember","október","november","december"];
+              const LF = L.filter(h=> !qh || String(h.n || "").toLowerCase().includes(qh) || h.d.includes(qh) || MO2[+h.d.slice(5, 7) - 1].includes(qh));
+              if(!LF.length) return qh ? `<div class="ax-empty">Nincs „${esc(qh)}” nevű ünnepnap.</div>` : "";
+              const tdy = dKey(new Date()), nextD = (LF.find(h=> h.d >= tdy) || {}).d, groups = {};
+              LF.forEach(h=>{ const mo = +h.d.slice(5, 7); (groups[mo] = groups[mo] || []).push(h); });
+              const pastN = LF.filter(h=> h.d < tdy).length, showPast = !!window.__holPast || qh;
+              const pastBtn = pastN && !qh ? `<button type="button" class="ax-btn sm hol2-pb" onclick="window.__holPast=!window.__holPast;this.closest('.hol2').classList.toggle('sp')">${pastN} elmúlt ünnepnap ${showPast ? "elrejtése" : "megjelenítése"}</button>` : "";
+              return pastBtn + Object.keys(groups).map(mo=> `<div class="hol2-m${groups[mo].every(h=> h.d < tdy) ? " allpast" : ""}"><h4>${MO2[mo - 1]}</h4>${groups[mo].map(h=>{ const st2 = holStat(h.d), [yy, mm, dd] = h.d.split("-").map(Number), dl = Math.round((new Date(yy, mm - 1, dd) - new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())) / 864e5);
+                const when = dl < 0 ? "elmúlt" : dl === 0 ? "ma" : dl === 1 ? "holnap" : dl + " nap múlva";
+                return `<div class="ax-hol hol2-i${h.d < tdy ? " past" : ""}${h.d === nextD ? " next" : ""}"><span class="hol2-d"><b>${dd}</b><small>${wd(h.d).slice(0, 3)}</small></span><span class="nm"><b>${esc(h.n || "Ünnepnap")}${h.auto ? ` <i class="ax-hauto">automatikus</i>` : ""}</b><small>${st2.on} boltnál beírva${st2.ch ? ` · ${st2.ch} átírta` : ""}${st2.wait ? ` · ${st2.wait} a következő belépéskor` : ""}</small></span><em class="hol2-w">${h.d === nextD ? "következő · " : ""}${when}</em><button type="button" class="ax-btn sm danger" data-hdel="${h.d}">${holArm === h.d ? "Biztos? Kattints újra" : "Törlés"}</button></div>`; }).join("")}</div>`).join(""); })() || `<div class="ax-empty">Erre az évre még nincs ünnepnap. Bal oldalt adhatsz hozzá — vagy egy kattintással az összes magyar ünnepnapot.</div>`}</div></div></div>`;
       }
       /* --- 📲 Naptár: ki iratkozott fel, gombok vissza, „nem kéri”, a 📅 Naptárba gomb vissza — a boltok, ahol már feltöltötték --- */
       const calAdm = { data:{}, at:0, busy:false, err:"" };
@@ -30476,7 +30544,8 @@ html.fp-lite html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:none; }
       }
       function drawCalAdm(box){
         $(".ax-scf").innerHTML = "";
-        const L = list.filter(isKapSt);
+        const qc = (($(".ax-scq") || {}).value || "").trim().toLowerCase();
+        const L = list.filter(isKapSt).filter(x=> !qc || shortN(x).toLowerCase().includes(qc) || (((stOf(x).settings || {}).employees) || []).some(e=> String(e.name || "").toLowerCase().includes(qc)));
         if(!calAdm.busy && Date.now() - calAdm.at > 30000) calAdmLoad();
         const nWait = list.length - L.length, waitN = nWait > 0 ? `<div class="ax-card"><p class="ax-hint">📲 ${L.length ? `Még <b>${nWait} bolt</b> nem töltötte fel` : `Még <b>egy bolt sem</b> töltötte fel`} a beosztást a dolgozók naptárába (Beosztás → 📅 Naptárba → ⬆️ Feltöltés most mindenkinek). Ha feltöltik, itt megjelennek.</p></div>` : "";
         if(!L.length){ box.innerHTML = waitN; return; }

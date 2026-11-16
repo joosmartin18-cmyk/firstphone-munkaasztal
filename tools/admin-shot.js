@@ -60,6 +60,7 @@ const FAKE = `(function(){
     localStorage.setItem('fp_ui_news_seen', JSON.stringify(['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16']));
     if (pin) localStorage.setItem('fp_ax_nav2', pin === 'rail' ? 'rail' : 'pin');
   }, [LK, process.env.PIN || '']);
+  if (process.env.NOW && ctx.clock) await ctx.clock.install({ time: new Date(process.env.NOW) });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(4000);
   const r = await p.evaluate(async ([nav, th, ev]) => {
