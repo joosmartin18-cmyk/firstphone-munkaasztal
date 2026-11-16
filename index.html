@@ -29327,6 +29327,16 @@ html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-r{ flex:none; display:flex; fl
 html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-r em{ font-style:normal; font-size:10.5px; font-weight:800; color:var(--ufaint); white-space:nowrap; } html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-r em.o{ color:#FBAC01; }
 html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-n{ margin:2px 2px 0; font-size:12px; color:var(--udim); }
 
+html body #fcAdmin#fcAdmin#fcAdmin .ax-look, html body .ax-drw .ax-look{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px; font-size:11.5px; font-weight:800; white-space:nowrap; border:1px solid; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-look.n, html body .ax-drw .ax-look.n{ color:#FBAC01; border-color:rgba(251,172,1,.5); background:rgba(251,172,1,.12); }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-look.o, html body .ax-drw .ax-look.o{ color:#a8b4c8; border-color:rgba(168,180,200,.4); background:rgba(168,180,200,.1); }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-look::before, html body .ax-drw .ax-look::before{ content:""; width:7px; height:7px; border-radius:50%; background:currentColor; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-lookd{ font-size:10.5px; color:var(--ufaint); }
+
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th, html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl td{ padding-left:10px !important; padding-right:10px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
+@media (max-width:1500px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl .ax-sc small{ display:none; } html body #fcAdmin#fcAdmin#fcAdmin .ax-lookd{ display:none; } }
+
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
@@ -29796,8 +29806,15 @@ html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-n{ margin:2px 2px 0; font-size
       let rT = null; function later(){ clearTimeout(rT); rT = setTimeout(()=>{ drawCts(); drawTix(); drawDash(); drawShopsIfOn(); }, 120); }
       /* --- 🏬 boltok --- */
       const sq = $(".ax-sq");
-      const COLS = [["name","Bolt"],["ms","Utolsó mentés"],["wait","Csomag"],["sx","Selejt ma"],["ks","Kassza"],["lt","Leltár"],["emp","Dolgozó"],["tix","Jegyek"]];
-      const sv = (x, k)=> k === "name" ? nameOf(x) : k === "ks" ? (x.ks && x.ks.diff != null ? Math.abs(x.ks.diff) : -1) : k === "lt" ? (x.lt && x.lt.at || "") : k === "msg" ? (x.msg ? 1 : 0) : k === "nseen" ? (x.nseen ? x.nseen.at : 0) : k === "tix" ? openOf(x.uid) : (x[k] == null ? -1 : x[k]);
+      const COLS = [["name","Bolt"],["ms","Utolsó mentés"],["look","Kinézet"],["wait","Csomag"],["sx","Selejt ma"],["ks","Kassza"],["lt","Leltár"],["emp","Dolgozó"],["tix","Jegyek"]];
+      /* melyik kinézetet használja a bolt — ugyanaz a döntés, mint a bolt gépén (fpKapUj / fpLayout) */
+      const lookOf = x=>{ let se = {}; try{ se = (JSON.parse((x.raw || {}).firstphone_beosztas_tervezo_v2 || "null") || {}).settings || {}; }catch(e){}
+        const loc = String(se.location || x.loc || "").trim(), u = String(se.uiLook || ""), own = u === "old" || u === "new";
+        const isNew = u === "new" ? true : u === "old" ? false : !/^bonyh[aá]d/i.test(loc);
+        const top = !isNew && (se.layout === "old" || (!se.layPick2 && /^bonyh[aá]d/i.test(loc) && se.layout !== "new"));
+        return { isNew, own, t:isNew ? "Új" : top ? "Régi · menü felül" : "Régi · menü oldalt", known:!!(x.raw && x.raw.firstphone_beosztas_tervezo_v2) }; };
+      const lookH = x=>{ const L = lookOf(x); if(!L.known) return `<small>—</small>`; return `<span class="ax-look ${L.isNew ? "n" : "o"}" title="${L.own ? "a bolt maga választotta" : "alapbeállítás (még nem választott)"}">${L.t}</span>${L.own ? "" : ` <small class="ax-lookd">alap</small>`}`; };
+      const sv = (x, k)=> k === "name" ? nameOf(x) : k === "ks" ? (x.ks && x.ks.diff != null ? Math.abs(x.ks.diff) : -1) : k === "lt" ? (x.lt && x.lt.at || "") : k === "msg" ? (x.msg ? 1 : 0) : k === "nseen" ? (x.nseen ? x.nseen.at : 0) : k === "tix" ? openOf(x.uid) : k === "look" ? lookOf(x).t : (x[k] == null ? -1 : x[k]);
       const sMatch = x=>{ const f = sq.value.trim().toLowerCase(); if(f && !(nameOf(x) + " " + x.email + " " + (x.addr || "")).toLowerCase().includes(f)) return false;
         return sFilt === "today" ? x.ms >= day0() : sFilt === "stale" ? isStale(x) : sFilt === "ks" ? !!(x.ks && x.ks.diff) : sFilt === "pkg" ? (x.wait || 0) > 0 : true; };
       const ksH = x=> !x.ks ? `<small>—</small>` : x.ks.diff == null ? `<span class="ax-b">nincs jelentés</span>` : x.ks.diff === 0 ? `<span class="ax-b g">✓ egyezik</span>` : x.ks.diff < 0 ? `<span class="ax-b r">hiány ${fmtFt(x.ks.diff)}</span>` : `<span class="ax-b o">többlet ${fmtFt(x.ks.diff)}</span>`;
@@ -29808,10 +29825,10 @@ html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-n{ margin:2px 2px 0; font-size
         $(".ax-stw").hidden = sView !== "tbl"; $(".ax-sgrid").hidden = sView !== "grid";
         if(sView === "tbl") $(".ax-stbl").innerHTML = `<thead><tr>${COLS.map(([k, t])=> `<th data-k="${k}" class="${sortK === k ? "s" + (sortUp ? " up" : "") : ""}${["wait","sx","emp","tix"].includes(k) ? " num" : ""}">${t}</th>`).join("")}</tr></thead><tbody>` + (L.map(x=>{
             const lt = x.lt && x.lt.at ? `${esc(String(x.lt.at).slice(0, 10).replace(/-/g, "."))}. <small>${x.lt.type === "P" ? "péntek" : x.lt.type === "H" ? "hétfő" : ""}</small>` : `<small>—</small>`, ot = openOf(x.uid);
-            return `<tr class="go" data-uid="${esc(x.uid)}"><td><div class="ax-sc">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${esc(x.email || "")}</small></span></div></td><td>${isStale(x) ? `<span class="ax-b r">${ago(x.ms)}</span>` : `<span class="ax-dt ${stDot(x)}"></span>${ago(x.ms)}`}</td><td class="num">${x.wait == null ? "<small>—</small>" : x.wait}</td><td class="num">${x.sx == null ? "<small>—</small>" : x.sx}</td><td>${ksH(x)}</td><td>${lt}</td><td class="num">${x.emp == null ? "<small>—</small>" : x.emp}</td><td class="num">${ot ? `<span class="ax-b o">${ot}</span>` : "<small>—</small>"}</td></tr>`; }).join("") || `<tr><td colspan="${COLS.length}"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></td></tr>`) + `</tbody>`;
+            return `<tr class="go" data-uid="${esc(x.uid)}"><td><div class="ax-sc">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${esc(x.email || "")}</small></span></div></td><td>${isStale(x) ? `<span class="ax-b r">${ago(x.ms)}</span>` : `<span class="ax-dt ${stDot(x)}"></span>${ago(x.ms)}`}</td><td>${lookH(x)}</td><td class="num">${x.wait == null ? "<small>—</small>" : x.wait}</td><td class="num">${x.sx == null ? "<small>—</small>" : x.sx}</td><td>${ksH(x)}</td><td>${lt}</td><td class="num">${x.emp == null ? "<small>—</small>" : x.emp}</td><td class="num">${ot ? `<span class="ax-b o">${ot}</span>` : "<small>—</small>"}</td></tr>`; }).join("") || `<tr><td colspan="${COLS.length}"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></td></tr>`) + `</tbody>`;
         else $(".ax-sgrid").innerHTML = L.map(x=> `<button type="button" class="ax-scard" data-uid="${esc(x.uid)}"><span class="h">${axAv(x, true)}<span><b>${esc(shortN(x))}</b><small>${esc([x.place, x.addr].filter(Boolean).join(" · ") || x.email)}</small></span></span>
             <span class="k"><span><small>Csomag</small><b>${x.wait == null ? "—" : x.wait}</b></span><span title="Selejt ma"><small>Selejt</small><b>${x.sx == null ? "—" : x.sx}</b></span><span><small>Dolgozó</small><b>${x.emp == null ? "—" : x.emp}</b></span><span><small>Kassza</small><b class="ax-ksv ${!x.ks || x.ks.diff == null ? "" : x.ks.diff === 0 ? "ok" : x.ks.diff < 0 ? "minus" : "plus"}" title="${!x.ks || x.ks.diff == null ? "Nincs kasszajelentés" : x.ks.diff === 0 ? "Egyezik a kassza" : (x.ks.diff < 0 ? "Hiány " : "Többlet ") + fmtFt(x.ks.diff)}">${!x.ks || x.ks.diff == null ? "—" : x.ks.diff === 0 ? "✓" : fmtFt(x.ks.diff).replace(" Ft", "")}</b></span></span>
-            <span class="f"><span><span class="ax-dt ${stDot(x)}"></span>${stDotT(x)}</span><span>💾 ${ago(x.ms)}</span></span></button>`).join("") || `<div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div>`;
+            <span class="f"><span><span class="ax-dt ${stDot(x)}"></span>${stDotT(x)}</span>${lookOf(x).known ? `<span class="ax-look ${lookOf(x).isNew ? "n" : "o"}">${lookOf(x).t}</span>` : ""}<span>💾 ${ago(x.ms)}</span></span></button>`).join("") || `<div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div>`;
         const nb = $(".ax-none"); nb.hidden = !nl.length;
         nb.innerHTML = nl.length ? `<button type="button" class="ax-ch ax-chb" data-x="nonet"><h3>⏳ Még nem lépett be</h3><span class="ax-b">${nl.length} bolt</span><span class="ax-sp"></span><small>${noneOpen || f ? "▴ elrejtés" : "▾ mutasd"}</small></button>${noneOpen || f ? `<div class="ax-nl">${nl.map(s=> `<button type="button" class="ax-nc" data-acc="${esc(s.n)}" title="${esc(s.a)} — kattints: fiók, új jelszó, újrakezdés"><span class="ax-av" style="--av:${avCol(s.n)}">${esc(avIni(s.n))}</span><span><b>${esc(s.n)}</b><small>${esc(s.e)}</small></span><em>🔑</em></button>`).join("")}</div><p class="ax-hint ax-nlh">Kattints egy boltra: megnézheted a fiókját, új jelszót adhatsz, vagy <b>↺ újrakezdheted</b> (pl. ha elírt a belépési cím).</p>` : ""}` : "";
       }
@@ -29834,7 +29851,7 @@ html body .ax-drw:not(#_1):not(#_2):not(#_3) .ds2-n{ margin:2px 2px 0; font-size
         m.innerHTML = `<div class="ax-drwb" role="dialog" aria-label="Bolt adatai">
           <div class="ax-dhero" style="--av:${avCol(shortN(x))}"><i class="ax-dhfx" aria-hidden="true"><s class="r1"></s><s class="r2"></s><s class="r3"></s>${[8,19,31,44,57,69,82,93].map((l, k)=> `<em style="--l:${l}%;--d:${(k * .73) % 4.2}s;--t:${3.6 + (k % 3) * .9}s;--z:${k % 2 ? 3 : 4}px"></em>`).join("")}</i><button type="button" class="ax-ib ax-detx" title="Bezárás (Esc)">${axI("x")}</button>
             <div class="ax-dhrow">${axAv(x, true)}<div class="ax-dhtx"><b>${esc(nameOf(x))}</b><small>${esc(se.address || x.addr || "")}</small></div></div>
-            <div class="ax-dchips"><span class="ax-dpres ${pi.k || "off"}" data-u="${esc(x.uid)}">${pi.s ? pi.s + (pi.k === "live" ? "" : " · " + pi.t.replace(/^utoljára bent: |^nem aktív · /, "")) : "⚪ Még nem volt bent"}</span><span class="ax-dchip">✉️ ${esc(x.email || "—")}</span>${se.phone ? `<span class="ax-dchip">📞 ${esc(se.phone)}</span>` : ""}<span class="ax-dchip">💾 ${x.ms ? "mentve " + rel(x.ms) : "még nem mentett"}</span>${(()=>{ const pv = (window.__fpPres || {}).admin, v = pv && pv.view; return v && v.uid === x.uid && Date.now() - (v.t || 0) < 75000 ? `<span class="ax-dchip ax-dme">👑 ${esc(v.n || "Admin")} most bent van${v.act ? " · " + esc(v.act) : ""}</span>` : ""; })()}</span></div></div>
+            <div class="ax-dchips"><span class="ax-dpres ${pi.k || "off"}" data-u="${esc(x.uid)}">${pi.s ? pi.s + (pi.k === "live" ? "" : " · " + pi.t.replace(/^utoljára bent: |^nem aktív · /, "")) : "⚪ Még nem volt bent"}</span>${lookOf(x).known ? `<span class="ax-look ${lookOf(x).isNew ? "n" : "o"}" title="${lookOf(x).own ? "a bolt maga választotta" : "alapbeállítás"}">${lookOf(x).t}${lookOf(x).own ? "" : " · alap"}</span>` : ""}<span class="ax-dchip">✉️ ${esc(x.email || "—")}</span>${se.phone ? `<span class="ax-dchip">📞 ${esc(se.phone)}</span>` : ""}<span class="ax-dchip">💾 ${x.ms ? "mentve " + rel(x.ms) : "még nem mentett"}</span>${(()=>{ const pv = (window.__fpPres || {}).admin, v = pv && pv.view; return v && v.uid === x.uid && Date.now() - (v.t || 0) < 75000 ? `<span class="ax-dchip ax-dme">👑 ${esc(v.n || "Admin")} most bent van${v.act ? " · " + esc(v.act) : ""}</span>` : ""; })()}</span></div></div>
           <div class="ax-dtabs" role="tablist"><button type="button" class="on" data-dtab="ov">📊 Áttekintés</button><button type="button" data-dtab="set">⚙️ Beállítások</button><button type="button" data-dtab="ops">⚡ Műveletek</button><span class="ax-sp"></span><small class="ax-dtabh">${openT.length ? `🐞 ${openT.length} nyitott jegy · ` : ""}${wait.length ? `📦 ${wait.length} csomag vár` : "minden rendben"}</small></div>
           <div class="ax-drwc" data-dtp="ov">
             <div class="ax-dtiles">${tile("📦", "#c98a3a", "Csomag vár", wait.length, wait.length ? "átvételre" : "nincs")}${tile("🗑️", "#e2585a", "Selejt ma", sxN + " db", sxT.length ? sxT.length + " tétel" : "")}${tile("🐞", "#f0953a", "Nyitott jegy", openT.length, T.length ? "összesen " + T.length : "")}${tile("👥", "#7b8cff", "Dolgozó", emps.length, "")}</div>
@@ -69406,6 +69423,15 @@ html.fp-lite #tdPage .tdn-it:hover, html.fp-lite #tdPage .tdn-chips button:hover
 })();
 </script>
 <style id="perfCss">
+/* ===== Belépő oldal: könnyű változat minden gépen (Martin: „nem bírja sok gép”) =====
+   a nagy, elmosott, mozgó fényfoltok helyett álló színátmenet; üvegelmosás helyett tömör, áttetsző kártyák */
+html body #fcLogin#fcLogin.lk .lk-bg{ background:radial-gradient(55vw 55vw at 10% -5%, rgba(201,138,26,.38), transparent 62%), radial-gradient(48vw 48vw at 100% 105%, rgba(138,75,18,.4), transparent 62%), radial-gradient(30vw 30vw at 55% 45%, rgba(251,172,1,.12), transparent 65%) !important; }
+html body #fcLogin#fcLogin.lk .lk-bg i{ display:none !important; }
+html body #fcLogin#fcLogin.lk .lk-card, html body #fcLogin#fcLogin.lk .lk-tile, html body #fcLogin#fcLogin.lk *{ -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+html body #fcLogin#fcLogin.lk .lk-card{ background:rgba(24,20,15,.94) !important; }
+html body #fcLogin#fcLogin.lk .lk-tile{ background:linear-gradient(160deg, rgba(40,32,22,.96), rgba(22,19,15,.96) 60%) !important; }
+html.fp-lite body #fcLogin#fcLogin.lk .lk-tile{ display:none !important; }
+html.fp-lite body #fcLogin#fcLogin.lk .lk-tile, html.fp-lite body #fcLogin#fcLogin.lk .lk-tile *, html.fp-lite body #fcLogin#fcLogin.lk .lk-mq, html.fp-lite body #fcLogin#fcLogin.lk .fc-go::after, html.fp-lite body #fcLogin#fcLogin.lk .lk-live::before{ animation:none !important; }
 /* admin által kikapcsolt program: minden kinézetben, minden nézetben rejtve */
 html body #pageSwitch#pageSwitch .ps-btn.ps-off, html body #pageSwitch#pageSwitch .ps-btn.ps-off[data-page]{ display:none !important; }
 /* ===== Simább futás (minden gépen): olcsóbb üveg-elmosás; könnyített módban (gyenge gép) elmosás és folyamatos díszítő animációk nélkül ===== */

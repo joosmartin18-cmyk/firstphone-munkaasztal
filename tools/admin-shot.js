@@ -6,7 +6,7 @@ const FAKE = `(function(){
   var boltok={}, kv={};
   names.forEach(function(n,i){ var uid="u"+i; boltok[uid]={email:"minta"+i+"@bolt.hu",loc:n,place:"Pláza",addr:"Minta utca "+(i+1),ms:now-i*day*2};
     var d=new Date(), sch={}, T=["a","b","split","multi"]; for(var k=1;k<=31;k++){ if((k+i)%9===0) continue; var t=T[(k+i)%4]; sch[d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(k).padStart(2,"0")]= t==="split"?{type:"split",am:"a",pm:"c"}: t==="multi"?{type:"multi",full:["b"],am:["c"]}:{type:t}; }
-    var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:true,location:n,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
+    var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:true,location:n,uiLook:i===1?"old":i===2?"new":undefined,layout:i===1?"old":undefined,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
     kv[uid]={firstphone_beosztas_tervezo_v2:{v:JSON.stringify(st),parts:0,by:"dev123456",n:now-i*day*2,t:now},
       firstphone_csomag:{v:JSON.stringify({items:[{id:1},{id:2,outAt:1},{id:3}]}),parts:0,by:"dev",n:now},
       firstphone_kassza:{v:JSON.stringify({n:{"1000":12,"5000":3},back:"20000",report:i%2?"47000":"46000"}),parts:0,by:"dev",n:now}};
@@ -38,7 +38,7 @@ const FAKE = `(function(){
   var db={collection:function(n){return mk(n)},collectionGroup:function(n){return mk(n,n)},doc:function(p){return mk(p)},settings:function(){},enablePersistence:function(){return Promise.resolve()},
     batch:function(){return {set:function(){},update:function(){},delete:function(){},commit:function(){return Promise.resolve()}}},runTransaction:function(){return Promise.resolve()}};
   var user={uid:"adminuid",email:"admin@admin.com",displayName:"",getIdTokenResult:function(){return Promise.resolve({claims:{}})},getIdToken:function(){return Promise.resolve("x")}};
-  var auth={currentUser:user,onAuthStateChanged:function(cb){setTimeout(function(){cb(user)},20);return function(){}},signOut:function(){return Promise.resolve()},setPersistence:function(){return Promise.resolve()}};
+  var auth={currentUser:window.__nouser?null:user,onAuthStateChanged:function(cb){setTimeout(function(){cb(window.__nouser?null:user)},20);return function(){}},signOut:function(){return Promise.resolve()},setPersistence:function(){return Promise.resolve()}};
   var fs=function(){return db}; fs.FieldValue={serverTimestamp:function(){return Date.now()},delete:function(){return null},increment:function(n){return n},arrayUnion:function(){return []},arrayRemove:function(){return []}};
   fs.Timestamp={now:function(){return {toMillis:function(){return Date.now()}}}}; fs.FieldPath={documentId:function(){return "__id"}};
   var au=function(){return auth}; au.Auth={Persistence:{LOCAL:"local",SESSION:"session",NONE:"none"}};
@@ -50,6 +50,7 @@ const FAKE = `(function(){
   const ctx = await b.newContext({ viewport: { width: W, height: H }, isMobile: W < 500, hasTouch: W < 500 });
   await ctx.route(/fonts\.(googleapis|gstatic)/, r => r.abort());
   await ctx.route(/firebasejs|npm\/firebase/, r => r.fulfill({ contentType: 'application/javascript', body: /app-compat/.test(r.request().url()) ? FAKE : '' }));
+  if (process.env.NOUSER) await ctx.addInitScript(() => { window.__nouser = 1; });   // NOUSER=1: belépő oldal
   await ctx.route(/\/api\//, r => r.fulfill({ contentType: 'application/json', body: '{}' }));
   await ctx.addInitScript(([lk, pin]) => {
     if (sessionStorage.x) return; sessionStorage.x = 1;
@@ -61,10 +62,10 @@ const FAKE = `(function(){
     if (pin) localStorage.setItem('fp_ax_nav2', pin === 'rail' ? 'rail' : 'pin');
   }, [LK, process.env.PIN || '']);
   if (process.env.NOW && ctx.clock) await ctx.clock.install({ time: new Date(process.env.NOW) });
-  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  const p = await ctx.newPage(); const errs = []; if (process.env.CPU) { const cd = await ctx.newCDPSession(p); await cd.send('Emulation.setCPUThrottlingRate', { rate: +process.env.CPU }); }   // CPU=6: lassú gép p.on('pageerror', e => errs.push(e.message));
   await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(4000);
   const r = await p.evaluate(async ([nav, th, ev]) => {
-    const A = document.getElementById('fcAdmin'); if (!A) return 'NINCS ADMIN';
+    const A = document.getElementById('fcAdmin'); if (!A) return ev ? 'EV:' + (await eval(ev)) : 'NINCS ADMIN';
     if (th === 'light') { A.classList.remove('th-dark'); A.classList.add('th-light'); }
     const x = A.querySelector('[data-nav="' + nav + '"]'); if (x) { x.click(); x.blur(); } await new Promise(r => setTimeout(r, 1200));
     const o = { cls: A.className, ui: document.documentElement.className.slice(0, 80), kilog: document.documentElement.scrollWidth > innerWidth };
