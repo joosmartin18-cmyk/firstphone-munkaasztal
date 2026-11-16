@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261117-000552";</script>
+<script>window.FP_BUILD="20261117-003256";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -55879,7 +55879,7 @@ function fillExamples(root){
       document.getElementById(prefix + "Body").scrollTop = 0;
       requestAnimationFrame(fit); tocSync();
     }
-    function open(start){ build(); fillExamples(modal); idx = 0; modal.classList.add("show"); show(start && start.nodeType ? Math.max(0, slides.indexOf(start)) : (start||0)); }
+    function open(start){ build(); fillExamples(modal); idx = 0; const at = start && start.nodeType ? Math.max(0, slides.indexOf(start)) : (start||0); try{ const P = window.parent && window.parent !== window && window.parent.fpDiaFromHelp; if(P){ P(window, modal, slides, at || null); return; } }catch(e){} modal.classList.add("show"); show(at); }
     function close(){ animHide(modal); setTimeout(()=> slidesAll.forEach(sl=>sl.classList.remove("active")), 200); }
     document.getElementById(prefix + "X").onclick = close;
     prevB.onclick = ()=> show(idx-1);
@@ -59000,6 +59000,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     function open(at){ build(); const bd = modal.querySelector(".help-body"); if(bd){ if(baseHtml === null) baseHtml = Array.from(bd.querySelectorAll(".hc-stage")).map(x=> x.innerHTML); else bd.querySelectorAll(".hc-stage").forEach((x, i)=>{ if(baseHtml[i] != null) x.innerHTML = baseHtml[i]; }); }
       fillExamples(modal); try{ fpRandApply(bd, fpRandSet()); }catch(e){} idx = 0;
       if(at != null){ const k = slides.findIndex(sl=> sl.dataset.i === String(at)); if(k > 0) idx = k; }
+      if(window.fpDiaFromHelp){ try{ fpDiaFromHelp(window, modal, slides, at != null ? idx : null); return; }catch(e){ try{ console.error(e); }catch(_){} } }
       modal.classList.add("show"); show(idx); }
     function close(){ animHide(modal); setTimeout(()=> slidesAll.forEach(sl=>sl.classList.remove("active")), 200); }
     document.getElementById(prefix + "X").onclick = close;
@@ -69492,6 +69493,24 @@ html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.today{ border:2px
 })();
 </script>
 <style id="newsAnimCss">
+/* diás súgók: kis diasor, a csíkok sorban telnek, a diák becsúsznak */
+.na-slides .nsl-w{ position:absolute; left:50%; top:50%; width:210px; height:118px; margin:-59px 0 0 -105px; border-radius:14px; background:#17130f; border:1px solid rgba(255,255,255,.1); box-shadow:0 14px 30px rgba(0,0,0,.45); overflow:hidden; }
+.na-slides .nsl-b{ display:flex; gap:4px; padding:10px 12px 0; }
+.na-slides .nsl-b i{ flex:1; height:4px; border-radius:3px; background:rgba(255,255,255,.14); position:relative; overflow:hidden; }
+.na-slides .nsl-b i::after{ content:""; position:absolute; inset:0; background:#f0c766; transform-origin:left; transform:scaleX(0); animation:nslB1 6s linear infinite; }
+.na-slides .nsl-b i:nth-child(2)::after{ animation-name:nslB2; } .na-slides .nsl-b i:nth-child(3)::after{ animation-name:nslB3; }
+.na-slides .nsl-p{ position:absolute; left:14px; right:14px; top:24px; display:flex; flex-direction:column; gap:7px; opacity:0; animation:nslP1 6s ease infinite; }
+.na-slides .nsl-p b{ font-size:30px; line-height:1; }
+.na-slides .nsl-p s{ display:block; height:6px; border-radius:4px; background:rgba(255,255,255,.16); width:86%; } .na-slides .nsl-p s + s{ width:58%; }
+.na-slides .p2{ animation-name:nslP2; } .na-slides .p3{ animation-name:nslP3; }
+.na-slides .nsl-pp{ position:absolute; right:10px; bottom:10px; width:22px; height:22px; border-radius:50%; background:#f0c766; color:#1c1505; font-size:8px; font-weight:900; display:grid; place-items:center; animation:nslPp 2s ease-in-out infinite; }
+@keyframes nslB1{ 0%{ transform:scaleX(0); } 32%,97%{ transform:scaleX(1); } 100%{ transform:scaleX(0); } }
+@keyframes nslB2{ 0%,33%{ transform:scaleX(0); } 65%,97%{ transform:scaleX(1); } 100%{ transform:scaleX(0); } }
+@keyframes nslB3{ 0%,66%{ transform:scaleX(0); } 96%,97%{ transform:scaleX(1); } 100%{ transform:scaleX(0); } }
+@keyframes nslP1{ 0%{ opacity:0; transform:translateX(40px); } 5%,28%{ opacity:1; transform:none; } 33%,100%{ opacity:0; transform:translateX(-40px); } }
+@keyframes nslP2{ 0%,33%{ opacity:0; transform:translateX(40px); } 38%,61%{ opacity:1; transform:none; } 66%,100%{ opacity:0; transform:translateX(-40px); } }
+@keyframes nslP3{ 0%,66%{ opacity:0; transform:translateX(40px); } 71%,94%{ opacity:1; transform:none; } 99%,100%{ opacity:0; transform:translateX(-40px); } }
+@keyframes nslPp{ 50%{ transform:scale(1.15); box-shadow:0 0 0 6px rgba(240,199,102,.18); } }
 /* ===== Újdonságok: minden bejegyzéshez saját, témához illő animáció ===== */
 .ui-news-anim.na-box{ display:block; }
 .na{ position:absolute; inset:0; overflow:hidden; }
@@ -70308,6 +70327,412 @@ html body .tts .tts-foot .nav.pri, html body .tts .tts-end .acts button.pri{back
   document.addEventListener("click", function(e){ var p = e.target.closest && e.target.closest(".tt-play"); if(!p) return; e.preventDefault(); e.stopPropagation(); open(p.dataset.b, p.dataset.id, p); }, true);
 })();
 </script>
+<style id="hsDiaCss">
+/* ===================== PRÓBA 35: minden súgó és Újdonság diasorként (mint a ▶ Diás segédlet) — mindkét kinézet ===================== */
+.hsd-sl .tts-steps{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);}
+.hsd-dev{padding:12px 12px 14px;min-height:0 !important;}
+.hsd-dev .bar{margin-bottom:10px;}
+.hsd-scr{position:relative;}
+.hsd-scr .help-slide{display:block !important;animation:none !important;margin:0 !important;padding:0 !important;border:0 !important;background:none !important;box-shadow:none !important;}
+.hsd-scr .hc-wrap{color:var(--text);margin:0 !important;}
+.hsd-scr .ui-news-anim{position:relative !important;display:block !important;height:170px !important;margin:0 !important;border-radius:14px !important;overflow:hidden !important;background:#0E0E0E radial-gradient(circle,#2A2A2A 1px,transparent 1.5px) 0 0/14px 14px !important;border:1px solid rgba(255,255,255,.1) !important;}
+html body .tts .hsd-ol li{opacity:.6;}
+html body .tts .hsd-ol li.cur{opacity:1;}
+html body .tts .hsd-ol li.dn{opacity:.88;}
+.hsd-ol li .tx{min-width:0;}
+.hsd-ol li .tx > b:first-child{color:#f5efe4;}
+.hsd-ol li .tx small{display:block;margin-top:3px;font-size:13.5px;line-height:19px;color:rgba(245,239,228,.7);}
+.hsd-ol li .tx small b{color:var(--a);}
+.hsd-ol li.ti .n{font-size:15px;background:rgba(255,255,255,.07);}
+.hsd-ol li.ti.cur .n{background:color-mix(in srgb,var(--a) 28%,transparent);color:inherit;}
+.hsd-ol li.ti.dn .n{font-size:15px;background:rgba(58,166,106,.22);color:inherit;}
+.hsd-ol li.ti.dn .n::before{content:none;}
+.hsd-ol li{cursor:pointer;}
+.hsd-cov .chips span{color:#f5efe4;}
+.hsd-toc{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 8px;margin:22px auto 0;max-width:760px;}
+html body .tts .hsd-toc button{font:600 12.5px/1.25 inherit !important;font-family:inherit !important;color:rgba(245,239,228,.8) !important;padding:6px 12px !important;height:auto !important;min-height:0 !important;border-radius:999px !important;border:1px solid rgba(255,255,255,.12) !important;background:rgba(255,255,255,.04) !important;cursor:pointer;box-shadow:none !important;transition:border-color .2s,background .2s;}
+html body .tts .hsd-toc button:hover{border-color:var(--a) !important;background:rgba(240,199,102,.1) !important;color:#fff !important;}
+.hsd-toc button i{font-style:normal;margin-right:5px;}
+.tts .hsd-news-tag{display:inline-block;padding:3px 10px;border-radius:999px;background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-right:8px;vertical-align:middle;}
+@media (max-width:860px){ .hsd-sl .tts-steps{grid-template-columns:minmax(0,1fr);} }
+@media (max-width:640px){ .hsd-toc{display:none;} }
+@media (min-width:641px) and (max-width:860px) and (min-height:900px){ html body .hsd-back .tts.tts{height:min(980px,calc(100vh - 32px));height:min(980px,calc(100dvh - 32px));} }
+@media print{ .hsd-back{display:none !important;} }
+html body .hsd-back .tts-foot .cnt{display:block !important;visibility:visible !important;position:static !important;font-size:13px !important;font-weight:700 !important;color:rgba(245,239,228,.6) !important;width:auto !important;height:auto !important;background:none !important;}
+
+/* --- új jelenetek azokhoz a súgó-diákhoz, amelyeknek eddig nem volt animációja (8 mp-es körök) --- */
+.hg{color:var(--text);}
+.hg .g-cd{position:absolute;border-radius:12px;background:var(--bg-panel);border:1px solid var(--border-soft);box-shadow:0 6px 16px rgba(0,0,0,.18);}
+.hg .g-ln{display:block;height:6px;border-radius:4px;background:var(--border);margin:6px 0;}
+.hg .hg-cur{opacity:0;}
+.hg .g-t{font-size:11px;font-weight:800;}
+.hg .g-sm{font-size:9.5px;font-weight:700;color:var(--text-dim);}
+.hg .g-gold{background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#171106;}
+/* szabadnap-kérés */
+.hg-req .g-cl{position:absolute;top:22px;width:76px;height:84px;border-radius:10px;background:var(--bg-panel);border:1px solid var(--border-soft);padding:6px 7px;font-size:11px;font-weight:700;color:var(--text-dim);}
+.hg-req .g-cl .hc-badge{bottom:8px;}
+.hg-req .g-rq,.hg-req .g-wr{position:absolute;right:4px;top:3px;font-size:15px;opacity:0;transform:scale(.3);}
+.hg-req .g-wr{right:auto;left:30px;top:30px;font-size:20px;color:#ff6b5a;font-weight:900;}
+.hg-req .g-pop{left:138px;top:58px;width:200px;padding:8px;opacity:0;z-index:5;background:var(--bg-panel2);border-color:var(--border);}
+.hg-req .g-pop .g-o{height:22px;border-radius:7px;font-size:9.5px;font-weight:600;display:flex;align-items:center;padding:0 8px;margin-top:4px;border:1px solid var(--border-soft);background:var(--bg-cell);}
+.hg-req .g-ph{position:absolute;left:400px;top:120px;font-size:34px;opacity:0;}
+.hg-req .g-ph i{position:absolute;right:30px;top:-6px;font-style:normal;font-size:10px;font-weight:800;white-space:nowrap;padding:4px 8px;border-radius:999px;background:var(--bg-panel2);border:1px solid var(--border);opacity:0;}
+.help-slide.active .hg-req .hg-cur{animation:hgReqC 9s infinite;}
+.help-slide.active .hg-req .g-pop{animation:hgReqP 9s infinite;}
+.help-slide.active .hg-req .g-o1{animation:hgReqO 9s infinite;}
+.help-slide.active .hg-req .g-q1{animation:hgPop1 9s infinite;}
+.help-slide.active .hg-req .g-q2{animation:hgPop2 9s infinite;}
+.help-slide.active .hg-req .g-wr{animation:hgPop3 9s infinite;}
+.help-slide.active .hg-req .g-ph{animation:hgReqPh 9s infinite;}
+.help-slide.active .hg-req .g-ph i{animation:hgReqB 9s infinite;}
+@keyframes hgReqC{0%{opacity:0;transform:translate(420px,190px)}6%{opacity:1}14%,17%{transform:translate(236px,64px)}15.5%{transform:translate(236px,64px) scale(.8)}27%,31%{opacity:1;transform:translate(220px,96px)}29%{transform:translate(220px,96px) scale(.8)}40%,100%{opacity:0;transform:translate(260px,180px)}}
+@keyframes hgReqP{0%,16%{opacity:0;transform:translateY(8px) scale(.95)}20%,44%{opacity:1;transform:none}48%,100%{opacity:0;transform:translateY(6px) scale(.96)}}
+@keyframes hgReqO{0%,28%{background:var(--bg-cell);border-color:var(--border-soft)}30%,48%{background:rgba(240,199,102,.22);border-color:var(--gold)}52%,100%{background:var(--bg-cell)}}
+@keyframes hgPop1{0%,48%{opacity:0;transform:scale(.3)}53%{opacity:1;transform:scale(1.35)}57%,92%{opacity:1;transform:none}97%,100%{opacity:0;transform:none}}
+@keyframes hgPop2{0%,72%{opacity:0;transform:scale(.3)}76%{opacity:1;transform:scale(1.35)}79%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgPop3{0%,80%{opacity:0;transform:scale(.3)}83%{opacity:1;transform:scale(1.4)}86%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgReqPh{0%,56%{opacity:0;transform:translateX(40px)}61%,90%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgReqB{0%,63%{opacity:0;transform:none}66%{opacity:1;transform:none}74%{opacity:1;transform:translate(-50px,-40px) scale(.9)}77%,100%{opacity:0;transform:translate(-60px,-48px) scale(.6)}}
+/* pénzköteg cetli */
+.hg-cash .g-slip{position:absolute;left:70px;top:10px;width:150px;height:190px;border-radius:4px;background:#ffe27a;color:#1a1405;padding:10px 12px;transform:rotate(-2deg);box-shadow:0 10px 24px rgba(0,0,0,.35);font-family:Arial,sans-serif;}
+.hg-cash .g-slip .g-lg{font-size:9px;font-weight:900;text-align:center;letter-spacing:.04em;}
+.hg-cash .g-slip .g-bn{margin:5px 0 8px;background:#111;color:#fff;font-size:10px;font-weight:900;text-align:center;letter-spacing:.12em;padding:3px 0;border-radius:2px;}
+.hg-cash .g-slip p{margin:0 0 6px;font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.hg-cash .g-slip p i{width:12px;height:12px;border:1.5px solid #1a1405;border-radius:2px;position:relative;flex:0 0 auto;}
+.hg-cash .g-slip p i::after{content:"✓";position:absolute;left:0;top:-5px;font-size:15px;font-weight:900;font-style:normal;color:#1d8a4c;opacity:0;}
+.hg-cash .g-bl{position:absolute;left:290px;width:120px;height:26px;border-radius:5px;background:linear-gradient(135deg,#7fc58f,#3f9a5c);border:1px solid rgba(0,0,0,.25);box-shadow:0 3px 8px rgba(0,0,0,.25);opacity:0;}
+.hg-cash .g-bl::after{content:"";position:absolute;left:46px;top:5px;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.55);}
+.hg-cash .g-sum{position:absolute;left:276px;top:20px;width:150px;text-align:center;font-size:14px;font-weight:900;opacity:0;}
+.help-slide.active .hg-cash .g-r1 i::after{animation:hgTk1 8s infinite;} .help-slide.active .hg-cash .g-r2 i::after{animation:hgTk2 8s infinite;} .help-slide.active .hg-cash .g-r3 i::after{animation:hgTk3 8s infinite;} .help-slide.active .hg-cash .g-r4 i::after{animation:hgTk4 8s infinite;} .help-slide.active .hg-cash .g-r5 i::after{animation:hgTk5 8s infinite;}
+.help-slide.active .hg-cash .g-b1{animation:hgBl1 8s infinite;} .help-slide.active .hg-cash .g-b2{animation:hgBl2 8s infinite;} .help-slide.active .hg-cash .g-b3{animation:hgBl3 8s infinite;} .help-slide.active .hg-cash .g-b4{animation:hgBl4 8s infinite;} .help-slide.active .hg-cash .g-b5{animation:hgBl5 8s infinite;}
+.help-slide.active .hg-cash .g-sum{animation:hgSum 8s infinite;}
+@keyframes hgTk1{0%,10%{opacity:0;transform:scale(.2)}13%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgTk2{0%,22%{opacity:0;transform:scale(.2)}25%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgTk3{0%,34%{opacity:0;transform:scale(.2)}37%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgTk4{0%,46%{opacity:0;transform:scale(.2)}49%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgTk5{0%,58%{opacity:0;transform:scale(.2)}61%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgBl1{0%,8%{opacity:0;top:20px}12%,92%{opacity:1;top:168px}96%,100%{opacity:0;top:168px}}
+@keyframes hgBl2{0%,20%{opacity:0;top:20px}24%,92%{opacity:1;top:146px}96%,100%{opacity:0;top:146px}}
+@keyframes hgBl3{0%,32%{opacity:0;top:20px}36%,92%{opacity:1;top:124px}96%,100%{opacity:0;top:124px}}
+@keyframes hgBl4{0%,44%{opacity:0;top:20px}48%,92%{opacity:1;top:102px}96%,100%{opacity:0;top:102px}}
+@keyframes hgBl5{0%,56%{opacity:0;top:20px}60%,92%{opacity:1;top:80px}96%,100%{opacity:0;top:80px}}
+@keyframes hgSum{0%,64%{opacity:0;transform:translateY(8px)}70%,92%{opacity:1;transform:none}96%,100%{opacity:0}}
+/* üzletek elérhetősége */
+.hg-shops .g-cd{top:38px;width:132px;height:118px;padding:12px;}
+.hg-shops .g-cd .g-ic{font-size:22px;}
+.hg-shops .g-cd .g-tel{position:absolute;left:12px;right:12px;bottom:12px;height:24px;border-radius:8px;background:var(--bg-cell);border:1px solid var(--border-soft);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;}
+.hg-shops .g-ring{position:absolute;left:212px;top:4px;font-size:11px;font-weight:800;padding:5px 10px;border-radius:999px;opacity:0;white-space:nowrap;}
+.help-slide.active .hg-shops .hg-cur{animation:hgShC 8s infinite;}
+.help-slide.active .hg-shops .g-c2{animation:hgShCard 8s infinite;}
+.help-slide.active .hg-shops .g-c2 .g-tel{animation:hgShTel 8s infinite;}
+.help-slide.active .hg-shops .g-ring{animation:hgShRing 8s infinite;}
+@keyframes hgShC{0%{opacity:0;transform:translate(430px,200px)}8%{opacity:1}24%,30%{transform:translate(246px,140px)}27%{transform:translate(246px,140px) scale(.8)}60%{opacity:1}70%,100%{opacity:0;transform:translate(330px,200px)}}
+@keyframes hgShCard{0%,26%{border-color:var(--border-soft);transform:none}30%,86%{border-color:var(--gold);transform:translateY(-4px)}92%,100%{border-color:var(--border-soft);transform:none}}
+@keyframes hgShTel{0%,26%{background:var(--bg-cell)}30%,86%{background:rgba(240,199,102,.25)}92%,100%{background:var(--bg-cell)}}
+@keyframes hgShRing{0%,30%{opacity:0;transform:translateY(6px)}34%{opacity:1;transform:none rotate(0)}38%{transform:rotate(-5deg)}42%{transform:rotate(5deg)}46%{transform:rotate(-4deg)}50%,86%{opacity:1;transform:none}92%,100%{opacity:0}}
+/* diás segédlet */
+.hg-dia .g-win{left:90px;top:14px;width:300px;height:182px;padding:10px 12px;overflow:hidden;background:#17130f;border-color:rgba(255,255,255,.1);color:#f5efe4;}
+.hg-dia .g-bars{display:flex;gap:4px;margin:2px 0 12px;}
+.hg-dia .g-bars i{flex:1;height:4px;border-radius:3px;background:rgba(255,255,255,.14);position:relative;overflow:hidden;}
+.hg-dia .g-bars i::after{content:"";position:absolute;inset:0;background:#f0c766;transform-origin:left;transform:scaleX(0);}
+.hg-dia .g-pn{position:absolute;left:12px;right:12px;top:34px;bottom:10px;opacity:0;}
+.hg-dia .g-pn .g-e{font-size:34px;line-height:1;margin-bottom:8px;}
+.hg-dia .g-pn b{display:block;font-size:13px;margin-bottom:6px;}
+.hg-dia .g-pn .g-ln{background:rgba(255,255,255,.14);}
+.hg-dia .g-pp{position:absolute;right:12px;bottom:10px;width:26px;height:26px;border-radius:50%;background:#f0c766;color:#1c1505;font-size:10px;display:grid;place-items:center;font-weight:900;}
+.help-slide.active .hg-dia .g-bars i:nth-child(1)::after{animation:hgDb1 8s linear infinite;} .help-slide.active .hg-dia .g-bars i:nth-child(2)::after{animation:hgDb2 8s linear infinite;} .help-slide.active .hg-dia .g-bars i:nth-child(3)::after{animation:hgDb3 8s linear infinite;} .help-slide.active .hg-dia .g-bars i:nth-child(4)::after{animation:hgDb4 8s linear infinite;}
+.help-slide.active .hg-dia .g-p1{animation:hgDp1 8s infinite;} .help-slide.active .hg-dia .g-p2{animation:hgDp2 8s infinite;} .help-slide.active .hg-dia .g-p3{animation:hgDp3 8s infinite;} .help-slide.active .hg-dia .g-p4{animation:hgDp4 8s infinite;}
+@keyframes hgDb1{0%{transform:scaleX(0)}24%,98%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes hgDb2{0%,24%{transform:scaleX(0)}48%,98%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes hgDb3{0%,48%{transform:scaleX(0)}72%,98%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes hgDb4{0%,72%{transform:scaleX(0)}96%,98%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes hgDp1{0%{opacity:0;transform:translateX(30px)}4%,21%{opacity:1;transform:none}25%,100%{opacity:0;transform:translateX(-30px)}}
+@keyframes hgDp2{0%,24%{opacity:0;transform:translateX(30px)}28%,45%{opacity:1;transform:none}49%,100%{opacity:0;transform:translateX(-30px)}}
+@keyframes hgDp3{0%,48%{opacity:0;transform:translateX(30px)}52%,69%{opacity:1;transform:none}73%,100%{opacity:0;transform:translateX(-30px)}}
+@keyframes hgDp4{0%,72%{opacity:0;transform:translateX(30px)}76%,94%{opacity:1;transform:none}98%,100%{opacity:0;transform:translateX(-30px)}}
+/* eladássegéd: keresés */
+.hg-srch .g-bx{left:60px;top:16px;width:360px;height:40px;border-radius:999px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:13px;font-weight:700;}
+.hg-srch .g-ty{display:inline-block;overflow:hidden;white-space:nowrap;width:0;border-right:2px solid var(--gold);}
+.hg-srch .g-rs{left:60px;width:360px;height:52px;padding:9px 14px;display:flex;gap:10px;align-items:center;opacity:0;}
+.hg-srch .g-rs .g-e{font-size:22px;}
+.hg-srch .g-rs .g-x{flex:1;}
+.hg-srch .g-ch{position:absolute;top:184px;font-size:10px;font-weight:800;padding:4px 10px;border-radius:999px;opacity:0;}
+.help-slide.active .hg-srch .g-ty{animation:hgTy 8s steps(4) infinite;}
+.help-slide.active .hg-srch .g-s1{animation:hgRs1 8s infinite;} .help-slide.active .hg-srch .g-s2{animation:hgRs2 8s infinite;}
+.help-slide.active .hg-srch .g-h1{animation:hgCh1 8s infinite;} .help-slide.active .hg-srch .g-h2{animation:hgCh2 8s infinite;} .help-slide.active .hg-srch .g-h3{animation:hgCh3 8s infinite;}
+@keyframes hgTy{0%,6%{width:0}26%,92%{width:4.2ch}100%{width:0}}
+@keyframes hgRs1{0%,30%{opacity:0;transform:translateY(14px)}36%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgRs2{0%,38%{opacity:0;transform:translateY(14px)}44%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgCh1{0%,52%{opacity:0;transform:scale(.5)}56%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgCh2{0%,58%{opacity:0;transform:scale(.5)}62%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgCh3{0%,64%{opacity:0;transform:scale(.5)}68%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+/* AI segítség */
+.hg-ai .g-bb{position:absolute;padding:9px 13px;border-radius:14px;font-size:11px;font-weight:700;opacity:0;max-width:250px;}
+.hg-ai .g-q{right:40px;top:14px;border-bottom-right-radius:4px;}
+.hg-ai .g-av{position:absolute;left:34px;top:78px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:17px;background:var(--bg-panel2);border:1px solid var(--border);}
+.hg-ai .g-dots{left:78px;top:80px;}
+.hg-ai .g-dots i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--text-dim);margin:0 2px;}
+.hg-ai .g-a{left:78px;top:78px;width:300px;background:var(--bg-panel);border:1px solid var(--border-soft);border-bottom-left-radius:4px;}
+.hg-ai .g-a .g-ln{width:0;background:var(--gold);opacity:.75;}
+.help-slide.active .hg-ai .g-q{animation:hgAiQ 8s infinite;}
+.help-slide.active .hg-ai .g-dots{animation:hgAiD 8s infinite;}
+.help-slide.active .hg-ai .g-dots i{animation:hgAiDot .9s ease-in-out infinite;}
+.help-slide.active .hg-ai .g-dots i:nth-child(2){animation-delay:.15s;} .help-slide.active .hg-ai .g-dots i:nth-child(3){animation-delay:.3s;}
+.help-slide.active .hg-ai .g-a{animation:hgAiA 8s infinite;}
+.help-slide.active .hg-ai .g-a .g-l1{animation:hgAiL1 8s infinite;} .help-slide.active .hg-ai .g-a .g-l2{animation:hgAiL2 8s infinite;} .help-slide.active .hg-ai .g-a .g-l3{animation:hgAiL3 8s infinite;}
+@keyframes hgAiQ{0%,4%{opacity:0;transform:translateY(10px)}9%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgAiD{0%,14%{opacity:0}17%,36%{opacity:1}39%,100%{opacity:0}}
+@keyframes hgAiDot{50%{transform:translateY(-4px);opacity:.5}}
+@keyframes hgAiA{0%,38%{opacity:0;transform:translateY(10px)}43%,92%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgAiL1{0%,44%{width:0}54%,100%{width:92%}}
+@keyframes hgAiL2{0%,52%{width:0}62%,100%{width:78%}}
+@keyframes hgAiL3{0%,60%{width:0}70%,100%{width:55%}}
+/* tréningek, tesztek */
+.hg-quiz .g-cd{left:70px;top:12px;width:340px;height:186px;padding:12px 16px;}
+.hg-quiz .g-pg{height:5px;border-radius:4px;background:var(--border);margin:8px 0 10px;overflow:hidden;}
+.hg-quiz .g-pg i{display:block;height:100%;width:20%;background:var(--gold);}
+.hg-quiz .g-op{height:26px;border-radius:8px;margin-top:6px;border:1px solid var(--border-soft);background:var(--bg-cell);font-size:10.5px;font-weight:700;display:flex;align-items:center;padding:0 10px;gap:6px;}
+.hg-quiz .g-op u{text-decoration:none;margin-left:auto;font-weight:900;color:#3aa66a;opacity:0;}
+.hg-quiz .g-pt{position:absolute;left:356px;top:110px;font-size:13px;font-weight:900;color:#3aa66a;opacity:0;}
+.help-slide.active .hg-quiz .hg-cur{animation:hgQzC 8s infinite;}
+.help-slide.active .hg-quiz .g-ok{animation:hgQzOk 8s infinite;}
+.help-slide.active .hg-quiz .g-ok u{animation:hgQzU 8s infinite;}
+.help-slide.active .hg-quiz .g-pt{animation:hgQzPt 8s infinite;}
+.help-slide.active .hg-quiz .g-pg i{animation:hgQzPg 8s infinite;}
+@keyframes hgQzC{0%{opacity:0;transform:translate(440px,200px)}8%{opacity:1}26%,32%{transform:translate(220px,118px)}29%{transform:translate(220px,118px) scale(.8)}62%{opacity:1}72%,100%{opacity:0;transform:translate(300px,200px)}}
+@keyframes hgQzOk{0%,29%{background:var(--bg-cell);border-color:var(--border-soft)}32%,90%{background:rgba(58,166,106,.2);border-color:#3aa66a}96%,100%{background:var(--bg-cell)}}
+@keyframes hgQzU{0%,30%{opacity:0;transform:scale(.3)}34%,90%{opacity:1;transform:none}96%,100%{opacity:0}}
+@keyframes hgQzPt{0%,36%{opacity:0;transform:translateY(0)}42%{opacity:1}64%,100%{opacity:0;transform:translateY(-40px)}}
+@keyframes hgQzPg{0%,38%{width:20%}50%,92%{width:30%}100%{width:20%}}
+/* olvasó mód */
+.hg-read .g-dim{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;}
+.hg-read .g-pg{left:110px;top:16px;width:260px;height:178px;padding:16px 18px;transform-origin:50% 40%;}
+.hg-read .g-pg b{display:block;font-size:12px;margin-bottom:8px;}
+.hg-read .g-aa{position:absolute;left:390px;top:16px;width:40px;height:30px;border-radius:9px;font-size:12px;font-weight:900;display:grid;place-items:center;background:var(--bg-panel2);border:1px solid var(--border);}
+.help-slide.active .hg-read .hg-cur{animation:hgRdC 8s infinite;}
+.help-slide.active .hg-read .g-aa{animation:hgRdA 8s infinite;}
+.help-slide.active .hg-read .g-pg{animation:hgRdP 8s infinite;}
+.help-slide.active .hg-read .g-dim{animation:hgRdD 8s infinite;}
+@keyframes hgRdC{0%{opacity:0;transform:translate(450px,190px)}8%{opacity:1}22%,28%{transform:translate(406px,28px)}25%{transform:translate(406px,28px) scale(.8)}36%,100%{opacity:0;transform:translate(450px,120px)}}
+@keyframes hgRdA{0%,24%{background:var(--bg-panel2)}27%,86%{background:var(--gold);color:#171106}92%,100%{background:var(--bg-panel2)}}
+@keyframes hgRdP{0%,26%{transform:none;z-index:1}34%,86%{transform:scale(1.14);z-index:3}92%,100%{transform:none}}
+@keyframes hgRdD{0%,26%{opacity:0}34%,86%{opacity:1}92%,100%{opacity:0}}
+/* új elrendezés */
+.hg-lay .g-tl{position:absolute;border-radius:10px;background:var(--bg-panel);border:1px solid var(--border-soft);}
+.hg-lay .g-hd{left:40px;top:14px;width:400px;height:44px;}
+.hg-lay .g-hd b{position:absolute;left:14px;top:10px;font-size:15px;font-weight:900;}
+.hg-lay .g-hd i{position:absolute;right:14px;top:13px;font-style:normal;font-size:9.5px;font-weight:800;padding:4px 9px;border-radius:999px;}
+.hg-lay .g-k1,.hg-lay .g-k2,.hg-lay .g-k3{top:70px;width:124px;height:116px;padding:10px;}
+.hg-lay .g-k1 .g-e,.hg-lay .g-k2 .g-e,.hg-lay .g-k3 .g-e{font-size:20px;}
+.help-slide.active .hg-lay .g-hd{animation:hgLyH 8s infinite;}
+.help-slide.active .hg-lay .g-k1{animation:hgLy1 8s infinite;} .help-slide.active .hg-lay .g-k2{animation:hgLy2 8s infinite;} .help-slide.active .hg-lay .g-k3{animation:hgLy3 8s infinite;}
+@keyframes hgLyH{0%,6%{opacity:0;transform:translateY(-14px) scaleX(.6)}16%,90%{opacity:1;transform:none}97%,100%{opacity:0}}
+@keyframes hgLy1{0%,14%{opacity:0;transform:translate(0,40px) scale(.7);left:40px}24%,90%{opacity:1;transform:none;left:40px}97%,100%{opacity:0;left:40px}}
+@keyframes hgLy2{0%,22%{opacity:0;transform:translate(0,40px) scale(.7);left:178px}32%,90%{opacity:1;transform:none;left:178px}97%,100%{opacity:0;left:178px}}
+@keyframes hgLy3{0%,30%{opacity:0;transform:translate(0,40px) scale(.7);left:316px}40%,90%{opacity:1;transform:none;left:316px}97%,100%{opacity:0;left:316px}}
+/* általános „jó tudni”: villanykörte + a tippek kártyái sorban */
+.hg-tips .g-bulb{position:absolute;left:34px;top:62px;font-size:58px;line-height:1;filter:drop-shadow(0 0 0 rgba(240,199,102,0));}
+.hg-tips .g-tc{position:absolute;left:138px;width:310px;height:38px;border-radius:11px;background:var(--bg-panel);border:1px solid var(--border-soft);display:flex;align-items:center;gap:9px;padding:0 12px;font-size:11.5px;font-weight:700;opacity:0;white-space:nowrap;overflow:hidden;}
+.hg-tips .g-tc span{overflow:hidden;text-overflow:ellipsis;}
+.hg-tips .g-tc i{font-style:normal;font-size:16px;flex:0 0 auto;}
+.help-slide.active .hg-tips .g-bulb{animation:hgBulb 2.4s ease-in-out infinite;}
+.help-slide.active .hg-tips .g-tc{animation:hgTc 8s infinite;animation-delay:var(--td,0s);}
+@keyframes hgBulb{50%{transform:translateY(-6px) rotate(-6deg);filter:drop-shadow(0 0 18px rgba(240,199,102,.75))}}
+@keyframes hgTc{0%{opacity:0;transform:translateX(26px)}6%,86%{opacity:1;transform:none}12%,24%{border-color:var(--gold);background:rgba(240,199,102,.14)}30%{border-color:var(--border-soft);background:var(--bg-panel)}94%,100%{opacity:0;transform:none}}
+</style>
+<script id="hsDiaJs">
+/* ===================== PRÓBA 35: súgók és Újdonságok a ▶ Diás segédlet stílusában (teljes képernyős, magától lapozó, animált diák) ===================== */
+(function(){
+  "use strict";
+  var E = function(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+  var txt = function(h){ return String(h || "").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim(); };
+  var CUR = '<svg class="hc-cursor hg-cur" viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  var LN = function(w){ return '<i class="g-ln" style="width:' + w + '%"></i>'; };
+  /* új jelenetek a súgó-diákhoz, amelyeknek eddig nem volt animációja */
+  var GEN = {
+    req: function(){ return '<div class="hc-stage hg hg-req">' + [14, 15, 16, 17, 18].map(function(d, i){ return '<div class="g-cl" style="left:' + (30 + i * 86) + 'px">' + d + (i === 2 ? '<span class="g-rq g-q1">🙋</span>' : '') + (i === 3 ? '<span class="g-rq g-q2">🙋</span><span class="g-wr">⚠</span><div class="hc-badge m">DOLGOZÓ<small>9:00–20:00</small></div>' : '') + (i === 0 ? '<div class="hc-badge e">DOLGOZÓ<small>9:00–20:00</small></div>' : '') + '</div>'; }).join("")
+      + '<div class="g-cd g-pop"><div class="g-t">🙋 Kérések erre a napra</div><div class="g-o g-o1">❌ Egész nap nem tud jönni</div><div class="g-o">🏖️ Szabadságot kér</div><div class="g-o">🌅 Csak délelőtt tud</div></div>'
+      + '<div class="g-ph">📱<i>🙋 Kérés elküldve</i></div><div class="hc-cap" style="top:182px">Kattints a napra → 🙋 Kérések · vagy telefonról, a saját naptárból</div>' + CUR + '</div>'; },
+    cash: function(){ return '<div class="hc-stage hg hg-cash"><div class="g-slip"><div class="g-lg">FIRSTPHONE</div><div class="g-bn">PÉNZKÖTEG</div>' + [1, 2, 3, 4, 5].map(function(n){ return '<p class="g-r' + n + '"><i></i>' + n + '. · ' + n + '00.000 Ft</p>'; }).join("") + '</div>'
+      + [1, 2, 3, 4, 5].map(function(n){ return '<div class="g-bl g-b' + n + '"></div>'; }).join("") + '<div class="g-sum">✓ 500.000 Ft</div></div>'; },
+    shops: function(){ return '<div class="hc-stage hg hg-shops">' + [0, 1, 2].map(function(i){ return '<div class="g-cd g-c' + (i + 1) + '" style="left:' + (28 + i * 148) + 'px"><div class="g-ic">🏬</div><div class="g-t">Üzlet ' + (i + 1) + '</div>' + LN(80) + LN(56) + '<div class="g-tel">📞 Hívás</div></div>'; }).join("")
+      + '<div class="g-ring g-gold">📞 Kicseng…</div>' + CUR + '</div>'; },
+    dia: function(){ var P = [["📋", "Mire való?"], ["1️⃣", "Első lépés"], ["2️⃣", "Második lépés"], ["✅", "Kész!"]];
+      return '<div class="hc-stage hg hg-dia"><div class="g-cd g-win"><div class="g-bars"><i></i><i></i><i></i><i></i></div>' + P.map(function(p, i){ return '<div class="g-pn g-p' + (i + 1) + '"><div class="g-e">' + p[0] + '</div><b>' + p[1] + '</b>' + LN(88) + LN(64) + '</div>'; }).join("") + '<div class="g-pp">❚❚</div></div></div>'; },
+    srch: function(){ return '<div class="hc-stage hg hg-srch"><div class="g-cd g-bx">🔍 <span class="g-ty">tok</span></div>'
+      + '<div class="g-cd g-rs g-s1" style="top:68px"><span class="g-e">📱</span><span class="g-x"><b class="g-t">Telefontok</b>' + LN(70) + '</span><span class="g-sm">💡 tipp</span></div>'
+      + '<div class="g-cd g-rs g-s2" style="top:126px"><span class="g-e">🛡️</span><span class="g-x"><b class="g-t">Tok + kijelzővédő</b>' + LN(55) + '</span><span class="g-sm">💡 tipp</span></div>'
+      + '<span class="g-ch g-h1 g-gold" style="left:60px">+ fólia</span><span class="g-ch g-h2 g-gold" style="left:128px">+ töltő</span><span class="g-ch g-h3 g-gold" style="left:196px">+ kábel</span></div>'; },
+    ai: function(){ return '<div class="hc-stage hg hg-ai"><div class="g-bb g-q g-gold">Mit ajánljak egy tok mellé?</div><div class="g-av">🤖</div><div class="g-bb g-dots"><i></i><i></i><i></i></div>'
+      + '<div class="g-bb g-a"><i class="g-ln g-l1"></i><i class="g-ln g-l2"></i><i class="g-ln g-l3"></i></div></div>'; },
+    quiz: function(){ return '<div class="hc-stage hg hg-quiz"><div class="g-cd"><div class="g-sm">❓ KÉRDÉS 3 / 10</div><div class="g-pg"><i></i></div>' + LN(90) + LN(60)
+      + '<div class="g-op">A) válasz</div><div class="g-op g-ok">B) válasz <u>✓</u></div><div class="g-op">C) válasz</div></div><div class="g-pt">+1 pont</div>' + CUR + '</div>'; },
+    read: function(){ return '<div class="hc-stage hg hg-read"><div class="g-dim"></div><div class="g-cd g-pg"><b>📖 Fejezet címe</b>' + LN(96) + LN(88) + LN(92) + LN(70) + LN(94) + LN(60) + LN(84) + '</div><div class="g-aa">Aa</div>' + CUR + '</div>'; },
+    lay: function(){ return '<div class="hc-stage hg hg-lay"><div class="g-tl g-hd"><b>Jó reggelt!</b><i class="g-gold">● Megnyitva</i></div>'
+      + [["📋", "g-k1"], ["✅", "g-k2"], ["📦", "g-k3"]].map(function(k){ return '<div class="g-tl ' + k[1] + '"><div class="g-e">' + k[0] + '</div>' + LN(80) + LN(55) + LN(68) + '</div>'; }).join("") + '</div>'; },
+    tips: function(items){ return '<div class="hc-stage hg hg-tips"><div class="g-bulb">💡</div>' + items.slice(0, 4).map(function(t, i, a){ var top = 105 - a.length * 23 + i * 46;
+      return '<div class="g-tc" style="top:' + top + 'px;--td:' + (i * 0.9).toFixed(1) + 's"><i>' + E(t.n) + '</i><span>' + E(t.b) + '</span></div>'; }).join("") + '</div>'; }
+  };
+  function genKey(h, items){
+    var t = (h || "").toLowerCase();
+    if(/szabadnap|kérés/.test(t)) return "req";
+    if(/köteg/.test(t)) return "cash";
+    if(/üzletek|elérhet/.test(t)) return "shops";
+    if(/diás/.test(t)) return "dia";
+    if(/eladássegéd|keresés/.test(t)) return "srch";
+    if(/\bai\b|mesterséges/.test(t)) return "ai";
+    if(/tréning|teszt/.test(t)) return "quiz";
+    if(/olvasó/.test(t)) return "read";
+    if(/elrendezés/.test(t)) return "lay";
+    return items && items.length ? "tips" : "dia";
+  }
+
+  /* lejátszó — minden ablakhoz (fő oldal, Cetli keret) külön példány */
+  function make(win){
+    var doc = win.document;
+    function css(){ ["ttsCss", "hsDiaCss"].forEach(function(id){ if(doc.getElementById(id)) return; var src = document.getElementById(id); if(!src) return; var st = doc.createElement("style"); st.id = id; st.textContent = src.textContent; (doc.head || doc.documentElement).appendChild(st); }); }
+    var back = null, st = null;
+    var stepMs = function(x){ return Math.max(2600, Math.min(9000, 1500 + txt(x.html).length * 42)); };
+    function sched(ms, fn){ clearTimeout(st.tm); st.fn = fn; st.left = ms; if(st.pause) return; st.t0 = Date.now(); st.tm = setTimeout(function(){ st.fn = null; fn(); }, ms); }
+    function next(){ if(st && st.i < st.S.length - 1) go(st.i + 1); }
+    function fit(el){
+      var scr = el && el.querySelector(".hsd-scr"); if(!scr) return;
+      var wrap = scr.querySelector(".hc-wrap"), stg = wrap && wrap.querySelector(".hc-stage"); if(!stg) return;
+      var W = scr.clientWidth || 480, ph = win.innerWidth <= 640, one = win.innerWidth <= 860, lim = ph ? 170 : one ? 210 : Math.max(150, Math.min(290, win.innerHeight - 360));
+      var sc = Math.min(W / 480, lim / 210);
+      wrap.style.height = Math.round(210 * sc) + "px";
+      stg.style.transform = "translateX(" + Math.max(0, (W - 480 * sc) / 2) + "px) scale(" + sc + ")";
+    }
+    function step(k){
+      var el = st.cur, s = st.S[st.i], lis = el.querySelectorAll(".hsd-ol li");
+      st.k = k;
+      lis.forEach(function(x, q){ x.classList.toggle("cur", q === k); x.classList.toggle("dn", q < k); });
+      var li = lis[k]; if(li && el.scrollHeight > el.clientHeight + 4){ var r = li.getBoundingClientRect(), b = el.getBoundingClientRect(); if(r.bottom > b.bottom - 8 || r.top < b.top + 8) el.scrollTo({ top:el.scrollTop + r.top - b.top - b.height / 2 + r.height / 2, behavior:"smooth" }); }
+      if(k < s.items.length - 1) sched(stepMs(s.items[k]), function(){ step(k + 1); });
+      else sched(stepMs(s.items[k]), function(){ lis.forEach(function(x){ x.classList.remove("cur"); x.classList.add("dn"); }); sched(1100, next); });
+    }
+    function go(i){
+      if(!st || i < 0 || i >= st.S.length) return;
+      clearTimeout(st.tm); st.fn = null;
+      var els = back.querySelectorAll(".tts-sl");
+      els.forEach(function(x, q){ x.classList.remove("on", "out"); if(q < i) x.classList.add("out"); var hs = x.querySelector(".hsd-hs"); if(hs && q !== i) hs.classList.remove("active"); });
+      st.i = i; st.cur = els[i];
+      els[i].scrollTop = 0; void els[i].offsetWidth; els[i].classList.add("on");
+      var hs = els[i].querySelector(".hsd-hs"); if(hs){ hs.classList.remove("active"); void hs.offsetWidth; hs.classList.add("active"); }
+      fit(els[i]);
+      els[i].querySelectorAll(".hsd-ol li").forEach(function(x){ x.classList.remove("cur", "dn"); });
+      back.querySelectorAll(".tts-bars i").forEach(function(b, q){ b.classList.remove("cur", "done"); if(q < i) b.classList.add("done"); if(q === i){ b.style.setProperty("--d", st.D[i] + "s"); void b.offsetWidth; b.classList.add("cur"); } });
+      back.querySelector(".cnt").textContent = (i + 1) + " / " + st.S.length;
+      back.querySelector("[data-a=pv]").disabled = i === 0;
+      back.querySelector("[data-a=nv]").textContent = i === st.S.length - 1 ? "Bezárás" : "Tovább →";
+      var s = st.S[i];
+      if(s.k === "sl" && s.items.length){
+        els[i].querySelectorAll(".hsd-ol li").forEach(function(li, q){ li.onclick = function(){ if(st && st.cur === els[i]) step(q); }; });
+        sched(800, function(){ step(0); });
+      }
+      else if(s.k !== "end") sched(st.D[i] * 1000, next);
+    }
+    function close(){
+      if(!back) return; clearTimeout(st && st.tm);
+      doc.removeEventListener("keydown", onKey, true);
+      var b = back, o = st; back = null; st = null; b.classList.remove("on"); setTimeout(function(){ b.remove(); }, 260);
+      if(o && o.onClose) try{ o.onClose(); }catch(e){}
+      if(o && o.ret && o.ret.focus) try{ o.ret.focus({ preventScroll:true }); }catch(e){}
+    }
+    function toggle(){
+      st.pause = !st.pause; back.querySelector(".tts").classList.toggle("paused", st.pause);
+      var pp = back.querySelector("[data-a=pp]"); pp.textContent = st.pause ? "▶" : "❚❚"; pp.title = st.pause ? "Lejátszás (szóköz)" : "Szünet (szóköz)";
+      if(st.pause){ clearTimeout(st.tm); if(st.t0) st.left = Math.max(300, st.left - (Date.now() - st.t0)); }
+      else if(st.fn) sched(st.left, st.fn);
+    }
+    function onKey(e){
+      if(!back) return;
+      if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); close(); }
+      else if(e.key === "ArrowRight"){ e.preventDefault(); e.stopPropagation(); if(st.i === st.S.length - 1) close(); else go(st.i + 1); }
+      else if(e.key === "ArrowLeft"){ e.preventDefault(); e.stopPropagation(); go(st.i - 1); }
+      else if(e.key === " " || e.key === "Spacebar"){ var tg = e.target && e.target.tagName; if(tg === "INPUT" || tg === "TEXTAREA") return; e.preventDefault(); e.stopPropagation(); if(!e.repeat) toggle(); }
+    }
+    function slideHtml(s, k, N, spec){
+      if(s.k === "cov") return '<div class="tts-sl tts-cov hsd-cov"><div class="big">' + E(spec.ic) + '</div><h2 class="an" style="--dl:.25s">' + E(spec.title) + '</h2><p class="an" style="--dl:.4s">' + E(spec.sub || "") + '</p><div class="chips an" style="--dl:.55s"><span><b>' + spec.n + '</b> ' + (spec.unit || "rész") + '</span>' + (spec.steps ? '<span><b>' + spec.steps + '</b> ' + (spec.stepUnit || "lépés") + '</span>' : '') + '<span>⏱ kb. <b>' + Math.max(1, Math.round(spec.sec / 60)) + '</b> perc</span></div>'
+        + (spec.n > 1 ? '<div class="hsd-toc an" style="--dl:.7s">' + spec.toc.map(function(t, q){ return '<button type="button" data-g="' + (q + 1) + '"><i>' + E(t.ic) + '</i>' + E(t.h) + '</button>'; }).join("") + '</div>' : '') + '</div>';
+      if(s.k === "end") return '<div class="tts-sl tts-end"><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="48"/><path d="M33 57 l15 15 l30 -32"/></svg><h2 class="an" style="--dl:.5s">' + E(spec.endT || "Kész!") + '</h2><p class="an" style="--dl:.6s">' + E(spec.endX || ("Végignézted: " + spec.title)) + '</p><div class="acts an" style="--dl:.7s"><button type="button" data-a="re">↺ Újra</button><button type="button" class="pri" data-a="x">✓ Bezárás</button></div></div>';
+      var it = s.items.map(function(x, q){ return '<li class="an' + (x.ti ? ' ti' : '') + '" style="--dl:' + (.25 + q * .07).toFixed(2) + 's"><span class="n">' + E(x.n) + '</span><span class="tx">' + x.html + '</span></li>'; }).join("");
+      return '<div class="tts-sl st hsd-sl">'
+        + '<div class="tts-kick an">' + (s.tag ? '<span class="hsd-news-tag">' + E(s.tag) + '</span>' : '') + E(s.ic || "") + ' ' + (s.no ? 'Rész ' + s.no + ' / ' + N : '') + '</div>'
+        + '<h3 class="tts-h an" style="--dl:.05s">' + E(s.h) + '</h3>' + (s.p ? '<p class="tts-intro an" style="--dl:.1s">' + E(s.p) + '</p>' : '')
+        + '<div class="tts-steps"><div class="tts-dev an hsd-dev" style="--dl:.15s"><div class="bar"><i></i><i></i><i></i><span>' + E(s.dev || spec.title) + '</span></div><div class="hsd-scr"><div class="help-slide hsd-hs"></div></div></div>'
+        + (it ? '<ol class="tts-ol hsd-ol">' + it + '</ol>' : '') + '</div></div>';
+    }
+    /* spec: { ic, title, label, sub, slides:[{ ic, h, p, node | html, items:[{ n, html, ti }] }], start, cover, onClose, ret } */
+    function open(spec){
+      css();
+      var body = spec.slides.map(function(s, q){ return Object.assign({ k:"sl", no:spec.numbered === false ? 0 : q + 1 }, s); });
+      var S = (spec.cover === false ? [] : [{ k:"cov" }]).concat(body).concat([{ k:"end" }]);
+      var D = S.map(function(s){ if(s.k === "cov") return 5; if(s.k === "end") return 600; return s.items.length ? (800 + s.items.reduce(function(a, x){ return a + stepMs(x); }, 0) + 1100) / 1000 : 7; });
+      spec.n = body.length; spec.toc = body.map(function(s){ return { ic:s.tocIc || s.ic || "•", h:s.h }; }); spec.sec = D.slice(0, -1).reduce(function(a, b){ return a + b; }, 0);
+      spec.steps = spec.steps != null ? spec.steps : body.reduce(function(a, s){ return a + s.items.filter(function(x){ return !x.ti; }).length; }, 0);
+      if(back){ var old = back; back = null; clearTimeout(st && st.tm); old.remove(); doc.removeEventListener("keydown", onKey, true); }
+      back = doc.createElement("div"); back.className = "tts-back hsd-back";
+      back.innerHTML = '<div class="tts" tabindex="-1" role="dialog" aria-modal="true" aria-label="' + E(spec.label + ": " + spec.title) + '"><div class="tts-top"><div class="ic">' + E(spec.ic) + '</div><div class="tl"><small>▶ ' + E(spec.label) + '</small><b>' + E(spec.title) + '</b></div><button type="button" class="tts-btn" data-a="pp" title="Szünet (szóköz)">❚❚</button><button type="button" class="tts-btn" data-a="x" title="Bezárás (Esc)">✕</button></div>'
+        + '<div class="tts-bars">' + S.map(function(_, q){ return '<i data-q="' + q + '"></i>'; }).join("") + '</div><div class="tts-stage">' + S.map(function(s, q){ return slideHtml(s, q, body.length, spec); }).join("") + '</div>'
+        + '<div class="tts-foot"><button type="button" class="nav" data-a="pv">← Vissza</button><span class="cnt"></span><span class="tts-hint">← → lapozás · szóköz: szünet · Esc: bezárás</span><button type="button" class="nav pri" data-a="nv">Tovább →</button></div></div>';
+      /* az animációk (meglévő súgó-jelenet vagy új) a helyükre */
+      var sls = back.querySelectorAll(".tts-sl");
+      S.forEach(function(s, q){ if(s.k !== "sl") return; var hs = sls[q].querySelector(".hsd-hs"); if(!hs) return;
+        if(s.node){ hs.appendChild(s.node); }
+        else if(s.news){ hs.innerHTML = '<div class="ui-news-anim na-box" aria-hidden="true">' + s.news + '</div>'; }
+        else { var g = s.gen || genKey(s.h, s.items); hs.innerHTML = '<div class="hc-wrap">' + GEN[g](s.items.map(function(x){ return { n:x.n, b:txt(x.b || x.html).slice(0, 60) }; })) + '</div>'; }
+      });
+      doc.body.appendChild(back);
+      st = { S:S, D:D, i:0, pause:false, tm:null, fn:null, onClose:spec.onClose, ret:spec.ret || doc.activeElement };
+      back.addEventListener("click", function(e){
+        var a = e.target.closest("[data-a]"), q = e.target.closest(".tts-bars i"), g = e.target.closest("[data-g]");
+        if(e.target === back){ close(); return; }
+        if(q){ go(+q.dataset.q); return; }
+        if(g){ go(+g.dataset.g); return; }
+        if(!a) return; var k = a.dataset.a;
+        if(k === "x") close(); else if(k === "pp") toggle(); else if(k === "pv") go(st.i - 1);
+        else if(k === "nv"){ if(st.i === st.S.length - 1) close(); else go(st.i + 1); }
+        else if(k === "re") go(0);
+      });
+      var sx = null, sy = 0;
+      back.addEventListener("touchstart", function(e){ var t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, { passive:true });
+      back.addEventListener("touchend", function(e){ if(sx == null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null; if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) go(st.i + (dx < 0 ? 1 : -1)); }, { passive:true });
+      doc.addEventListener("keydown", onKey, true);
+      back.addEventListener("keyup", function(e){ if(e.key === " " || e.key === "Spacebar"){ e.preventDefault(); e.stopPropagation(); } }, true);
+      var at = spec.start != null ? Math.max(0, Math.min(S.length - 2, spec.start + (spec.cover === false ? 0 : 1))) : 0;
+      go(at);
+      win.requestAnimationFrame(function(){ back.classList.add("on"); try{ back.querySelector(".tts").focus({ preventScroll:true }); }catch(e){} });
+    }
+    win.addEventListener("resize", function(){ if(back && st) fit(st.cur); });
+    doc.addEventListener("visibilitychange", function(){ if(doc.hidden && back && st && !st.pause) toggle(); });
+    return { open:open, close:close, isOpen:function(){ return !!back; } };
+  }
+
+  /* súgó-ablak (help-modal) diáiból diasor: a meglévő animáció marad, ahol nincs, újat kap */
+  function fromHelp(win, modal, slides, at, onClose){
+    var P = win.__fpDia || (win.__fpDia = make(win));
+    var ttl = ((modal.querySelector(".help-top h2") || {}).textContent || "Súgó").trim();
+    var m = /^(\S+)\s+(.+)$/.exec(ttl), ic = "❓", title = ttl;
+    if(m && !/[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű0-9]/.test(m[1])){ ic = m[1]; title = m[2]; }
+    title = title.replace(/\s+—\s+így működik$/i, "").replace(/^Hogyan használd\?$/, "Beosztás");
+    var S = slides.map(function(sl){
+      var hd = sl.querySelector(".hs-head"), w = sl.querySelector(".hc-wrap"), items = [];
+      sl.querySelectorAll(".hs-steps > li").forEach(function(li, q){ items.push({ n:String(q + 1), html:li.innerHTML.replace(/^<div>|<\/div>$/g, "") }); });
+      sl.querySelectorAll(".tips .tip").forEach(function(tp){ var ti = tp.querySelector(".ti"), b = tp.querySelector("b"), sp = tp.querySelector("span");
+        items.push({ ti:1, n:(ti ? ti.textContent : "💡").trim(), b:b ? b.innerHTML : "", html:(b ? '<b>' + b.innerHTML + '</b>' : '') + (sp ? '<small>' + sp.innerHTML + '</small>' : '') }); });
+      var node = null; if(w){ node = w.cloneNode(true); node.removeAttribute("style"); var sg = node.querySelector(".hc-stage"); if(sg) sg.style.transform = ""; }
+      return { ic:((hd && hd.querySelector(".hs-icon")) || {}).textContent || "•", h:((hd && hd.querySelector("h3")) || {}).textContent || "", p:((hd && hd.querySelector("p")) || {}).textContent || "", node:node, items:items, dev:title };
+    });
+    P.open({ ic:ic, title:title, label:"Súgó · " + title, sub:"Súgó · " + S.length + " rész — magától lapoz, bármikor megállíthatod", slides:S, start:at || null, onClose:onClose });
+    return P;
+  }
+  window.fpDiaMake = make;
+  window.fpDiaFromHelp = fromHelp;
+  window.fpDia = function(spec){ var P = window.__fpDia || (window.__fpDia = make(window)); P.open(spec); return P; };
+})();
+</script>
+
 
 <script>/* dokumentumok betűje (Manrope) — betöltés a rajzolás előtt */
 window.fpDocFonts = function(){ try{ if(!document.fonts) return Promise.resolve(); return Promise.all(["400","500","600","700","800"].map(function(w){ return document.fonts.load(w + " 40px Manrope"); })).catch(function(){}); }catch(e){ return Promise.resolve(); } };
@@ -70386,7 +70811,9 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
 /* PRÓBA: újdonság — egyszerű felugró ablak (a régi diás bemutató helyett) */
 (function(){
   var BON = (function(){ try{ var s = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"); return /^bonyh[aá]d/i.test(String((s && s.settings && s.settings.location) || "").trim()); }catch(e){ return false; } })();
-  var NEWS = [{ id:"teendok-uj-2026-11-16", both:true, anim:"cal", tag:"Újdonság", t:"Megújult a Teendők oldal", x:"Új elrendezés és működő naptár a határidőhöz.",
+  var NEWS = [{ id:"sugo-diak-2026-11-16", both:true, anim:"slides", tag:"Újdonság", t:"Diás súgók mindenhol", x:"Minden ❓ súgó és az Újdonságok is animált diasorként jelennek meg — mint a Tudástár Diás segédlete.",
+    p:["▶ A ❓ gomb most teljes képernyős, magától lapozó diasort nyit, a lépéseket sorban kiemeli","🎬 Minden diához tartozik animáció — ahol eddig nem volt, ott is készült","⏯ Szóközzel megállíthatod, nyilakkal vagy húzással lapozol, a borítón bármelyik részre ugorhatsz"] },
+    { id:"teendok-uj-2026-11-16", both:true, anim:"cal", tag:"Újdonság", t:"Megújult a Teendők oldal", x:"Új elrendezés és működő naptár a határidőhöz.",
     p:["📅 A „Másik nap” gombra kis naptár nyílik — bármelyik napot egy kattintással kiválaszthatod","✏️ Szerkesztésnél is ugyanígy állíthatod a határidőt","🗂️ Új, átláthatóbb tábla: Lejárt · Ma · Később · Bármikor, külön kártyákon"] },
     { id:"zen-hangok-2026-11-16", both:true, anim:"sound", tag:"Újdonság", t:"Új, lágyabb hangok", x:"Megújultak a Munkaasztal hangjai.",
     p:["🎵 Puhább, nyugodtabb hangok szólnak beolvasáskor, mentéskor és hibánál","💬 A chat új üzenete és az elküldés hangja is lágyabb lett","🔈 Ugyanott szólnak, ahol eddig — csak kellemesebben"] },
@@ -70408,15 +70835,23 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
     rings:'<div class="na na-rings"><i></i><i></i><i></i><b>🎁</b></div>',
     cal:'<div class="na na-cal"><div class="nc-g">' + Array.from({ length:28 }, function(_, i){ return '<i' + (i === 17 ? ' class="pk"' : '') + '>' + (i + 1) + '</i>'; }).join('') + '</div><span class="nc-cur"></span></div>',
     sound:'<div class="na na-sound"><b>🎵</b><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><s></s><s></s><s></s></div>',
-    cards:'<div class="na na-cards"><i></i><i></i><i></i><i></i></div>'
+    cards:'<div class="na na-cards"><i></i><i></i><i></i><i></i></div>',
+    slides:'<div class="na na-slides"><div class="nsl-w"><div class="nsl-b"><i></i><i></i><i></i></div><div class="nsl-p p1"><b>❓</b><s></s><s></s></div><div class="nsl-p p2"><b>🎬</b><s></s><s></s></div><div class="nsl-p p3"><b>✅</b><s></s><s></s></div><span class="nsl-pp">❚❚</span></div></div>'
   };
   var NEWS_GEN = ["spark", "rings", "cards"];
   function newsAnim(n){ if(n.anim && NEWS_ANIM[n.anim]) return NEWS_ANIM[n.anim]; if(n.id === "uj-kinezet-2026-11-09") return null;
     var h = 0; for(var i = 0; i < n.id.length; i++) h = (h * 31 + n.id.charCodeAt(i)) >>> 0; return NEWS_ANIM[NEWS_GEN[h % NEWS_GEN.length]]; }
   var K = "fp_ui_news_seen";
   function seen(){ try{ return JSON.parse(localStorage.getItem(K) || "[]"); }catch(e){ return []; } }
-  function show(){ var S0 = seen(), n0 = NEWS.filter(function(x){ return S0.indexOf(x.id) < 0; })[0]; if(!n0) return true; if((!n0.both && !document.documentElement.classList.contains("ui-uj")) || document.getElementById("fcLogin") || (function(){ var a = document.getElementById("fcAdmin"); return !!(a && a.getClientRects().length && getComputedStyle(a).display !== "none" && getComputedStyle(a).visibility !== "hidden"); })() || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
-    var S = seen(), n = NEWS.filter(function(x){ return S.indexOf(x.id) < 0; })[0]; if(!n) return true;
+  function show(){ var S0 = seen(), n0 = NEWS.filter(function(x){ return S0.indexOf(x.id) < 0; })[0]; if(!n0) return true; if(document.querySelector(".tts-back")) return false; if((!n0.both && !document.documentElement.classList.contains("ui-uj")) || document.getElementById("fcLogin") || (function(){ var a = document.getElementById("fcAdmin"); return !!(a && a.getClientRects().length && getComputedStyle(a).display !== "none" && getComputedStyle(a).visibility !== "hidden"); })() || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
+    var S = seen(), uj = document.documentElement.classList.contains("ui-uj"), L = NEWS.filter(function(x){ return S.indexOf(x.id) < 0 && (x.both || uj); }); if(!L.length) return true;
+    if(window.fpDia){ try{
+      var Es = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+      window.fpDia({ ic:"✨", title:L.length > 1 ? L.length + " újdonság a Munkaasztalon" : L[0].t, label:"Újdonságok", sub:"Ami új a Munkaasztalon — magától lapoz, bármikor megállíthatod", unit:"újdonság", steps:0, cover:L.length > 1, numbered:false, endT:"Ennyi az újdonság!", endX:"Jó munkát! Minden részletet a ❓ súgókban is megtalálsz.",
+        slides:L.map(function(n){ return { tag:n.tag || "Újdonság", ic:"", tocIc:"🆕", h:n.t, p:n.x, dev:"Újdonság", news:newsAnim(n) || NEWS_ANIM.spark, items:n.p.map(function(t){ var mm = /^(\S+)\s+([\s\S]+)$/.exec(t), e = mm && !/[A-Za-z\u00C0-\u017F0-9]/.test(mm[1]); return { ti:1, n:e ? mm[1] : "✨", html:Es(e ? mm[2] : t) }; }) }; }),
+        onClose:function(){ var S2 = seen(); L.forEach(function(x){ if(S2.indexOf(x.id) < 0) S2.push(x.id); }); try{ localStorage.setItem(K, JSON.stringify(S2)); }catch(e){} } });
+      return true; }catch(e){ try{ console.error(e); }catch(_){} } }
+    var n = L[0];
     var b = document.createElement("div"); b.className = "ui-newsback";
     b.innerHTML = '<div class="ui-news" role="dialog" aria-modal="true" aria-labelledby="uiNewsT"><div class="ui-news-anim" aria-hidden="true"><div class="w o"><div class="rl"><i></i><i></i><i></i><i></i></div><div class="mn"><b></b><span></span><span></span><span></span><s></s></div></div><div class="w n"><div class="rl"><i class="y"></i><i></i><i></i><i></i></div><div class="mn"><b></b><span></span><span></span><span></span><s></s></div></div><i class="sw"></i><span class="lb a">Régi</span><span class="lb b">Új kinézet</span></div><span class="tag">✨ ' + n.tag + '</span><h3 id="uiNewsT"></h3><p></p><ul></ul><button type="button">Rendben</button></div>';
     b.querySelector("h3").textContent = n.t; b.querySelector("p").textContent = n.x;

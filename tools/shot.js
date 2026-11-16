@@ -10,7 +10,7 @@ const { chromium } = require('playwright');
   const W = +process.env.W || 1366, H = +process.env.H || 800, LOC = process.env.LOC || 'Kaposvár', LK = process.env.LK || 'new';
   const ctx = await b.newContext({ viewport: { width: W, height: H }, isMobile: W < 500, hasTouch: W < 500, reducedMotion: process.env.RM ? 'reduce' : 'no-preference' });
   await ctx.route(/fonts\.(googleapis|gstatic)|gstatic\.com\/firebasejs/, r => r.abort());   // felhő és külső betűk nélkül
-  await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo]) => {
+  await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo, news]) => {
     if (sessionStorage.x) return; sessionStorage.x = 1;
     const s = { configured: true, location: loc, employees: [{ id: 'a', name: 'Teszt Elek Hosszúnevű', hex: '#a78bfa' }].concat(emp2 ? [{ id: 'b', name: 'Minta Béla Ferenc', hex: '#2a5bd7' }] : []), hours: Array(7).fill({ open: '09:00', close: '20:00' }) };
     if (lk) s.uiLook = lk; if (lay) s.layout = lay;
@@ -21,8 +21,8 @@ const { chromium } = require('playwright');
     localStorage.setItem('firstphone_beosztas_tervezo_v2', JSON.stringify({ year: d.getFullYear(), month: d.getMonth() + 1, schedule: sch, settings: s, todos: tds }));
     localStorage.setItem('firstphone_welcome_seen', '1');
     localStorage.setItem('firstphone_cloud_off', '1');
-    localStorage.setItem('fp_ui_news_seen', JSON.stringify(['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16']));
-  }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '']);
+    { const NS = ['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16', 'sugo-diak-2026-11-16']; localStorage.setItem('fp_ui_news_seen', JSON.stringify(NS.slice(0, NS.length - (+news || 0)))); }
+  }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '', process.env.NEWS || '']);
   if (process.env.NOW && ctx.clock) await ctx.clock.install({ time: new Date(process.env.NOW) });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(3500);
