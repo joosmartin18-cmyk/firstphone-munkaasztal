@@ -21,7 +21,7 @@ const { chromium } = require('playwright');
     localStorage.setItem('fp_ui_news_seen', JSON.stringify(['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15']));
   }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '']);
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
-  await p.goto('http://127.0.0.1:8765/index.html'); await p.waitForTimeout(3500);
+  await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(3500);
   const r = await p.evaluate(async ([pg, ev]) => {
     document.querySelectorAll('.ui-thback,.set-hint,.ui-newsback,.ulk-back').forEach(x => x.remove());
     if (pg) { const x = document.querySelector('.ps-btn[data-page="' + pg + '"]'); if (x) x.click(); await new Promise(r => setTimeout(r, 1200)); }
