@@ -61696,6 +61696,27 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* ---------- oldal megjelenítése ---------- */
   function ltEsc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, c=> ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
   function ltChips(t){ return LT_TYPES[t].cats.map(c=> `<span class="lt-chip ${LT_CAT[c].cls}">${LT_CAT[c].icon} ${c}</span>`).join(""); }
+  /* Leltár fejléc a kezdőlap stílusában (csak az új kinézetben) */
+  function ltMaHead(first, today){
+    const pg = document.getElementById("ltPage"); if(!pg) return;
+    let h = pg.querySelector(":scope > .lt-mbh");
+    if(!document.documentElement.classList.contains("ui-uj")){ if(h) h.remove(); return; }
+    if(!h){ h = document.createElement("div"); h.className = "mb-head lt-mbh"; pg.prepend(h); }
+    const isToday = !!(first && ltYmd(first.date) === ltYmd(today)), dd = first ? ltDaysUntil(first.date) : null;
+    const T = (ltData && ltType) || (first && first.type) || "H", tn = LT_TYPES[T].name.replace(/\s*leltár$/i, "");
+    const wd = ltWd(today), dl = today.toLocaleDateString("hu-HU", { month:"long", day:"numeric" });
+    let h1, chip, pill = "";
+    if(ltData && ltViewOld){ h1 = `Korábbi <span>leltár</span>`; chip = `<span class="ma-chip"><i></i>Visszanézés · ${ltEsc(ltData.day ? ltDayLbl(ltData.day) : "korábbi nap")}</span>`; pill = `<button type="button" class="ma-pill dark" data-lt-go="pdf">Leltárív PDF</button>`; }
+    else if(ltData){ h1 = `${ltEsc(tn)} <span>leltár</span>`; chip = `<span class="ma-chip"><i></i>Export betöltve · <b>${ltData.items.length}</b> sor</span>`; pill = `<button type="button" class="ma-pill dark" data-lt-go="pdf">Leltárív PDF</button>`; }
+    else if(ltDoneToday){ h1 = `Mai leltár <span>kész</span>`; chip = `<span class="ma-chip"><i></i>Lezárva${first ? " · következő: " + (dd === 1 ? "holnap" : dd + " nap múlva") : ""}</span>`; }
+    else if(isToday || ltAdhoc){ h1 = isToday ? `Ma <span>leltár</span> van` : `Soron kívüli <span>leltár</span>`; chip = `<span class="ma-chip"><i class="r"></i>Még nincs betöltve export</span>`; pill = `<button type="button" class="ma-pill dark" data-lt-go="file">＋ Export betöltése</button>`; }
+    else { h1 = `Leltár <span>${dd === 1 ? "holnap" : dd + " nap múlva"}</span>`; chip = `<span class="ma-chip"><i class="r"></i>Ma nincs leltár</span>`; pill = document.getElementById("ltAdhocBtn") ? `<button type="button" class="ma-pill dark" data-lt-go="adhoc">＋ Soron kívüli</button>` : ""; }
+    h.innerHTML = `<div><p>${ltEsc(wd)}, ${ltEsc(dl)}</p><h1>${h1}</h1></div><div class="ma-chips">${chip}${pill}</div>`;
+    h.querySelectorAll("[data-lt-go]").forEach(b=> b.onclick = ()=>{ const k = b.dataset.ltGo, el = document.getElementById(k === "pdf" ? "ltPdfBtn" : k === "file" ? "ltFile" : "ltAdhocBtn"); if(el) el.click(); });
+    /* kártyacímek emoji nélkül, mint a kezdőlapon */
+    let rx = null; try{ rx = new RegExp("^\\s*(?:\\p{Extended_Pictographic}|\\p{Regional_Indicator})(?:\\uFE0F|\\u200D\\p{Extended_Pictographic}\\uFE0F?)*\\s*", "u"); }catch(e){}
+    if(rx) pg.querySelectorAll(".lt-h, .lt-side-h, .lt-att-h b, .lt-kicker").forEach(el=>{ const n = el.firstChild; if(n && n.nodeType === 3 && rx.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(rx, ""); });
+  }
   function ltRenderSchedule(){
     const today = ltToday(), upAll = ltUpcoming(8), up = ltDoneToday ? upAll.filter(e=> ltYmd(e.date) !== ltYmd(today)) : upAll, first = up[0];
     const hero = document.getElementById("ltHero");
@@ -61754,6 +61775,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           <span>${e.reason ? (e.dir > 0 ? "⏩ " : "⏪ ") + ltEsc(e.reason) + (e.dir > 0 ? " miatt elhalasztva" : " miatt előrehozva") : LT_TYPES[e.type].cats.join(" + ")}</span></div>
         <span class="k ${e.type}">${e.type === "H" ? "Hétfői" : "Pénteki"}</span></div>`;
     }).join("");
+    try{ ltMaHead(first, today); }catch(e){}
   }
   /* ---------- online leltár: állapot (böngészőben megmarad) ---------- */
   const LTP_KEY = "firstphone_leltar_prog", LTB_KEY = "firstphone_leltar_by";
@@ -68600,6 +68622,173 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const a = x.animate([{ opacity:0, transform:"translateX(-34px) scale(.96)" }, { opacity:1, transform:"none" }], { duration:420, delay:i * 55, easing:"cubic-bezier(.2,.9,.25,1)", fill:"backwards" }); a.onfinish = ()=>{ x.style.transformOrigin = ""; }; }
       }catch(_){ } }); }, 30); }, true);
 })();</script>
+<style id="ltMaSkin">
+/* ===== PRÓBA 30: Leltár — a kezdőlap (Ma) kinézetében: nagy fejléc, üvegkártyák rácsban ===== */
+html:not(.ui-uj) .lt-mbh{ display:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-mbh{ margin:2px 0 18px !important; }
+html.ui-uj body #ltPage#ltPage .lt-mbh h1 span{ background:linear-gradient(90deg,#FFD45C,#FBAC01 45%,#F07F12); -webkit-background-clip:text; background-clip:text; color:transparent; }
+html.ui-uj body #ltPage#ltPage .lt-mbh .ma-chip b{ font-weight:800; }
+/* --- kártyák: ugyanaz az üveg, mint a kezdőlapon --- */
+html.ui-uj body #ltPage#ltPage .lt-card, html.ui-uj body #ltPage#ltPage details.lt-cat{ background:var(--gl-bg) !important; background-image:none !important; border:1px solid var(--gl-bd) !important; border-radius:26px !important; -webkit-backdrop-filter:var(--gl-blur) !important; backdrop-filter:var(--gl-blur) !important; box-shadow:var(--gl-sh), inset 0 1px 0 var(--gl-hi) !important; padding:22px !important; color:inherit; transition:transform .4s cubic-bezier(.2,.9,.3,1.25), border-color .3s !important; }
+html.ui-uj body #ltPage#ltPage .lt-card::before, html.ui-uj body #ltPage#ltPage .lt-card::after, html.ui-uj body #ltPage#ltPage details.lt-cat::before, html.ui-uj body #ltPage#ltPage details.lt-cat::after{ display:none !important; }
+html.ui-uj body #ltPage#ltPage #ltStart .lt-card:hover, html.ui-uj body #ltPage#ltPage .lt-side .lt-card:hover, html.ui-uj body #ltPage#ltPage .lt-flow:hover, html.ui-uj body #ltPage#ltPage .lt-scan:hover{ transform:translateY(-3px); border-color:rgba(251,172,1,.35) !important; }
+/* kártyacímek: mint a kezdőlapon (15px, vastag, emoji nélkül) */
+html.ui-uj body #ltPage#ltPage .lt-h, html.ui-uj body #ltPage#ltPage .lt-side-h, html.ui-uj body #ltPage#ltPage .lt-att-h b{ margin:0 0 14px !important; font-size:15px !important; line-height:24px !important; font-weight:800 !important; letter-spacing:-.01em !important; text-transform:none !important; color:var(--text) !important; display:flex; align-items:center; gap:8px; }
+html.ui-uj body #ltPage#ltPage .lt-att-h b{ margin:0 !important; }
+html.ui-uj body #ltPage#ltPage .lt-note{ margin:14px 0 0 !important; font-size:12px !important; line-height:1.55 !important; color:var(--text-dim) !important; }
+/* --- kezdő nézet: rács (12 oszlop) --- */
+@media (min-width:1000px){
+  html.ui-uj body #ltPage#ltPage #ltStart:not([hidden]){ display:grid !important; grid-template-columns:repeat(12,minmax(0,1fr)) !important; gap:16px !important; align-items:stretch !important; }
+  html.ui-uj body #ltPage#ltPage #ltStart > .lt-start-grid{ display:contents !important; }
+  html.ui-uj body #ltPage#ltPage #ltHero{ grid-column:span 8 !important; order:1; }
+  html.ui-uj body #ltPage#ltPage #ltStart .lt-upcoming{ grid-column:span 4 !important; order:2; }
+  html.ui-uj body #ltPage#ltPage #ltImport{ grid-column:1 / -1 !important; order:3; }
+}
+/* --- „élő” kártya: a mai / következő leltár (forgó fényes szegély, mint a kezdőlap órája) --- */
+html.ui-uj body #ltPage#ltPage #ltHero, html.ui-uj body #ltPage#ltPage #ltNow{ position:relative; overflow:hidden !important; isolation:isolate; }
+html.ui-uj body #ltPage#ltPage #ltHero::before, html.ui-uj body #ltPage#ltPage #ltNow::before{ display:block !important; content:""; position:absolute; inset:-60%; z-index:-2; background:conic-gradient(from 0deg, transparent 0 70%, rgba(251,172,1,.75) 82%, rgba(255,120,40,.6) 90%, transparent 100%); animation:mbSpin 7s linear infinite; }
+html.ui-uj body #ltPage#ltPage #ltHero::after, html.ui-uj body #ltPage#ltPage #ltNow::after{ display:block !important; content:""; position:absolute; inset:1.5px; z-index:-1; border-radius:25px; background:linear-gradient(160deg, rgba(40,32,20,.96), rgba(14,12,10,.97)); }
+html.ui-uj body.light-theme #ltPage#ltPage #ltHero::after, html.ui-uj body[data-theme="light"] #ltPage#ltPage #ltHero::after, html.ui-uj body.light-theme #ltPage#ltPage #ltNow::after, html.ui-uj body[data-theme="light"] #ltPage#ltPage #ltNow::after{ background:linear-gradient(160deg, rgba(255,252,244,.97), rgba(255,246,228,.97)); }
+html.ui-uj body #ltPage#ltPage #ltHero{ display:flex !important; flex-direction:column !important; justify-content:space-between !important; gap:16px !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-hero-main{ display:grid !important; grid-template-columns:auto minmax(0,1fr) auto !important; align-items:center !important; gap:20px !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-badge, html.ui-uj body #ltPage#ltPage #ltNow .lt-badge{ width:64px !important; height:64px !important; border-radius:20px !important; background:linear-gradient(145deg,#FFD45C,#FBAC01 55%,#F07F12) !important; color:#000 !important; box-shadow:0 12px 26px -12px rgba(251,172,1,.9) !important; border:0 !important; display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-badge b, html.ui-uj body #ltPage#ltPage #ltNow .lt-badge b{ font-size:28px !important; line-height:30px !important; font-weight:800 !important; color:#000 !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-badge small, html.ui-uj body #ltPage#ltPage #ltNow .lt-badge small{ font-size:9px !important; font-weight:800 !important; letter-spacing:.08em !important; text-transform:uppercase; color:rgba(0,0,0,.65) !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-kicker, html.ui-uj body #ltPage#ltPage #ltNow .lt-now-t small{ display:flex !important; align-items:center; gap:8px; margin:0 0 6px !important; font-size:12px !important; font-weight:800 !important; letter-spacing:.14em !important; text-transform:uppercase !important; color:var(--text-dim) !important; background:none !important; padding:0 !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-kicker::before{ content:""; width:9px; height:9px; border-radius:50%; background:#FF6B6B; flex:none; }
+html.ui-uj body #ltPage#ltPage #ltHero.is-today .lt-kicker::before{ background:#34C38F; animation:glPulseG 1.8s ease-in-out infinite; }
+html.ui-uj body #ltPage#ltPage #ltHero h2{ margin:0 !important; font-size:30px !important; line-height:34px !important; font-weight:800 !important; letter-spacing:-.03em !important; background:none !important; -webkit-text-fill-color:currentColor !important; color:var(--text) !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-date{ margin:4px 0 10px !important; font-size:14px !important; font-weight:700 !important; color:#FBAC01 !important; }
+html.ui-uj body.light-theme #ltPage#ltPage #ltHero .lt-date, html.ui-uj body[data-theme="light"] #ltPage#ltPage #ltHero .lt-date{ color:#8A5A00 !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-count{ background:none !important; border:0 !important; box-shadow:none !important; padding:0 !important; min-width:0 !important; width:auto !important; height:auto !important; display:flex !important; flex-direction:column !important; align-items:flex-end !important; text-align:right; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-count b{ font-size:76px !important; line-height:72px !important; font-weight:800 !important; letter-spacing:-.05em !important; font-variant-numeric:tabular-nums; background:linear-gradient(90deg,#FFD45C,#FBAC01 45%,#F07F12) !important; -webkit-background-clip:text !important; background-clip:text !important; color:transparent !important; -webkit-text-fill-color:transparent !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-count span{ font-size:12px !important; font-weight:800 !important; letter-spacing:.1em !important; text-transform:uppercase !important; color:var(--text-dim) !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-hero-foot{ margin-top:auto !important; padding:12px 0 0 !important; border:0 !important; border-top:1px solid var(--gl-bd) !important; background:none !important; display:flex !important; flex-wrap:wrap !important; align-items:center !important; gap:8px !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-st{ flex:1 1 260px !important; background:none !important; border:0 !important; padding:0 !important; box-shadow:none !important; font-size:12.5px !important; color:var(--text-dim) !important; display:flex !important; align-items:center !important; gap:8px !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-st b{ color:var(--text) !important; }
+html.ui-uj body #ltPage#ltPage #ltHero .lt-st .dot{ width:9px !important; height:9px !important; border-radius:50% !important; flex:none; }
+html.ui-uj body #ltPage#ltPage .lt-chip{ border-radius:99px !important; padding:4px 11px !important; font-size:12px !important; font-weight:800 !important; background:var(--gl-bg2) !important; border:1px solid var(--gl-bd) !important; box-shadow:none !important; color:var(--text) !important; }
+html.ui-uj body #ltPage#ltPage .lt-done{ background:var(--gl-bg2) !important; border:1px solid var(--gl-bd) !important; border-radius:18px !important; box-shadow:none !important; }
+/* --- következő leltárak: mint a „A héten” lista --- */
+html.ui-uj body #ltPage#ltPage #ltStart[hidden]{ display:none !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule{ display:flex !important; flex-direction:column !important; gap:5px !important; grid-template-columns:none !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule::before, html.ui-uj body #ltPage#ltPage #ltSchedule::after{ display:none !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row{ position:relative; display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:flex-start !important; text-align:left !important; min-height:0 !important; height:auto !important; gap:12px !important; padding:8px 10px !important; color:inherit !important; border:0 !important; border-radius:14px !important; background:transparent !important; box-shadow:none !important; transition:background .2s, transform .2s; min-width:0; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row:hover{ background:var(--gl-bg2) !important; transform:translateX(3px); }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row::before, html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row::after{ display:none !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .d{ width:38px !important; flex:none; display:flex !important; flex-direction:column !important; align-items:center !important; line-height:1.05 !important; background:none !important; border:0 !important; padding:0 !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .d b{ font-size:20px !important; line-height:22px !important; font-weight:800 !important; color:inherit !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .d small{ font-size:10px !important; font-weight:800 !important; opacity:.7; color:inherit !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .t{ flex:1 1 auto !important; min-width:0 !important; width:auto !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; text-align:left !important; color:inherit !important; font-size:13px !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .t b{ font-size:13px !important; font-weight:800 !important; color:inherit !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .t span{ font-size:11.5px !important; color:inherit !important; opacity:.7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .k{ position:static !important; flex:none; font-size:10.5px !important; font-weight:800 !important; padding:3px 9px !important; border-radius:99px !important; background:rgba(251,172,1,.18) !important; color:#FBAC01 !important; border:0 !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row .k.P{ background:rgba(167,139,250,.2) !important; color:#a78bfa !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row.today{ background:linear-gradient(90deg, rgba(251,172,1,.95), rgba(240,127,18,.85)) !important; color:#000 !important; box-shadow:0 10px 22px -12px rgba(251,172,1,.9) !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row.today .t span{ opacity:.75; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row.today .k, html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row.today .k.P{ background:#000 !important; color:#FBAC01 !important; }
+html.ui-uj body #ltPage#ltPage #ltSchedule .lt-row.done{ background:var(--gl-bg2) !important; color:inherit !important; box-shadow:none !important; }
+/* --- export betöltése: lépések csempékként, behúzós mező --- */
+html.ui-uj body #ltPage#ltPage .lt-steps{ display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:8px !important; margin:0 0 14px !important; padding:0 !important; list-style:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-steps li{ display:flex !important; align-items:center !important; gap:10px !important; padding:10px 12px !important; border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:var(--gl-bg2) !important; box-shadow:none !important; font-size:12.5px !important; line-height:1.35 !important; color:var(--text-dim) !important; min-width:0; }
+html.ui-uj body #ltPage#ltPage .lt-steps li > b{ flex:none; width:24px !important; height:24px !important; border-radius:50% !important; display:grid !important; place-items:center !important; background:#FBAC01 !important; color:#000 !important; font-size:12px !important; font-weight:800 !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-steps li span b{ color:var(--text) !important; }
+html.ui-uj body #ltPage#ltPage .lt-drop{ border-radius:20px !important; border:1.5px dashed rgba(251,172,1,.45) !important; background:rgba(251,172,1,.05) !important; box-shadow:none !important; min-height:150px; transition:background .2s, border-color .2s, transform .2s !important; }
+html.ui-uj body #ltPage#ltPage .lt-drop:hover, html.ui-uj body #ltPage#ltPage .lt-drop.over, html.ui-uj body #ltPage#ltPage .lt-drop.drag{ background:rgba(251,172,1,.1) !important; border-color:#FBAC01 !important; }
+html.ui-uj body #ltPage#ltPage .lt-drop b{ font-size:15px !important; font-weight:800 !important; }
+html.ui-uj body #ltPage#ltPage .lt-drop span:not(.ic){ color:var(--text-dim) !important; font-size:12px !important; }
+/* --- munkanézet --- */
+html.ui-uj body #ltPage#ltPage #ltData{ gap:16px !important; }
+html.ui-uj body #ltPage#ltPage #ltNow{ display:grid !important; grid-template-columns:auto minmax(0,1fr) !important; align-items:center !important; gap:14px !important; }
+html.ui-uj body #ltPage#ltPage #ltNow .lt-now-t b{ display:block; font-size:20px !important; line-height:24px !important; font-weight:800 !important; letter-spacing:-.02em; color:var(--text) !important; }
+html.ui-uj body #ltPage#ltPage #ltNow .lt-now-t span{ font-size:12.5px !important; color:var(--text-dim) !important; }
+html.ui-uj body #ltPage#ltPage #ltNow .lt-now-t em{ font-style:normal; font-weight:800; color:#FBAC01 !important; }
+html.ui-uj body #ltPage#ltPage #ltNow .lt-now-acts, html.ui-uj body #ltPage#ltPage #ltNow .lt-now-x{ grid-column:1 / -1 !important; }
+html.ui-uj body #ltPage#ltPage #ltNow .lt-now-acts{ display:flex !important; gap:8px !important; flex-wrap:wrap; }
+html.ui-uj body #ltPage#ltPage #ltNow .lt-now-acts .action-btn{ flex:1 1 auto; }
+/* lépések: csempék, mint a kezdőlap kis számlálói */
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-top{ display:flex !important; align-items:center !important; gap:14px !important; margin:0 0 14px !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-bar{ flex:1; height:8px !important; border-radius:99px !important; background:rgba(127,127,127,.2) !important; overflow:hidden; border:0 !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-bar i{ border-radius:99px !important; background:linear-gradient(90deg,#FFD45C,#FBAC01,#F07F12) !important; box-shadow:0 0 14px rgba(251,172,1,.6) !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-pc{ font-size:24px !important; line-height:28px !important; font-weight:800 !important; font-variant-numeric:tabular-nums; color:var(--text) !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-steps{ gap:8px !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-st{ border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:var(--gl-bg2) !important; box-shadow:none !important; color:inherit !important; transition:transform .2s, border-color .2s !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-st:hover{ transform:translateY(-2px); border-color:rgba(251,172,1,.5) !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-st.cur{ background:linear-gradient(90deg, rgba(251,172,1,.95), rgba(240,127,18,.85)) !important; border-color:transparent !important; color:#000 !important; box-shadow:0 10px 22px -12px rgba(251,172,1,.9) !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-st.cur *{ color:#000 !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-st.cur > span:first-child, html.ui-uj body #ltPage#ltPage .lt-flow .lf-st.cur i{ background:#000 !important; color:#FBAC01 !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-ln{ background:var(--gl-bd) !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-ln.on{ background:#FBAC01 !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-hint{ margin-top:12px !important; font-size:13px !important; color:var(--text-dim) !important; background:none !important; border:0 !important; padding:0 !important; }
+html.ui-uj body #ltPage#ltPage .lt-flow .lf-hint b{ color:var(--text) !important; }
+/* vonalkód-olvasó */
+html.ui-uj body #ltPage#ltPage .lt-scan-in{ background:var(--gl-bg2) !important; border:1px solid var(--gl-bd) !important; border-radius:18px !important; box-shadow:none !important; padding:6px 6px 6px 12px !important; }
+html.ui-uj body #ltPage#ltPage .lt-scan-in:focus-within{ border-color:#FBAC01 !important; box-shadow:0 0 0 3px rgba(251,172,1,.18) !important; }
+html.ui-uj body #ltPage#ltPage .lt-scan-in input{ background:transparent !important; border:0 !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-scan-msg{ margin-top:10px !important; font-size:12.5px !important; color:var(--text-dim) !important; background:none !important; border:0 !important; }
+html.ui-uj body #ltPage#ltPage .lt-scan-in .action-btn, html.ui-uj body #ltPage#ltPage .lt-tools .action-btn, html.ui-uj body #ltPage#ltPage .lt-hero-foot .action-btn, html.ui-uj body #ltPage#ltPage #ltNow .action-btn, html.ui-uj body #ltPage#ltPage .lt-done .action-btn{ border-radius:9999px !important; font-weight:700 !important; }
+html.ui-uj body #ltPage#ltPage .lt-vol{ border-radius:50% !important; background:var(--gl-bg2) !important; border:1px solid var(--gl-bd) !important; box-shadow:none !important; }
+/* eszközsor */
+html.ui-uj body #ltPage#ltPage .lt-tools{ display:flex !important; flex-wrap:wrap !important; align-items:center !important; gap:8px !important; }
+html.ui-uj body #ltPage#ltPage .lt-tools .lt-only{ margin-right:auto; display:inline-flex !important; align-items:center; gap:8px; height:38px; padding:0 14px; border-radius:9999px; background:var(--gl-bg2); border:1px solid var(--gl-bd); font-size:12.5px; font-weight:700; }
+html.ui-uj body #ltPage#ltPage .lt-tools .action-btn.secondary{ height:38px; padding:0 16px !important; background:var(--gl-bg2) !important; border:1px solid var(--gl-bd) !important; box-shadow:none !important; }
+/* kategóriák (Telefon, ShieldUp, AirPods) */
+html.ui-uj body #ltPage#ltPage .lt-cats{ display:flex !important; flex-direction:column !important; gap:16px !important; }
+html.ui-uj body #ltPage#ltPage details.lt-cat{ padding:0 !important; overflow:hidden; }
+html.ui-uj body #ltPage#ltPage details.lt-cat > summary{ padding:18px 22px !important; background:none !important; border:0 !important; box-shadow:none !important; display:flex !important; align-items:center !important; gap:12px !important; }
+html.ui-uj body #ltPage#ltPage details.lt-cat[open] > summary{ border-bottom:1px solid var(--gl-bd) !important; }
+html.ui-uj body #ltPage#ltPage details.lt-cat > summary .l{ width:36px !important; height:36px !important; border-radius:12px !important; display:grid !important; place-items:center !important; background:rgba(251,172,1,.16) !important; border:0 !important; box-shadow:none !important; font-size:17px !important; flex:none; }
+html.ui-uj body #ltPage#ltPage details.lt-cat > summary b, html.ui-uj body #ltPage#ltPage details.lt-cat > summary strong{ font-size:15px !important; font-weight:800 !important; letter-spacing:-.01em; }
+html.ui-uj body #ltPage#ltPage details.lt-cat > summary .n{ font-size:12px !important; font-weight:700 !important; color:var(--text-dim) !important; }
+html.ui-uj body #ltPage#ltPage details.lt-cat > .body{ padding:8px 14px 14px !important; background:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-it{ border-radius:14px !important; }
+/* oldalsáv: típus, állás, PDF, képek */
+html.ui-uj body #ltPage#ltPage .lt-type{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px !important; padding:0 !important; background:none !important; border:0 !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-type button{ border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:var(--gl-bg2) !important; color:inherit !important; box-shadow:none !important; padding:10px 12px !important; transition:transform .2s, border-color .2s !important; }
+html.ui-uj body #ltPage#ltPage .lt-type button:hover{ transform:translateY(-2px); border-color:rgba(251,172,1,.5) !important; }
+html.ui-uj body #ltPage#ltPage .lt-type button.on{ background:linear-gradient(90deg, rgba(251,172,1,.95), rgba(240,127,18,.85)) !important; border-color:transparent !important; color:#000 !important; box-shadow:0 10px 22px -12px rgba(251,172,1,.9) !important; }
+html.ui-uj body #ltPage#ltPage .lt-type button.on small{ color:rgba(0,0,0,.7) !important; }
+html.ui-uj body #ltPage#ltPage .lt-sum > *{ border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:var(--gl-bg2) !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-sum .lt-s b{ font-size:24px !important; font-weight:800 !important; font-variant-numeric:tabular-nums; }
+html.ui-uj body #ltPage#ltPage .lt-pdf{ border-radius:9999px !important; font-weight:800 !important; height:46px; box-shadow:0 12px 26px -14px rgba(251,172,1,.9) !important; }
+html.ui-uj body #ltPage#ltPage .lt-att-drop{ border-radius:16px !important; border:1.5px dashed var(--gl-bd) !important; background:var(--gl-bg2) !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-att-pick, html.ui-uj body #ltPage#ltPage .lt-file{ border-radius:16px !important; border:1px solid var(--gl-bd) !important; background:var(--gl-bg2) !important; box-shadow:none !important; }
+html.ui-uj body #ltPage#ltPage .lt-warn{ border-radius:18px !important; }
+html.ui-uj body #ltPage#ltPage #ltHist{ margin-top:16px !important; }
+/* telefonon és kis ablakban: egymás alatt, mint a kezdőlapon */
+@media (min-width:1000px) and (max-width:1299px){
+  html.ui-uj body #ltPage#ltPage #ltHero{ grid-column:span 7 !important; }
+  html.ui-uj body #ltPage#ltPage #ltStart .lt-upcoming{ grid-column:span 5 !important; }
+}
+@media (max-width:999px){
+  html.ui-uj body #ltPage#ltPage #ltData:not([hidden]){ grid-template-columns:minmax(0,1fr) !important; }
+  html.ui-uj body #ltPage#ltPage #ltData > *, html.ui-uj body #ltPage#ltPage #ltData .lt-side > *, html.ui-uj body #ltPage#ltPage #ltData .lt-main > *{ min-width:0 !important; max-width:100% !important; }
+  html.ui-uj body #ltPage#ltPage .lt-flow .lf-steps{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  html.ui-uj body #ltPage#ltPage .lt-flow .lf-ln{ display:none !important; }
+  html.ui-uj body #ltPage#ltPage .lt-flow .lf-st{ min-width:0 !important; width:auto !important; }
+  html.ui-uj body #ltPage#ltPage .lt-scan-in{ min-width:0 !important; }
+  html.ui-uj body #ltPage#ltPage .lt-file{ display:flex !important; flex-wrap:nowrap !important; align-items:center !important; gap:10px !important; }
+  html.ui-uj body #ltPage#ltPage .lt-file .fn{ flex:1 1 auto !important; min-width:0 !important; }
+  html.ui-uj body #ltPage#ltPage .lt-file > button{ flex:none !important; width:40px !important; height:40px !important; padding:0 !important; border-radius:12px !important; }
+  html.ui-uj body #ltPage#ltPage .lt-scan-in input{ min-width:0 !important; width:100% !important; }
+  html.ui-uj body #ltPage#ltPage #ltStart:not([hidden]){ display:flex !important; flex-direction:column !important; gap:12px !important; }
+  html.ui-uj body #ltPage#ltPage #ltStart > .lt-start-grid{ display:flex !important; flex-direction:column !important; gap:12px !important; }
+  html.ui-uj body #ltPage#ltPage #ltHero .lt-count b{ font-size:56px !important; line-height:54px !important; }
+}
+@media (max-width:700px){
+  html.ui-uj body #ltPage#ltPage .lt-steps{ grid-template-columns:minmax(0,1fr) !important; }
+  html.ui-uj body #ltPage#ltPage #ltHero .lt-hero-main{ grid-template-columns:auto minmax(0,1fr) !important; }
+  html.ui-uj body #ltPage#ltPage #ltHero .lt-count{ grid-column:1 / -1 !important; flex-direction:row !important; align-items:baseline !important; gap:10px; }
+  html.ui-uj body #ltPage#ltPage #ltHero h2{ font-size:24px !important; line-height:28px !important; }
+  html.ui-uj body #ltPage#ltPage .lt-card{ padding:18px !important; border-radius:22px !important; }
+  html.ui-uj body #ltPage#ltPage .lt-mbh h1{ font-size:32px !important; line-height:38px !important; }
+}
+@media (prefers-reduced-motion:reduce){
+  html.ui-uj:not(.fp-anim-full) body #ltPage#ltPage #ltHero::before, html.ui-uj:not(.fp-anim-full) body #ltPage#ltPage #ltNow::before{ animation:none !important; }
+  html.ui-uj:not(.fp-anim-full) body #ltPage#ltPage .lt-card:hover, html.ui-uj:not(.fp-anim-full) body #ltPage#ltPage .lt-row:hover{ transform:none !important; }
+}
+@media print{ .lt-mbh{ display:none !important; } }
+</style>
 <script id="axNewJs">
 /* Admin konzol — új kinézet: oldalsáv csoportok + „Ma a boltokban” idővonal */
 (function(){
