@@ -75,6 +75,8 @@ Sorszámok helyett ezekre keress rá (a sorok folyamatosan csúsznak):
 - `<style id="ltMaSkin">` (PRÓBA 30) + `function ltMaHead` — a **Leltár** új kinézete a kezdőlap stílusában (nagy fejléc, üvegkártyák rácsban); csak `html.ui-uj` alatt, a régi kinézet változatlan. Próba-export betöltése: `EV="$(cat tools/lt-demo.js)" PAGE=leltar node tools/shot.js`.
 - Cetli post-it nyomtatás: `piAdjGet/piAdjStyle` — gépenkénti igazítás (eltolás mm, méret %), „📐 Nyomtatás igazítása” gomb. Nyomtatási próba PDF-be: `POSTIT=1 UJ=1 node tools/cetli-print.js`.
 - Kezdőlap óra-kártya: `window.__maM` üzenetlista (váltás 6,5 mp-enként / kattintásra, `maMsgNext`), zárás után búcsú + holnapi kolléga; `<style id="maMsgCss">` (PRÓBA 31). Próba adott időpontra: `NOW='2026-11-16T21:00:00' SCH=same|other EMP2=1 node tools/shot.js`.
+- Szállítási címke — több rendelés egyben: `SB` lista, `sbAsk / sbPrint / sbBar` (a „✅ Kész” gomb után kérdez; a végén mind külön cetlire, „1/2 rendelés” jelöléssel). Próba: `POSTIT=1 N=3 node tools/cetli-batch.js`.
+- **Újdonságok animáció:** `NEWS_ANIM` + `newsAnim(n)`, `<style id="newsAnimCss">`. **Minden új NEWS-bejegyzéshez készíts saját, a témához illő animációt** (`anim:"kulcs"`); ha nincs, az azonosítóból választ egy általánosat (`NEWS_GEN`), így mindig más. Ha Martin azt írja, „mehet az újdonságokba”, azonnal készíts bejegyzést saját animációval. Próba: `KEEPNEWS=1 T=3300 node tools/shot.js`.
 - `fpBrkNote()` — a munkaközi szünet (6 óra felett 1 óra) szövege; **nyomtatványonként csak egyszer, lábjegyzetként** szerepeljen.
 - `const FEATS`, `function fpApplyFeats()` — boltonként ki-bekapcsolható programok.
 - Telefonos nézet: `html.m-app`.
