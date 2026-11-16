@@ -29180,6 +29180,64 @@ html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dtl, html body .ax-drw:not(#_1)
 html body #fcAdmin#fcAdmin#fcAdmin .ax-tb{ flex-wrap:wrap !important; }
 html body #fcAdmin#fcAdmin#fcAdmin .ax-tb > *{ max-width:100%; }
 @media (max-width:700px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-chat{ grid-template-columns:minmax(0,1fr) !important; min-width:0 !important; max-width:100% !important; } html body #fcAdmin#fcAdmin#fcAdmin .ax-chat > *{ min-width:0 !important; max-width:100% !important; box-sizing:border-box !important; } }
+/* ===== Admin Beosztás — Havi: boltonként kis naptár ===== */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-mo:has(.sm2){ grid-template-columns:240px minmax(0,1fr) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-head{ display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:10px 20px; margin:0 0 14px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-head h3{ margin:0; font-size:18px; font-weight:800; letter-spacing:-.01em; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-head small{ color:var(--udim); font-size:12.5px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-key{ display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:var(--udim); } html body #fcAdmin#fcAdmin#fcAdmin .sm2-key span{ display:inline-flex; align-items:center; gap:6px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2{ display:grid; grid-template-columns:repeat(auto-fill,minmax(560px,1fr)); gap:16px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i{ min-height:58px !important; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-g s, html body #fcAdmin#fcAdmin#fcAdmin .sm2-key s{ font-size:11px !important; line-height:14px !important; padding:1px 5px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-c{ padding:16px !important; cursor:pointer; transition:transform .2s, border-color .2s !important; min-width:0; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:translateY(-3px); border-color:rgba(251,172,1,.5) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-c > header{ display:flex; align-items:center; gap:10px; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-c > header .tt{ flex:1; min-width:0; display:flex; flex-direction:column; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-c > header .tt b{ font-size:15px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-c > header .tt small{ font-size:12px; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-bar{ height:6px; border-radius:99px; background:rgba(127,127,127,.2); margin:10px 0 8px; overflow:hidden; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-bar i{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,#FFD45C,#FBAC01,#F07F12); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-lg{ display:flex; flex-wrap:wrap; gap:4px 10px; margin:0 0 8px; font-size:11.5px; color:var(--udim); } html body #fcAdmin#fcAdmin#fcAdmin .sm2-lg span{ display:inline-flex; align-items:center; gap:5px; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-lg span i{ width:9px; height:9px; border-radius:50%; background:var(--h); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-w, html body #fcAdmin#fcAdmin#fcAdmin .sm2-g{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-w em{ font-style:normal; text-align:center; font-size:10.5px; font-weight:800; color:var(--udim); padding:2px 0; } html body #fcAdmin#fcAdmin#fcAdmin .sm2-w em.we{ color:#FBAC01; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i{ font-style:normal; min-height:54px; border-radius:9px; padding:3px; display:flex; flex-direction:column; gap:2px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); min-width:0; overflow:hidden; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i.x{ background:transparent; border-color:transparent; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i.we{ background:rgba(251,172,1,.06); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i.td{ border:2px solid #FBAC01; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i.e{ border:1px dashed rgba(255,107,107,.7); background:rgba(255,107,107,.08); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i.c, html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i.h{ background:rgba(127,127,127,.08); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g i b{ font-size:11px; font-weight:800; line-height:13px; padding-left:2px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g s, html body #fcAdmin#fcAdmin#fcAdmin .sm2-key s{ text-decoration:none; display:block; border-radius:5px; padding:1px 4px; font-size:10px; line-height:13px; font-weight:800; color:#fff; background:var(--h, #FBAC01); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-key s{ display:inline-block; background:#a78bfa; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g s.am, html body #fcAdmin#fcAdmin#fcAdmin .sm2-key s.am{ background:linear-gradient(90deg, var(--h, #a78bfa) 60%, rgba(0,0,0,.25)); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g s.pm, html body #fcAdmin#fcAdmin#fcAdmin .sm2-key s.pm{ background:linear-gradient(90deg, rgba(0,0,0,.25), var(--h, #a78bfa) 40%); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g s.more{ background:rgba(127,127,127,.35); }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g u, html body #fcAdmin#fcAdmin#fcAdmin .sm2-key u{ text-decoration:none; font-size:10px; font-weight:700; color:var(--ufaint); padding-left:2px; }
+html body #fcAdmin#fcAdmin#fcAdmin .sm2-g u.r, html body #fcAdmin#fcAdmin#fcAdmin .sm2-key u.r{ color:#FF6B6B; }
+/* ===== Admin Munkaidő — boltonként kártyák, dolgozónként haladás-csík ===== */
+html body #fcAdmin#fcAdmin#fcAdmin .wt2{ display:grid; grid-template-columns:repeat(auto-fill,minmax(440px,1fr)); gap:16px; margin:16px 0; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-s{ padding:18px !important; min-width:0; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-s > header{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-s > header .tt{ flex:1; min-width:0; display:flex; flex-direction:column; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-s > header .tt b{ font-size:16px; font-weight:800; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-s > header .tt small{ font-size:12px; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-set{ display:flex; flex-wrap:wrap; gap:10px 14px; align-items:flex-end; margin:12px 0 0; padding:12px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid var(--u4); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-set[hidden]{ display:none !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-set label{ display:flex; flex-direction:column; gap:4px; font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-set label.ax-wtoff{ flex-direction:row; align-items:center; text-transform:none; letter-spacing:0; font-size:12.5px; font-weight:600; color:var(--utx); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-set small{ flex-basis:100%; font-size:12px; color:var(--ufaint); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-set .ax-in{ min-width:150px; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-ps{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-p{ padding:12px 14px; border-radius:16px; background:rgba(255,255,255,.035); border:1px solid var(--u4); border-left:4px solid var(--h); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-p.r{ border-color:rgba(255,107,107,.5); border-left-color:#FF6B6B; background:rgba(255,107,107,.06); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-p.dim{ opacity:.55; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-n{ display:flex; align-items:center; gap:8px; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-n i{ width:10px; height:10px; border-radius:50%; background:var(--h); flex:none; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-n b{ flex:1; min-width:0; font-size:14.5px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-h{ display:flex; align-items:center; gap:14px; margin-top:8px; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-big{ flex:none; display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 6px; width:170px; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-big b{ font-size:26px; line-height:28px; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-big span{ font-size:13px; font-weight:700; color:var(--udim); } html body #fcAdmin#fcAdmin#fcAdmin .wt2-big small{ flex-basis:100%; font-size:11.5px; color:var(--ufaint); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-bars{ flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-bar{ position:relative; height:10px; border-radius:99px; background:rgba(127,127,127,.18); overflow:hidden; display:flex; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-bar i{ display:block; height:100%; border-radius:99px 0 0 99px; background:linear-gradient(90deg,#34C38F,#5fd6a8); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-p.a .wt2-bar i{ background:linear-gradient(90deg,#FFD45C,#FBAC01); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-p.r .wt2-bar i{ background:linear-gradient(90deg,#FBAC01,#F07F12); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-bar u{ display:block; height:100%; background:#FF6B6B; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-bar.k{ height:6px; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-bar.k i{ background:rgba(167,139,250,.85); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-k{ font-size:11.5px; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-cog{ flex:none; width:34px; height:34px; border-radius:50%; border:1px solid var(--u4); background:var(--u2); color:var(--utx); cursor:pointer; font-size:15px; }
+html body #fcAdmin#fcAdmin#fcAdmin .wt2-cog:hover, html body #fcAdmin#fcAdmin#fcAdmin .wt2-cog.on{ border-color:#FBAC01; color:#FBAC01; }
+@media (max-width:700px){ html body #fcAdmin#fcAdmin#fcAdmin .wt2{ grid-template-columns:minmax(0,1fr); } html body #fcAdmin#fcAdmin#fcAdmin .wt2-h{ flex-wrap:wrap; } html body #fcAdmin#fcAdmin#fcAdmin .wt2-big{ width:auto; } html body #fcAdmin#fcAdmin#fcAdmin .sm2{ grid-template-columns:minmax(0,1fr); } html body #fcAdmin#fcAdmin#fcAdmin .ax-mo:has(.sm2){ grid-template-columns:minmax(0,1fr) !important; } }
+html.fp-lite html body #fcAdmin#fcAdmin#fcAdmin .sm2-c:hover{ transform:none; }
+
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
@@ -30158,25 +30216,25 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-tb > *{ max-width:100%; }
         const sel = (attr, cur, opts, inh)=> `<select class="ax-in ax-wtd" ${attr}><option value=""${cur !== "" && cur != null ? "" : " selected"}>${inh}</option>${opts.map(([v, l])=> `<option value="${v}"${cur !== "" && cur != null && +cur === v ? " selected" : ""}>${l}</option>`).join("")}</select>`;
         const DOPT = [8,7,6,5,4].map(v=> [v, v + " óra/nap"]), KOPT = [1,2,3,4,6].map(v=> [v, v + " hó"]), BOPT = [[0,"nincs"],[20,"20 perc"],[30,"30 perc"],[60,"60 perc"]];
         const byStore = new Map(); rows.forEach(r=>{ if(!byStore.has(r.x.uid)) byStore.set(r.x.uid, []); byStore.get(r.x.uid).push(r); });
+        window.__wtOpen = window.__wtOpen || new Set(); const OPN = window.__wtOpen;
         let tr = "";
-        byStore.forEach((R, uid)=>{ const x = R[0].x, s = wtStore(C, uid), R2 = wtOnlyBad ? R.filter(r=> !r.P.off && r.diff > 0.01) : R; if(!R2.length) return; const nb = R.filter(r=> !r.P.off && r.diff > 0.01).length;
-          tr += `<tr class="sh"><td>${axAv(x)} <b>${esc(shortN(x))}</b><small>bolti alap</small></td>
-            <td>${sel(`data-ws="${esc(uid)}|d"`, s.S.d, DOPT, `mindenki: ${C.d || 8} óra`)}</td>
-            <td>${sel(`data-ws="${esc(uid)}|k"`, s.S.k, KOPT, `mindenki: ${K} hó`)}</td>
-            <td>${sel(`data-ws="${esc(uid)}|brk"`, s.S.brk === "" || s.S.brk == null ? "" : s.S.brk === 0 ? "0" : s.S.brk, BOPT, `szünet: ${(+C.brk || 0) ? C.brk + " p" : "nincs"}`)}</td>
-            <td colspan="3"><span class="ax-b ${nb ? "r" : "g"}">${nb ? `⚠ ${nb} túllépő` : "✓ rendben"}</span></td></tr>`;
-          tr += R2.map(r=>{ const cls = r.P.off ? "dim" : r.diff > 0.01 ? "r" : r.diff < -8 ? "a" : "g", pk = esc(uid + "|" + r.e.id);
-            const lbl = r.P.off ? "nem figyelt" : r.diff > 0.01 ? `⚠ +${fH(r.diff)} óra túllépés` : r.diff < -8 ? `${fH(r.diff)} óra hiányzik` : "✓ rendben";
-            return `<tr class="${cls}"><td class="pe"><s style="background:${esc(r.e.hex || "#7b8cff")}"></s>${esc(r.e.name)}</td>
-              <td>${sel(`data-wp="${pk}|d"`, r.P.P.d || (C.wh || {})[uid + "|" + r.e.id], DOPT, `bolti: ${r.P.s.d} óra`)}</td>
-              <td>${sel(`data-wp="${pk}|k"`, r.P.P.k, KOPT, `bolti: ${r.P.s.k} hó`)}</td>
-              <td><input class="ax-in ax-wtfx" type="number" min="0" max="300" step="1" data-wp="${pk}|fix" value="${r.P.fix || ""}" placeholder="havi óra" title="Egyéni havi óraszám (pl. diákmunka, részmunkaidő) — ha megadod, ezzel számol a munkanapok helyett"></td>
-              <td class="n"><b>${fH(r.hM)}</b> <small>/ ${fH(r.expM)} ó · ${String(r.days).replace(".", ",")} nap</small></td>
-              <td class="n"><b>${fH(r.hP)}</b> <small>/ ${fH(r.exp)} ó · ${lblOf(r.months)}</small></td>
-              <td><span class="ax-b ${cls === "dim" ? "" : cls}">${lbl}</span><label class="ax-wtoff" title="Ennél a dolgozónál ne figyelje a keretet"><input type="checkbox" data-wp="${pk}|off"${r.P.off ? " checked" : ""}> ki</label></td></tr>`; }).join(""); });
+        byStore.forEach((R, uid)=>{ const x = R[0].x, s = wtStore(C, uid), R2 = wtOnlyBad ? R.filter(r=> !r.P.off && r.diff > 0.01) : R; if(!R2.length) return; const nb = R.filter(r=> !r.P.off && r.diff > 0.01).length, sk = "s|" + uid;
+          const ppl = R2.map(r=>{ const cls = r.P.off ? "dim" : r.diff > 0.01 ? "r" : r.diff < -8 ? "a" : "g", pk = esc(uid + "|" + r.e.id), ok2 = "p|" + uid + "|" + r.e.id;
+            const lbl = r.P.off ? "nem figyelt" : r.diff > 0.01 ? `+${fH(r.diff)} óra túllépés` : r.diff < -8 ? `${fH(-r.diff)} óra hiányzik` : "rendben";
+            const pM = r.expM ? Math.min(130, r.hM / r.expM * 100) : 0, pP = r.exp ? Math.min(130, r.hP / r.exp * 100) : 0;
+            return `<div class="wt2-p ${cls}" style="--h:${esc(r.e.hex || "#7b8cff")}">
+              <div class="wt2-n"><i></i><b>${esc(r.e.name)}</b><span class="ax-b ${cls === "dim" ? "" : cls}">${cls === "r" ? "⚠ " : cls === "g" ? "✓ " : ""}${lbl}</span></div>
+              <div class="wt2-h"><div class="wt2-big"><b>${fH(r.hM)}</b><span>/ ${fH(r.expM)} óra</span><small>${HU_M[Mo - 1]} · ${String(r.days).replace(".", ",")} nap beosztva</small></div>
+                <div class="wt2-bars"><div class="wt2-bar" title="${HU_M[Mo - 1]}: ${fH(r.hM)} / ${fH(r.expM)} óra"><i style="width:${Math.min(100, pM)}%"></i>${pM > 100 ? `<u style="width:${Math.min(30, pM - 100)}%"></u>` : ""}</div>
+                  ${r.months.length > 1 ? `<div class="wt2-bar k" title="Keret (${lblOf(r.months)}): ${fH(r.hP)} / ${fH(r.exp)} óra"><i style="width:${Math.min(100, pP)}%"></i></div><small class="wt2-k">Keret ${lblOf(r.months)}: <b>${fH(r.hP)}</b> / ${fH(r.exp)} óra</small>` : ""}</div>
+                <button type="button" class="wt2-cog${OPN.has(ok2) ? " on" : ""}" data-wtop="${esc(ok2)}" title="Egyéni beállítás">⚙</button></div>
+              <div class="wt2-set"${OPN.has(ok2) ? "" : " hidden"}><label>Napi munkaidő ${sel(`data-wp="${pk}|d"`, r.P.P.d || (C.wh || {})[uid + "|" + r.e.id], DOPT, `bolti: ${r.P.s.d} óra`)}</label><label>Keret ${sel(`data-wp="${pk}|k"`, r.P.P.k, KOPT, `bolti: ${r.P.s.k} hó`)}</label><label>Egyéni havi óra <input class="ax-in ax-wtfx" type="number" min="0" max="300" step="1" data-wp="${pk}|fix" value="${r.P.fix || ""}" placeholder="pl. 80" title="Egyéni havi óraszám (pl. diákmunka, részmunkaidő)"></label><label class="ax-wtoff"><input type="checkbox" data-wp="${pk}|off"${r.P.off ? " checked" : ""}> ne figyelje a keretet</label></div></div>`; }).join("");
+          tr += `<section class="ax-card wt2-s"><header>${axAv(x)}<div class="tt"><b>${esc(shortN(x))}</b><small>${R.length} dolgozó</small></div><span class="ax-b ${nb ? "r" : "g"}">${nb ? `⚠ ${nb} túllépő` : "✓ rendben"}</span><button type="button" class="ax-btn sm${OPN.has(sk) ? " pri" : ""}" data-wtop="${esc(sk)}">⚙ Bolti beállítás</button></header>
+            <div class="wt2-set st"${OPN.has(sk) ? "" : " hidden"}><label>Napi munkaidő ${sel(`data-ws="${esc(uid)}|d"`, s.S.d, DOPT, `mindenki: ${C.d || 8} óra`)}</label><label>Keret ${sel(`data-ws="${esc(uid)}|k"`, s.S.k, KOPT, `mindenki: ${K} hó`)}</label><label>Szünet 6 ó felett ${sel(`data-ws="${esc(uid)}|brk"`, s.S.brk === "" || s.S.brk == null ? "" : s.S.brk === 0 ? "0" : s.S.brk, BOPT, `szünet: ${(+C.brk || 0) ? C.brk + " p" : "nincs"}`)}</label><small>Üresen hagyva a fenti, mindenkire érvényes alapot használja.</small></div>
+            <div class="wt2-ps">${ppl}</div></section>`; });
         box.innerHTML = `<div class="ax-wt">
           <div class="ax-card ax-wth"><div class="ax-wtk"><div><small>${Y}. ${HU_M[Mo - 1]}</small><b>${dM} munkanap</b><em>${dM * (C.d || 8)} óra általános munkaidő</em></div>
-            <div><small>Munkaidőkeret (alap)</small><b>${K} hónap</b><em>${lblOf(months)}: ${dP} munkanap</em></div>
+            <div><small>Munkaidőkeret (alap)</small><b>${K} hónap</b><em>${lblOf(months)}: ${dP} munkanap · ${dP * (C.d || 8)} óra</em></div>
             <div class="${bad.length ? "r" : "g"}"><small>Keret túllépés</small><b>${bad.length ? "⚠ " + bad.length + " dolgozó" : "✓ senki"}</b><em>${low.length ? low.length + " dolgozónál 8 óránál több hiányzik" : "a keretben"}</em></div></div>
             <div class="ax-wto"><span>Alap keret mindenkinek:</span>${[1,2,3,4,6].map(v=> `<button type="button" class="ax-btn sm${v === K ? " pri" : ""}" data-wtk="${v}">${v} hó</button>`).join("")}
               <span>Napi:</span>${[8,7,6].map(v=> `<button type="button" class="ax-btn sm${v === (+C.d || 8) ? " pri" : ""}" data-wtdd="${v}">${v} ó</button>`).join("")}
@@ -30184,8 +30242,9 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-tb > *{ max-width:100%; }
               <span class="ax-sp"></span><label class="ax-wtf"><input type="checkbox" data-wt="bad"${wtOnlyBad ? " checked" : ""}> csak a túllépők</label><button type="button" class="ax-btn sm" data-wt="year">📆 Munkaidő-naptár ${Y}</button></div>
             <div class="ax-wto">${srcLine}</div></div>
           ${yearTbl}
-          <div class="ax-card ax-flush"><div class="ax-tw"><table class="ax-wtt"><thead><tr><th>Dolgozó</th><th>Napi munkaidő</th><th>Keret</th><th>Egyéni havi óra</th><th>${HU_M[Mo - 1]} — beosztva / elvárt</th><th>Keret — beosztva / elvárt</th><th>Állapot</th></tr></thead><tbody>${tr || `<tr><td colspan="7" class="ax-empty">${wtOnlyBad ? "✓ Senki nem lépte túl a keretet." : "Nincs dolgozó."}</td></tr>`}</tbody></table></div>
-            <p class="ax-hint" style="padding:0 14px 12px">Szerkesztés: a <b>bolt sorában</b> a bolti alapot (napi óra, keret, szünet), a <b>dolgozó sorában</b> az egyéni beállítást adod meg — az üres érték a felette lévőt örökli. A beosztásból számol (helyettesek nélkül): egész nap = nyitástól zárásig, félnap = a DE/DU váltásig. Az elvárt óra = munkanapok × napi munkaidő (vagy az egyéni havi óra). Ünnepnapra nem számol órát.</p></div></div>`;
+          <div class="wt2">${tr || `<div class="ax-card"><div class="ax-empty">${wtOnlyBad ? "✓ Senki nem lépte túl a keretet." : "Nincs dolgozó."}</div></div>`}</div>
+          <div class="ax-card"><p class="ax-hint" style="margin:0">Szerkesztés: a <b>bolt sorában</b> a bolti alapot (napi óra, keret, szünet), a <b>dolgozó sorában</b> az egyéni beállítást adod meg — az üres érték a felette lévőt örökli. A beosztásból számol (helyettesek nélkül): egész nap = nyitástól zárásig, félnap = a DE/DU váltásig. Az elvárt óra = munkanapok × napi munkaidő (vagy az egyéni havi óra). Ünnepnapra nem számol órát.</p></div></div>`;
+        box.querySelectorAll("[data-wtop]").forEach(b=> b.addEventListener("click", ev=>{ ev.stopPropagation(); const k2 = b.dataset.wtop; if(OPN.has(k2)) OPN.delete(k2); else OPN.add(k2); const st2 = b.closest(".wt2-s, .wt2-p"), w2 = k2.startsWith("s|") ? st2.querySelector(":scope > .wt2-set") : st2.querySelector(":scope > .wt2-set"); if(w2) w2.hidden = !OPN.has(k2); b.classList.toggle(k2.startsWith("s|") ? "pri" : "on", OPN.has(k2)); }));
         box.onclick = async e=>{ const t = e.target;
           const k = t.closest("[data-wtk]"); if(k){ appC.wt = Object.assign(wtCfg(), { k:+k.dataset.wtk }); drawSched(); await cfgPush(`⏱ Munkaidőkeret (alap): ${k.dataset.wtk} hónap`); return; }
           const dd = t.closest("[data-wtdd]"); if(dd){ appC.wt = Object.assign(wtCfg(), { d:+dd.dataset.wtdd }); drawSched(); await cfgPush(`⏱ Napi munkaidő (alap): ${dd.dataset.wtdd} óra`); return; }
@@ -30339,16 +30398,23 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-tb > *{ max-width:100%; }
             + M2.map(({ x, op, emp })=>{ const pct = op ? Math.round((op - emp) / op * 100) : 100; return `<button type="button" class="ax-moi${scShop === x.uid ? " on" : ""}" data-scs="${esc(x.uid)}">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${op ? `${op - emp}/${op} nap beosztva` : "egész hónapban zárva"}</small><i class="bar"><s class="${pct < 100 ? "w" : ""}" style="width:${pct}%"></s></i></span>${emp ? `<em class="r" title="${emp} nyitvatartási nap beosztás nélkül">${emp}</em>` : `<em class="g">✓</em>`}</button>`; }).join("");
           let main = "";
           if(!scShop){
-            const hd = Array.from({ length:nD }, (_, i)=>{ const d = i + 1, w = dw(d), kk = kOf(d); return `<th class="${w > 4 ? "we" : ""}${kk === today ? " td" : ""}"><b>${d}</b><small>${HU_D[w].slice(0, 2)}</small></th>`; }).join("");
-            const rows = M2.map(({ x, st, emp })=>{
-              const cells = Array.from({ length:nD }, (_, i)=>{ const kk = kOf(i + 1), sd = schDay(st, kk), td = kk === today ? " td" : "";
-                if(sd.hol) return `<td class="h${td}${sd.adm ? " ad" : ""}" title="${kk}: ünnep${sd.hn ? " — " + esc(sd.hn) : ""}${sd.adm ? " · 👑 admin rögzítette" : ""}"><i class="hm">Ü</i></td>`;
-                if(sd.closed) return `<td class="c${td}" title="${kk}: zárva"></td>`;
-                if(!sd.people.length) return `<td class="e${td}" title="${kk}: nincs beosztva"></td>`;
-                return `<td class="${td.trim()}${sd.adm ? " ad" : ""}" title="${sd.adm ? "👑 admin rögzítette · " : ""}${kk}: ${esc(sd.people.map(pp=> pp.name + " — " + PART_T[pp.part] + " " + fromM(pp.from) + "–" + fromM(pp.to)).join("\n"))}"><span class="nms">${sd.people.slice(0, 3).map(pp=> `<i class="${pp.part}" style="--h:${pp.hex}">${esc(avIni(pp.name))}</i>`).join("")}${sd.people.length > 3 ? `<i class="more">+${sd.people.length - 3}</i>` : ""}</span></td>`; }).join("");
+            /* minden bolt: boltonként egy kis havi naptár, napokra bontva névvel (jobban követhető, mint a monogramos rács) */
+            const fnm2 = n=>{ const p = String(n || "").trim().split(/\s+/); return p[1] || p[0] || "?"; };
+            const first = dw(1), HDW = ["H","K","Sze","Cs","P","Szo","V"];
+            const cards = M2.map(({ x, st, op, emp })=>{
+              const days = Array.from({ length:first }, ()=> `<i class="x"></i>`).join("") + Array.from({ length:nD }, (_, i)=>{ const d = i + 1, kk = kOf(d), sd = schDay(st, kk), w = dw(d), td = kk === today ? " td" : "", we = w > 4 ? " we" : "";
+                const tip = sd.hol ? `${kk}: ünnep${sd.hn ? " — " + esc(sd.hn) : ""}` : sd.closed ? `${kk}: zárva` : !sd.people.length ? `${kk}: nincs beosztva` : `${kk}:\n` + esc(sd.people.map(pp=> pp.name + " — " + PART_T[pp.part] + " " + fromM(pp.from) + "–" + fromM(pp.to)).join("\n"));
+                const body = sd.hol ? `<u class="z">ünnep</u>` : sd.closed ? `<u class="z">zárva</u>` : !sd.people.length ? `<u class="r">üres</u>` : sd.people.slice(0, 3).map(pp=> `<s class="${pp.part}" style="--h:${esc(pp.hex)}">${esc(fnm2(pp.name))}${pp.part === "am" ? " DE" : pp.part === "pm" ? " DU" : ""}</s>`).join("") + (sd.people.length > 3 ? `<s class="more">+${sd.people.length - 3}</s>` : "");
+                return `<i class="d${we}${td}${sd.hol ? " h" : sd.closed ? " c" : !sd.people.length ? " e" : ""}${sd.adm ? " ad" : ""}" title="${tip}"><b>${d}</b>${body}</i>`; }).join("");
               const E = ((st.settings || {}).employees || []).filter(e=> e.name);
-              return `<tr><th class="nm" data-scs="${esc(x.uid)}" title="Kattints a bolt naptárához"><b>${esc(shortN(x))} <em>›</em></b><small>${E.map(e=> `<s style="background:${e.hex}"></s>${esc(e.name)}`).join("  ")}</small></th>${cells}<td class="em">${emp ? `<span class="ax-b r">${emp}</span>` : `<span class="ax-b g">✓</span>`}</td></tr>`; }).join("");
-            main = `<div class="ax-card ax-flush ax-moa"><div class="ax-moah"><div><h3>Minden bolt — ${Y}. ${HU_M[Mo - 1]}</h3><small>Kattints egy boltra (balra vagy a táblában) a teljes, nevekkel kitöltött naptárért</small></div><div class="ax-leg2"><span><i class="f">AB</i>egész nap</span><span><i class="a">AB</i>délelőtt</span><span><i class="p">AB</i>délután</span><span><i class="h">Ü</i>ünnep</span><span><i class="c"></i>zárva</span><span><i class="e"></i>nincs beosztva</span></div></div><div class="ax-tblw"><table class="ax-mgrid"><thead><tr><th class="nm">Bolt · dolgozók</th>${hd}<th class="em" title="Nyitvatartási nap beosztás nélkül">Üres</th></tr></thead><tbody>${rows || `<tr><td colspan="${nD + 2}"><div class="ax-empty">Nincs találat.</div></td></tr>`}</tbody></table></div></div>`;
+              const pct = op ? Math.round((op - emp) / op * 100) : 100;
+              return `<section class="ax-card sm2-c" data-scs="${esc(x.uid)}" title="Kattints a bolt teljes naptárához">
+                <header>${axAv(x)}<div class="tt"><b>${esc(shortN(x))}</b><small>${op ? `${op - emp}/${op} nap beosztva` : "egész hónapban zárva"}</small></div>${emp ? `<span class="ax-b r">${emp} üres nap</span>` : `<span class="ax-b g">✓ kész</span>`}</header>
+                <div class="sm2-bar"><i style="width:${pct}%"></i></div>
+                <div class="sm2-lg">${E.map(e=> `<span style="--h:${esc(e.hex || "#7b8cff")}"><i></i>${esc(e.name)}</span>`).join("") || `<span class="none">nincs dolgozó</span>`}</div>
+                <div class="sm2-w">${HDW.map((d, i)=> `<em${i > 4 ? ' class="we"' : ""}>${d}</em>`).join("")}</div>
+                <div class="sm2-g">${days}</div></section>`; }).join("");
+            main = `<div class="sm2-head"><div><h3>Minden bolt — ${Y}. ${HU_M[Mo - 1]}</h3><small>Kattints egy boltra a teljes, részletes naptárért</small></div><div class="sm2-key"><span><s class="full">Név</s>egész nap</span><span><s class="am">Név DE</s>délelőtt</span><span><s class="pm">Név DU</s>délután</span><span><u class="r">üres</u>nincs beosztva</span></div></div><div class="sm2">${cards || `<div class="ax-card"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></div>`}</div>`;
           } else {
             const x = list.find(z=> z.uid === scShop), st = stOf(x), se = st.settings || {}, r0 = M2.find(r=> r.x === x) || { op:0, emp:0 };
             const cnt = {}, ppl = []; (se.employees || []).filter(e=> e.name).forEach(e=>{ cnt[e.id] = 0; ppl.push({ id:e.id, name:e.name, hex:e.hex || "#7b8cff" }); });
