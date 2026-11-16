@@ -64853,7 +64853,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const att = ((state.att || {})[key]) || [];
     const ppl = E.map(e=>{ let p = null; try{ p = personPart(e.id, a, key); }catch(_){} return { e, p }; }).filter(x=> x.p && !x.p.holiday);
     let who = ""; try{ who = (window.fpWhoName && fpWhoName()) || ""; }catch(e){}
-    const first = String(who || "").trim().split(/\s+/).slice(-1)[0];
+    const first = (p=> p[1] || p[0])(String(who || "").trim().split(/\s+/));
     const hr = now.getHours(), hi = hr < 10 ? "Jó reggelt" : hr < 18 ? "Szia" : "Jó estét";
     const DW = ["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"], DS = ["V","H","K","Sze","Cs","P","Szo"];
     const cap = s=> s.charAt(0).toUpperCase() + s.slice(1);
@@ -64898,11 +64898,48 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     /* idővonal (nyitástól zárásig) */
     const tlA = oM != null ? oM : 9 * 60, tlB = cM != null && cM > tlA ? cM : 20 * 60, pos = m=> Math.max(0, Math.min(100, (m - tlA) / (tlB - tlA) * 100));
     const hrs = []; for(let h = Math.ceil(tlA / 60); h * 60 <= tlB; h++) hrs.push(`<span style="left:${pos(h * 60)}%">${h}</span>`);
+    const fnm = n=>{ const p = String(n || "").trim().split(/\s+/); return p[1] || p[0]; };
+    const elap = z=> z.s == null || z.e == null || z.e <= z.s ? 0 : Math.max(0, Math.min(100, (nowM - z.s) / (z.e - z.s) * 100));
     const bars = ppl.length ? ppl.map((x, i)=>{ const z = span(x), inn = att.find(q=> (x.e.id && q.id === x.e.id) || q.name === x.e.name);
-      return `<div class="mt-row" style="--c:${esc(x.e.hex || "#9B9B9B")};--i:${i}"><span class="mt-who"><b class="mt-av">${ini(x.e.name)}</b><span>${esc(x.e.name.split(/\s+/).slice(-1)[0])}${inn ? `<small class="ma-ok">bent ${esc(inn.t || "")}</small>` : `<small>${esc(x.p.start)}–${esc(x.p.end)}</small>`}</span></span>
-        <span class="mt-track"><i style="left:${pos(z.s)}%;width:${Math.max(2, pos(z.e) - pos(z.s))}%"><em>${x.p.part === "am" ? "Délelőtt" : x.p.part === "pm" ? "Délután" : "Egész nap"}</em></i></span></div>`; }).join("")
+      return `<div class="mt-row" style="--c:${esc(x.e.hex || "#9B9B9B")};--i:${i}"><span class="mt-who"><b class="mt-av">${ini(x.e.name)}</b><span>${esc(fnm(x.e.name))}${inn ? `<small class="ma-ok">bent ${esc(inn.t || "")}</small>` : `<small>${esc(x.p.start)}–${esc(x.p.end)}</small>`}</span></span>
+        <span class="mt-track"><i style="left:${pos(z.s)}%;width:${Math.max(2, pos(z.e) - pos(z.s))}%"><u style="width:${elap(z)}%"></u><em>${x.p.part === "am" ? "Délelőtt" : x.p.part === "pm" ? "Délután" : "Egész nap"}</em><s>${esc(x.p.start)}–${esc(x.p.end)}</s></i></span></div>`; }).join("")
       : `<p class="ma-empty ma-warn">${dt ? "Mára nincs senki beosztva." : "Ma zárva vagyunk."}</p>`;
     const nowLine = dt && nowM >= tlA && nowM <= tlB ? `<b class="mt-now" style="left:${pos(nowM)}%"><span>${hm(nowM)}</span></b>` : "";
+    /* holnap: ki jön — a zárás utáni üzenethez és a „Ma a boltban” aljához */
+    const tmD = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), tmK = maKey(tmD);
+    const tmDt = (()=>{ try{ return dayTimesK(tmK); }catch(e){ return null; } })(), tmA = getAssignment(tmK);
+    const tmP = tmDt ? E.map(e=>{ let p = null; try{ p = personPart(e.id, tmA, tmK); }catch(_){} return { e, p }; }).filter(x=> x.p && !x.p.holiday) : [];
+    const andJ = L=> L.length <= 1 ? L.join("") : L.slice(0, -1).join(", ") + " és " + L[L.length - 1];
+    const nmB = L=> andJ(L.map(x=> "<b>" + esc(fnm(x.e.name)) + "</b>"));
+    const closedNow = !dt || nowM >= cM, beforeOpen = !!dt && nowM < oM;
+    const sameTm = ppl.length && tmP.length && ppl.map(x=> x.e.id).sort().join(",") === tmP.map(x=> x.e.id).sort().join(",");
+    const tomTxt = !tmDt ? "Holnap zárva vagyunk — pihenjetek ki magatokat! 😴"
+      : !tmP.length ? "Holnapra még nincs beosztva senki."
+      : sameTm ? `Holnap találkozunk${ppl.length === 1 ? ", " + esc(fnm(ppl[0].e.name)) : ""}! 👋`
+      : tmP.length === 1 ? `Holnap te jössz, ${nmB(tmP)}! 👋` : `Holnap ti jöttök: ${nmB(tmP)}! 👋`;
+    const isLt = up.some(x=> x.k === "lt" && dayDiff(x.d) === 0);
+    const MSG = [];
+    if(closedNow){
+      MSG.push(dt ? "Mai napra bezártunk, jó pihenést! 🌙" : "Ma zárva vagyunk — jó pihenést! 🌙");
+      MSG.push(tomTxt);
+      if(tmDt && tmP.length) MSG.push(`Holnap ${esc(tmDt.open)}–${esc(tmDt.close)} között vagyunk nyitva`);
+      if(wait.length) MSG.push(`${wait.length} csomag vár még futárra 📦`);
+    } else {
+      if(beforeOpen){ MSG.push(`Nyitásig ${dur(oM - nowM)} ☕`); if(ppl.length) MSG.push(`Ma ${nmB(ppl)} dolgozik${ppl.length > 1 ? "nak" : ""} — jó napot! ☀️`); }
+      else { MSG.push(cM - nowM <= 30 ? `Mindjárt zárunk — még ${dur(cM - nowM)} ⏳` : `Zárásig ${dur(cM - nowM)}`);
+        MSG.push(first ? `Jó munkát, ${esc(first)}! 💪` : inNow.length ? `Jó munkát, ${nmB(inNow)}! 💪` : "Jó munkát mára! 💪");
+        if(dayPct >= 45 && dayPct <= 55) MSG.push("Félidő — a nap fele már megvan! 🎉"); }
+      if(isLt) MSG.push("Ma leltár van — ne felejtsd el! 📋");
+      if(wait.length) MSG.push(`${wait.length} csomag vár futárra 📦`);
+      if(todosAll.length) MSG.push(`${todosAll.length} teendő vár még ✅`);
+      if(!beforeOpen && ksSum == null && cM - nowM <= 90) MSG.push("Zárás előtt jöhet a kassza számolás 💰");
+      if(next) MSG.push(`${esc(next.x.p.start)}-tól jön ${nmB([next.x])} 👋`);
+    }
+    window.__maM = MSG; const mI = (window.__maI || 0) % MSG.length;
+    const msgBox = `<div class="mb-msg" id="maMsg"${MSG.length > 1 ? ` role="button" tabindex="0" title="Kattints a következő üzenetért"` : ""}><p class="mb-sub mb-mt">${MSG[mI]}</p>${MSG.length > 1 ? `<span class="mb-dots">${MSG.map((_, j)=> `<i${j === mI ? ` class="on"` : ""}></i>`).join("")}</span>` : ""}</div>`;
+    /* „Ma a boltban” — felső összegző sor és a holnapi sor */
+    const tlSum = `<div class="mt2-sum">${dt ? `<span class="mt2-c">Nyitva <b>${esc(dt.open)}–${esc(dt.close)}</b></span>` : `<span class="mt2-c">Ma zárva</span>`}<span class="mt2-c">${ppl.length} fő ma</span>${inNow.length ? `<span class="mt2-c on"><i></i>Bent: ${nmB(inNow)}</span>` : closedNow && dt ? `<span class="mt2-c">Bezártunk</span>` : ""}</div>`;
+    const tlTom = `<div class="mt2-tom"><span class="mt2-tl">Holnap <small>${DW[tmD.getDay()]}</small></span>${tmP.length ? tmP.map(x=> `<span class="mt2-p" style="--c:${esc(x.e.hex || "#9B9B9B")}"><b class="mt-av">${ini(x.e.name)}</b><span><b>${esc(fnm(x.e.name))}</b><small>${esc(x.p.start)}–${esc(x.p.end)}</small></span></span>`).join("") : `<em>${tmDt ? "még nincs beosztva" : "zárva"}</em>`}</div>`;
     /* hét */
     const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
     const week = Array.from({ length:7 }, (_, i)=>{ const d = new Date(mon); d.setDate(mon.getDate() + i); const k = maKey(d), aa = getAssignment(k);
@@ -64923,17 +64960,20 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       <div class="mb-head ma-in" style="--d:0"><div><p>${cap(DW[now.getDay()])}, ${HU_MONTHS[now.getMonth()].toLowerCase()} ${now.getDate()}.</p><h1>${hi}${first ? ", <span>" + esc(first) + "</span>" : ""} <span class="mb-wave">👋</span></h1></div>
         <div class="ma-chips"><span class="ma-chip"><i class="${open ? "g" : "r"}"></i>${dt ? (open ? "Nyitva" : "Zárva") + ` · ${esc(dt.open)}–${esc(dt.close)}` : "Ma zárva"}</span><button type="button" class="ma-pill dark" data-ma-go="cetli">＋ Cetli</button></div></div>
       <div class="mb-grid">
-        <section class="mb-c mb-live ma-in" style="--d:1">
-          <div class="mb-lab"><i class="mb-dot${open ? " on" : ""}"></i>Most</div>
+        <section class="mb-c mb-live ma-in${closedNow ? " is-closed" : beforeOpen ? " is-early" : ""}" style="--d:1">
+          ${closedNow ? `<span class="mb-night" aria-hidden="true"><i>🌙</i><s></s><s></s><s></s><s></s></span>` : ""}
+          <div class="mb-lab"><i class="mb-dot${open ? " on" : ""}"></i>${closedNow ? "Zárva" : beforeOpen ? "Hamarosan nyitunk" : "Most"}</div>
           <div class="mb-clock" id="maClock">${pad2(now.getHours())}<i>:</i>${pad2(now.getMinutes())}</div>
-          <p class="mb-sub">${liveTxt}</p>
+          ${msgBox}
           <div class="mb-bar"><i style="width:${dayPct}%"></i>${dt ? `<span style="left:0">${esc(dt.open)}</span><span style="right:0">${esc(dt.close)}</span>` : ""}</div>
           <div class="mb-st"><button type="button" data-ma-go="teendo"><b data-cu="${todosAll.length}">${todosAll.length}</b><small>teendő</small></button><button type="button" data-ma-go="csomag"><b data-cu="${wait.length}">${wait.length}</b><small>csomag vár</small></button><button type="button" data-ma-go="beosztas"><b data-cu="${ppl.length}">${ppl.length}</b><small>dolgozik ma</small></button></div>
-          <div class="mb-now">${inNow.length ? `<span>Bent most</span>${inNow.map(x=> `<b style="--c:${esc(x.e.hex || "#9B9B9B")}">${esc(x.e.name.split(/\s+/).slice(-1)[0])}</b>`).join("")}` : `<span>${dt ? "Most nincs bent senki" : "Pihenőnap"}</span>`}${next ? `<em>Következik: <b>${esc(next.x.e.name.split(/\s+/).slice(-1)[0])}</b> ${esc(next.x.p.start)}-tól</em>` : ""}</div>
+          <div class="mb-now">${closedNow && tmP.length ? `<span>Holnap</span>${tmP.map(x=> `<b style="--c:${esc(x.e.hex || "#9B9B9B")}">${esc(fnm(x.e.name))}</b>`).join("")}<em>${esc(tmDt.open)}-tól nyitunk</em>` : inNow.length ? `<span>Bent most</span>${inNow.map(x=> `<b style="--c:${esc(x.e.hex || "#9B9B9B")}">${esc(fnm(x.e.name))}</b>`).join("")}` : `<span>${dt ? (closedNow ? "Mára vége — szép munka volt!" : "Most nincs bent senki") : "Pihenőnap"}</span>`}${!closedNow && next ? `<em>Következik: <b>${esc(fnm(next.x.e.name))}</b> ${esc(next.x.p.start)}-tól</em>` : ""}</div>
         </section>
         <section class="mb-c mb-tl ma-in" style="--d:2">
           <div class="ma-ch"><h2>Ma a boltban</h2><button type="button" class="ma-lk" data-ma-go="beosztas">Beosztás ›</button></div>
+          ${tlSum}
           <div class="mt-wrap"><div class="mt-hrs">${hrs.join("")}</div><div class="mt-rows">${bars}${nowLine}</div></div>
+          ${tlTom}
         </section>
         <section class="mb-c mb-week ma-in" style="--d:3">
           <div class="ma-ch"><h2>A héten</h2><small>${HU_MONTHS[mon.getMonth()].toLowerCase().slice(0, 3)}. ${mon.getDate()}–</small></div>
@@ -64975,6 +65015,13 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* élő óra */
   setInterval(()=>{ const c = document.getElementById("maClock"); if(!c || document.hidden) return; const d = new Date(); c.innerHTML = `${pad2(d.getHours())}<i>:</i>${pad2(d.getMinutes())}`; }, 1000);
   window.fpMaRender = maRender;
+  /* óra-kártya: váltakozó kis üzenetek (kattintásra a következő) */
+  function maMsgNext(){ const box = document.getElementById("maMsg"), M = window.__maM || []; if(!box || M.length < 2) return; window.__maI = ((window.__maI || 0) + 1) % M.length;
+    const p = box.querySelector(".mb-mt"), k = window.__maI; if(!p) return; p.classList.remove("in"); p.classList.add("out");
+    setTimeout(()=>{ if(!p.isConnected) return; p.innerHTML = M[k] || ""; p.classList.remove("out"); void p.offsetWidth; p.classList.add("in"); box.querySelectorAll(".mb-dots i").forEach((d, j)=> d.classList.toggle("on", j === k)); }, 230); }
+  let maMsgT = setInterval(()=>{ try{ if(activePage === "ma" && !document.hidden) maMsgNext(); }catch(e){} }, 6500);
+  document.addEventListener("click", e=>{ if(!(e.target.closest && e.target.closest("#maMsg"))) return; maMsgNext(); clearInterval(maMsgT); maMsgT = setInterval(()=>{ try{ if(activePage === "ma" && !document.hidden) maMsgNext(); }catch(e){} }, 6500); });
+  document.addEventListener("keydown", e=>{ if((e.key === "Enter" || e.key === " ") && e.target && e.target.id === "maMsg"){ e.preventDefault(); maMsgNext(); } });
 
   const PAGE_INFO = {
     ma: { title:"Ma", sub:"Napi áttekintés · ki dolgozik, teendők, csomagok, határidők" },
@@ -68681,6 +68728,61 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           const a = x.animate([{ opacity:0, transform:"translateX(-34px) scale(.96)" }, { opacity:1, transform:"none" }], { duration:420, delay:i * 55, easing:"cubic-bezier(.2,.9,.25,1)", fill:"backwards" }); a.onfinish = ()=>{ x.style.transformOrigin = ""; }; }
       }catch(_){ } }); }, 30); }, true);
 })();</script>
+<style id="mpFixCss">
+/* „Ki dolgozik aznap?” (több dolgozó / félnap): ne lógjon ki az ablakból — teljes szélesség, összehúzódó oszlopok */
+#assignBackdrop .multi-pick.multi-pick{ grid-column:1 / -1 !important; box-sizing:border-box !important; width:100% !important; max-width:100% !important; min-width:0 !important; }
+.popup.wide #assignBackdrop .multi-pick.open, #assignBackdrop .popup.wide .multi-pick.open.open{ grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)) !important; }
+#assignBackdrop .multi-pick .mp-row{ min-width:0 !important; width:auto !important; box-sizing:border-box !important; }
+#assignBackdrop .multi-pick .mp-name{ flex:1 1 auto !important; min-width:0 !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+#assignBackdrop .multi-pick .mp-seg{ flex:none !important; }
+#assignBackdrop .multi-pick .mp-head{ min-width:0 !important; flex-wrap:wrap !important; }
+#assignBackdrop .multi-pick .mp-head small{ white-space:normal !important; }
+@media (max-width:520px){ #assignBackdrop .multi-pick .mp-row{ flex-wrap:wrap !important; row-gap:6px !important; } #assignBackdrop .multi-pick .mp-name{ flex:1 1 100% !important; white-space:normal !important; } #assignBackdrop .multi-pick .mp-seg{ margin-left:auto !important; } }
+</style>
+<style id="maMsgCss">
+/* ===== PRÓBA 31: kezdőlap — óra-kártya üzenetei + „Ma a boltban” új elrendezés ===== */
+.mb-msg{ position:relative; margin:-4px 0 0; min-height:40px; cursor:default; outline:none; }
+.mb-msg[role="button"]{ cursor:pointer; }
+.mb-msg .mb-mt{ margin:0 !important; line-height:1.35; transition:opacity .22s ease, transform .22s ease; }
+.mb-msg .mb-mt b{ font-weight:800; }
+.mb-msg .mb-mt.out{ opacity:0; transform:translateY(-6px); }
+.mb-msg .mb-mt.in{ animation:maMsgIn .42s cubic-bezier(.2,.9,.3,1.25); }
+@keyframes maMsgIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+.mb-msg[role="button"]:hover .mb-mt, .mb-msg:focus-visible .mb-mt{ filter:brightness(1.15); }
+.mb-dots{ display:flex; gap:5px; margin-top:7px; }
+.mb-dots i{ width:6px; height:6px; border-radius:99px; background:rgba(127,127,127,.35); transition:width .3s ease, background .3s ease; }
+.mb-dots i.on{ width:16px; background:#FBAC01; }
+.mb-live.is-closed .mb-clock{ opacity:.55; }
+.mb-live.is-closed .mb-dot{ background:#8a8f98; }
+.mb-night{ position:absolute; top:14px; right:16px; width:96px; height:64px; pointer-events:none; z-index:1; }
+.mb-night i{ position:absolute; right:6px; top:0; font-style:normal; font-size:34px; filter:drop-shadow(0 0 14px rgba(255,214,120,.55)); animation:maMoon 5s ease-in-out infinite; }
+.mb-night s{ position:absolute; width:4px; height:4px; border-radius:50%; background:#ffe39a; box-shadow:0 0 8px #ffd25e; animation:maStar 2.6s ease-in-out infinite; }
+.mb-night s:nth-of-type(1){ left:8px; top:10px; } .mb-night s:nth-of-type(2){ left:30px; top:38px; animation-delay:.7s; } .mb-night s:nth-of-type(3){ left:52px; top:6px; animation-delay:1.3s; } .mb-night s:nth-of-type(4){ left:18px; top:52px; animation-delay:1.9s; width:3px; height:3px; }
+@keyframes maMoon{ 0%,100%{ transform:translateY(0) rotate(-8deg); } 50%{ transform:translateY(-6px) rotate(6deg); } }
+@keyframes maStar{ 0%,100%{ opacity:.2; transform:scale(.6); } 50%{ opacity:1; transform:scale(1.15); } }
+/* „Ma a boltban” */
+.mt2-sum{ display:flex; flex-wrap:wrap; gap:6px; margin:-4px 0 2px; }
+.mt2-c{ display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 11px; border-radius:99px; background:var(--gl-bg2, rgba(255,255,255,.06)); border:1px solid var(--gl-bd, rgba(255,255,255,.12)); font-size:12px; font-weight:700; color:var(--text-dim); white-space:nowrap; }
+.mt2-c b{ color:var(--text); }
+.mt2-c .ma-i{ width:14px; height:14px; }
+.mt2-c.on{ color:var(--text); border-color:rgba(52,195,143,.45); background:rgba(52,195,143,.1); }
+.mt2-c.on > i{ width:7px; height:7px; border-radius:50%; background:#34C38F; animation:glPulseG 1.8s ease-in-out infinite; }
+.mb-tl .mt-row{ height:50px; }
+.mb-tl .mt-track i{ overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 12px; box-sizing:border-box; }
+.mb-tl .mt-track i u{ position:absolute; left:0; top:0; bottom:0; background:repeating-linear-gradient(135deg, rgba(255,255,255,.34) 0 6px, rgba(255,255,255,.14) 6px 12px); border-right:2px solid rgba(255,255,255,.55); text-decoration:none; pointer-events:none; }
+.mb-tl .mt-track i em, .mb-tl .mt-track i s{ position:relative; z-index:1; }
+.mb-tl .mt-track i s{ text-decoration:none; font-size:11px; font-weight:800; color:rgba(0,0,0,.7); white-space:nowrap; }
+.mt2-tom{ margin-top:auto; display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding-top:12px; border-top:1px dashed var(--gl-bd, rgba(255,255,255,.14)); }
+.mt2-tl{ font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); display:flex; flex-direction:column; line-height:1.15; }
+.mt2-tl small{ font-size:10.5px; letter-spacing:0; text-transform:none; font-weight:700; opacity:.8; }
+.mt2-p{ display:inline-flex; align-items:center; gap:8px; padding:4px 12px 4px 4px; border-radius:99px; background:var(--gl-bg2, rgba(255,255,255,.06)); border:1px solid var(--gl-bd, rgba(255,255,255,.12)); transition:transform .2s; }
+.mt2-p:hover{ transform:translateY(-2px); }
+.mt2-p .mt-av{ width:28px; height:28px; font-size:10px; }
+.mt2-p > span{ display:flex; flex-direction:column; line-height:1.15; } .mt2-p > span b{ font-size:12.5px; } .mt2-p > span small{ font-size:10.5px; color:var(--text-dim); font-weight:700; }
+.mt2-tom > em{ font-style:normal; font-size:12.5px; color:var(--text-dim); }
+@media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) .mb-night i, html:not(.fp-anim-full) .mb-night s, html:not(.fp-anim-full) .mt2-c.on > i{ animation:none !important; } html:not(.fp-anim-full) .mb-night s{ opacity:.8; } html:not(.fp-anim-full) .mb-msg .mb-mt.in{ animation:none !important; } }
+@media print{ .mb-night{ display:none !important; } }
+</style>
 <style id="ltMaSkin">
 /* ===== PRÓBA 30: Leltár — a kezdőlap (Ma) kinézetében: nagy fejléc, üvegkártyák rácsban ===== */
 html:not(.ui-uj) .lt-mbh{ display:none !important; }
