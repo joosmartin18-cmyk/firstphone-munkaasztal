@@ -29118,6 +29118,68 @@ html body #fcAdmin#fcAdmin .ax-emo-h, html body .ax-drw:not(#_1):not(#_2) .ax-em
   html body #fcAdmin#fcAdmin .ax-btn, html body .ax-drw:not(#_1):not(#_2) .ax-btn, html body .ax-swin:not(#_1):not(#_2) .ax-btn{ white-space:normal !important; height:auto !important; padding:8px 12px !important; line-height:1.25 !important; }
   html body #fcAdmin#fcAdmin .ax-btn.sm, html body .ax-drw:not(#_1):not(#_2) .ax-btn.sm, html body .ax-swin:not(#_1):not(#_2) .ax-btn.sm{ height:auto !important; padding:6px 10px !important; }
 }
+/* ===== Admin v3 — a bolti új kinézet stílusában: meleg sötét háttér, sárga kiemelés, üvegkártyák ===== */
+html body #fcAdmin#fcAdmin#fcAdmin, html body .ax-drw:not(#_1):not(#_2):not(#_3), html body .ax-swin:not(#_1):not(#_2):not(#_3){ --u0:#0b0907; --u1:rgba(30,26,20,.74); --u2:rgba(255,255,255,.055); --u3:rgba(255,255,255,.09); --u4:rgba(255,255,255,.11); --utx:#f4efe6; --udim:#aaa293; --ufaint:#7d7568; --uacc:#FBAC01; --uacctx:#000; --axAccTx:#f0c766; --axR:22px; --axT:16px; --axC:12px; --axH:38px; --axBlur:blur(14px) saturate(1.2); --axSh:0 20px 50px -26px rgba(0,0,0,.85); --axHi:inset 0 1px 0 rgba(255,255,255,.08); }
+html body #fcAdmin#fcAdmin#fcAdmin.th-light, html body .ax-drw.th-light:not(#_1):not(#_2):not(#_3), html body .ax-swin.th-light:not(#_1):not(#_2):not(#_3){ --u0:#F4EFE6; --u1:rgba(255,255,255,.78); --u2:rgba(255,255,255,.7); --u3:rgba(20,14,0,.06); --u4:rgba(20,14,0,.1); --utx:#1a1712; --udim:#5f584c; --ufaint:#8a8273; --axAccTx:#8A5A00; --axSh:0 18px 40px -26px rgba(120,80,0,.35); --axHi:inset 0 1px 0 rgba(255,255,255,.9); }
+html.fp-lite body #fcAdmin#fcAdmin#fcAdmin, html.fp-lite body .ax-drw:not(#_1):not(#_2):not(#_3), html.fp-lite body .ax-swin:not(#_1):not(#_2):not(#_3){ --axBlur:none; }
+html body #fcAdmin#fcAdmin#fcAdmin{ background:radial-gradient(60vmax 40vmax at 18% -8%, rgba(251,172,1,.17), transparent 62%), radial-gradient(50vmax 40vmax at 100% 10%, rgba(240,110,30,.12), transparent 60%), radial-gradient(60vmax 50vmax at 60% 110%, rgba(251,172,1,.08), transparent 65%), #0b0907 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin.th-light{ background:radial-gradient(60vmax 40vmax at 18% -8%, rgba(251,172,1,.22), transparent 62%), radial-gradient(50vmax 40vmax at 100% 10%, rgba(240,110,30,.12), transparent 60%), #F4EFE6 !important; }
+/* oldalmenü */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav{ background:rgba(16,13,10,.82) !important; -webkit-backdrop-filter:var(--axBlur) !important; backdrop-filter:var(--axBlur) !important; border-right:1px solid var(--u4) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-nav{ background:rgba(255,252,246,.86) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav > button{ height:38px !important; min-height:38px !important; border-radius:12px !important; font-weight:600 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav > button.on{ background:linear-gradient(90deg, rgba(251,172,1,.95), rgba(240,127,18,.85)) !important; color:#000 !important; box-shadow:0 10px 22px -12px rgba(251,172,1,.9) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav > button.on .ps-t{ color:#000 !important; font-weight:800 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav > button.on .ps-i{ background-color:#000 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav > button.on em{ background:#000 !important; color:#FBAC01 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav > button em.hot{ background:#FBAC01 !important; color:#000 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav .ui-navtop b::before{ color:var(--axAccTx) !important; }
+/* felső sáv */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-hdr{ background:rgba(11,9,7,.6) !important; -webkit-backdrop-filter:var(--axBlur) !important; backdrop-filter:var(--axBlur) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-hdr{ background:rgba(244,239,230,.75) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-hdr .ax-search input, html body #fcAdmin#fcAdmin#fcAdmin .ax-gq{ border-radius:9999px !important; background:var(--u2) !important; padding-left:38px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-rr .ax-ib{ border-radius:12px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-rr .ax-meav{ background:linear-gradient(145deg,#FFD45C,#FBAC01 55%,#F07F12) !important; }
+/* oldal fejléce: dátum + nagy cím, az utolsó szó sárga (mint a bolti oldalakon) */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ph{ padding:26px 0 18px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kick{ display:block; margin:0 0 6px; font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--udim); }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-h1{ font-size:36px !important; line-height:40px !important; font-weight:800 !important; letter-spacing:-.03em !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-h1 > span{ background:linear-gradient(90deg,#FFD45C,#FBAC01 45%,#F07F12) !important; -webkit-background-clip:text !important; background-clip:text !important; color:transparent !important; -webkit-text-fill-color:transparent !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-sub{ font-size:13.5px !important; margin-top:4px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-phs > *{ border-radius:16px !important; background:var(--u1) !important; border:1px solid var(--u4) !important; box-shadow:var(--axHi) !important; -webkit-backdrop-filter:var(--axBlur) !important; backdrop-filter:var(--axBlur) !important; padding:8px 14px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-phs > * b{ font-size:20px !important; font-weight:800 !important; }
+/* kártyák: üveg, mint a bolti kezdőlapon */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-card, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-card, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-card, html body #fcAdmin#fcAdmin#fcAdmin .ax-chat, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-chat, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-chat, html body #fcAdmin#fcAdmin#fcAdmin .fc-acc, html body .ax-drw:not(#_1):not(#_2):not(#_3) .fc-acc, html body .ax-swin:not(#_1):not(#_2):not(#_3) .fc-acc, html body #fcAdmin#fcAdmin#fcAdmin .ax-mol, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-mol, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-mol, html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-kpi, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-kpi, html body #fcAdmin#fcAdmin#fcAdmin .ax-scard, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-scard, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-scard{ background-color:var(--u1) !important; border:1px solid var(--u4) !important; border-radius:var(--axR) !important; box-shadow:var(--axSh), var(--axHi) !important; -webkit-backdrop-filter:var(--axBlur) !important; backdrop-filter:var(--axBlur) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-card:not(.ax-flush):not(.ui-tl):not(.ax-tl), html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-card:not(.ax-flush):not(.ui-tl):not(.ax-tl), html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-card:not(.ax-flush):not(.ui-tl):not(.ax-tl), html body #fcAdmin#fcAdmin#fcAdmin .fc-acc, html body .ax-drw:not(#_1):not(#_2):not(#_3) .fc-acc, html body .ax-swin:not(#_1):not(#_2):not(#_3) .fc-acc{ padding:20px 22px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ch h3, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-ch h3, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-ch h3{ font-size:16px !important; font-weight:800 !important; letter-spacing:-.01em !important; }
+/* számkártyák */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kpis{ gap:14px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi{ padding:16px 18px !important; transition:transform .25s cubic-bezier(.2,.9,.3,1.25), border-color .2s !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi:hover{ transform:translateY(-3px) !important; border-color:color-mix(in srgb, var(--k, #FBAC01) 60%, transparent) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi small{ font-size:11px !important; font-weight:800 !important; letter-spacing:.12em !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi b{ font-size:32px !important; line-height:36px !important; font-weight:800 !important; letter-spacing:-.03em; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi.alert{ border-color:rgba(255,107,107,.5) !important; }
+/* gombok, mezők, fülek */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-btn, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-btn, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-btn{ border-radius:9999px !important; padding:0 16px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-btn.sm, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-btn.sm, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-btn.sm{ border-radius:9999px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-btn.pri, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-btn.pri, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-btn.pri{ background:linear-gradient(135deg,#FFD45C,#FBAC01 55%,#F07F12) !important; border-color:transparent !important; color:#000 !important; box-shadow:0 10px 22px -12px rgba(251,172,1,.9) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin input.ax-in, html body .ax-drw:not(#_1):not(#_2):not(#_3) input.ax-in, html body .ax-swin:not(#_1):not(#_2):not(#_3) input.ax-in, html body #fcAdmin#fcAdmin#fcAdmin select.ax-in, html body .ax-drw:not(#_1):not(#_2):not(#_3) select.ax-in, html body .ax-swin:not(#_1):not(#_2):not(#_3) select.ax-in, html body #fcAdmin#fcAdmin#fcAdmin textarea.ax-in, html body .ax-drw:not(#_1):not(#_2):not(#_3) textarea.ax-in, html body .ax-swin:not(#_1):not(#_2):not(#_3) textarea.ax-in, html body #fcAdmin#fcAdmin#fcAdmin .fc-pw-q, html body .ax-drw:not(#_1):not(#_2):not(#_3) .fc-pw-q, html body .ax-swin:not(#_1):not(#_2):not(#_3) .fc-pw-q{ border-radius:12px !important; background-color:var(--u2) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-seg, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-seg, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-seg{ border-radius:9999px !important; padding:3px !important; background:var(--u2) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-seg > button, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-seg > button, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-seg > button, html body #fcAdmin#fcAdmin#fcAdmin .ax-dtabs > button, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dtabs > button, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-dtabs > button{ border-radius:9999px !important; padding:0 14px !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-seg > button.on, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-seg > button.on, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-seg > button.on, html body #fcAdmin#fcAdmin#fcAdmin .ax-dtabs > button.on, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dtabs > button.on, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-dtabs > button.on{ background:linear-gradient(90deg, rgba(251,172,1,.95), rgba(240,127,18,.85)) !important; color:#000 !important; box-shadow:0 6px 16px -10px rgba(251,172,1,.9) !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-seg > button.on *, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-seg > button.on *, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-seg > button.on *, html body #fcAdmin#fcAdmin#fcAdmin .ax-dtabs > button.on *, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dtabs > button.on *, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-dtabs > button.on *{ color:#000 !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-chip, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-chip, html body .ax-swin:not(#_1):not(#_2):not(#_3) .ax-chip{ border-radius:9999px !important; }
+/* táblázat sorai */
+html body #fcAdmin#fcAdmin#fcAdmin table tbody tr:hover > td, html body .ax-drw:not(#_1):not(#_2):not(#_3) table tbody tr:hover > td, html body .ax-swin:not(#_1):not(#_2):not(#_3) table tbody tr:hover > td{ background:rgba(251,172,1,.06) !important; }
+/* bolt-adatlap és felugró ablakok */
+html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-drwb{ background:rgba(22,18,14,.94) !important; border-radius:24px !important; border:1px solid var(--u4) !important; box-shadow:0 30px 80px -20px rgba(0,0,0,.8) !important; }
+html body .ax-drw.th-light:not(#_1):not(#_2):not(#_3) .ax-drwb{ background:rgba(255,252,246,.97) !important; }
+html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dhero{ background:radial-gradient(40vmax 20vmax at 0% 0%, rgba(251,172,1,.16), transparent 70%) !important; }
+html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dtl, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dc, html body .ax-drw:not(#_1):not(#_2):not(#_3) .ax-dset{ border-radius:16px !important; background:var(--u2) !important; }
+@media (prefers-reduced-motion:reduce){ html body #fcAdmin#fcAdmin#fcAdmin .ax-kpi:hover{ transform:none !important; } }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-tb{ flex-wrap:wrap !important; }
+html body #fcAdmin#fcAdmin#fcAdmin .ax-tb > *{ max-width:100%; }
+@media (max-width:700px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-chat{ grid-template-columns:minmax(0,1fr) !important; min-width:0 !important; max-width:100% !important; } html body #fcAdmin#fcAdmin#fcAdmin .ax-chat > *{ min-width:0 !important; max-width:100% !important; box-sizing:border-box !important; } }
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
@@ -29137,6 +29199,15 @@ html body #fcAdmin#fcAdmin .ax-emo-h, html body .ax-drw:not(#_1):not(#_2) .ax-em
       if(host){ if(p === host || p.matches(".ps-i")) return; if(host.textContent.replace(axEmoRx, "").trim()) p.classList.add("ax-emo-h"); return; }
       const box = p.parentElement; if(box && box.textContent.replace(axEmoRx, "").trim()) p.classList.add("ax-emo-h"); });
   }
+  /* admin oldalfejléc a bolti oldalak stílusában: dátum felül, a cím utolsó szava sárga */
+  function axHeadFx(){ const A = document.getElementById("fcAdmin"); if(!A) return;
+    const h = A.querySelector(".ax-ph .ax-h1"); if(!h) return;
+    if(!h.querySelector("span")){ const s = h.textContent.trim(), i = s.lastIndexOf(" "); h.innerHTML = i > 0 ? esc(s.slice(0, i)) + " <span>" + esc(s.slice(i + 1)) + "</span>" : "<span>" + esc(s) + "</span>"; }
+    const p = h.parentNode; let k = p.querySelector(".ax-kick");
+    if(!k){ k = document.createElement("small"); k.className = "ax-kick"; p.insertBefore(k, h); }
+    const d = new Date(), DW = ["Vasárnap","Hétfő","Kedd","Szerda","Csütörtök","Péntek","Szombat"], t = DW[d.getDay()] + ", " + d.toLocaleDateString("hu-HU", { month:"long", day:"numeric" }) + " · Admin";
+    if(k.textContent !== t) k.textContent = t; }
+  setInterval(()=>{ try{ axHeadFx(); }catch(e){} }, 400);
   function axEmoStart(){
     if(axEmoOn || !axEmoRx || !window.MutationObserver) return; axEmoOn = true;
     let Q = [], T = 0;
