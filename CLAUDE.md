@@ -79,6 +79,7 @@ Sorszámok helyett ezekre keress rá (a sorok folyamatosan csúsznak):
 - **Újdonságok animáció:** `NEWS_ANIM` + `newsAnim(n)`, `<style id="newsAnimCss">`. **Minden új NEWS-bejegyzéshez készíts saját, a témához illő animációt** (`anim:"kulcs"`); ha nincs, az azonosítóból választ egy általánosat (`NEWS_GEN`), így mindig más. Ha Martin azt írja, „mehet az újdonságokba”, azonnal készíts bejegyzést saját animációval. Próba: `KEEPNEWS=1 T=3300 node tools/shot.js`.
 - `<style id="ksMaSkin">` + `<script id="ksMaJs">` (PRÓBA 32): **Kassza** a kezdőlap stílusában (fejléc állapot-chippel: megszámolva / egyezik / hiány / többlet); a **Cetli** fejléce és kártyái ugyanígy (a Cetli-dokumentum saját CSS-ében, `clHead`). Csak új kinézetben.
 - `<style id="calClearCss">` + `<script id="calClearJs">` (PRÓBA 33): Beosztás naptár jól láthatóan (élénk dolgozói színek, a kártyák betűszíne a beállított marad); a méret-szabályok csak asztali nézetben (`:not(.m-app)`). Próba teli hónappal: `SCH=month EMP2=1 PAGE=beosztas node tools/shot.js`.
+- Hangok: `window.fpSound(kind, vol)` (ok, done, dup, err, info, msg, send) — a **„zen”** hangcsomag (Martin választása; `zen()` segéd). Próbaoldalhoz a hangokat külön HTML-ben érdemes megmutatni.
 - `fpBrkNote()` — a munkaközi szünet (6 óra felett 1 óra) szövege; **nyomtatványonként csak egyszer, lábjegyzetként** szerepeljen.
 - `const FEATS`, `function fpApplyFeats()` — boltonként ki-bekapcsolható programok.
 - Telefonos nézet: `html.m-app`.

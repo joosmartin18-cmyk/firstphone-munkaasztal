@@ -58,16 +58,18 @@
     var src = AC.createBufferSource(), bp = AC.createBiquadFilter(), g = AC.createGain(); src.buffer = b; bp.type = "bandpass"; bp.Q.value = 1.4; bp.frequency.setValueAtTime(f1, t); bp.frequency.exponentialRampToValueAtTime(f2, t + d);
     g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + d * .25); g.gain.exponentialRampToValueAtTime(.0001, t + d); src.connect(bp).connect(g).connect(out); src.start(t); src.stop(t + d + .02); }
   var GLASS = [[1, 1], [2.01, .22], [3.02, .07]], BELL = [[1, 1], [2, .3], [3, .1], [4.16, .04]];
+  /* zen hangcsomag: lágy, kicsit lebegő hangok (Martin választása, 2026-11) */
+  function zen(out, f, t, d, pk){ tone(out, f, t, d, pk, { att:.06, harm:[[1, 1], [2, .12], [3, .04]] }); }
   window.fpSound = function(kind, vol){
     try{
       if(vol === 0) return; var a = ctx(), t = a.currentTime + .01, out = a.createGain(); out.gain.value = vol == null ? .6 : vol; out.connect(comp);
-      if(kind === "ok"){ tone(out, 1567.98, t, .16, .55, { harm:GLASS }); tone(out, 2093, t + .06, .32, .5, { harm:GLASS }); }
-      else if(kind === "done"){ [1046.5, 1318.5, 1568, 2093].forEach(function(f, i){ tone(out, f, t + i * .07, .45, .42, { harm:BELL }); }); }
-      else if(kind === "dup"){ tone(out, 740, t, .07, .55, { f2:600, harm:[[1, 1], [2, .15]] }); tone(out, 740, t + .11, .09, .55, { f2:600, harm:[[1, 1], [2, .15]] }); }
-      else if(kind === "err"){ tone(out, 311, t, .22, .7, { type:"triangle", f2:262, harm:[[1, 1], [2, .2]] }); tone(out, 233, t + .17, .34, .7, { type:"triangle", f2:196, harm:[[1, 1], [2, .2]] }); }
-      else if(kind === "info"){ tone(out, 1174.7, t, .22, .45, { harm:GLASS }); }
-      else if(kind === "msg"){ [1318.5, 1661.2, 1975.5].forEach(function(f, i){ tone(out, f, t + i * .11, .38, .45, { harm:BELL }); }); }
-      else if(kind === "send"){ noise(out, t, .24, 700, 4200, .5); tone(out, 880, t + .05, .12, .12, { f2:1760 }); }
+      if(kind === "ok"){ zen(out, 880, t, .9, .45); zen(out, 1320, t + .12, 1, .35); }
+      else if(kind === "done"){ [523, 659, 784, 988].forEach(function(f, i){ zen(out, f, t + i * .15, 1.6, .3); }); }
+      else if(kind === "dup"){ zen(out, 587, t, .5, .45); zen(out, 587, t + .2, .6, .35); }
+      else if(kind === "err"){ zen(out, 392, t, .9, .5); zen(out, 311, t + .2, 1.1, .45); }
+      else if(kind === "info"){ zen(out, 1047, t, 1.2, .4); }
+      else if(kind === "msg"){ zen(out, 784, t, 1.2, .4); zen(out, 1175, t + .18, 1.3, .35); }
+      else if(kind === "send"){ noise(out, t, .6, 400, 2500, .25); zen(out, 1175, t + .1, .9, .25); }
       if(navigator.vibrate) navigator.vibrate(kind === "ok" ? 30 : kind === "dup" ? [25, 40, 25] : kind === "err" ? [100, 50, 100] : 0);
     }catch(e){}
   };
@@ -69073,6 +69075,13 @@ html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.today{ border:2px
 .na-cards i{ position:absolute; top:50%; width:70px; height:90px; margin-top:-45px; border-radius:12px; background:linear-gradient(160deg,#FFD45C,#F07F12); box-shadow:0 12px 26px rgba(0,0,0,.45); animation:naCard 3.6s cubic-bezier(.3,.8,.3,1.2) infinite; }
 .na-cards i:nth-of-type(1){ left:calc(50% - 120px); } .na-cards i:nth-of-type(2){ left:calc(50% - 50px); animation-delay:.15s; background:linear-gradient(160deg,#a78bfa,#6d5bd0); } .na-cards i:nth-of-type(3){ left:calc(50% + 20px); animation-delay:.3s; background:linear-gradient(160deg,#4fb3c4,#2c7a87); } .na-cards i:nth-of-type(4){ left:calc(50% + 90px); animation-delay:.45s; background:linear-gradient(160deg,#ff8fa3,#d6589a); width:40px; }
 @keyframes naCard{ 0%,100%{ transform:translateY(0) rotate(0); } 40%{ transform:translateY(-12px) rotate(-4deg); } 70%{ transform:translateY(4px) rotate(2deg); } }
+.na-sound{ display:flex; align-items:center; justify-content:center; gap:7px; }
+.na-sound b{ font-size:30px; margin-right:12px; animation:naPop 2.4s ease-in-out infinite; }
+.na-sound i{ width:8px; height:26px; border-radius:6px; background:linear-gradient(180deg,#FFD45C,#F07F12); animation:nsBar 1.6s ease-in-out infinite; transform-origin:center; }
+.na-sound i:nth-of-type(2){ animation-delay:.12s; } .na-sound i:nth-of-type(3){ animation-delay:.24s; } .na-sound i:nth-of-type(4){ animation-delay:.36s; } .na-sound i:nth-of-type(5){ animation-delay:.48s; } .na-sound i:nth-of-type(6){ animation-delay:.6s; } .na-sound i:nth-of-type(7){ animation-delay:.72s; } .na-sound i:nth-of-type(8){ animation-delay:.84s; } .na-sound i:nth-of-type(9){ animation-delay:.96s; }
+@keyframes nsBar{ 0%,100%{ transform:scaleY(.35); opacity:.6; } 50%{ transform:scaleY(2.2); opacity:1; } }
+.na-sound s{ position:absolute; left:50%; top:50%; width:60px; height:60px; margin:-30px 0 0 -30px; border-radius:50%; border:2px solid rgba(251,172,1,.6); opacity:0; animation:naRing 3s ease-out infinite; }
+.na-sound s:nth-of-type(2){ animation-delay:1s; } .na-sound s:nth-of-type(3){ animation-delay:2s; }
 @media (prefers-reduced-motion:reduce){
   html:not(.fp-anim-full) .na *{ animation:none !important; }
   html:not(.fp-anim-full) .na-multi .nm-s, html:not(.fp-anim-full) .na-multi .nm-ok, html:not(.fp-anim-full) .na-ship .ns-plus{ opacity:1 !important; }
@@ -69913,7 +69922,9 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
 /* PRÓBA: újdonság — egyszerű felugró ablak (a régi diás bemutató helyett) */
 (function(){
   var BON = (function(){ try{ var s = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"); return /^bonyh[aá]d/i.test(String((s && s.settings && s.settings.location) || "").trim()); }catch(e){ return false; } })();
-  var NEWS = [{ id:"cetli-tobb-egyben-2026-11-16", both:true, anim:"multi", tag:"Újdonság", t:"Több cetli egyben — vegyesen is", x:"Rögzíts egymás után több cetlit, és nyomtasd ki őket egyszerre.",
+  var NEWS = [{ id:"zen-hangok-2026-11-16", both:true, anim:"sound", tag:"Újdonság", t:"Új, lágyabb hangok", x:"Megújultak a Munkaasztal hangjai.",
+    p:["🎵 Puhább, nyugodtabb hangok szólnak beolvasáskor, mentéskor és hibánál","💬 A chat új üzenete és az elküldés hangja is lágyabb lett","🔈 Ugyanott szólnak, ahol eddig — csak kellemesebben"] },
+    { id:"cetli-tobb-egyben-2026-11-16", both:true, anim:"multi", tag:"Újdonság", t:"Több cetli egyben — vegyesen is", x:"Rögzíts egymás után több cetlit, és nyomtasd ki őket egyszerre.",
     p:["✅ Bármelyik cetlinél a „Kész” gomb után megkérdezi: van még? Ha igen, elteszi, és jöhet a következő","🔀 Lehet vegyesen is: pl. egy szállítási címke, aztán egy megérkezett rendelés, aztán egy foglaló","🖨 A végén egyben nyomtatod ki — mindegyik külön cetlire kerül (1/3, 2/3, 3/3 …), az elrakottakat a gomb fölött látod"] },
     { id:"cetli-szallitas-2026-11-16", both:true, anim:"ship", tag:"Újdonság", t:"Szállítási költség és nyomtatás-igazítás a cetliken", x:"Két hasznos újítás a Cetli generátorban.",
     p:["🚚 Megérkezett rendelés: ha van szállítási díj, kattints a „Van” gombra és írd be az összeget — hozzáadja a fizetendő végösszeghez","📐 Post-it nyomtatás: ha a nyomtató levágja a cetli szélét, a „Nyomtatás igazítása” gombbal eltolhatod vagy kicsinyítheted — a gép megjegyzi","🖨 Javítva: a rendelés-cetli alja nem lóg le többé a post-it-ről"] },
@@ -69929,6 +69940,7 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
     ship:'<div class="na na-ship"><span class="ns-road"></span><span class="ns-truck">🚚</span><div class="ns-card"><span><small>Részösszeg</small><b>99 990 Ft</b></span><span class="ns-plus"><small>Szállítás</small><b>+ 1 990 Ft</b></span><span class="ns-tot"><small>Fizetendő</small><b>101 980 Ft</b></span></div></div>',
     spark:'<div class="na na-spark"><b>✨</b><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
     rings:'<div class="na na-rings"><i></i><i></i><i></i><b>🎁</b></div>',
+    sound:'<div class="na na-sound"><b>🎵</b><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><s></s><s></s><s></s></div>',
     cards:'<div class="na na-cards"><i></i><i></i><i></i><i></i></div>'
   };
   var NEWS_GEN = ["spark", "rings", "cards"];
