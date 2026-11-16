@@ -69144,11 +69144,11 @@ html.ui-uj.fp-lite:root{ --gl-blur:none !important; }
 .mb-live::before, #ltHero::before, #ltNow::before, .preview-outer.pv-stage::before{ will-change:transform; }
 html.fp-lite .mb-live::before, html.fp-lite #ltHero::before, html.fp-lite #ltNow::before, html.fp-lite .preview-outer.pv-stage::before,
 html.fp-lite .mb-night i, html.fp-lite .mb-night s, html.fp-lite .mb-clock i, html.fp-lite .mb-dot.on, html.fp-lite .mt2-c.on > i, html.fp-lite .mt-now::after,
-html.fp-lite .na *, html.fp-lite .sb-ico, html.fp-lite #calGrid .day-cell.today .day-num::after{ animation:none !important; }
+html.fp-lite .sb-ico, html.fp-lite #calGrid .day-cell.today .day-num::after{ animation:none !important; }
 html.fp-lite .mb-live::before, html.fp-lite #ltHero::before, html.fp-lite #ltNow::before, html.fp-lite .preview-outer.pv-stage::before{ background:linear-gradient(135deg, rgba(251,172,1,.5), transparent 45%) !important; inset:0 !important; }
 html.fp-lite .mb-c:hover, html.fp-lite .lt-card:hover, html.fp-lite .ks-card:hover, html.fp-lite .mw-d:hover, html.fp-lite #calGrid .day-cell:hover{ transform:none !important; }
-html.fp-lite .na-multi .nm-s, html.fp-lite .na-multi .nm-ok, html.fp-lite .na-ship .ns-plus{ opacity:1 !important; }
-html.fp-lite .na-multi .s1{ transform:translate(-92px,0); } html.fp-lite .na-multi .s3{ transform:translate(92px,0); } html.fp-lite .na-ship .ns-truck{ left:calc(50% - 150px); }
+/* az Újdonságok kis animációi könnyített módban is mennek (kicsik, nem lassítanak) */
+html.fp-lite :is(.ui-news-anim, #_na) *, html.fp-lite :is(.ui-news-anim, #_na) *::before, html.fp-lite :is(.ui-news-anim, #_na) *::after{ animation-iteration-count:infinite !important; }
 </style>
 <style id="calClearCss">
 /* ===== PRÓBA 33: Beosztás naptár — jól látható (élénk dolgozói színek, műszak a nap száma alatt, jól elváló napok) ===== */
