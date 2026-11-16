@@ -68986,6 +68986,51 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 #assignBackdrop .multi-pick .mp-head small{ white-space:normal !important; }
 @media (max-width:520px){ #assignBackdrop .multi-pick .mp-row{ flex-wrap:wrap !important; row-gap:6px !important; } #assignBackdrop .multi-pick .mp-name{ flex:1 1 100% !important; white-space:normal !important; } #assignBackdrop .multi-pick .mp-seg{ margin-left:auto !important; } }
 </style>
+<style id="calClearCss">
+/* ===== PRÓBA 33: Beosztás naptár — jól látható (élénk dolgozói színek, műszak a nap száma alatt, jól elváló napok) ===== */
+html.ui-uj:not(.m-app) body #calGrid#calGrid{ gap:8px !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell{ justify-content:flex-start !important; gap:6px !important; padding:8px !important; min-height:118px !important; border-radius:14px !important; background:#1d1a15 !important; border:1px solid rgba(255,255,255,.14) !important; box-shadow:0 1px 0 rgba(255,255,255,.04) inset !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.weekend:not(.today){ background:#26201a !important; border-color:rgba(251,172,1,.18) !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.past:not(.today){ background:#16140f !important; border-color:rgba(255,255,255,.08) !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.past:not(.today) .badge{ opacity:.8 !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.blank{ background:transparent !important; border:1px dashed rgba(127,127,127,.18) !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.editable:hover{ border-color:#FBAC01 !important; background:#2a2419 !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .day-num{ font-size:18px !important; line-height:24px !important; font-weight:800 !important; letter-spacing:-.02em; }
+/* műszak-kártya: a dolgozó saját, élénk színe — sötét fátyol nélkül */
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge:not(.empty):not(.split), html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.split .half{ background-image:none !important; border:0 !important; box-shadow:0 4px 10px -6px rgba(0,0,0,.7) !important; border-radius:9px !important; padding:6px 8px !important; filter:none !important; }
+html.ui-uj body #calGrid#calGrid#calGrid .day-cell .badge .nmL, html.ui-uj body #calGrid#calGrid#calGrid .day-cell .badge .half-time{ color:inherit !important; -webkit-text-fill-color:currentColor !important; text-shadow:none !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge .nmL{ font-size:13px !important; line-height:16px !important; font-weight:800 !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge .half-time{ font-size:12px !important; line-height:15px !important; font-weight:700 !important; opacity:.85; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.split{ gap:4px !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .dl-mark{ margin-top:auto !important; }
+/* fejléc: hét napjai jól olvashatóan */
+html.ui-uj body :is(.cal-head, #calHead) > *{ font-size:13px !important; font-weight:800 !important; letter-spacing:.06em !important; color:var(--text) !important; }
+html.ui-uj body :is(.cal-head, #calHead) > :nth-child(n+6){ color:#FBAC01 !important; }
+/* világos téma */
+html.ui-uj body.light-theme #calGrid#calGrid#calGrid .day-cell{ background:#ffffff !important; border-color:rgba(20,14,0,.14) !important; }
+html.ui-uj body.light-theme #calGrid#calGrid#calGrid .day-cell.weekend:not(.today){ background:#fff7e6 !important; }
+html.ui-uj body.light-theme #calGrid#calGrid#calGrid .day-cell.past:not(.today){ background:#f4f2ee !important; }
+html.ui-uj body.light-theme #calGrid#calGrid#calGrid .day-cell.editable:hover{ background:#fffaf0 !important; }
+/* több dolgozó egész nap: ugyanakkora, jól olvasható sorok */
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.multi{ display:flex !important; flex-direction:column !important; gap:4px !important; background:none !important; padding:0 !important; border:0 !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.multi .mrow{ border-radius:9px !important; padding:5px 8px !important; background-image:none !important; box-shadow:0 4px 10px -6px rgba(0,0,0,.7) !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.multi .mrow .nmL{ display:block !important; font-size:13px !important; line-height:16px !important; font-weight:800 !important; color:inherit !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.multi .mrow .nmS{ display:none !important; }
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge.multi .mcount{ font-size:11px !important; font-weight:700 !important; color:var(--text-dim) !important; padding:0 2px; }
+/* ma: jól látható sárga keret */
+html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell.today{ border:2px solid #FBAC01 !important; box-shadow:0 0 0 4px rgba(251,172,1,.18), 0 14px 30px -16px rgba(251,172,1,.6) !important; }
+@media (max-width:1280px){ html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell{ min-height:104px !important; padding:6px !important; } html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge .nmL{ font-size:12px !important; } html.ui-uj:not(.m-app) body #calGrid#calGrid#calGrid .day-cell .badge .half-time{ font-size:11px !important; } }
+</style>
+<script id="calClearJs">
+/* a dolgozó kártyáján a beállított (jól olvasható) betűszín érvényesüljön — a régebbi stílus fehérre írná át */
+(function(){
+  function fix(root){ if(!document.documentElement.classList.contains("ui-uj")) return;
+    root.querySelectorAll(".badge[style], .badge .half[style], .badge .mrow[style]").forEach(function(el){ var c = el.style.color; if(c && el.style.getPropertyPriority("color") !== "important") el.style.setProperty("color", c, "important"); }); }
+  function start(){ var g = document.getElementById("calGrid"); if(!g) return; fix(g);
+    if(window.MutationObserver) new MutationObserver(function(){ fix(g); }).observe(g, { childList:true, subtree:true }); }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+</script>
 <style id="newsAnimCss">
 /* ===== Újdonságok: minden bejegyzéshez saját, témához illő animáció ===== */
 .ui-news-anim.na-box{ display:block; }

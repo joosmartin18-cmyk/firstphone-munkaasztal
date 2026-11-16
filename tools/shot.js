@@ -2,7 +2,7 @@
 // Előtte:  python3 -m http.server 8765 --bind 127.0.0.1   (a tároló gyökeréből)
 // Példa:   LOC=Bonyhád LK=old W=1366 H=800 O=/tmp/kep.png node tools/shot.js
 //          LK=new PAGE=tudastar W=390 H=844 node tools/shot.js
-// KEEPNEWS=1: az Újdonságok ablak maradjon. EMP2=1: két dolgozó. SCH=same|other: ma A dolgozik, holnap ugyanő / B. NOW='2026-11-16T21:00': rögzített idő. Változók: LOC (bolt neve), LK (new|old|none = a bolt választott kinézete), LAY (old|new = régi kinézetben menü felül|oldalt),
+// KEEPNEWS=1: az Újdonságok ablak maradjon. EMP2=1: két dolgozó. SCH=same|other|month (egész hónap kitöltve): ma A dolgozik, holnap ugyanő / B. NOW='2026-11-16T21:00': rögzített idő. Változók: LOC (bolt neve), LK (new|old|none = a bolt választott kinézete), LAY (old|new = régi kinézetben menü felül|oldalt),
 //           PAGE (beosztas, cetli, leltar, kassza, csomag, selejt, teendo, elado, tudastar), W, H, O (kimenet), EV (lefuttatandó JS kifejezés), T (várakozás ms)
 const { chromium } = require('playwright');
 (async () => {
@@ -15,7 +15,7 @@ const { chromium } = require('playwright');
     const s = { configured: true, location: loc, employees: [{ id: 'a', name: 'Teszt Elek Hosszúnevű', hex: '#a78bfa' }].concat(emp2 ? [{ id: 'b', name: 'Minta Béla Ferenc', hex: '#2a5bd7' }] : []), hours: Array(7).fill({ open: '09:00', close: '20:00' }) };
     if (lk) s.uiLook = lk; if (lay) s.layout = lay;
     const d = new Date();
-    const sch = {}; if (schd) { const k = x => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); const t = new Date(d); sch[k(t)] = { type: 'a' }; t.setDate(t.getDate() + 1); sch[k(t)] = { type: schd === 'same' ? 'a' : 'b' }; }
+    const sch = {}; if (schd === 'month') { const T = ['a', 'b', 'split', 'multi', 'a', 'b', 'a']; for (let k = 1; k <= 28; k++) { if (k % 7 === 0) continue; const t = T[k % 7]; sch[d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(k).padStart(2, '0')] = t === 'split' ? { type: 'split', am: 'a', pm: 'b' } : t === 'multi' ? { type: 'multi', full: ['a', 'b'], am: [], pm: [] } : { type: t }; } } else if (schd) { const k = x => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); const t = new Date(d); sch[k(t)] = { type: 'a' }; t.setDate(t.getDate() + 1); sch[k(t)] = { type: schd === 'same' ? 'a' : 'b' }; }
     localStorage.setItem('firstphone_beosztas_tervezo_v2', JSON.stringify({ year: d.getFullYear(), month: d.getMonth() + 1, schedule: sch, settings: s }));
     localStorage.setItem('firstphone_welcome_seen', '1');
     localStorage.setItem('firstphone_cloud_off', '1');
