@@ -57,7 +57,7 @@ const FAKE = `(function(){
     const d = new Date();
     localStorage.setItem('firstphone_beosztas_tervezo_v2', JSON.stringify({ year: d.getFullYear(), month: d.getMonth() + 1, schedule: {}, settings: s }));
     localStorage.setItem('firstphone_welcome_seen', '1');
-    localStorage.setItem('fp_ui_news_seen', JSON.stringify(['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16']));
+    localStorage.setItem('fp_ui_news_seen', JSON.stringify(['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16']));
     if (pin) localStorage.setItem('fp_ax_nav2', pin === 'rail' ? 'rail' : 'pin');
   }, [LK, process.env.PIN || '']);
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));

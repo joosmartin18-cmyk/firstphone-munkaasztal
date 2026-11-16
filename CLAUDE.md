@@ -80,6 +80,8 @@ Sorszámok helyett ezekre keress rá (a sorok folyamatosan csúsznak):
 - `<style id="ksMaSkin">` + `<script id="ksMaJs">` (PRÓBA 32): **Kassza** a kezdőlap stílusában (fejléc állapot-chippel: megszámolva / egyezik / hiány / többlet); a **Cetli** fejléce és kártyái ugyanígy (a Cetli-dokumentum saját CSS-ében, `clHead`). Csak új kinézetben.
 - `<style id="calClearCss">` + `<script id="calClearJs">` (PRÓBA 33): Beosztás naptár jól láthatóan (élénk dolgozói színek, a kártyák betűszíne a beállított marad); a méret-szabályok csak asztali nézetben (`:not(.m-app)`). Próba teli hónappal: `SCH=month EMP2=1 PAGE=beosztas node tools/shot.js`.
 - Hangok: `window.fpSound(kind, vol)` (ok, done, dup, err, info, msg, send) — a **„zen”** hangcsomag (Martin választása; `zen()` segéd). Próbaoldalhoz a hangokat külön HTML-ben érdemes megmutatni.
+- **Teendők:** saját kis naptár a határidőhöz (`calH`, `TDF.cal` / `TDE.cal`; a rejtett `<input type=date>` kattintásra sok böngészőben nem nyílt meg). Új kinézet: `<style id="tdMaSkin">` + `<script id="tdMaJs">` (PRÓBA 34). Próba-teendőkkel: `TODO=1 PAGE=teendo node tools/shot.js`.
+- **Simább futás:** `<style id="perfCss">` (olcsóbb elmosás `--gl-blur`, könnyített módban elmosás és végtelen díszítő animációk nélkül). A lassúság fő oka a mozgó háttér + üvegelmosás együtt. `fpWeakGuess`: 4 szálas vagy kisebb gép mindig könnyített; `fpWatch` használat közben is mér, és akadozásnál átvált. Új díszítő animációnál mindig legyen `html.fp-lite` alatti kikapcsolás.
 - `fpBrkNote()` — a munkaközi szünet (6 óra felett 1 óra) szövege; **nyomtatványonként csak egyszer, lábjegyzetként** szerepeljen.
 - `const FEATS`, `function fpApplyFeats()` — boltonként ki-bekapcsolható programok.
 - Telefonos nézet: `html.m-app`.
