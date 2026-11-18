@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-171511";</script>
+<script>window.FP_BUILD="20261118-172613";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -68789,6 +68789,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* a lapra csak a lényeg kerül: fontossági sorrendben legfeljebb 6 adat (Martin kérése) */
   const ESS = ["kijelzo","meret","cpu","tarhely","kamera","akku","halo5g","toltes","viz","anc","ido","hang","tok","ter","sziv","hallas","mic","fej","forditas","keres","garancia","x","ujj","memkartya","os","sim","nfc","bt","wifi","radio","kezeles","halozat","suly","szin"], ESS_MAX = 6;
   const essRank = k=>{ const i = ESS.indexOf(k); return i < 0 ? ESS.length : i; };
+  /* tárhely / RAM külön mezőben (Martin kérése): „128” → „128 GB”, „1tb” → „1 TB” */
+  const gbOne = v=>{ const s = String(v || "").trim(); if(!s) return ""; if(/tb/i.test(s)) return (s.replace(/[^\d.,]/g, "") || "1") + " TB"; const d = s.replace(/[^\d]/g, ""); return d ? d + " GB" : s; };
+  const gbTxt = c=>{ const g = gbOne(c.gb), r = gbOne(c.ram); return g ? g + (r ? " · " + r + " RAM" : "") : ""; };
+  /* melyik sor kerül a lapra (a kártyán is ez a szabály) → sorszámok */
+  function printedRows(c){ const seen = new Set(), L = [];
+    const gb = !!gbLine(c), hasKi = c.rows.some(r=> r.on && r.v && r.k === "kijelzo"), extra = [];
+    c.rows.forEach((r, i)=>{ if(!r.on) return; if(gb && r.k === "tarhely"){ if(r.v) extra.push(i); return; } if(hasKi && r.k === "meret"){ if(r.v) extra.push(i); return; } const t = pretty(r); if(!t) return; const n = normV(t); if(seen.has(n)) return; seen.add(n); L.push([r.k, i]); });
+    const P = new Set(L.map((x, j)=> [essRank(x[0]), j, x[1]]).sort((a, b)=> a[0] - b[0] || a[1] - b[1]).slice(0, ESS_MAX).map(x=> x[2])); extra.forEach(i=> P.add(i)); return P; }
   /* ✨ a lapon rendezettebben jelenik meg (a szerkesztőben az eredeti szöveg marad) */
   const YN = /^(nem|igen|van|nincs|yes|no|n\/a|-|–)$/i;
   function pretty(r){
@@ -68938,23 +68946,43 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       return { k:it.k, v, du, same, on:!du && !same && it.on !== false }; }).filter(x=> x.v);
     FOUND.sort((a, b)=> (a.du ? 2 : a.on ? 0 : 1) - (b.du ? 2 : b.on ? 0 : 1));
     const nNew = FOUND.filter(x=> !x.du).length;
-    pkMsg(`<b>🌐 ${E(src.name)}</b><small class="sk-sm">Forrás: ${E(src.from)} · ${nNew ? "pipáld ki, mi kerüljön a lapra" : "minden adata már rajta van a lapon 👍"}</small>
+    pkMsg(`<div class="sk-fh"><div><b>🌐 ${E(src.name)}</b><small class="sk-sm">Forrás: ${E(src.from)} · ${nNew ? "pipáld ki, mi kerüljön a lapra (a lapra a legfontosabb " + ESS_MAX + " fér)" : "minden adata már rajta van a lapon 👍"}</small></div>${nNew ? `<div class="sk-fall"><button type="button" class="sk-mini" data-fall="1">Mind</button><button type="button" class="sk-mini" data-fall="0">Egyik sem</button></div>` : ""}</div>
       <div class="sk-fl">${FOUND.map((x, i)=> `<label class="sk-fi${x.du ? " du" : ""}"><input type="checkbox" data-fnd="${i}"${x.on ? " checked" : ""}${x.du ? " disabled" : ""}><i>${ICO[x.k] || ICO.x}</i><span>${E(pretty({ k:x.k, v:x.v, l:ICON_NAMES[x.k] }))}${x.du ? `<small>✓ már rajta van</small>` : x.same ? `<small>van már ${E(String(ICON_NAMES[x.k] || "ilyen").toLowerCase())} sor — ha bepipálod, ez is odakerül</small>` : ""}</span></label>`).join("")}</div>
       ${src.alt && src.alt.length ? `<div class="sk-alt"><small>Nem ez a telefon?</small>${src.alt.map(a=> `<button type="button" class="sk-mini" data-gsm="${E(a.id)}">${E(a.name)}</button>`).join("")}</div>` : ""}
       <div class="sk-pkb"><button type="button" class="sk-mini" data-a="pkx">Mégse</button>${nNew ? `<button type="button" class="sk-mini pri" data-a="fndok">➕ Hozzáadás a laphoz</button>` : ""}</div>`);
-    const pk = pkBox(); if(pk) pk.firstElementChild.classList.add("sk-found");
+    const pk = pkBox(); if(pk){ pk.firstElementChild.classList.add("sk-found"); pk.querySelectorAll("[data-fall]").forEach(b=> b.onclick = ()=> pk.querySelectorAll("[data-fnd]:not(:disabled)").forEach(cb=> cb.checked = b.dataset.fall === "1")); }
   }
   function applyFound(){ const c = D.cards.find(x=> x.id === sel), pk = pkBox(); if(!c || !pk) return; let n = 0;
     pk.querySelectorAll("[data-fnd]:checked").forEach(cb=>{ const x = FOUND[+cb.dataset.fnd]; if(!x || x.du || dupOf(c, x.v)) return; c.rows.push({ k:x.k, v:x.v, on:true, auto:false, l:ICON_NAMES[x.k] || "" }); n++; });
     save(); drawMod(); preview(); hint(n ? `✓ ${n} új adat került a lapra az internetről. Amit nem kérsz, a pipával kikapcsolhatod.` : "Nem jelöltél ki semmit.", !n); }
+  /* a lap adatai: rövid, egyértelmű sorok (Martin kérése) */
+  const SKL = { kijelzo:"Kijelző", meret:"Kijelző", cpu:"Processzor", kamera:"Kamera", akku:"Akkumulátor", halo5g:"Hálózat", toltes:"Töltés", viz:"Vízállóság", nfc:"NFC", ujj:"Feloldás", garancia:"Garancia", memkartya:"Memóriakártya", os:"Rendszer", sim:"SIM", anc:"Zajszűrés", ido:"Üzemidő", hang:"Hangzás", tok:"Töltőtok", ter:"Térhangzás", sziv:"Pulzusmérés", hallas:"Hallás", mic:"Mikrofon", fej:"Illesztés", forditas:"Fordítás", keres:"Keresés", wifi:"Wi-Fi", bt:"Bluetooth", radio:"Rádió", suly:"Súly", szin:"Szín", halozat:"Hálózat", kezeles:"Kezelés" };
+  const inchOf = t=>{ const m = String(t || "").match(/(\d+(?:[.,]\d+)?)\s*(?:"|”|col|inch|hüvelyk)/i); return m ? m[1].replace(".", ",") + '"' : ""; };
+  function shortV(k, t){ t = String(t || "").replace(/\s+/g, " ").trim();
+    if(k === "cpu"){ t = t.replace(/^\d+\s*magos,?\s*/i, "").replace(/^(octa|hexa|deca|quad)[- ]core,?\s*/i, "").split(/\s+-\s+|\s*;\s*/)[0].replace(/\s*\([^)]*\)/g, "").replace(/,\s*\d+\s*mag(os)?\b.*$/i, "").trim(); }
+    else if(k === "toltes"){ t = t.split(/,\s*/)[0].replace(/(\d)\s*W\b/i, "$1 W").trim(); }
+    else if(k === "akku"){ t = t.replace(/\bli-?(ion|po|polymer)\b\s*/ig, "").trim(); }
+    else if(k === "kamera"){ t = t.split(/\s*·\s*előlap/i)[0].trim(); }
+    else if(k === "kijelzo"){ const ty = (t.match(/(dynamic\s+)?(ltpo\s+)?(super\s+)?(\w*\s?)?(amoled|oled|lcd|ips|retina)(\s*2x)?(\s*xdr)?/i) || [])[0], hz = (t.match(/(\d{2,3})\s*hz/i) || [])[1];
+      if(ty) t = ty.replace(/^\s+|\s+$/g, "").replace(/\b(dynamic|ltpo)\s+/ig, "").replace(/\s{2,}/g, " ") + (hz ? ", " + hz + " Hz" : ""); }
+    return t.length > 42 ? t.slice(0, 41).replace(/[\s,·]+\S*$/, "") + "…" : t; }
+  /* tárhely a név alatt: a külön mezőből, vagy a tárhely-sorból kiolvasva */
+  function gbLine(c){ const g = gbTxt(c); if(g) return g; const r = c.rows.find(x=> x.on && x.k === "tarhely" && x.v); if(!r) return "";
+    const t = String(pretty(r) || r.v), s = (t.match(/(\d+\s*(?:GB|TB))(?!\s*RAM)/i) || [])[1], ram = (t.match(/(\d+\s*GB)\s*RAM/i) || [])[1];
+    return s ? s.replace(/\s*(GB|TB)/i, " $1").toUpperCase() + (ram ? " · " + ram.replace(/\s*GB/i, " GB") + " RAM" : "") : ""; }
+  function cardRows(c){ const seen = new Set(), rows = [], gb = !!gbLine(c);
+    for(const r of c.rows){ if(!r.on) continue; if(gb && r.k === "tarhely") continue; const t = pretty(r); if(!t) continue; const n = normV(t); if(seen.has(n)) continue; seen.add(n); rows.push([r.k, t]); }
+    const ki = rows.find(x=> x[0] === "kijelzo"), me = rows.find(x=> x[0] === "meret");
+    if(me){ const inch = inchOf(me[1]); if(ki && inch){ ki[1] = inch + " " + shortV("kijelzo", ki[1]); ki.done = 1; rows.splice(rows.indexOf(me), 1); } else if(inch){ me[0] = "kijelzo"; me[1] = inch + (/(\d{2,3})\s*hz/i.test(me[1]) ? ", " + me[1].match(/(\d{2,3})\s*hz/i)[1] + " Hz" : ""); me.done = 1; } }
+    rows.forEach(x=>{ if(!x.done) x[1] = shortV(x[0], x[1]); });
+    if(rows.length > ESS_MAX){ const K = new Set(rows.map((r, i)=> [essRank(r[0]), i]).sort((a, b)=> a[0] - b[0] || a[1] - b[1]).slice(0, ESS_MAX).map(x=> x[1])); for(let i = rows.length - 1; i >= 0; i--) if(!K.has(i)) rows.splice(i, 1); }
+    return rows; }
   function cardHTML(c, s, fsz){
-    const lg = logoFor(c), seen = new Set(), rows = [];
-    for(const r of c.rows){ if(!r.on) continue; const t = pretty(r); if(!t) continue; const n = normV(t); if(seen.has(n)) continue; seen.add(n); rows.push([r.k, t]); }
-    if(rows.length > ESS_MAX){ const keep = rows.map((r, i)=> [essRank(r[0]), i]).sort((a, b)=> a[0] - b[0] || a[1] - b[1]).slice(0, ESS_MAX).map(x=> x[1]); const K = new Set(keep); for(let i = rows.length - 1; i >= 0; i--) if(!K.has(i)) rows.splice(i, 1); }
+    const lg = logoFor(c), rows = cardRows(c), gb = gbLine(c);
     const base = LAY[s.per][2] * (s.scale || 1), pf = (fsz && fsz.pf) || base * 1.3; fsz = (fsz && fsz.fs) || fsz || base;
     return `<div class="sk-card" data-id="${E(c.id)}" style="--fs:${fsz}pt;--pf:${pf}pt">${c.badge ? `<span class="sk-badge">${E(c.badge)}</span>` : ""}
-      <div class="sk-top"><div class="sk-lg">${lg ? `<img src="${lg}" alt="">` : ""}</div><div class="sk-nm">${E(c.name || "Új telefon")}</div></div>
-      <div class="sk-rows">${rows.map(([k, t])=> `<div class="sk-row"><i>${ICO[k] || ICO.x}</i><b>${E(t)}</b></div>`).join("")}</div>
+      <div class="sk-top"><div class="sk-lg">${lg ? `<img src="${lg}" alt="">` : ""}</div><div class="sk-nm">${E(c.name || "Új telefon")}</div>${gb ? `<div class="sk-gb"><span>${E(gb.split(" · ")[0])}</span>${gb.split(" · ")[1] ? `<em>${E(gb.split(" · ")[1])}</em>` : ""}</div>` : ""}</div>
+      <div class="sk-rows">${rows.map(([k, t])=> `<div class="sk-row"><i>${ICO[k] || ICO.x}</i><span>${SKL[k] ? `<small>${E(SKL[k])}</small>` : ""}<b>${E(t)}</b></span></div>`).join("")}</div>
       ${c.note ? `<div class="sk-note">${E(c.note)}</div>` : ""}
       <div class="sk-pbox">${c.oldPrice ? `<div class="sk-old">${E(money(c.oldPrice))} Ft</div>` : ""}<div class="sk-price"><span class="n">${E(money(c.price) || "—")}</span><span class="c">Ft</span></div></div></div>`;
   }
@@ -68987,12 +69015,18 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     .sk-lg:empty{display:none;}
     .sk-nm{margin-top:1.8mm;padding:1.2mm .3mm 1.1mm;border-top:.25mm solid #000;border-bottom:.25mm solid #000;font:800 1em/1.14 'Manrope',Arial,sans-serif;letter-spacing:.01em;text-transform:uppercase;overflow-wrap:break-word;}
     .sk-lg:empty + .sk-nm{margin-top:0;font-size:1.05em;}
+    .sk-gb{padding:1.6mm 0 .2mm;text-align:center;}
+    .sk-gb{display:flex;align-items:center;justify-content:center;gap:1.6mm;flex-wrap:wrap;}
+    .sk-gb span{display:inline-block;max-width:100%;padding:.8mm 2.6mm;border:.35mm solid #000;font:900 1.15em/1 'Manrope',Arial,sans-serif;color:#000;white-space:nowrap;}
+    .sk-gb em{font:800 .8em/1 'Manrope',Arial,sans-serif;font-style:normal;color:#333;white-space:nowrap;}
     .sk-rows{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:1mm 0 .8mm;overflow:hidden;}
-    .sk-row{flex:1 1 auto;display:grid;grid-template-columns:1.3em minmax(0,1fr);column-gap:1.5mm;align-items:center;padding:.35mm 2mm;}
+    .sk-row{flex:1 1 auto;display:grid;grid-template-columns:1.15em minmax(0,1fr);column-gap:1.8mm;align-items:center;padding:.5mm 2mm;}
+    .sk-row > span{display:block;min-width:0;}
+    .sk-row small{display:block;font:800 .52em/1.1 'Manrope',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#555;margin-bottom:.25mm;}
     .sk-row + .sk-row{border-top:.2mm dotted #9a9a9a;}
-    .sk-row i{display:block;width:1.3em;height:1.3em;color:#000;}
+    .sk-row i{display:block;width:1.15em;height:1.15em;color:#000;}
     .sk-row i svg{display:block;width:100%;height:100%;}
-    .sk-row b{display:block;min-width:0;font:700 1em/1.16 'Manrope',Arial,sans-serif;color:#000;overflow-wrap:break-word;}
+    .sk-row b{display:block;min-width:0;font:800 .92em/1.14 'Manrope',Arial,sans-serif;color:#000;overflow-wrap:break-word;}
     .sk-note{flex:none;margin:0 2mm 1.2mm;padding:1mm 1.4mm;border:.25mm dashed #000;font:800 .92em/1.25 'Manrope',Arial,sans-serif;text-align:center;}
     .sk-pbox{flex:none;padding:0 1.7mm 1.8mm;}
     .sk-old{text-align:center;padding-bottom:.6mm;font:800 .95em/1.1 'Manrope',Arial,sans-serif;color:#555;text-decoration:line-through;}
@@ -69023,7 +69057,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     root.querySelector(".sk-tabs").innerHTML = [["cards","📱 Telefonok",D.cards.length],["logos","🖼️ Logók",L.length]].map(([k, t, n])=> `<button type="button" data-tab="${k}" class="${tab === k ? "on" : ""}">${t} <small>${n}</small></button>`).join("");
     const P = root.querySelector(".sk-panel");
     if(tab === "cards"){
-      P.innerHTML = `<div class="sk-list">${D.cards.map((x, i)=> `<div class="sk-li" data-open="${E(x.id)}" title="Kattints a szerkesztéshez"><span class="sk-th">${logoFor(x) ? `<img src="${logoFor(x)}" alt="">` : /airpods|buds|fülhallgató|fejhallgató/i.test(x.name || "") ? "🎧" : "📱"}</span><span class="sk-lt"><b>${E(x.name || "Új telefon")}</b><small>${x.price ? `<em class="sk-lp">${money(x.price)} Ft</em>` : "nincs ár"}${x.badge ? ` <em class="sk-lb">${E(x.badge)}</em>` : ""} <em class="sk-ln">${Math.min(ESS_MAX, x.rows.filter(r=> r.on && r.v).length)} adat a lapon</em></small></span><span class="sk-ord"><button type="button" data-up="${i}" title="Előre">▲</button><button type="button" data-dn="${i}" title="Hátra">▼</button></span><button type="button" class="sk-edb" data-open="${E(x.id)}" title="Szerkesztés">✏️</button></div>`).join("") || `<div class="sk-hint">Még nincs telefon. Tölts be egy Word-dokumentumot (fent), vagy adj hozzá egyet.</div>`}</div>
+      P.innerHTML = `<div class="sk-list">${D.cards.map((x, i)=> `<div class="sk-li" data-open="${E(x.id)}" title="Kattints a szerkesztéshez"><span class="sk-th">${logoFor(x) ? `<img src="${logoFor(x)}" alt="">` : /airpods|buds|fülhallgató|fejhallgató/i.test(x.name || "") ? "🎧" : "📱"}</span><span class="sk-lt"><b>${E(x.name || "Új telefon")}</b><small>${x.price ? `<em class="sk-lp">${money(x.price)} Ft</em>` : "nincs ár"}${gbTxt(x) ? ` <em class="sk-lg2">${E(gbOne(x.gb))}</em>` : ""}${x.badge ? ` <em class="sk-lb">${E(x.badge)}</em>` : ""} <em class="sk-ln">${Math.min(ESS_MAX, x.rows.filter(r=> r.on && r.v).length)} adat a lapon</em></small></span><span class="sk-ord"><button type="button" data-up="${i}" title="Előre">▲</button><button type="button" data-dn="${i}" title="Hátra">▼</button></span><button type="button" class="sk-edb" data-open="${E(x.id)}" title="Szerkesztés">✏️</button></div>`).join("") || `<div class="sk-hint">Még nincs telefon. Tölts be egy Word-dokumentumot (fent), vagy adj hozzá egyet.</div>`}</div>
         <div class="sk-adds"><button type="button" class="sk-add" data-a="add">➕ Új telefon</button><button type="button" class="sk-add" data-a="addaudio">🎧 Új AirPods</button></div>`;
     } else {
       P.innerHTML = `<div class="sk-f"><label>Logó a lap tetején</label><div class="sk-seg">${[["store","🏬 Bolt logója"],["custom","⬆ Saját"],["none","Nincs"]].map(([k, t])=> `<button type="button" data-own="${k}" class="${s.ownLogo === k ? "on" : ""}">${t}</button>`).join("")}</div>
@@ -69042,20 +69076,30 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     m.innerHTML = `<div class="sk-mc" role="dialog" aria-label="Telefon szerkesztése"><div class="sk-mh"><span class="sk-th">${logoFor(c) ? `<img src="${logoFor(c)}" alt="">` : /airpods|buds|fülhallgató|fejhallgató/i.test(c.name || "") ? "🎧" : "📱"}</span><b>${E(c.name || "Új telefon")}</b><button type="button" class="sk-x" data-a="close" title="Bezárás (Esc)">✕</button></div>
       <div class="sk-mb"><div class="sk-mcol">
         <div class="sk-f"><label>Név (a logó alatt mindig ott van)</label><input type="text" data-c="name" value="${E(c.name)}" placeholder="pl. Samsung Galaxy A57 5G 128GB"></div>
+        <div class="sk-f sk-gbf"><label>Tárhely <i>mennyi GB-os — a lapon a név alatt nagyban látszik</i></label><div class="sk-gbc">${["64","128","256","512","1 TB"].map(g=> `<button type="button" data-gb="${g}" class="${gbOne(c.gb) === gbOne(g) ? "on" : ""}">${gbOne(g)}</button>`).join("")}</div>
+          <div class="sk-f2"><div class="sk-f"><input type="text" data-c="gb" value="${E(c.gb || "")}" placeholder="vagy írd be, pl. 128" inputmode="numeric"></div><div class="sk-f"><input type="text" data-c="ram" value="${E(c.ram || "")}" placeholder="RAM, pl. 8 (nem kötelező)" inputmode="numeric"></div></div></div>
         <div class="sk-f2"><div class="sk-f"><label>Ár (Ft)</label><input type="text" inputmode="numeric" class="big" data-c="price" value="${E(money(c.price))}" placeholder="132 900"></div><div class="sk-f"><label>Régi ár <i>ha akciós</i></label><input type="text" inputmode="numeric" data-c="oldPrice" value="${E(money(c.oldPrice))}" placeholder="149 900"></div></div>
         <div class="sk-f2"><div class="sk-f"><label>Kiemelés <i>pl. AKCIÓ, ÚJ</i></label><input type="text" data-c="badge" value="${E(c.badge)}" maxlength="18"></div><div class="sk-f"><label>Logó</label><div class="sk-lrow"><label class="sk-mini">⬆ Saját logó<input type="file" accept="image/*" hidden data-file="card"></label>${c.logo ? `<button type="button" class="sk-mini" data-a="nologo" title="Vissza a könyvtár logójára">✕</button>` : ""}</div></div></div>
         <div class="sk-f"><label>Megjegyzés a kártya aljára <i>nem kötelező</i></label><input type="text" data-c="note" value="${E(c.note || "")}" placeholder="pl. Ajándék tok + fólia!"></div>
         <button type="button" class="sk-del" data-a="delcard">🗑 Telefon törlése a lapról</button></div>
-      <div class="sk-mcol"><div class="sk-f"><label>Adatok <small class="sk-sm">— az ikont magától választja a szövegből; rákattintva cserélhető</small></label><div class="sk-rowsed">${c.rows.map(rowHTML).join("")}</div></div>
+      <div class="sk-mcol"><div class="sk-f"><label>Adatok <span class="sk-prn"></span><small class="sk-sm">— a lapra a legfontosabb ${ESS_MAX} kerül (sárga csík); az ikont a szövegből választja, rákattintva cserélhető</small></label><div class="sk-rowsed">${c.rows.map(rowHTML).join("")}</div></div>
         <div class="sk-new"><span class="sk-ico" data-nico>${ICO.x}</span><input type="text" data-new placeholder="Új adat — pl. Garancia 3 év, NFC, 25W gyorstöltés…" enterkeyhint="done"><button type="button" class="sk-mini pri" data-a="addrow">➕ Hozzáad</button></div><small class="sk-sm sk-nl">${NL_HINT}</small>
         <div class="sk-net"><button type="button" class="sk-mini net" data-a="enrich">🌐 Kiegészítés az internetről</button><small class="sk-sm">a név alapján megkeresi és felajánlja a hiányzó adatokat (telefon: GSMArena · AirPods: Apple)</small></div></div></div>
       <div class="sk-mf"><span class="sk-sm">Minden azonnal mentődik, és a lapon is látszik.</span><button type="button" class="sk-btn pri" data-a="close">✓ Kész</button></div>
       <div class="sk-pick" hidden></div></div>`;
     requestAnimationFrame(()=> m.querySelectorAll("textarea[data-rv]").forEach(grow));
+    const gbSync = ()=>{ m.querySelectorAll("[data-gb]").forEach(b=> b.classList.toggle("on", !!c.gb && gbOne(c.gb) === gbOne(b.dataset.gb))); markRows(); };
+    m.querySelectorAll("[data-gb]").forEach(b=> b.onclick = ()=>{ c.gb = gbOne(c.gb) === gbOne(b.dataset.gb) ? "" : b.dataset.gb; const i = m.querySelector('[data-c="gb"]'); if(i) i.value = c.gb; save(); preview(); gbSync(); });
+    const gi = m.querySelector('[data-c="gb"]'); if(gi) gi.addEventListener("input", ()=> setTimeout(gbSync, 0));
+    markRows();
   }
+  /* a szerkesztőben látszik, melyik adat kerül a lapra (a legfontosabb 6) */
+  function markRows(){ const c = D.cards.find(x=> x.id === sel), m = root && root.querySelector(".sk-mod"); if(!c || !m) return; const P = printedRows(c);
+    m.querySelectorAll(".sk-re[data-ri]").forEach(el=>{ const i = +el.dataset.ri, r = c.rows[i]; el.classList.toggle("pr", P.has(i)); el.classList.toggle("np", !!(r && r.on && r.v && !P.has(i))); });
+    const h = m.querySelector(".sk-prn"); if(h) h.textContent = `${P.size} adat kerül a lapra`; }
   function openMod(id){ sel = id; let m = root.querySelector(".sk-mod"); if(!m){ m = document.createElement("div"); m.className = "sk-mod"; root.appendChild(m); m.addEventListener("click", e=>{ if(e.target === m) closeMod(); }); }
-    drawMod(); document.addEventListener("keydown", escMod, true); setTimeout(()=>{ const i = m.querySelector(D.cards.find(x=> x.id === id).name ? "[data-new]" : '[data-c="name"]'); if(i) i.focus(); }, 60); preview(); }
-  function closeMod(){ const m = root && root.querySelector(".sk-mod"); if(m){ m.classList.add("out"); setTimeout(()=> m.remove(), 180); } document.removeEventListener("keydown", escMod, true); draw(); }
+    document.body.classList.add("sk-modon"); drawMod(); document.addEventListener("keydown", escMod, true); setTimeout(()=>{ const i = m.querySelector(D.cards.find(x=> x.id === id).name ? "[data-new]" : '[data-c="name"]'); if(i) i.focus(); }, 60); preview(); }
+  function closeMod(){ document.body.classList.remove("sk-modon"); const m = root && root.querySelector(".sk-mod"); if(m){ m.classList.add("out"); setTimeout(()=> m.remove(), 180); } document.removeEventListener("keydown", escMod, true); draw(); }
   const escMod = e=>{ if(e.key === "Escape"){ const pk = root.querySelector(".sk-pick:not([hidden])"); e.preventDefault(); e.stopPropagation(); if(pk){ pk.hidden = true; return; } closeMod(); } };
   const NL_HINT = "Írd be, és felismeri, mi az: 🔋 akku, 📷 kamera, 🛡️ garancia, 📶 Wi-Fi… Ami már rajta van, azt nem írja be még egyszer.";
   function hint(t, warn){ const el = root && root.querySelector(".sk-nl"); if(!el) return; el.textContent = t || NL_HINT; el.classList.toggle("warn", !!warn); }
@@ -69067,7 +69111,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     c.rows.push({ k:detect(v), v, on:true, auto:true }); save(); inp.value = ""; const box = root.querySelector(".sk-rowsed"); box.insertAdjacentHTML("beforeend", rowHTML(c.rows[c.rows.length - 1], c.rows.length - 1));
     const ni = root.querySelector("[data-nico]"); if(ni) ni.innerHTML = ICO.x; box.lastElementChild.classList.add("nw"); grow(box.lastElementChild.querySelector("textarea")); box.lastElementChild.scrollIntoView({ block:"nearest" }); hint(""); inp.focus(); preview(); }
   let pvT = null;
-  function preview(){ clearTimeout(pvT); pvT = setTimeout(async ()=>{ if(!root) return; ownLogoUrl = await ownLogo();
+  function preview(){ clearTimeout(pvT); pvT = setTimeout(async ()=>{ if(!root) return; try{ markRows(); }catch(e){} ownLogoUrl = await ownLogo();
       const pv = root.querySelector(".sk-pv"), inner = root.querySelector(".sk-pvi");
       inner.innerHTML = sheetsHTML(); await new Promise(r=> requestAnimationFrame(r)); lastFs = fit(inner);
       const w = pv.clientWidth - 8, sc = Math.min(1, w / 793.7); inner.style.transform = `scale(${sc})`; inner.style.width = "793.7px";
@@ -71387,5 +71431,61 @@ html.ui-uj:not(.m-app) body.light-theme #skPage .sk-lp,html.ui-uj:not(.m-app) bo
   setInterval(function(){ try{ draw(); }catch(e){} }, 800);
 })();
 </script>
+<style id="skModCss">
+/* ===================== PRÓBA 39b: Speckó — szerkesztő és internetes találatok ablak (új kinézet) ===================== */
+html.ui-uj body .sk-mod{z-index:99985 !important;}
+html.ui-uj body:has(.sk-mod) #fpTools#fpTools,html.ui-uj body.sk-modon #fpTools#fpTools{display:none !important;}
+html.ui-uj .sk-mod .sk-mf .sk-btn.pri{background:linear-gradient(135deg,#f0c766,#d9ad46) !important;color:#1c1505 !important;border:0 !important;}
+html.ui-uj .sk-mod .sk-mc{width:min(1140px,100%) !important;border-radius:26px !important;border:1px solid rgba(255,255,255,.09) !important;background:radial-gradient(120% 70% at 0% 0%,rgba(240,199,102,.08),transparent 55%),#15120e !important;box-shadow:0 40px 100px rgba(0,0,0,.6) !important;}
+html.ui-uj .sk-mod .sk-mh{padding:16px 20px !important;gap:14px !important;background:none !important;border-bottom:1px solid rgba(255,255,255,.07) !important;}
+html.ui-uj .sk-mod .sk-mh .sk-th{width:120px !important;height:48px !important;border-radius:12px !important;background:#fff !important;padding:4px 8px;display:grid;place-items:center;}
+html.ui-uj .sk-mod .sk-mh .sk-th img{max-width:100%;max-height:100%;object-fit:contain;}
+html.ui-uj .sk-mod .sk-mh b{font:800 22px/1.2 'Manrope','Inter',sans-serif !important;}
+html.ui-uj .sk-mod .sk-mb{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) !important;gap:16px !important;padding:18px 20px !important;}
+html.ui-uj .sk-mod .sk-mcol{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;}
+html.ui-uj .sk-mod .sk-f > label{display:block;margin:0 0 6px !important;font-size:11px !important;font-weight:800 !important;letter-spacing:.08em !important;text-transform:uppercase !important;color:#a59c8c !important;}
+html.ui-uj .sk-mod .sk-f > label i,html.ui-uj .sk-mod .sk-f > label small{text-transform:none;letter-spacing:0;font-weight:600;font-style:normal;opacity:.85;}
+html.ui-uj .sk-mod .sk-f input,html.ui-uj .sk-mod .sk-new input{border-radius:12px !important;}
+html.ui-uj .sk-mod input.big{font-size:24px !important;font-weight:800 !important;color:#f0c766 !important;}
+html.ui-uj .sk-mod .sk-gbf{padding:12px;border-radius:16px;border:1px solid rgba(240,199,102,.3);background:rgba(240,199,102,.05);}
+html.ui-uj .sk-mod .sk-gbc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+html.ui-uj .sk-mod .sk-gbc button{height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#1d1813;color:#f4efe6;font:800 13px 'Manrope','Inter',sans-serif;cursor:pointer;transition:border-color .15s,background .15s;}
+html.ui-uj .sk-mod .sk-gbc button:hover{border-color:#f0c766;}
+html.ui-uj .sk-mod .sk-gbc button.on{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border-color:transparent;}
+html.ui-uj .sk-mod .sk-gbf .sk-f2{gap:8px;}
+html.ui-uj .sk-mod .sk-prn{display:inline-block;margin-left:6px;padding:2px 9px;border-radius:999px;background:rgba(240,199,102,.16);color:#f0c766;font-size:10.5px;letter-spacing:.04em;}
+html.ui-uj .sk-mod .sk-rowsed{display:flex;flex-direction:column;gap:6px;}
+html.ui-uj .sk-mod .sk-re{padding:6px 8px 6px 10px;border:1px solid rgba(255,255,255,.07);border-left:3px solid transparent;border-radius:12px !important;background:rgba(255,255,255,.02);}
+html.ui-uj .sk-mod .sk-re.pr{border-left-color:#f0c766;background:rgba(240,199,102,.06);}
+html.ui-uj .sk-mod .sk-re.np{opacity:.55;}
+html.ui-uj .sk-mod .sk-re.off{opacity:.4;}
+html.ui-uj .sk-mod .sk-net{border-top:0 !important;margin-top:0 !important;padding:12px !important;border-radius:16px;background:rgba(79,179,196,.07);border:1px solid rgba(79,179,196,.3) !important;}
+html.ui-uj .sk-mod .sk-mini.net{height:40px !important;border-radius:999px !important;font-weight:800 !important;}
+html.ui-uj .sk-mod .sk-mf{padding:14px 20px !important;background:rgba(0,0,0,.25) !important;border-top:1px solid rgba(255,255,255,.07) !important;}
+html.ui-uj .sk-mod .sk-mf .sk-btn.pri{height:44px !important;padding:0 22px !important;border-radius:999px !important;}
+html.ui-uj .sk-mod .sk-del{border-radius:12px !important;}
+/* internetes találatok */
+html.ui-uj .sk-mod .sk-pick{background:rgba(6,5,4,.7) !important;}
+html.ui-uj .sk-mod .sk-pk{border-radius:24px !important;background:#17130f !important;border:1px solid rgba(255,255,255,.1) !important;padding:18px !important;gap:12px !important;}
+html.ui-uj .sk-mod .sk-pk.sk-found{width:min(900px,94%) !important;max-height:calc(100% - 28px) !important;}
+html.ui-uj .sk-mod .sk-fh{display:flex;align-items:flex-start;gap:12px;}
+html.ui-uj .sk-mod .sk-fh > div:first-child{flex:1;min-width:0;}
+html.ui-uj .sk-mod .sk-fh b{display:block;font:800 19px/1.25 'Manrope','Inter',sans-serif !important;margin-bottom:3px;}
+html.ui-uj .sk-mod .sk-fall{display:flex;gap:6px;flex:none;}
+html.ui-uj .sk-mod .sk-fall .sk-mini{height:32px;border-radius:999px;}
+html.ui-uj .sk-mod .sk-fl{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px !important;max-height:min(56vh,520px) !important;padding:2px !important;}
+html.ui-uj .sk-mod .sk-fi{grid-template-columns:20px 28px minmax(0,1fr) !important;padding:10px 12px !important;border-radius:14px !important;border:1px solid rgba(255,255,255,.08) !important;background:rgba(255,255,255,.03) !important;font:700 13.5px/1.35 'Manrope','Inter',sans-serif !important;transition:border-color .15s,background .15s;}
+html.ui-uj .sk-mod .sk-fi:hover{border-color:rgba(240,199,102,.45) !important;}
+html.ui-uj .sk-mod .sk-fi:has(input:checked){border-color:rgba(240,199,102,.55) !important;background:rgba(240,199,102,.08) !important;}
+html.ui-uj .sk-mod .sk-fi input{accent-color:#f0c766;width:18px;height:18px;}
+html.ui-uj .sk-mod .sk-alt{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.03);}
+html.ui-uj .sk-mod .sk-alt .sk-mini{border-radius:999px;}
+html.ui-uj .sk-mod .sk-pkb{padding-top:12px;border-top:1px solid rgba(255,255,255,.07);}
+html.ui-uj .sk-mod .sk-pkb .sk-mini{height:42px;padding:0 18px;border-radius:999px;font-weight:800;}
+@media (max-width:760px){ html.ui-uj .sk-mod .sk-mb{grid-template-columns:1fr !important;padding:12px !important;} html.ui-uj .sk-mod .sk-fl{grid-template-columns:1fr;} html.ui-uj .sk-mod .sk-fh{flex-direction:column;} }
+html.ui-uj body.light-theme .sk-mod .sk-mc,html.ui-uj body.light-theme .sk-mod .sk-pk{background:#fbf8f2 !important;color:#1c1505;}
+html.ui-uj body.light-theme .sk-mod .sk-gbc button{background:#fff;color:#1c1505;border-color:rgba(0,0,0,.12);}
+html.ui-uj .sk-lg2{font-style:normal;font-size:10px;font-weight:800;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.08);}
+</style>
 </body>
 </html>
