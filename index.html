@@ -70813,7 +70813,7 @@ html body .hx-scr .hx-sn .bc.bc{width:200px;height:70px;border-radius:6px;backgr
   }
   var FING = '<span class="hx-f">👆</span><span class="hx-r"></span>';
   function hxScene(x, q){
-    var t = txt(x.html).toLowerCase(), k = hxKind(x, t), B = bolds(x.html), p = B[0] || clip(txt(x.html).split(/[,.;:—–]/)[0], 30), P = E(p), h = "";
+    var t = txt(x.html).toLowerCase(), k = x.k || hxKind(x, t), B = bolds(x.html), p = B[0] || clip(txt(x.html).split(/[,.;:—–]/)[0], 30), P = E(p), h = "";
     if(k === "tip") h = '<div class="hx-tip"><b>' + E(x.n) + '</b><span>' + E(clip(txt(x.b || x.html), 40)) + '</span></div>';
     else if(k === "tap") h = '<div class="hx-btn">' + P + '</div>' + FING + '<div class="hx-ok">✓ Kész</div>';
     else if(k === "type") h = '<div class="hx-in"><small>✍️ ' + E(B[1] ? clip(B[1], 24) : "Beírás") + '</small><div><span class="hx-tx">' + P + '</span><i class="hx-cr"></i></div></div>';
@@ -70897,7 +70897,7 @@ html body .hx-scr .hx-sn .bc.bc{width:200px;height:70px;border-radius:6px;backgr
     }
     function slideHtml(s, k, N, spec){
       if(s.k === "cov") return '<div class="tts-sl tts-cov hsd-cov"><div class="big">' + E(spec.ic) + '</div><h2 class="an" style="--dl:.25s">' + E(spec.title) + '</h2><p class="an" style="--dl:.4s">' + E(spec.sub || "") + '</p><div class="chips an" style="--dl:.55s"><span><b>' + spec.n + '</b> ' + (spec.unit || "rész") + '</span>' + (spec.steps ? '<span><b>' + spec.steps + '</b> ' + (spec.stepUnit || "lépés") + '</span>' : '') + '<span>⏱ kb. <b>' + Math.max(1, Math.round(spec.sec / 60)) + '</b> perc</span></div>'
-        + (spec.n > 1 ? '<div class="hsd-toc an" style="--dl:.7s">' + spec.toc.map(function(t, q){ return '<button type="button" data-g="' + (q + 1) + '"><i>' + E(t.ic) + '</i>' + E(t.h) + '</button>'; }).join("") + '</div>' : '') + '</div>';
+        + (spec.n > 1 ? '<div class="hsd-toc an" style="--dl:.7s">' + spec.toc.map(function(t, q){ return '<button type="button" data-g="' + ((t.q != null ? t.q : q) + (spec.cover === false ? 0 : 1)) + '"><i>' + E(t.ic) + '</i>' + E(t.h) + '</button>'; }).join("") + '</div>' : '') + '</div>';
       if(s.k === "end") return '<div class="tts-sl tts-end"><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="48"/><path d="M33 57 l15 15 l30 -32"/></svg><h2 class="an" style="--dl:.5s">' + E(spec.endT || "Kész!") + '</h2><p class="an" style="--dl:.6s">' + E(spec.endX || ("Végignézted: " + spec.title)) + '</p><div class="acts an" style="--dl:.7s"><button type="button" data-a="re">↺ Újra</button><button type="button" class="pri" data-a="x">✓ Bezárás</button></div></div>';
       var it = s.items.map(function(x, q){ return '<li class="an' + (x.ti ? ' ti' : '') + '" style="--dl:' + (.25 + q * .07).toFixed(2) + 's"><span class="n">' + E(x.n) + '</span><span class="tx">' + x.html + '</span></li>'; }).join("");
       return '<div class="tts-sl st hsd-sl">'
@@ -70912,7 +70912,8 @@ html body .hx-scr .hx-sn .bc.bc{width:200px;height:70px;border-radius:6px;backgr
       var body = spec.slides.map(function(s, q){ return Object.assign({ k:"sl", no:spec.numbered === false ? 0 : q + 1 }, s); });
       var S = (spec.cover === false ? [] : [{ k:"cov" }]).concat(body).concat([{ k:"end" }]);
       var D = S.map(function(s){ if(s.k === "cov") return 5; if(s.k === "end") return 600; return s.items.length ? (800 + s.items.reduce(function(a, x){ return a + stepMs(x); }, 0) + 1100) / 1000 : 7; });
-      spec.n = body.length; spec.toc = body.map(function(s){ return { ic:s.tocIc || s.ic || "•", h:s.h }; }); spec.sec = D.slice(0, -1).reduce(function(a, b){ return a + b; }, 0);
+      spec.n = body.length; spec.toc = body.map(function(s, q){ return { ic:s.tocIc || s.ic || "•", h:s.segT && spec.segToc ? s.segT : s.h, q:q, seg:s.seg }; });
+      if(spec.segToc){ var sg = {}; spec.toc = spec.toc.filter(function(t){ if(!t.seg || sg[t.seg]) return false; sg[t.seg] = 1; return true; }); } spec.sec = D.slice(0, -1).reduce(function(a, b){ return a + b; }, 0);
       spec.steps = spec.steps != null ? spec.steps : body.reduce(function(a, s){ return a + s.items.filter(function(x){ return !x.ti; }).length; }, 0);
       if(back){ var old = back; back = null; clearTimeout(st && st.tm); old.remove(); doc.removeEventListener("keydown", onKey, true); }
       back = doc.createElement("div"); back.className = "tts-back hsd-back" + (spec.cls ? " " + spec.cls : "");
@@ -70966,6 +70967,8 @@ html body .hx-scr .hx-sn .bc.bc{width:200px;height:70px;border-radius:6px;backgr
         items.push({ ti:1, n:(ti ? ti.textContent : "💡").trim(), b:b ? b.innerHTML : "", html:(b ? '<b>' + b.innerHTML + '</b>' : '') + (sp ? '<small>' + sp.innerHTML + '</small>' : '') }); });
       return { ic:((hd && hd.querySelector(".hs-icon")) || {}).textContent || "•", h:((hd && hd.querySelector("h3")) || {}).textContent || "", p:((hd && hd.querySelector("p")) || {}).textContent || "", hx:1, items:items, dev:title };
     });
+    try{ var gp = { helpModal:"beosztas", lhelpModal:"leltar", khelpModal:"kassza", phelpModal:"csomag", xhelpModal:"selejt", thelpModal:"tudastar", ehelpModal:"elado", dhelpModal:"teendo", chelpModal:"cetli" }[modal.id];
+      if(gp && at == null && window.fpGuideDia){ var GS = window.fpGuideDia(gp); if(GS.length) S = GS.concat(S); } }catch(e){}
     P.open({ ic:ic, title:title, label:"Súgó · " + title, sub:"Súgó · " + S.length + " rész — magától lapoz, bármikor megállíthatod", slides:S, start:at || null, onClose:onClose });
     return P;
   }
@@ -72085,7 +72088,7 @@ html body.light-theme .fg-offer.fg-offer,html body.light-theme .fg-card.fg-card{
     var bk = document.createElement("div"); bk.className = "fg-back";
     var o = document.createElement("div"); o.className = "fg-offer big";
     var ch = ORDER.filter(pageOn).map(function(p){ return '<span>' + G[p].ic + ' ' + E(G[p].t) + '</span>'; }).join("");
-    o.innerHTML = '<div class="ic">🧭</div><h4>Körbevezesselek?</h4><p>Megmutatom lépésről lépésre, a valódi gombokon, hogyan működnek a programok. Kb. 5 perc, bármikor kiléphetsz.</p><div class="fg-chips">' + ch + '</div><div class="row"><button type="button" class="pri" data-a="go">▶ Indulhat</button><button type="button" data-a="later">Később</button><button type="button" data-a="no">Nem kell</button></div>';
+    o.innerHTML = '<div class="ic">🧭</div><h4>Körbevezesselek?</h4><p>Animált diákon megmutatom lépésről lépésre, hogyan működnek a programok. Bármikor megállíthatod vagy kiléphetsz.</p><div class="fg-chips">' + ch + '</div><div class="row"><button type="button" class="pri" data-a="go">▶ Indulhat</button><button type="button" data-a="later">Később</button><button type="button" data-a="no">Nem kell</button></div>';
     document.body.appendChild(bk); document.body.appendChild(o); offer = [bk, o];
     o.querySelector('[data-a="go"]').onclick = function(){ closeOffer(); fullTour(); };
     o.querySelector('[data-a="later"]').onclick = function(){ closeOffer(); try{ sessionStorage.setItem("fp_guide_later", "1"); }catch(e){} };
@@ -72105,20 +72108,35 @@ html body.light-theme .fg-offer.fg-offer,html body.light-theme .fg-card.fg-card{
       if(blocked()){ stable = 0; return; }
       var sp = document.getElementById("settingsPanel"); if(sp && sp.dataset.first === "1") return;   /* még nincs beállítva a bolt */
       if(!document.querySelector("#pageSwitch .ps-btn")) return;
-      if(++stable < 6) return;   /* ~3 mp nyugalom után */
+      if(++stable < 2) return;   /* ~4 mp nyugalom után */
       if(offer) return;
       var full = ls(K_FULL), later = false; try{ later = !!sessionStorage.getItem("fp_guide_later"); }catch(e){}
       if(!full){ if(!later) offerFull(); return; }
-      var p = activePage(); if(p !== lastP){ lastP = p; if(G[p] && !seen()[p] && pageOn(p)) offerPage(p); }
+      /* oldalanként nem kérdez (Martin: ne terhelje a gépet) */
     }catch(e){}
-  }, 500);
+  }, 2000);
   /* ❓ Súgó gomb → az oldal interaktív bemutatója (a diás súgó a végéről érhető el) */
   document.addEventListener("click", function(e){
     var b = e.target.closest && e.target.closest("#helpBtn"); if(!b || window.__fgBypass) return;
     if(document.documentElement.classList.contains("fp-setup")) return;   /* a beállításnál a saját súgója marad */
-    if(G[activePage()]){ e.preventDefault(); e.stopImmediatePropagation(); pageGuide(); }
+    var ap = activePage(); if(["ma","rendeles","specko"].indexOf(ap) >= 0 && G[ap]){ e.preventDefault(); e.stopImmediatePropagation(); pageGuide(ap); }
   }, true);
-  window.fpGuide = pageGuide; window.fpGuideTour = fullTour; window.fpGuideSteps = G;
+  /* ===== Martin kérése: a súgó diás, animált legyen (nem a valódi felületen kiemelős) — könnyű, gyenge gépen is ===== */
+  var KMAP = { tap:"tap", scan:"scan", look:"info" };
+  function diaSlides(p){ var g = G[p]; if(!g) return [];
+    return g.s.filter(function(x){ return p !== "tools" || !!find(x[0]); }).map(function(x){ var a = x[3] || "look", k = a.indexOf("type:") === 0 ? "type" : (KMAP[a] || "info");
+      var items = [{ n:"1", html:x[2], k:k }]; if(x[4]) items.push({ ti:1, n:"💡", html:x[4], b:x[4] });
+      return { ic:g.ic, h:x[1], p:"", items:items, dev:g.t, tocIc:g.ic, hx:1, seg:p, segT:g.t }; }); }
+  window.fpGuideDia = diaSlides;
+  function diaOpen(title, ic, sl, sub){ if(!sl.length || !window.fpDia) return false; var st = !!window.__fgSegToc; window.__fgSegToc = 0; window.fpDia({ segToc:st, ic:ic, title:title, label:"Súgó · " + title, sub:sub || "Súgó · " + sl.length + " rész — magától lapoz, bármikor megállíthatod", slides:sl }); return true; }
+  pageGuide = function(p){ p = p || activePage(); var g = G[p]; markSeen(p); return g ? diaOpen(g.t, g.ic, diaSlides(p)) : false; };
+  fullTour = function(){
+    ls(K_FULL, "1"); ORDER.forEach(markSeen);
+    var sl = [{ ic:"👋", h:"Üdv a Munkaasztalon!", p:"Végigmegyünk minden programon, amit a boltotok használ — lépésről lépésre, animálva. Szóközzel megállíthatod, nyilakkal lapozhatsz.", items:[], dev:"Körbevezetés", tocIc:"👋" }].concat(diaSlides("tools"));
+    ORDER.forEach(function(p){ if(pageOn(p)) sl = sl.concat(diaSlides(p)); });
+    window.__fgSegToc = 1; diaOpen("Körbevezetés", "🧭", sl, "Az összes program, lépésről lépésre — kb. " + Math.max(3, Math.round(sl.length * 9 / 60)) + " perc");
+  };
+  window.fpGuide = function(p){ return pageGuide(p); }; window.fpGuideTour = function(){ fullTour(); }; window.fpGuideSteps = G;
 })();
 </script>
 </body>
