@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-153205";</script>
+<script>window.FP_BUILD="20261118-155550";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -71127,6 +71127,42 @@ setInterval(function(){
     if(document.getElementById("fpBoot") || document.querySelector(".ui-thback,.fc-full,.fc-back,.fc-adin,.modal-backdrop.show,.popup-backdrop.show,.lay-back,.nw-back,.tour-back,#fcLogin,.fc-pwm,#fcMt")) return;
     asked = true; clearInterval(iv); setTimeout(function(){ pick(true); }, 600);
   }, 1200);
+})();
+</script>
+<style id="hdrV2Css">
+/* ===================== PRÓBA 36: felső sáv egyben, rendezetten (új kinézet, asztali nézet) ===================== */
+html.ui-uj.fp-rnav:not(.m-app) .hdr-ph{display:none !important;}
+html.ui-uj.fp-rnav:not(.m-app) body .app > .hdr2.hdr2{position:sticky !important;top:10px !important;left:auto !important;right:auto !important;transform:none !important;width:auto !important;max-width:none !important;z-index:56 !important;
+  margin:10px 0 18px !important;min-height:64px;box-sizing:border-box;padding:10px calc(var(--ui-tools,440px) - 14px) 10px 20px !important;display:flex !important;align-items:center !important;gap:14px !important;
+  background:linear-gradient(180deg,rgba(31,26,20,.97),rgba(18,15,12,.97)) !important;border:1px solid rgba(255,255,255,.07) !important;border-radius:20px !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;transition:box-shadow .25s;}
+html.ui-uj.fp-rnav:not(.m-app) body .app > .hdr2.hdr2::before{content:"" !important;display:block !important;position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;background:linear-gradient(180deg,#f0c766,#d9ad46);}
+html.ui-uj.fp-rnav:not(.m-app) body.light-theme .app > .hdr2.hdr2{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(250,247,241,.98)) !important;border-color:rgba(0,0,0,.08) !important;box-shadow:0 10px 26px rgba(60,40,10,.1) !important;}
+html.ui-uj.fp-rnav:not(.m-app) body .hdr2 .hdr-ctx{border:0 !important;display:flex !important;align-items:center !important;gap:16px !important;flex:1 1 auto !important;min-width:0 !important;width:auto !important;margin:0 !important;padding:0 !important;}
+html.ui-uj.fp-rnav:not(.m-app) body .hdr2 .header-title{display:flex !important;flex-direction:column !important;align-items:flex-start !important;justify-content:center !important;gap:1px !important;min-width:0 !important;flex:1 1 auto !important;}
+html.ui-uj.fp-rnav:not(.m-app) body .hdr2 #pageTitle{font-size:22px !important;line-height:28px !important;font-weight:700 !important;margin:0 !important;white-space:nowrap;}
+html.ui-uj.fp-rnav:not(.m-app) body .hdr2 #pageSub{font-size:12.5px !important;line-height:17px !important;margin:0 !important;padding:0 !important;max-width:100%;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;opacity:.7;}
+html.ui-uj.fp-rnav:not(.m-app) body .hdr2 #pageSub::before{content:none !important;display:none !important;}
+html.ui-uj.fp-rnav:not(.m-app) body .hdr2 .ctx-r{flex:0 0 auto !important;margin:0 0 0 auto !important;display:flex;align-items:center;gap:8px;}
+html.ui-uj.fp-rnav:not(.m-app) body #fpTools.hv2{padding:4px !important;border-radius:16px !important;background:rgba(255,255,255,.035) !important;border:1px solid rgba(255,255,255,.07) !important;box-shadow:none !important;transition:top .15s;}
+html.ui-uj.fp-rnav:not(.m-app) body.light-theme #fpTools.hv2{background:rgba(0,0,0,.03) !important;border-color:rgba(0,0,0,.08) !important;}
+@media (max-width:1180px){ html.ui-uj.fp-rnav:not(.m-app) body .hdr2 #pageSub{display:none !important;} }
+@media print{ .hdr2,#fpTools{display:none !important;} }
+</style>
+<script id="hdrV2Js">
+/* a jobb oldali gombsor a felső sávon belül, függőlegesen középen (görgetéskor is) */
+(function(){
+  var raf = 0;
+  function on(){ var H = document.documentElement; return H.classList.contains("ui-uj") && H.classList.contains("fp-rnav") && !H.classList.contains("m-app"); }
+  function fit(){ raf = 0;
+    var t = document.getElementById("fpTools"), h = document.querySelector(".app > .hdr2"); if(!t) return;
+    if(!on() || !h || !h.offsetHeight){ if(t.classList.contains("hv2")){ t.classList.remove("hv2"); t.style.removeProperty("top"); t.style.removeProperty("right"); } return; }
+    var r = h.getBoundingClientRect(); t.classList.add("hv2");
+    t.style.setProperty("top", Math.round(r.top + (r.height - t.offsetHeight) / 2) + "px", "important");
+    t.style.setProperty("right", Math.max(8, Math.round(innerWidth - r.right + 12)) + "px", "important");
+  }
+  function q(){ if(!raf) raf = requestAnimationFrame(fit); }
+  addEventListener("scroll", q, { passive:true }); addEventListener("resize", q); setInterval(fit, 1000); setTimeout(fit, 50);
 })();
 </script>
 </body>
