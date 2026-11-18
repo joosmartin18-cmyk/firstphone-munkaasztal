@@ -23237,7 +23237,7 @@
   }
 
   /* ===== PRÓBA 10: Beosztás oldal — új elrendezés (naptár + jobb oldali dolgozói sáv) és új napi ablak ===== */
-  html.ui-uj:not(.m-app) body.lay-new:not([class*="page-"]) #mainPanel{ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) body.lay-new:not([class*="page-"]) #mainPanel:not([style*="none"]){ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
   html.ui-uj:not(.m-app) #mainPanel > *{ grid-column:1; min-width:0; }
   html.ui-uj:not(.m-app) #mainPanel > #prevBannerWrap, html.ui-uj:not(.m-app) #mainPanel > .month-row, html.ui-uj:not(.m-app) #mainPanel > #calPersonBar{ grid-column:1 / -1; }
   html.ui-uj:not(.m-app) #mainPanel > #uiSide{ grid-column:2 !important; grid-row:3 / span 3 !important; display:flex; flex-direction:column; gap:16px; align-self:start; position:sticky; top:16px; }
@@ -52843,7 +52843,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
   }
 
   /* ===== PRÓBA 10: Beosztás oldal — új elrendezés (naptár + jobb oldali dolgozói sáv) és új napi ablak ===== */
-  html.ui-uj:not(.m-app) body.lay-new:not([class*="page-"]) #mainPanel{ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
+  html.ui-uj:not(.m-app) body.lay-new:not([class*="page-"]) #mainPanel:not([style*="none"]){ display:grid !important; grid-template-columns:minmax(0,1fr) 320px !important; column-gap:24px !important; row-gap:0 !important; align-items:start !important; }
   html.ui-uj:not(.m-app) #mainPanel > *{ grid-column:1; min-width:0; }
   html.ui-uj:not(.m-app) #mainPanel > #prevBannerWrap, html.ui-uj:not(.m-app) #mainPanel > .month-row, html.ui-uj:not(.m-app) #mainPanel > #calPersonBar{ grid-column:1 / -1; }
   html.ui-uj:not(.m-app) #mainPanel > #uiSide{ grid-column:2 !important; grid-row:3 / span 3 !important; display:flex; flex-direction:column; gap:16px; align-self:start; position:sticky; top:16px; }
@@ -71737,12 +71737,14 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
   function busy(){ var H = document.documentElement; return !!(vis("fpBoot") || vis("fcLogin") || (H.classList.contains("fc-locked") && (vis("fcLogin") || vis("fcAdmin")))); }
   function tick(){
     var p = document.getElementById("settingsPanel"), H = document.documentElement;
-    var want = !!(p && p.dataset.first === "1" && p.style.display !== "none" && !busy());
+    /* a beállítás mindig teljes képernyőn nyílik — csak ez látszik (Martin kérése), a beállított boltnál is */
+    var want = !!(p && p.style.display !== "none" && p.innerHTML && !busy());
     var first = !!(p && p.dataset.first === "1" && p.style.display !== "none");
     if(!want){ since = 0; if(H.classList.contains("fp-setup")) H.classList.remove("fp-setup"); H.classList.toggle("fp-setwait", first); return; }
     if(!since) since = Date.now();
-    H.classList.toggle("fp-setwait", Date.now() - since < 600);
-    if(Date.now() - since >= 600 && !H.classList.contains("fp-setup")){ H.classList.add("fp-setup"); try{ var f = p.querySelector("#setBody input"); if(f) f.focus({ preventScroll:true }); }catch(e){} }
+    var dl = first ? 600 : 0;
+    H.classList.toggle("fp-setwait", first && Date.now() - since < dl);
+    if(Date.now() - since >= dl && !H.classList.contains("fp-setup")){ H.classList.add("fp-setup"); try{ var f = p.querySelector("#setBody input"); if(f) f.focus({ preventScroll:true }); }catch(e){} }
   }
   setInterval(tick, 200);
   addEventListener("beforeunload", function(){ document.documentElement.classList.remove("fp-setup"); var p = document.getElementById("settingsPanel"); if(p) p.style.visibility = "hidden"; });
