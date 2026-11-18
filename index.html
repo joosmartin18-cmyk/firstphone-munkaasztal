@@ -71602,7 +71602,7 @@ html.ui-uj body.light-theme .mw2-t u{background:#1c1505;}
 <style id="setupV2Css">
 /* ===================== PRÓBA 41: első bolt-beállítás — teljes képernyős, csak ez látszik (mindkét kinézet) ===================== */
 /* villanás ellen: amíg a felhő tölt / belépés-kilépés zajlik, az első beállítás nem látszik */
-html:not(.fp-setup) #settingsPanel[data-first="1"]{visibility:hidden !important;}
+html.fp-setwait:not(.fp-setup) #settingsPanel[data-first="1"]{visibility:hidden !important;}
 html.fp-setup body{overflow:hidden !important;}
 html.fp-setup #settingsPanel#settingsPanel{position:fixed !important;inset:0 !important;z-index:99970 !important;margin:0 !important;max-width:none !important;width:auto !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;
   display:grid !important;grid-template-columns:340px minmax(0,1fr) !important;grid-template-rows:auto minmax(0,1fr) auto !important;grid-template-areas:"head body" "pills body" "help foot" !important;gap:0 !important;padding:0 !important;
@@ -71731,12 +71731,15 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
 /* az első beállítás csak akkor jelenik meg (teljes képernyőn), ha biztosan kell: nem tölt a felhő, nincs belépés/kilépés folyamatban, és rövid ideig stabilan „nincs beállítva” */
 (function(){
   var since = 0;
-  function busy(){ var H = document.documentElement; return !!(document.getElementById("fpBoot") || document.getElementById("fcLogin") || H.classList.contains("fc-locked") || document.getElementById("fcAdmin")); }
+  function vis(id){ var e = document.getElementById(id); return !!(e && e.getClientRects().length && getComputedStyle(e).display !== "none"); }
+  function busy(){ var H = document.documentElement; return !!(vis("fpBoot") || vis("fcLogin") || (H.classList.contains("fc-locked") && (vis("fcLogin") || vis("fcAdmin")))); }
   function tick(){
     var p = document.getElementById("settingsPanel"), H = document.documentElement;
     var want = !!(p && p.dataset.first === "1" && p.style.display !== "none" && !busy());
-    if(!want){ since = 0; if(H.classList.contains("fp-setup")) H.classList.remove("fp-setup"); return; }
+    var first = !!(p && p.dataset.first === "1" && p.style.display !== "none");
+    if(!want){ since = 0; if(H.classList.contains("fp-setup")) H.classList.remove("fp-setup"); H.classList.toggle("fp-setwait", first); return; }
     if(!since) since = Date.now();
+    H.classList.toggle("fp-setwait", Date.now() - since < 600);
     if(Date.now() - since >= 600 && !H.classList.contains("fp-setup")){ H.classList.add("fp-setup"); try{ var f = p.querySelector("#setBody input"); if(f) f.focus({ preventScroll:true }); }catch(e){} }
   }
   setInterval(tick, 200);
