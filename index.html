@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-152049";</script>
+<script>window.FP_BUILD="20261118-153205";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -26046,6 +26046,40 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     #bugBtn.has-ans{position:relative;} #bugBtn.has-ans::after{content:attr(data-n);position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#ef5a5a;color:#fff;font:700 10px/16px 'Inter',sans-serif;text-align:center;box-shadow:0 0 0 2px var(--bg,#0c0c0f);}
     .fc-msgban > i{font-style:normal;font-size:22px;} .fc-msgban div{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;} .fc-msgban small{display:block;font-size:11.5px;color:var(--text-dim,#9c9ca6);margin-bottom:2px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;}
     .fc-msgban button{border:1px solid var(--border,#2b2b33);background:var(--bg-panel2,#1e1e25);color:inherit;font:700 12.5px 'Inter',sans-serif;padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap;}
+    /* ===== Közlemény v2 (bolti kártya + admin előnézet ugyanaz) ===== */
+    #fcMsg.fcm2-w{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:99990;width:min(760px,calc(100vw - 24px));animation:fcm2In .55s cubic-bezier(.22,1,.36,1) both;}
+    #fcMsg.fcm2-w.out{animation:fcm2Out .32s ease forwards;}
+    @keyframes fcm2In{from{opacity:0;transform:translate(-50%,-24px) scale(.97)}to{opacity:1;transform:translate(-50%,0)}}
+    @keyframes fcm2Out{to{opacity:0;transform:translate(-50%,-16px) scale(.97)}}
+    .fcm2{--k:#f0c766;--kb:rgba(240,199,102,.16);position:relative;box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 16px 16px 18px;border-radius:20px;overflow:hidden;color:#f5efe4;font-family:'Manrope','Inter',system-ui,sans-serif;text-align:left;
+      background:radial-gradient(120% 140% at 0% 0%,var(--kb),transparent 55%),linear-gradient(180deg,#1d1914,#15120e);border:1px solid color-mix(in srgb,var(--k) 38%,rgba(255,255,255,.08));box-shadow:0 18px 44px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);}
+    .fcm2.lv-warn{--k:#ff6b5e;--kb:rgba(255,107,94,.18);} .fcm2.lv-ok{--k:#3ccf8a;--kb:rgba(60,207,138,.16);}
+    .fcm2::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--k),color-mix(in srgb,var(--k) 40%,transparent));}
+    .fcm2-ic{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:24px;font-style:normal;background:color-mix(in srgb,var(--k) 18%,#221d17);border:1px solid color-mix(in srgb,var(--k) 35%,transparent);flex:0 0 auto;}
+    .fcm2-w .fcm2-ic{animation:fcm2Ic 1.6s ease .5s 2;}
+    @keyframes fcm2Ic{0%,100%{transform:none}30%{transform:rotate(-10deg) scale(1.08)}60%{transform:rotate(8deg)}}
+    .fcm2-b{min-width:0;}
+    .fcm2-top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:6px;}
+    .fcm2-tag{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--k);color:#1a140b;}
+    .fcm2-from{font-size:12px;font-weight:700;color:rgba(245,239,228,.6);}
+    .fcm2-exp{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.07);color:rgba(245,239,228,.75);}
+    .fcm2-tx{font-size:15.5px;line-height:22px;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere;max-height:40vh;overflow:auto;}
+    .fcm2-tx em{color:rgba(245,239,228,.45);font-weight:500;}
+    .fcm2 .fcm2-ok{border:0 !important;cursor:pointer;white-space:nowrap;font:800 13px/1 'Manrope','Inter',sans-serif !important;padding:12px 16px !important;border-radius:999px !important;background:linear-gradient(135deg,#f0c766,#d9ad46) !important;color:#1c1505 !important;box-shadow:0 6px 16px rgba(240,199,102,.25) !important;transition:transform .15s;height:auto !important;min-height:0 !important;}
+    .fcm2 .fcm2-ok:hover{transform:translateY(-1px);}
+    .fcm2.lv-warn .fcm2-ok{background:linear-gradient(135deg,#ff7b6e,#e24c4c) !important;color:#fff !important;box-shadow:0 6px 16px rgba(226,76,76,.3) !important;}
+    .fcm2-w .fcm2.lv-warn{animation:fcm2Glow 1.8s ease .4s 2;}
+    @keyframes fcm2Glow{50%{box-shadow:0 18px 44px rgba(0,0,0,.45),0 0 0 6px rgba(255,107,94,.2)}}
+    html.fp-lite .fcm2-w .fcm2-ic,html.fp-lite .fcm2-w .fcm2.lv-warn{animation:none !important;}
+    html body #fcMsg#fcMsg .fcm2{background:radial-gradient(120% 140% at 0% 0%,var(--kb),transparent 55%),linear-gradient(180deg,#1d1914,#15120e) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;color:#f5efe4 !important;opacity:1 !important;border:1px solid color-mix(in srgb,var(--k) 45%,rgba(255,255,255,.08)) !important;border-radius:20px !important;}
+    html body #fcMsg#fcMsg .fcm2::before{display:block !important;content:"" !important;}
+    html body #fcMsg#fcMsg .fcm2 .fcm2-ok{background:linear-gradient(135deg,#f0c766,#d9ad46) !important;color:#1c1505 !important;border:0 !important;}
+    html body #fcMsg#fcMsg .fcm2.lv-warn .fcm2-ok{background:linear-gradient(135deg,#ff7b6e,#e24c4c) !important;color:#fff !important;}
+    html body #fcMsg#fcMsg .fcm2-ic{background:color-mix(in srgb,var(--k) 18%,#221d17) !important;}
+    html body #fcMsg#fcMsg .fcm2-tx,html body #fcMsg#fcMsg .fcm2-b{color:#f5efe4 !important;}
+    @media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) #fcMsg.fcm2-w{animation:none !important;} html:not(.fp-anim-full) .fcm2-w .fcm2-ic, html:not(.fp-anim-full) .fcm2-w .fcm2.lv-warn{animation:none !important;} }
+    @media (max-width:560px){ .fcm2{grid-template-columns:auto minmax(0,1fr);padding:14px;} .fcm2 .fcm2-ok{grid-column:1/-1;width:100%;} .fcm2-ic{width:40px;height:40px;font-size:20px;border-radius:12px;} .fcm2-tx{font-size:14.5px;line-height:21px;} }
+    @media print{ #fcMsg{display:none !important;} }
     @media (max-width:860px){ .ad-shell{grid-template-columns:1fr;padding:14px 12px 40px;} .ad-side{position:static;flex-direction:row;flex-wrap:wrap;gap:6px;padding:10px;} .ad-brand{width:100%;} .ad-nav{width:auto;flex:1 1 auto;justify-content:center;padding:9px 10px;} .ad-nav em{margin-left:4px;} .ad-sfoot{width:100%;grid-template-columns:1fr 1fr;} }`;
     document.head.appendChild(st);
   }
@@ -29422,6 +29456,37 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     #fcAdmin#fcAdmin#fcAdmin .pw2 .fc-pw-warn,#fcAdmin#fcAdmin#fcAdmin .pw2 .fc-pw-ed,#fcAdmin#fcAdmin#fcAdmin .pw2 .fc-pw-msg{margin:0 !important;grid-column:auto !important;}
     #fcAdmin#fcAdmin#fcAdmin.th-light .fc-pw-r.pw2,#fcAdmin#fcAdmin#fcAdmin.th-light .pw2-m span{background:rgba(0,0,0,.025) !important;}
     @media (max-width:640px){ #fcAdmin#fcAdmin#fcAdmin .fc-pw-list{grid-template-columns:1fr;} }
+
+    /* ===== Közlemények v2 ===== */
+    #fcAdmin#fcAdmin#fcAdmin .ax-prev.v2{display:block !important;padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important;min-height:0 !important;}
+    #fcAdmin#fcAdmin#fcAdmin .ax-prev.v2 .fcm2{box-shadow:0 10px 28px rgba(0,0,0,.35);}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important;width:100%;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button{--k:#f0c766;display:flex !important;flex-direction:column;align-items:flex-start;justify-content:flex-start !important;gap:1px;height:auto !important;min-height:0 !important;padding:12px 14px !important;border-radius:16px !important;border:1px solid var(--ax-line) !important;background:rgba(255,255,255,.03) !important;color:var(--ax-tx) !important;text-align:left;box-shadow:none !important;transition:border-color .2s,background .2s,transform .2s;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button.lv-warn{--k:#ff6b5e;} html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button.lv-ok{--k:#3ccf8a;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button i{display:block;width:12px;height:12px;border-radius:50%;background:var(--k);box-shadow:0 0 0 4px color-mix(in srgb,var(--k) 20%,transparent);margin:2px 0 6px 2px;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button b{font-size:13.5px;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button small{font-size:11.5px;color:var(--ax-dim,#a59c8c);font-weight:600;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button:hover{transform:translateY(-1px);}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button.on{border-color:var(--k) !important;background:color-mix(in srgb,var(--k) 14%,transparent) !important;box-shadow:0 0 0 3px color-mix(in srgb,var(--k) 16%,transparent) !important;color:var(--ax-tx) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button.on.on{color:var(--ax-tx) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button.on b{color:var(--k) !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button.on small{color:var(--ax-dim,#a59c8c) !important;}
+    #fcAdmin#fcAdmin#fcAdmin .ax-mi.mi2{position:relative;display:flex !important;flex-direction:column;gap:10px;padding:14px 14px 14px 18px !important;border-radius:16px !important;border:1px solid var(--ax-line) !important;background:rgba(255,255,255,.03) !important;overflow:hidden;margin-bottom:10px;}
+    #fcAdmin#fcAdmin#fcAdmin .ax-mi.mi2::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--k);}
+    #fcAdmin#fcAdmin#fcAdmin .ax-mi.mi2.exp{opacity:.55;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-h{display:flex;align-items:center;gap:8px;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-h .ax-btn{margin-left:auto !important;} #fcAdmin#fcAdmin#fcAdmin .mi2-h small{color:var(--ax-dim,#a59c8c);font-size:11.5px;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-tag{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--k);color:#1a140b;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2 .tx span{font-size:14px;line-height:20px;font-weight:600;white-space:pre-wrap;overflow-wrap:anywhere;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-who{display:flex;align-items:center;flex-wrap:wrap;gap:0;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:9.5px;font-weight:800;color:#fff;border:2px solid var(--ax-panel,#1a1611);margin-right:-6px;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-av.more{background:rgba(255,255,255,.12);color:var(--ax-tx);}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-who small{margin-left:14px;font-size:12px;color:var(--ax-dim,#a59c8c);font-weight:700;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-exp{display:flex;align-items:center;gap:10px;}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-exp .tr{flex:1;max-width:240px;height:5px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;} #fcAdmin#fcAdmin#fcAdmin .mi2-exp .tr i{display:block;height:100%;min-width:4px;border-radius:4px;background:var(--k);}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-exp::before{content:"";}
+    #fcAdmin#fcAdmin#fcAdmin .mi2-exp small{font-size:11.5px;color:var(--ax-dim,#a59c8c);font-weight:700;}
+    #fcAdmin#fcAdmin#fcAdmin.th-light .ml2 button,#fcAdmin#fcAdmin#fcAdmin.th-light .ax-mi.mi2{background:rgba(0,0,0,.02) !important;}
+    @media (max-width:640px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button{padding:10px !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button small{display:none;} html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button b{font-size:12.5px;} }
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
@@ -29533,7 +29598,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
               <div class="ax-card ax-errw"><div class="ax-ch"><h3>🤖 Automatikus hibanapló</h3><small>a boltok gépein / telefonjain előfordult programhibák — a bolt ebből semmit nem lát, nem kell bejelentenie</small><span class="ax-sp"></span><button type="button" class="ax-btn sm" data-x="errload">↻ Frissítés</button></div><div class="ax-errl"><p class="ax-hint">Megnyitáskor betölti…</p></div></div></section>
             <section class="ax-pane" data-pane="ann"><div class="ax-g2 ax-annw"><div class="ax-card"><div class="ax-ch"><h3>Új közlemény</h3><small>a munkaasztal tetején jelenik meg, amíg el nem olvassák</small></div>
                 <textarea class="ax-in ax-ta ax-mtxt" maxlength="600" placeholder="Pl.: Holnaptól új árak a ShieldUp fóliákon — kérlek, nézzétek át a polcokat."></textarea><div class="ax-cc"><span class="ax-mcnt">0 / 600</span></div>
-                <div class="ax-fl"><label>Típus</label>${seg("ax-ml", "ml", [["info","💬 Tájékoztatás"],["warn","⚠️ Fontos"],["ok","✅ Jó hír"]], "info")}</div>
+                <div class="ax-fl"><label>Típus</label>${`<div class="ax-seg ax-ml ml2">${[["info","📢","Tájékoztatás","általános hír"],["warn","⚠️","Fontos","piros, kiemelve"],["ok","✅","Jó hír","zöld, vidám"]].map(([k, i, t, d])=> `<button type="button" data-ml="${k}" class="lv-${k}${k === "info" ? " on" : ""}"><i></i><b>${t}</b><small>${d}</small></button>`).join("")}</div>`}</div>
                 <div class="ax-fl"><label>Lejárat</label>${seg("ax-mex", "mex", [["0","Amíg be nem zárják"],["1","1 nap"],["3","3 nap"],["7","1 hét"]], "0")}</div>
                 <div class="ax-fl"><label>Címzettek <span class="ax-b ax-mn"></span></label>${seg("ax-mt", "mt", [["all","Minden bolt"],["sel","Kiválasztott boltok"]], "all")}
                   <div class="ax-pick" hidden><div class="ax-pickh"><div class="ax-inp">${axI("srch")}<input class="ax-in ax-pq" type="search" placeholder="Szűrés" autocomplete="off"></div><button type="button" class="ax-btn sm" data-x="pall">Mind</button><button type="button" class="ax-btn sm" data-x="pnone">Egyik sem</button></div><div class="ax-pickl"></div></div></div>
@@ -30173,7 +30238,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       function drawPrev(){ const [i, , c] = LV[mLvl]; const tx = mtxt.value.trim();
         $(".ax-mcnt").textContent = `${mtxt.value.length} / 600`;
         $(".ax-prev").style.setProperty("--k", c);
-        $(".ax-prev").innerHTML = `<i>${mLvl === "info" ? "📢" : i}</i><div><small>Üzenet az admintól · most${mExp ? ` · ${mExp === 7 ? "1 hétig" : mExp + " napig"} látszik` : ""}</small><span>${tx ? esc(tx) : `<em>Az üzenet előnézete itt jelenik meg.</em>`}</span></div><button type="button" tabindex="-1">✓ Elolvastam</button>`; }
+        css(); $(".ax-prev").classList.add("v2"); $(".ax-prev").innerHTML = msgCard({ text:tx, level:mLvl, expDays:mExp || 0 }, true); }
       function drawMn(){ const n = mTgt === "all" ? list.length : $$(".ax-pickl input:checked").length; $(".ax-mn").textContent = `${n} bolt`; }
       mtxt.oninput = drawPrev;
       $(".ax-pickl").innerHTML = list.slice().sort((a, c)=> shortN(a).localeCompare(shortN(c), "hu")).map(x=> `<label><input type="checkbox" value="${esc(x.uid)}"> <span>${esc(shortN(x))}</span></label>`).join("") + none.map(s=> `<label class="dis" title="Még nem lépett be"><input type="checkbox" disabled> <span>${esc(s.n)}</span></label>`).join("");
@@ -30183,7 +30248,11 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         const G = {}; list.forEach(x=>{ if(x.msg && x.msg.text){ const k = msgKey(x.msg); (G[k] = G[k] || { m:x.msg, L:[] }).L.push(x); } });
         const R = Object.entries(G).sort((a, c)=> (c[1].m.at || 0) - (a[1].m.at || 0));
         $(".ax-mlive").innerHTML = R.map(([k, { m, L }])=>{ const lv = LV[m.level] || LV.info, exp = m.exp && Date.now() > m.exp;
-          return `<div class="ax-mi${exp ? " exp" : ""}" style="--k:${lv[2]}"><i>${lv[0]}</i><div class="tx"><span>${esc(String(m.text).slice(0, 140))}</span><small>${m.at ? full(m.at) : ""} · ${L.length} bolt${m.exp ? ` · ${exp ? "lejárt" : "lejár: " + full(m.exp)}` : ""}</small><small class="who">${esc(L.slice(0, 5).map(shortN).join(", "))}${L.length > 5 ? ` +${L.length - 5}` : ""}</small></div><button type="button" class="ax-btn sm" data-x="mrev" data-k="${esc(k)}">Visszavonás</button></div>`; }).join("") || `<div class="ax-empty">Most nincs kint közlemény.</div>`;
+          const pc = m.exp && m.at ? Math.max(0, Math.min(100, (Date.now() - m.at) / (m.exp - m.at) * 100)) : 0;
+          return `<div class="ax-mi mi2${exp ? " exp" : ""}" style="--k:${lv[2]}"><div class="mi2-h"><span class="mi2-tag">${lv[1]}</span><small>${m.at ? full(m.at) : ""}</small><span class="ax-sp"></span><button type="button" class="ax-btn sm" data-x="mrev" data-k="${esc(k)}">Visszavonás</button></div>
+            <div class="tx"><span>${esc(String(m.text).slice(0, 220))}</span></div>
+            <div class="mi2-who">${L.slice(0, 8).map(x=> `<span class="mi2-av" title="${esc(shortN(x))}" style="background:${avCol(shortN(x))}">${esc(avIni(shortN(x)))}</span>`).join("")}${L.length > 8 ? `<span class="mi2-av more">+${L.length - 8}</span>` : ""}<small>${L.length} bolt${L.length <= 3 ? " · " + esc(L.map(shortN).join(", ")) : ""}</small></div>
+            ${m.exp ? `<div class="mi2-exp"><span class="tr"><i style="width:${pc.toFixed(0)}%"></i></span><small>${exp ? "lejárt" : "lejár: " + full(m.exp)}</small></div>` : `<div class="mi2-exp no"><small>amíg be nem zárják</small></div>`}</div>`; }).join("") || `<div class="ax-empty">Most nincs kint közlemény.</div>`;
       }
       async function sendMsg(btn){
         const text = mtxt.value.trim(); if(!text){ out(".ax-mout", "err", "Írd be az üzenetet."); mtxt.focus(); return; }
@@ -32045,15 +32114,22 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       if(lo && si && lo > si && lsGet("fp_lo_done") !== String(lo)){ lsSet("fp_lo_done", String(lo)); toast2("🚪 Az admin kijelentkeztetett — lépj be újra."); setTimeout(()=>{ firebase.auth().signOut().then(()=> location.reload(), ()=> location.reload()); }, 900); return true; } }catch(e){}
     mtDraw(); try{ window.fpApplyAdmHol && fpApplyAdmHol(); }catch(e){} return false;
   }
+  /* közlemény-kártya: a bolt ezt látja, az admin előnézete is ezt mutatja */
+  function msgCard(m, prev){
+    const L = { info:["📢","Tájékoztatás"], warn:["⚠️","Fontos"], ok:["✅","Jó hír"] }, lv = L[m.level] ? m.level : "info", d = new Date(m.at || Date.now());
+    const when = prev ? "most" : `${d.getMonth() + 1}.${String(d.getDate()).padStart(2, "0")}. ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    let ex = ""; if(m.expDays) ex = m.expDays === 7 ? "1 hétig látszik" : m.expDays + " napig látszik";
+    else if(m.exp){ const left = m.exp - Date.now(), h = Math.ceil(left / 36e5); ex = left <= 0 ? "lejárt" : h <= 24 ? `még ${h} óráig` : `még ${Math.ceil(left / 864e5)} napig`; }
+    return `<div class="fcm2 lv-${lv}"><i class="fcm2-ic">${L[lv][0]}</i><div class="fcm2-b"><div class="fcm2-top"><span class="fcm2-tag">${L[lv][1]}</span><span class="fcm2-from">Közlemény az admintól · ${when}</span>${ex ? `<span class="fcm2-exp">⏳ ${ex}</span>` : ""}</div><div class="fcm2-tx">${m.text ? esc(m.text) : `<em>Az üzenet előnézete itt jelenik meg.</em>`}</div></div><button type="button" class="fcm2-ok"${prev ? ' tabindex="-1"' : ""}>✓ Elolvastam</button></div>`;
+  }
   function showMsg(){
     let m = null; try{ m = JSON.parse(lsGet(MSG_KEY) || "null"); }catch(e){}
     const old = document.getElementById("fcMsg");
     if(!m || !m.text || lsGet(MSG_KEY + "_seen") === m.id || (m.exp && Date.now() > m.exp)){ if(old) old.remove(); return; }
     css(); if(old) old.remove();
-    const el = document.createElement("div"); el.id = "fcMsg"; el.className = "fc-msgban" + (m.level === "warn" ? " warn" : m.level === "ok" ? " ok" : "");
-    const d = new Date(m.at || Date.now());
-    el.innerHTML = `<i>${m.level === "warn" ? "⚠️" : m.level === "ok" ? "✅" : "📢"}</i><div><small>Üzenet az admintól · ${d.getMonth() + 1}.${String(d.getDate()).padStart(2, "0")}. ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}</small>${esc(m.text)}</div><button type="button">✓ Elolvastam</button>`;
-    el.querySelector("button").onclick = ()=>{ lsSet(MSG_KEY + "_seen", m.id); el.remove(); };
+    const el = document.createElement("div"); el.id = "fcMsg"; el.className = "fcm2-w"; el.setAttribute("role", "alert");
+    el.innerHTML = msgCard(m);
+    el.querySelector(".fcm2-ok").onclick = ()=>{ lsSet(MSG_KEY + "_seen", m.id); el.classList.add("out"); setTimeout(()=> el.remove(), 330); };
     document.body.appendChild(el);
   }
   window.fpShowAdminMsg = showMsg;
