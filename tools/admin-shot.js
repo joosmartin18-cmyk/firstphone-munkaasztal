@@ -1,6 +1,9 @@
 // Admin felület helyi próbája ál-felhővel (kitalált boltokkal): PIN=1 (menü rögzítve), NAV=dash|shops|sched|acc|inbox|tix|ann|docs|train|set|data, TH=dark|light, LK=new|old, W, H, O, EV, FULL=1
 const { chromium } = require('playwright');
 const FAKE = `(function(){
+  var _f=window.fetch; window.fetch=function(u,o){ if(String(u).indexOf("/api/admin")>=0){ var body={}; try{ body=JSON.parse((o&&o.body)||"{}"); }catch(e){} var users=[];
+    if(body.action==="list"){ var D=(typeof FP_DOMAIN!=="undefined"?FP_DOMAIN:"firstphone.hu"), i=0; Object.keys(window.FP_LOGIN||{}).forEach(function(l){ i++; if(i%7===0) return; users.push({email:l+"@"+D,last:i%3?Date.now()-i*36e5:0,created:Date.now()-90*864e5,pwAt:Date.now()-i*864e5,disabled:i%11===0}); }); }
+    return Promise.resolve(new Response(JSON.stringify({ok:true,users:users}),{headers:{"content-type":"application/json"}})); } return _f.apply(this,arguments); };
   var now=Date.now(), day=864e5;
   var names=["Minta A","Minta B","Minta C","Minta D","Minta E","Minta F"];
   var boltok={}, kv={};
