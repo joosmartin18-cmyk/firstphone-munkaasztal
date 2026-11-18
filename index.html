@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-173533";</script>
+<script>window.FP_BUILD="20261118-174258";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -29487,6 +29487,42 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     #fcAdmin#fcAdmin#fcAdmin .mi2-exp small{font-size:11.5px;color:var(--ax-dim,#a59c8c);font-weight:700;}
     #fcAdmin#fcAdmin#fcAdmin.th-light .ml2 button,#fcAdmin#fcAdmin#fcAdmin.th-light .ax-mi.mi2{background:rgba(0,0,0,.02) !important;}
     @media (max-width:640px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button{padding:10px !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button small{display:none;} html body #fcAdmin#fcAdmin#fcAdmin .ax-seg.ml2 button b{font-size:12.5px;} }
+
+    /* ===== Üzenetek v2: külön kártyák, lebegő beíró, buborékok ===== */
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-chat.v2{background:none !important;border:0 !important;box-shadow:none !important;gap:16px !important;grid-template-columns:330px minmax(0,1fr) !important;overflow:visible !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-chat.v2 > .ax-cl,html body #fcAdmin#fcAdmin#fcAdmin .ax-chat.v2 > .ax-cr{border:1px solid var(--ax-line) !important;border-radius:22px !important;background:linear-gradient(180deg,rgba(31,26,20,.92),rgba(18,15,12,.92)) !important;overflow:hidden;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-chat.v2 .ax-clh{padding:14px !important;border-bottom:1px solid var(--ax-line) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cts{padding:8px !important;display:flex;flex-direction:column;gap:4px;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct{position:relative;border-radius:16px !important;padding:10px 12px !important;border:1px solid transparent !important;background:transparent !important;transition:background .15s,border-color .15s;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct:hover{background:rgba(255,255,255,.04) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct.on{background:linear-gradient(135deg,rgba(240,199,102,.16),rgba(240,199,102,.04)) !important;border-color:rgba(240,199,102,.45) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct.on::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:#f0c766;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct .ax-av{width:42px !important;height:42px !important;border-radius:50% !important;font-size:13px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct .tx b span{font-size:14px;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-ct .tx small{opacity:.75;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-bc{margin:10px !important;border-radius:14px !important;border:1px dashed rgba(240,199,102,.45) !important;color:#f0c766 !important;background:rgba(240,199,102,.05) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-crh{padding:14px 18px !important;background:rgba(0,0,0,.18) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-crh .ax-cn{font-size:17px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-list{background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 1.5px) 0 0/22px 22px,transparent !important;padding:18px 22px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-day{background:rgba(255,255,255,.06) !important;border-radius:999px !important;padding:4px 12px !important;font-size:11px !important;letter-spacing:.08em;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-m.them .ch-bb{background:#241e18 !important;border:1px solid rgba(255,255,255,.08) !important;border-radius:6px 18px 18px 18px !important;padding:11px 15px !important;font-size:14.5px !important;line-height:1.45 !important;color:#f4efe6 !important;box-shadow:0 4px 14px rgba(0,0,0,.25) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-m.me .ch-bb{background:linear-gradient(135deg,#f0c766,#d9a33a) !important;color:#1c1505 !important;border:0 !important;border-radius:18px 6px 18px 18px !important;padding:11px 15px !important;font-size:14.5px !important;line-height:1.45 !important;font-weight:600;box-shadow:0 6px 18px rgba(240,199,102,.22) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-av{border-radius:50% !important;width:34px !important;height:34px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-nm{font-size:11.5px !important;font-weight:800 !important;color:#cfc6b6 !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-f{margin:12px 16px 16px !important;padding:6px !important;border-radius:999px !important;border:1px solid var(--ax-line) !important;background:#1d1813 !important;box-shadow:0 10px 26px rgba(0,0,0,.35) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-f:focus-within{border-color:#f0c766 !important;box-shadow:0 0 0 4px rgba(240,199,102,.14),0 10px 26px rgba(0,0,0,.35) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-f textarea{background:transparent !important;border:0 !important;box-shadow:none !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-empty{font-size:15px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-empty span{font-size:44px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cts .ax-ct.on.on,html body #fcAdmin#fcAdmin#fcAdmin .ax-cts .ax-ct.on .tx b span{color:var(--ax-tx) !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-cts .ax-ct.on .tx small,html body #fcAdmin#fcAdmin#fcAdmin .ax-cts .ax-ct.on time{color:var(--ax-dim,#a59c8c) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-crh .ax-cav{width:auto !important;height:auto !important;background:none !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-crh .ax-cav .ax-av{width:44px !important;height:44px !important;border-radius:50% !important;font-size:14px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-f .ch-bar{border:0 !important;background:transparent !important;box-shadow:none !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-f{border:1px solid var(--ax-line) !important;}
+    #fcAdmin#fcAdmin#fcAdmin.th-light .ax-chat.v2 > .ax-cl,#fcAdmin#fcAdmin#fcAdmin.th-light .ax-chat.v2 > .ax-cr{background:#fff !important;}
+    #fcAdmin#fcAdmin#fcAdmin.th-light .ax-cr .ch-m.them .ch-bb{background:#f4efe6 !important;color:#1c1505 !important;border-color:rgba(0,0,0,.06) !important;}
+    #fcAdmin#fcAdmin#fcAdmin.th-light .ax-cr .ch-f{background:#fff !important;}
+    #fcAdmin#fcAdmin#fcAdmin.th-light .ax-cr .ch-nm{color:#6b5f4c !important;}
+    @media (max-width:900px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-chat.v2{grid-template-columns:1fr !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-list{padding:12px !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-m .ch-col{max-width:86% !important;} }
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
