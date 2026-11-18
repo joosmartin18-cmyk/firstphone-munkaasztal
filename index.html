@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-223317";</script>
+<script>window.FP_BUILD="20261118-223632";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -57646,7 +57646,8 @@ function fpNotice(msg){
   /* csak a fontos üzenetek: figyelmeztetés, hiba, kész letöltés / mentés, havi törlés — a többi (témaváltás, mód, apró visszajelzés) nem jelenik meg */
   if(!/előbb|hiba|⚠|nem sikerült|sikertelen|nem engedi|nem töltött|nincs mit törölni|adj meg|írd be|beosztása törölve|letöltve|elmentve|beolvasva|következő hónapot|nem menthető|internet/i.test(msg)) return;
   let wrap = document.getElementById("fpNotes");
-  if(!wrap){ wrap = document.createElement("div"); wrap.id = "fpNotes"; wrap.className = "fp-notes"; wrap.setAttribute("aria-live", "polite"); document.body.appendChild(wrap); }
+  if(!wrap){ wrap = document.createElement("div"); wrap.id = "fpNotes"; wrap.className = "fp-notes"; wrap.setAttribute("aria-live", "polite"); document.body.appendChild(wrap);
+    try{ if(!document.getElementById("noteV2Css") && window.parent && window.parent !== window){ const src = window.parent.document.getElementById("noteV2Css"); if(src){ const st = document.createElement("style"); st.id = "noteV2Css"; st.textContent = src.textContent; document.head.appendChild(st); } } }catch(e){} }
   /* típus a szövegből */
   const low = msg.toLowerCase();
   let type = "info";
@@ -57661,7 +57662,7 @@ function fpNotice(msg){
   let icon = ICON[type];
   const m = msg.match(/^(\p{Extended_Pictographic}️?)\s*/u);
   if(m){ icon = m[1]; msg = msg.slice(m[0].length); }
-  msg = msg.replace(/\s*[✔✓]\s*$/, "");
+  msg = msg.replace(/\s*[✔✓]\s*$/, "").replace(/^\s*[✔✓]\s*/, "");
   /* ugyanaz az üzenet ne sorakozzon fel többször */
   Array.from(wrap.children).forEach(n=>{ if(n.dataset.msg === msg) fpNoticeClose(n, true); });
   const n = document.createElement("div");
@@ -59580,7 +59581,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     /* csak a fontos üzenetek: figyelmeztetés, hiba, kész letöltés / mentés, havi törlés — a többi (témaváltás, mód, apró visszajelzés) nem jelenik meg */
     if(!/előbb|hiba|⚠|nem sikerült|sikertelen|nem engedi|nem töltött|nincs mit törölni|adj meg|írd be|beosztása törölve|számolás törölve|letöltve|elmentve|beolvasva|következő hónapot|nem menthető|internet/i.test(msg)) return;
     let wrap = document.getElementById("fpNotes");
-    if(!wrap){ wrap = document.createElement("div"); wrap.id = "fpNotes"; wrap.className = "fp-notes"; wrap.setAttribute("aria-live", "polite"); document.body.appendChild(wrap); }
+    if(!wrap){ wrap = document.createElement("div"); wrap.id = "fpNotes"; wrap.className = "fp-notes"; wrap.setAttribute("aria-live", "polite"); document.body.appendChild(wrap);
+    try{ if(!document.getElementById("noteV2Css") && window.parent && window.parent !== window){ const src = window.parent.document.getElementById("noteV2Css"); if(src){ const st = document.createElement("style"); st.id = "noteV2Css"; st.textContent = src.textContent; document.head.appendChild(st); } } }catch(e){} }
     /* típus a szövegből */
     const low = msg.toLowerCase();
     let type = "info";
@@ -59595,13 +59597,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     let icon = ICON[type];
     const m = msg.match(/^(\p{Extended_Pictographic}️?)\s*/u);
     if(m){ icon = m[1]; msg = msg.slice(m[0].length); }
-    msg = msg.replace(/\s*[✔✓]\s*$/, "");
+    msg = msg.replace(/\s*[✔✓]\s*$/, "").replace(/^\s*[✔✓]\s*/, "");
     /* ugyanaz az üzenet ne sorakozzon fel többször */
     Array.from(wrap.children).forEach(n=>{ if(n.dataset.msg === msg) fpNoticeClose(n, true); });
     const n = document.createElement("div");
     n.className = "fp-note t-" + type; n.dataset.msg = msg; n.setAttribute("role", type === "warn" ? "alert" : "status");
     const esc = s=> s.replace(/[&<>]/g, c=> ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[c]));
     const dur = type === "warn" ? 5600 : 4200;
+    n.style.setProperty("--fnd", dur + "ms");
     n.innerHTML = `<button type="button" class="fn-x" aria-label="Bezárás">✕</button><span class="fn-ic">${esc(icon)}</span>` +
                   `<div class="fn-tx"><div class="fn-app"><span>FirstPhone Munkaasztal</span><em>most</em></div><b>${TITLE[type]}</b><span class="fn-msg">${esc(msg)}</span></div>`;
     wrap.prepend(n);
@@ -59628,6 +59631,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   window.addEventListener("resize", fpNoticePlace);
   
   function toast(msg){ fpNotice(msg); }
+  window.fpNotice = fpNotice;
 
   if(didAutoAdvance){
     setTimeout(()=> toast(`A hónap 23. napjától elérted a következő hónapot: ${HU_MONTHS[state.month-1]} ${state.year} — itt tervezhető a beosztás.`), 400);
@@ -71739,5 +71743,32 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
   addEventListener("beforeunload", function(){ document.documentElement.classList.remove("fp-setup"); var p = document.getElementById("settingsPanel"); if(p) p.style.visibility = "hidden"; });
 })();
 </script>
+<style id="noteV2Css">
+/* ===================== PRÓBA 42: rendszerértesítések — középen felül, tömör kártya, színes ikon, visszaszámláló csík (mindkét kinézet) ===================== */
+html body #fpNotes.fp-notes{left:50% !important;right:auto !important;transform:translateX(-50%) !important;width:min(440px,calc(100vw - 24px)) !important;gap:8px !important;z-index:100050 !important;}
+html body #fpNotes .fp-note{--k:#f0c766;position:relative !important;display:grid !important;grid-template-columns:40px minmax(0,1fr) 28px !important;align-items:center !important;gap:12px !important;padding:12px 12px 14px 12px !important;border-radius:20px !important;background:linear-gradient(180deg,#221d17,#17130f) !important;border:1px solid color-mix(in srgb,var(--k) 35%,rgba(255,255,255,.08)) !important;color:#f5efe4 !important;box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;overflow:hidden !important;pointer-events:auto;filter:none !important;animation:fnIn .5s cubic-bezier(.22,1.2,.36,1) both !important;}
+html body #fpNotes .fp-note.t-ok{--k:#3ccf8a;} html body #fpNotes .fp-note.t-warn{--k:#ff6b5e;} html body #fpNotes .fp-note.t-del{--k:#a59c8c;} html body #fpNotes .fp-note.t-info{--k:#f0c766;}
+html body #fpNotes .fp-note.out{animation:fnOut .35s ease forwards !important;}
+@keyframes fnIn{from{opacity:0;transform:translateY(-18px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes fnOut{to{opacity:0;transform:translateY(-12px) scale(.96)}}
+html body #fpNotes .fp-note .fn-ic{order:0;width:40px !important;height:40px !important;border-radius:13px !important;display:grid !important;place-items:center !important;font-size:18px !important;font-weight:900 !important;font-style:normal;background:color-mix(in srgb,var(--k) 20%,#221d17) !important;color:var(--k) !important;border:1px solid color-mix(in srgb,var(--k) 40%,transparent) !important;margin:0 !important;position:static !important;}
+html body #fpNotes .fp-note .fn-tx{order:1;min-width:0;}
+html body #fpNotes .fp-note .fn-app{display:none !important;}
+html body #fpNotes .fp-note .fn-tx b{display:block !important;font:800 14px/1.25 'Manrope','Inter',sans-serif !important;color:var(--k) !important;margin:0 0 2px !important;}
+html body #fpNotes .fp-note .fn-msg{display:block !important;font:600 14px/1.4 'Manrope','Inter',sans-serif !important;color:#f5efe4 !important;overflow-wrap:anywhere;}
+html body #fpNotes .fp-note .fn-x{order:2;position:static !important;width:28px !important;height:28px !important;border-radius:50% !important;border:0 !important;background:rgba(255,255,255,.07) !important;color:rgba(245,239,228,.7) !important;font-size:11px !important;display:grid !important;place-items:center !important;opacity:1 !important;cursor:pointer;}
+html body #fpNotes .fp-note .fn-x:hover{background:rgba(255,255,255,.14) !important;color:#fff !important;}
+html body #fpNotes .fp-note::after{content:"" !important;display:block !important;position:absolute !important;left:0;bottom:0;height:3px;width:100%;background:var(--k) !important;opacity:.85;transform-origin:left;animation:fnBar var(--fnd,4200ms) linear forwards;}
+html body #fpNotes .fp-note.hold::after{animation-play-state:paused;}
+html body #fpNotes .fp-note::before{display:none !important;}
+@keyframes fnBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+html body.light-theme #fpNotes .fp-note{background:linear-gradient(180deg,#fff,#faf6ee) !important;color:#1c1505 !important;box-shadow:0 14px 34px rgba(60,40,10,.18) !important;}
+html body.light-theme #fpNotes .fp-note .fn-msg{color:#1c1505 !important;} html body.light-theme #fpNotes .fp-note .fn-x{background:rgba(0,0,0,.06) !important;color:#5a4e3c !important;}
+html body.light-theme #fpNotes .fp-note .fn-ic{background:color-mix(in srgb,var(--k) 16%,#fff) !important;}
+html body.light-theme #fpNotes .fp-note.t-info{--k:#b07d10;}
+html.fp-lite body #fpNotes .fp-note::after{animation-iteration-count:1 !important;}
+@media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) body #fpNotes .fp-note{animation:none !important;} html:not(.fp-anim-full) body #fpNotes .fp-note::after{display:none !important;} }
+@media print{ #fpNotes{display:none !important;} }
+</style>
 </body>
 </html>
