@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-173228";</script>
+<script>window.FP_BUILD="20261118-173533";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -65690,6 +65690,13 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const txc = h=>{ const c = String(h || "").replace("#", ""); if(c.length !== 6) return "#000"; const r = parseInt(c.slice(0, 2), 16), g = parseInt(c.slice(2, 4), 16), bl = parseInt(c.slice(4, 6), 16); return (r * 299 + g * 587 + bl * 114) / 1000 > 140 ? "#000" : "#fff"; };
       const pp = PL.map(({ e, p })=> `<span class="mw-pp" style="--c:${esc(e.hex || "#9B9B9B")};--t:${txc(e.hex)}" title="${esc(e.name)} · ${esc(p.start)}–${esc(p.end)}"><b>${ini(e.name)}</b>${PL.length <= 2 ? `<i>${esc(fnm(e.name))}${p.part === "am" ? " <u>DE</u>" : p.part === "pm" ? " <u>DU</u>" : ""}</i>` : ""}</span>`).join("");
       const ev = up.find(x=> maKey(x.d) === k);
+      /* v2: idősáv a nyitvatartásra, rajta a műszakok (Martin kérése: másképp mutassa) */
+      const o2 = wdt ? toMin(wdt.open) : null, c2 = wdt ? toMin(wdt.close) : null, tot = o2 != null && c2 > o2 ? c2 - o2 : 0;
+      const segs = tot ? PL.map(({ e, p }, j)=>{ const s = Math.max(o2, toMin(p.start) ?? o2), en = Math.min(c2, toMin(p.end) ?? c2), l = (s - o2) / tot * 100, w = Math.max(6, (en - s) / tot * 100);
+        return `<i class="mw2-s${w < 45 ? " nr" : ""}" style="--c:${esc(e.hex || "#9B9B9B")};--t:${txc(e.hex)};left:${l.toFixed(1)}%;width:${w.toFixed(1)}%;top:${PL.length > 1 ? (j * (100 / PL.length)).toFixed(0) + "%" : "0"};height:${PL.length > 1 ? (100 / PL.length).toFixed(0) + "%" : "100%"}" title="${esc(e.name)} · ${esc(p.start)}–${esc(p.end)}"><b>${esc(fnm(e.name))}</b><small>${hh(p.start)}–${hh(p.end)}</small></i>`; }).join("") : "";
+      const nowP = k === key && tot ? Math.max(0, Math.min(100, (nowM - o2) / tot * 100)) : -1;
+      const v2 = `<span class="mw2-t">${segs || `<em>${wdt ? "nincs beosztva" : "zárva"}</em>`}${nowP >= 0 && nowP <= 100 ? `<u style="left:${nowP.toFixed(1)}%"></u>` : ""}</span>`;
+      return `<button type="button" class="mw-d mw2${k === key ? " on" : ""}${k < key ? " past" : ""}${!wdt ? " shut" : ""}${PL.length ? "" : " empty"}" data-ma-go="beosztas"><span class="mw-n"><small>${DS[d.getDay()]}</small><b>${d.getDate()}</b></span>${v2}${ev ? `<span class="mw-ev" title="${esc(ev.t)}">${ev.k === "lt" ? "Leltár" : "Határidő"}</span>` : ""}</button>`;
       return `<button type="button" class="mw-d${k === key ? " on" : ""}${k < key ? " past" : ""}${!wdt ? " shut" : ""}" data-ma-go="beosztas"><span class="mw-n"><small>${DS[d.getDay()]}</small><b>${d.getDate()}</b></span><span class="mw-p">${pp || `<em>${wdt ? "nincs beosztva" : "zárva"}</em>`}</span>${ev ? `<span class="mw-ev" title="${esc(ev.t)}">${ev.k === "lt" ? "Leltár" : "Határidő"}</span>` : wdt ? `<span class="mw-h">${hh(wdt.open)}–${hh(wdt.close)}</span>` : ""}</button>`; }).join("");
     /* mai feladatlista: leltár, határidő, futár, teendők */
     const tasks = [];
@@ -71486,6 +71493,28 @@ html.ui-uj .sk-mod .sk-pkb .sk-mini{height:42px;padding:0 18px;border-radius:999
 html.ui-uj body.light-theme .sk-mod .sk-mc,html.ui-uj body.light-theme .sk-mod .sk-pk{background:#fbf8f2 !important;color:#1c1505;}
 html.ui-uj body.light-theme .sk-mod .sk-gbc button{background:#fff;color:#1c1505;border-color:rgba(0,0,0,.12);}
 html.ui-uj .sk-lg2{font-style:normal;font-size:10px;font-weight:800;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.08);}
+</style>
+<style id="mwV2Css">
+/* ===================== PRÓBA 40: kezdőlap „A héten” — idősávos hét (új kinézet) ===================== */
+html.ui-uj .mw .mw-d.mw2{display:grid !important;grid-template-columns:42px minmax(0,1fr) auto !important;align-items:center !important;gap:10px !important;padding:6px 8px !important;min-height:52px !important;border-radius:14px !important;background:transparent !important;border:1px solid transparent !important;box-shadow:none !important;color:inherit !important;}
+html.ui-uj .mw .mw-d.mw2:hover{background:rgba(255,255,255,.035) !important;}
+html.ui-uj .mw .mw-d.mw2.on{border-color:#f0c766 !important;background:rgba(240,199,102,.07) !important;}
+html.ui-uj .mw .mw-d.mw2.on .mw-n b,html.ui-uj .mw .mw-d.mw2.on .mw-n small{color:#f0c766 !important;}
+html.ui-uj .mw .mw-d.mw2.past{opacity:.45;}
+html.ui-uj .mw .mw-d.mw2 .mw-n{text-align:center;}
+html.ui-uj .mw2-t{position:relative;display:block;height:40px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);overflow:hidden;}
+html.ui-uj .mw2-t em{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-style:normal;font-weight:700;color:rgba(245,239,228,.4);}
+html.ui-uj .mw-d.empty:not(.shut):not(.past) .mw2-t{border:1px dashed rgba(226,76,76,.5);background:rgba(226,76,76,.06);}
+html.ui-uj .mw-d.empty:not(.shut):not(.past) .mw2-t em{color:#ff7a6e;}
+html.ui-uj .mw2-s{position:absolute;display:flex;align-items:center;gap:6px;padding:0 8px;box-sizing:border-box;background:var(--c);color:var(--t);font-style:normal;overflow:hidden;white-space:nowrap;border-radius:8px;border:2px solid transparent;background-clip:padding-box;}
+html.ui-uj .mw2-s b{font-size:12.5px;font-weight:800;overflow:hidden;text-overflow:ellipsis;}
+html.ui-uj .mw2-s small{font-size:10.5px;font-weight:700;opacity:.8;}
+html.ui-uj .mw2-s.nr small{display:none;} html.ui-uj .mw2-s.nr{padding:0 5px;}
+html.ui-uj .mw2-t u{position:absolute;top:-2px;bottom:-2px;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.8);text-decoration:none;}
+html.ui-uj .mw .mw-d.mw2 .mw-ev{font-size:11px !important;padding:3px 8px !important;}
+html.ui-uj body.light-theme .mw2-t{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);}
+html.ui-uj body.light-theme .mw2-t em{color:rgba(0,0,0,.4);}
+html.ui-uj body.light-theme .mw2-t u{background:#1c1505;}
 </style>
 </body>
 </html>
