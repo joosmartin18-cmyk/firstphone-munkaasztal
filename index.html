@@ -72088,9 +72088,9 @@ html body.light-theme .fg-offer.fg-offer,html body.light-theme .fg-card.fg-card{
     var bk = document.createElement("div"); bk.className = "fg-back";
     var o = document.createElement("div"); o.className = "fg-offer big";
     var ch = ORDER.filter(pageOn).map(function(p){ return '<span>' + G[p].ic + ' ' + E(G[p].t) + '</span>'; }).join("");
-    o.innerHTML = '<div class="ic">🧭</div><h4>Körbevezesselek?</h4><p>Animált diákon megmutatom lépésről lépésre, hogyan működnek a programok. Bármikor megállíthatod vagy kiléphetsz.</p><div class="fg-chips">' + ch + '</div><div class="row"><button type="button" class="pri" data-a="go">▶ Indulhat</button><button type="button" data-a="later">Később</button><button type="button" data-a="no">Nem kell</button></div>';
+    o.innerHTML = '<div class="ic">🧭</div><h4>Körbevezesselek?</h4><p>Rövid videókon megmutatom, hogyan működnek a programok. Bármikor megállíthatod vagy kiléphetsz.</p><div class="fg-chips">' + ch + '</div><div class="row"><button type="button" class="pri" data-a="go">▶ Indulhat</button><button type="button" data-a="later">Később</button><button type="button" data-a="no">Nem kell</button></div>';
     document.body.appendChild(bk); document.body.appendChild(o); offer = [bk, o];
-    o.querySelector('[data-a="go"]').onclick = function(){ closeOffer(); fullTour(); };
+    o.querySelector('[data-a="go"]').onclick = function(){ closeOffer(); (window.fpGuideTour || fullTour)(); };
     o.querySelector('[data-a="later"]').onclick = function(){ closeOffer(); try{ sessionStorage.setItem("fp_guide_later", "1"); }catch(e){} };
     o.querySelector('[data-a="no"]').onclick = function(){ closeOffer(); ls(K_FULL, "no"); ORDER.forEach(markSeen); };
   }
@@ -72119,7 +72119,8 @@ html body.light-theme .fg-offer.fg-offer,html body.light-theme .fg-card.fg-card{
   document.addEventListener("click", function(e){
     var b = e.target.closest && e.target.closest("#helpBtn"); if(!b || window.__fgBypass) return;
     if(document.documentElement.classList.contains("fp-setup")) return;   /* a beállításnál a saját súgója marad */
-    var ap = activePage(); if(["ma","rendeles","specko"].indexOf(ap) >= 0 && G[ap]){ e.preventDefault(); e.stopImmediatePropagation(); pageGuide(ap); }
+    var ap = activePage(); if(window.fpFilms && window.fpFilms[ap]) return;   /* a videós súgó viszi */
+    if(["ma","rendeles","specko"].indexOf(ap) >= 0 && G[ap]){ e.preventDefault(); e.stopImmediatePropagation(); pageGuide(ap); }
   }, true);
   /* ===== Martin kérése: a súgó diás, animált legyen (nem a valódi felületen kiemelős) — könnyű, gyenge gépen is ===== */
   var KMAP = { tap:"tap", scan:"scan", look:"info" };
@@ -72137,6 +72138,238 @@ html body.light-theme .fg-offer.fg-offer,html body.light-theme .fg-card.fg-card{
     window.__fgSegToc = 1; diaOpen("Körbevezetés", "🧭", sl, "Az összes program, lépésről lépésre — kb. " + Math.max(3, Math.round(sl.length * 9 / 60)) + " perc");
   };
   window.fpGuide = function(p){ return pageGuide(p); }; window.fpGuideTour = function(){ fullTour(); }; window.fpGuideSteps = G;
+})();
+</script>
+<style id="fvCss">
+/* ===================== PRÓBA 44: videós súgó — a program kicsinyített mása, egy egér végigcsinálja a teendőt (mindkét kinézet) ===================== */
+.fv-back{position:fixed;inset:0;z-index:100030;display:grid;place-items:center;padding:16px;background:rgba(6,5,4,.8);font-family:'Manrope','Inter',system-ui,sans-serif;opacity:0;transition:opacity .25s;}
+.fv-back.on{opacity:1;}
+.fv{width:min(1040px,100%);max-height:calc(100dvh - 32px);display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:#15120e;border:1px solid rgba(255,255,255,.09);box-shadow:0 30px 80px rgba(0,0,0,.6);color:#f5efe4;}
+.fv-top{display:flex;align-items:center;gap:12px;padding:12px 14px 10px 18px;}
+.fv-top .ic{font-size:22px;}
+.fv-top .tl{flex:1;min-width:0;}
+.fv-top small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#f0c766;}
+.fv-top b{display:block;font-size:17px;}
+.fv-b{width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:#f5efe4;font-size:14px;cursor:pointer;display:grid;place-items:center;}
+.fv-b:hover{background:rgba(255,255,255,.16);}
+.fv-chs{display:flex;gap:4px;padding:0 18px 10px;}
+.fv-chs button{flex:1;min-width:0;height:auto;padding:0;border:0;background:none;cursor:pointer;text-align:left;color:rgba(245,239,228,.55);font:700 11px/1.2 inherit;font-family:inherit;}
+.fv-chs button i{display:block;height:4px;border-radius:4px;background:rgba(255,255,255,.12);margin-bottom:5px;overflow:hidden;position:relative;}
+.fv-chs button i::after{content:"";position:absolute;inset:0;background:#f0c766;transform:scaleX(var(--p,0));transform-origin:left;}
+.fv-chs button.on{color:#f0c766;}
+.fv-chs button span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fv-stw{position:relative;margin:0 14px;border-radius:16px;overflow:hidden;background:#0d0b08;border:1px solid rgba(255,255,255,.07);aspect-ratio:16/9;}
+.fv-st{position:absolute;left:0;top:0;width:960px;height:540px;transform-origin:0 0;}
+.fv-cap{display:flex;align-items:center;gap:12px;min-height:58px;padding:12px 18px;}
+.fv-cap .n{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#f0c766;color:#1c1505;font-weight:900;font-size:13px;}
+.fv-cap p{margin:0;font-size:16px;line-height:1.4;font-weight:600;}
+.fv-cap p b{color:#f0c766;}
+.fv-ft{display:flex;align-items:center;gap:8px;padding:0 14px 14px;}
+.fv-ft button{height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#f5efe4;font:700 13px inherit;font-family:inherit;cursor:pointer;}
+.fv-ft .pri{margin-left:auto;background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border:0;}
+.fv-ft .lk{border:0;background:none;color:rgba(245,239,228,.6);padding:0 6px;}
+/* mini program */
+.mx{position:absolute;inset:0;padding:22px 26px;display:flex;flex-direction:column;gap:14px;background:radial-gradient(700px 300px at 0 0,rgba(240,199,102,.08),transparent 60%),#100d0a;color:#f5efe4;font-size:15px;}
+.mx *{box-sizing:border-box;}
+.mx .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;}
+.mx .hd small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a59c8c;}
+.mx .hd h2{margin:2px 0 0;font-size:30px;font-weight:800;letter-spacing:-.01em;}
+.mx .hd h2 i{font-style:normal;color:#f0c766;}
+.mx .row{display:flex;gap:12px;}
+.mx .col{display:flex;flex-direction:column;gap:10px;}
+.mx .cd{border-radius:16px;background:#1b1712;border:1px solid rgba(255,255,255,.07);padding:14px;}
+.mx .lb{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#a59c8c;margin-bottom:5px;}
+.mx .in{height:40px;border-radius:11px;background:#120f0b;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;padding:0 12px;font-weight:700;color:#f5efe4;white-space:nowrap;overflow:hidden;transition:border-color .2s,box-shadow .2s;}
+.mx .in.ph{color:rgba(245,239,228,.35);font-weight:600;}
+.mx .in.foc{border-color:#f0c766;box-shadow:0 0 0 3px rgba(240,199,102,.18);}
+.mx .in.foc::after{content:"";width:2px;height:18px;background:#f0c766;margin-left:2px;animation:fvBl .8s step-end infinite;}
+@keyframes fvBl{50%{opacity:0}}
+.mx .bt{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 16px;border-radius:999px;background:#241e17;border:1px solid rgba(255,255,255,.12);font-weight:800;font-size:14px;white-space:nowrap;transition:transform .12s,background .2s,color .2s;}
+.mx .bt.p{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border:0;}
+.mx .bt.on,.mx .ch.on{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border-color:transparent;}
+.mx .ch{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#1f1a14;border:1px solid rgba(255,255,255,.1);font-size:13px;font-weight:700;transition:background .2s,color .2s;}
+.mx .prs{transform:scale(.93);}
+.mx .hide{opacity:0;transform:translateY(10px);pointer-events:none;}
+.mx .fx{transition:opacity .35s,transform .35s cubic-bezier(.22,1,.36,1);}
+.mx .pop{position:absolute;z-index:5;border-radius:16px;background:#221d17;border:1px solid rgba(240,199,102,.45);box-shadow:0 18px 40px rgba(0,0,0,.55);padding:12px;display:flex;flex-direction:column;gap:6px;}
+.mx .pop .o{padding:8px 12px;border-radius:10px;background:#16130f;border:1px solid rgba(255,255,255,.08);font-weight:700;font-size:13.5px;transition:background .2s,border-color .2s;}
+.mx .pop .o.on{background:rgba(240,199,102,.18);border-color:#f0c766;}
+.mx .toast{position:absolute;left:50%;top:16px;transform:translateX(-50%);z-index:6;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;background:#1f2a20;border:1px solid rgba(60,207,138,.5);font-weight:800;color:#e9fff2;box-shadow:0 12px 30px rgba(0,0,0,.45);}
+.mx .toast::before{content:"✓";width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:#3ccf8a;color:#06210f;font-weight:900;}
+.mx .bc{display:inline-block;width:150px;height:44px;border-radius:5px;background:repeating-linear-gradient(90deg,#111 0 3px,transparent 3px 5px,#111 5px 6px,transparent 6px 9px) 8px 6px/134px 32px no-repeat,#fff;}
+.mx .tick{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;border:2px solid rgba(255,255,255,.3);font-size:12px;font-weight:900;color:transparent;transition:all .25s;}
+.mx .tick.on{background:#3ccf8a;border-color:#3ccf8a;color:#06210f;}
+.mx .bar{height:8px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;}
+.mx .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f0c766,#e08a1e);transition:width .6s;}
+.mx .paper{background:#fff;color:#111;border-radius:6px;box-shadow:0 12px 30px rgba(0,0,0,.5);}
+/* egér */
+.fv-cur{position:absolute;z-index:20;left:0;top:0;width:26px;height:26px;pointer-events:none;transition:transform .7s cubic-bezier(.45,0,.2,1);filter:drop-shadow(0 4px 6px rgba(0,0,0,.6));}
+.fv-cur.dn{transform-origin:3px 2px;}
+.fv-cur svg{width:100%;height:100%;transition:transform .12s;}
+.fv-cur.dn svg{transform:scale(.82);}
+.fv-rip{position:absolute;z-index:19;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid #f0c766;pointer-events:none;opacity:0;}
+.fv-rip.go{animation:fvRip .55s ease-out;}
+@keyframes fvRip{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(3.2)}}
+.fv-beam{position:absolute;z-index:18;height:3px;background:#ff4b3e;box-shadow:0 0 12px #ff4b3e;pointer-events:none;opacity:0;}
+.fv-beam.go{animation:fvBeam 1.2s ease-in-out 2;}
+@keyframes fvBeam{0%,100%{opacity:1;transform:translateY(0)}50%{opacity:1;transform:translateY(var(--h,40px))}}
+.fv-end{position:absolute;inset:0;z-index:25;display:grid;place-items:center;background:rgba(10,8,6,.82);text-align:center;}
+.fv-end b{display:block;font-size:30px;margin:8px 0 6px;}
+.fv-end .ok{width:76px;height:76px;margin:0 auto;border-radius:50%;display:grid;place-items:center;font-size:40px;color:#06210f;background:#3ccf8a;}
+.fv-end .acts{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.fv-end button{height:42px;padding:0 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#f5efe4;font:700 14px inherit;font-family:inherit;cursor:pointer;}
+.fv-end button.pri{background:linear-gradient(135deg,#f0c766,#d9ad46);color:#1c1505;border:0;}
+.fv.paused .fv-cur{opacity:.6;}
+@media (max-width:640px){ .fv-back{padding:0;} .fv{border-radius:0;max-height:100dvh;height:100dvh;} .fv-stw{margin:0 8px;} .fv-cap p{font-size:14px;} .fv-chs button span{display:none;} .fv-ft .lk{display:none;} }
+@media print{ .fv-back{display:none !important;} }
+</style>
+<script id="fvJs">
+/* Videós súgó: oldalanként rövid „film” a program kicsinyített másán. Csak megnyitáskor fut, közben nincs háttérmunka. */
+(function(){
+  "use strict";
+  var CUR = '<svg viewBox="0 0 24 24"><path d="M3 2 L20 11.5 L12.6 13.3 L9 21 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  var days = function(sel){ var o = ""; for(var i = 1; i <= 28; i++) o += '<div class="dy' + (i === sel ? " td" : "") + '" id="d' + i + '"><b>' + i + '</b><span></span></div>'; return o; };
+  /* ---------- a filmek: html = a mini program, sc = jelenetek [cím, [lépések]] ---------- */
+  var F = {
+    beosztas:{ t:"Beosztás", ic:"📅", css:".mx .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;flex:1}.mx .dy{border-radius:10px;background:#1b1712;border:1px solid rgba(255,255,255,.07);padding:5px 7px;font-size:12px;position:relative;transition:border-color .2s}.mx .dy.td{border-color:#f0c766}.mx .dy span{display:flex;flex-direction:column;gap:3px;margin-top:3px}.mx .dy em{display:block;font-style:normal;font-size:10.5px;font-weight:800;padding:3px 5px;border-radius:6px;color:#fff;animation:fvPop .35s cubic-bezier(.34,1.56,.64,1)}@keyframes fvPop{from{transform:scale(.4);opacity:0}}.mx .wk{width:220px}.mx .wk .p{display:flex;align-items:center;gap:8px;padding:10px;border-radius:12px;background:#16130f;margin-bottom:8px}.mx .wk .av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:11px;font-weight:900}.mx .wk .p b{flex:1;font-size:13px}.mx .wk .p i{font-style:normal;font-weight:900;font-size:18px}",
+      html:'<div class="hd"><div><small>Beosztás tervező</small><h2>November <i>2026</i></h2></div><div class="row"><span class="bt p" id="pdf">⬇ Letöltés PDF-ben</span><span class="bt" id="att">📋 Jelenléti ív</span></div></div><div class="row" style="flex:1;min-height:0"><div class="cd wk"><span class="lb">Dolgozók a hónapban</span><div class="p"><span class="av" style="background:#a78bfa;color:#160b2e">EL</span><b>Elek</b><i id="ce">11</i></div><div class="p"><span class="av" style="background:#3b6fe0;color:#fff">BÉ</span><b>Béla</b><i id="cb">10</i></div></div><div class="cal">' + days(18) + '</div></div>'
+        + '<div class="pop fx hide" id="pp" style="left:430px;top:250px;width:230px"><div class="lb">18. szerda — ki dolgozik?</div><div class="o" id="o1">Elek — egész nap</div><div class="o" id="o2">Béla — egész nap</div><div class="o" id="o3">Délelőtt / délután</div></div>'
+        + '<div class="pop fx hide" id="pp2" style="left:520px;top:250px;width:230px"><div class="lb">19. — két dolgozó</div><div class="o" id="o4">DE: Elek · 9–14:30</div><div class="o" id="o5">DU: Béla · 14:30–20</div></div><div class="toast fx hide" id="ts">beosztas-november.pdf letöltve</div>',
+      sc:[["Egy nap beosztása", [["cap","Kattints a naptárban egy <b>napra</b>…"],["click","#d18"],["show","#pp"],["cap","…és válaszd ki, <b>ki dolgozik</b> aznap."],["click","#o1"],["on","#o1"],["wait",300],["hide","#pp"],["badge","#d18","Elek 9–20","#a78bfa"],["text","#ce","12"],["cap","Bekerült, és a bal oldali <b>számláló</b> is nőtt."],["wait",1400]]],
+          ["Két dolgozó egy napon", [["cap","Ha ketten vannak: <b>délelőtt</b> az egyik, <b>délután</b> a másik."],["click","#d19"],["show","#pp2"],["click","#o4"],["on","#o4"],["click","#o5"],["on","#o5"],["wait",300],["hide","#pp2"],["badge","#d19","DE Elek","#a78bfa"],["badge","#d19","DU Béla","#3b6fe0"],["wait",1500]]],
+          ["Letöltés, jelenléti ív", [["cap","Ha kész a hónap: <b>Letöltés PDF-ben</b> — nyomtatható, ki is küldheted."],["click","#pdf"],["show","#ts"],["wait",1500],["hide","#ts"],["cap","A <b>Jelenléti ív</b> gombbal aláírásra kész ív készül a hónapról."],["click","#att"],["wait",1400]]]] },
+    cetli:{ t:"Cetli generátor", ic:"🏷️", css:".mx .ty{width:200px}.mx .ty .ch{display:flex;width:100%;margin-bottom:6px;height:38px;border-radius:12px}.mx .sl{width:250px;padding:14px;font-family:Arial,sans-serif}.mx .sl .h{font-weight:900;font-size:13px;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:8px}.mx .sl .r{font-size:12px;margin:4px 0;min-height:15px}.mx .sl .tot{margin-top:10px;border:2px solid #111;padding:6px;font-weight:900;font-size:18px;text-align:center}.mx .sl .st{margin-top:6px;background:#111;color:#fff;text-align:center;font-weight:900;font-size:12px;padding:3px}.mx .prn{position:absolute;right:60px;bottom:30px;width:240px;height:60px;border-radius:14px;background:#2a241c;box-shadow:0 10px 24px rgba(0,0,0,.5)}",
+      html:'<div class="hd"><div><small>Cetli generátor</small><h2>Megérkezett <i>rendelés</i></h2></div></div><div class="row" style="flex:1"><div class="ty"><span class="ch" id="t1">🚚 Szállítási címke</span><span class="ch" id="t2">📥 Megérkezett rendelés</span><span class="ch" id="t3">📦 Termék foglaló</span><span class="ch">↩️ Visszaáru</span><span class="ch">✏️ Szabad cetli</span></div>'
+        + '<div class="cd col" style="flex:1"><div><span class="lb">Vevő neve</span><div class="in ph" id="nm">pl. Kovács János</div></div><div><span class="lb">Termék — olvasd be a vonalkódot</span><div class="row" style="align-items:center"><div class="in ph" id="pr" style="flex:1">Termék neve</div><span class="bc" id="bc"></span></div></div><div><span class="lb">Fizetés</span><div class="row"><span class="ch" id="pb">💵 A boltban</span><span class="ch" id="pf">✅ Fizetve</span></div></div><div class="row" style="margin-top:auto"><span class="bt p" id="ok">✅ Kész</span></div></div>'
+        + '<div class="paper sl fx" id="sl"><div class="h">FirstPhone · Megérkezett rendelés</div><div class="r" id="s1"></div><div class="r" id="s2"></div><div class="r">Átvehető: 5 munkanapig</div><div class="tot" id="s3">— Ft</div><div class="st fx hide" id="s4">FIZETVE</div></div></div>'
+        + '<div class="pop fx hide" id="q" style="left:330px;top:200px;width:300px"><div class="lb">Van még cetli ehhez a nyomtatáshoz?</div><div class="o">＋ Igen, jöhet a következő</div><div class="o" id="qn">🖨 Nem, nyomtatás</div></div><div class="toast fx hide" id="ts">Cetli kinyomtatva</div>',
+      sc:[["Cetli kiválasztása", [["cap","Bal oldalt választod ki, <b>milyen cetli</b> kell."],["click","#t2"],["on","#t2"],["wait",600]]],
+          ["Kitöltés", [["cap","Írd be a <b>vevő nevét</b> — jobbra azonnal látod a cetlit."],["type","#nm","Kovács Anna"],["text","#s1","Vevő: Kovács Anna"],["cap","A terméket <b>vonalkóddal</b> olvasd be: a név és az ár magától beíródik."],["scan","#bc"],["text","#pr","iPhone 15 tok · 9.990 Ft"],["text","#s2","iPhone 15 tok — 9.990 Ft"],["text","#s3","9.990 Ft"],["cap","Válaszd ki, <b>fizetett-e</b> már."],["click","#pf"],["on","#pf"],["show","#s4"],["wait",1000]]],
+          ["Nyomtatás", [["cap","<b>✅ Kész</b> — megkérdezi, van-e még cetli. Ha több van, egyben nyomtatja mindet."],["click","#ok"],["show","#q"],["click","#qn"],["on","#qn"],["wait",300],["hide","#q"],["show","#ts"],["wait",1500]]]] },
+    kassza:{ t:"Kassza", ic:"💰", css:".mx .kr{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#16130f;margin-bottom:6px}.mx .kr .nt{width:70px;height:30px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-weight:900;color:#111}.mx .kr .in{width:70px;height:34px;justify-content:center}.mx .kr i{margin-left:auto;font-style:normal;font-weight:800}.mx .res{border-radius:16px;padding:16px;text-align:center;font-weight:900;font-size:20px;background:#1b1712;border:1px solid rgba(255,255,255,.08);transition:all .4s}.mx .res.ok{background:rgba(60,207,138,.15);border-color:#3ccf8a;color:#7af0b5}",
+      html:'<div class="hd"><div><small>Kassza számoló</small><h2>Összesen <i id="tot">0 Ft</i></h2></div></div><div class="row" style="flex:1"><div class="cd" style="flex:1"><span class="lb">Bankjegyek — csak a darabszámot írod be</span>'
+        + '<div class="kr"><span class="nt" style="background:#8ec07c">20 000</span><div class="in ph" id="q1">0</div><i id="v1">0 Ft</i></div><div class="kr"><span class="nt" style="background:#b9a0e0">10 000</span><div class="in ph" id="q2">0</div><i id="v2">0 Ft</i></div><div class="kr"><span class="nt" style="background:#e8c26a">5 000</span><div class="in ph" id="q3">0</div><i id="v3">0 Ft</i></div></div>'
+        + '<div class="col" style="width:330px"><div class="cd"><span class="lb">Pénz hátul</span><div class="in ph" id="bk">0 Ft</div></div><div class="cd"><span class="lb">Kasszajelentés szerint</span><div class="in ph" id="rp">pl. 245 300</div></div><div class="res" id="rs">Írd be a jelentés összegét</div></div></div>',
+      sc:[["Címletek", [["cap","Minden címletnél csak a <b>darabszámot</b> írod be — az összeget magától számolja."],["type","#q1","8"],["text","#v1","160 000 Ft"],["text","#tot","160 000 Ft"],["type","#q2","5"],["text","#v2","50 000 Ft"],["text","#tot","210 000 Ft"],["type","#q3","3"],["text","#v3","15 000 Ft"],["text","#tot","225 000 Ft"],["wait",800]]],
+          ["Pénz hátul + jelentés", [["cap","A <b>hátul lévő pénz</b> hozzáadódik."],["type","#bk","20 300 Ft"],["text","#tot","245 300 Ft"],["cap","Írd be, mennyi van a <b>kasszajelentésen</b> — azonnal látod, egyezik-e."],["type","#rp","245 300 Ft"],["text","#rs","✓ Egyezik"],["on2","#rs","ok"],["wait",1600]]]] },
+    csomag:{ t:"Csomag", ic:"📦", css:".mx .cr{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#16130f;margin-bottom:6px;animation:fvPop .35s}.mx .cr .cg{width:56px;font-weight:900}.mx .cr em{margin-left:auto;font-style:normal;font-weight:800;font-size:12.5px;padding:4px 10px;border-radius:999px;background:rgba(240,166,60,.16);color:#f0b45a}.mx .cr em.ok{background:rgba(60,207,138,.16);color:#7af0b5}",
+      html:'<div class="hd"><div><small>Csomag nyilvántartó</small><h2>Ma <i>érkezett</i></h2></div><span class="bt p" id="gls">🚚 Itt a GLS futár</span></div><div class="cd row" style="align-items:center"><div class="in ph" id="sc" style="flex:1">Olvasd be a csomag vonalkódját…</div><span class="bc" id="bc"></span></div><div class="cd" style="flex:1" id="ls"></div>'
+        + '<div class="pop fx hide" id="who" style="left:560px;top:90px;width:260px"><div class="lb">Ki adta át a futárnak?</div><div class="o" id="w1">Elek</div><div class="o">Béla</div></div><div class="toast fx hide" id="ts">2 csomag átadva a GLS futárnak</div>',
+      sc:[["Beolvasás", [["cap","Olvasd be a csomag vonalkódját — magától felismeri: <b>GLS</b>, <b>Posta</b> vagy <b>DPD</b>."],["scan","#bc"],["text","#sc","00 1234 5678 90"],["add","#ls",'<div class="cr"><span class="cg">GLS</span><span>00 1234 5678 90 · ma 10:12</span><em>⏳ futárra vár</em></div>'],["scan","#bc"],["text","#sc","00 9876 5432 10"],["add","#ls",'<div class="cr"><span class="cg">GLS</span><span>00 9876 5432 10 · ma 11:40</span><em>⏳ futárra vár</em></div>'],["wait",700]]],
+          ["Futár elvitte", [["cap","Ha jön a futár, egy gombbal <b>átadod az összeset</b>, és jelölöd, ki adta át."],["click","#gls"],["show","#who"],["click","#w1"],["on","#w1"],["wait",300],["hide","#who"],["each","#ls em",'✓ elvitte',"ok"],["show","#ts"],["wait",1600]]]] },
+    selejt:{ t:"Selejt", ic:"🗑️", css:".mx .si{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#16130f;border-left:3px solid #e85b5b;animation:fvPop .35s}.mx .si b{flex:1}",
+      html:'<div class="hd"><div><small>Selejt</small><h2>Mai <i>selejt</i></h2></div></div><div class="cd row"><div class="col" style="flex:1"><div><span class="lb">Termék neve</span><div class="in ph" id="nm">pl. iPhone 15 tok (sérült)</div></div><div><span class="lb">Miért?</span><div class="row"><span class="ch" id="r1">Sérült</span><span class="ch">Hibás</span><span class="ch">Törött</span><span class="ch">Lejárt</span></div></div></div><div class="col" style="width:250px"><div><span class="lb">Darab</span><div class="row" style="align-items:center"><span class="bt">−</span><b id="qt" style="font-size:22px;width:30px;text-align:center">1</b><span class="bt" id="pl">＋</span></div></div><span class="bt p" id="add" style="margin-top:auto">＋ Selejt rögzítése</span></div></div><div class="cd col" style="flex:1" id="ls"><span class="lb">Ma</span></div><div class="toast fx hide" id="ts">Bekerült a mai selejtbe</div>',
+      sc:[["Rögzítés", [["cap","Írd be (vagy olvasd be), <b>mi lett selejt</b>…"],["type","#nm","USB-C kábel 1 m"],["cap","…válaszd ki az <b>okát</b> és a <b>darabszámot</b>…"],["click","#r1"],["on","#r1"],["click","#pl"],["text","#qt","2"],["cap","…és <b>Rögzítés</b>. Minden nap magától mentődik."],["click","#add"],["add","#ls",'<div class="si"><b>USB-C kábel 1 m</b><span>2 db · Sérült · 14:05</span></div>'],["show","#ts"],["wait",1500]]]] },
+    teendo:{ t:"Teendők", ic:"✅", css:".mx .bd{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;flex:1}.mx .bd .cd{padding:10px}.mx .tk{padding:10px;border-radius:12px;background:#16130f;margin-top:8px;animation:fvPop .35s;display:flex;align-items:center;gap:8px}.mx .tk b{flex:1;font-size:13.5px;transition:opacity .3s}.mx .tk.dn b{text-decoration:line-through;opacity:.5}",
+      html:'<div class="hd"><div><small>Teendők</small><h2>Mai <i>teendők</i></h2></div></div><div class="cd col"><div class="row" style="align-items:center"><div class="in ph" id="nm" style="flex:1">Mi a teendő?</div><span class="bt p" id="add">＋ Felírom</span></div><div class="row"><span class="ch on">👥 Közös</span><span class="ch">Elek</span><span class="ch">Béla</span><span style="width:20px"></span><span class="ch">Bármikor</span><span class="ch" id="ma">Ma</span><span class="ch">Holnap</span><span class="ch">📅 Másik nap</span></div></div>'
+        + '<div class="bd"><div class="cd"><span class="lb">Lejárt</span></div><div class="cd" id="c2"><span class="lb">Ma</span></div><div class="cd"><span class="lb">Később</span></div></div>',
+      sc:[["Felírás", [["cap","Írd be a feladatot, válaszd ki <b>kinek</b> és <b>mikorra</b>…"],["type","#nm","Kirakat rendezése"],["click","#ma"],["on","#ma"],["click","#add"],["add","#c2",'<div class="tk" id="tk"><b>Kirakat rendezése</b><span class="tick" id="tc">✓</span></div>'],["cap","…és már fent is van a táblán, a <b>Ma</b> oszlopban."],["wait",800]]],
+          ["Kipipálás", [["cap","Ha kész, a saját neveteknél <b>pipáljátok ki</b>."],["click","#tc"],["on","#tc"],["on2","#tk","dn"],["wait",1400]]]] },
+    rendeles:{ t:"Rendelés", ic:"🛒", css:".mx .ri{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:#16130f;margin-top:8px;animation:fvPop .35s}.mx .ri b{flex:1}",
+      html:'<div class="hd"><div><small>Rendelés</small><h2>Rendelni <i>kell</i></h2></div></div><div class="row" style="flex:1"><div class="cd col" style="width:380px"><span class="lb">Mit kell rendelni?</span><div class="row"><span class="ch" id="c1">🛡️ ShieldUp</span><span class="ch">🪟 Üvegfólia</span><span class="ch">📱 Tok</span></div><div class="row" style="flex-wrap:wrap"><span class="ch">125 micron</span><span class="ch" id="m1">150 micron</span><span class="ch">200 micron</span></div><div class="row" style="align-items:center"><span class="lb" style="margin:0">Darab</span><b id="qt" style="font-size:20px">1</b><span class="bt" id="pl">＋</span></div><span class="bt p" id="add">＋ Felírom</span></div>'
+        + '<div class="col" style="flex:1"><div class="row"><span class="ch on" id="tn">🛒 Rendelni kell</span><span class="ch" id="to">📦 Megrendelve</span><span class="ch">✅ Megjött</span></div><div class="cd" id="ls" style="flex:1"></div></div></div>',
+      sc:[["Felírás", [["cap","Válaszd ki, <b>mi fogyott el</b>, és hány darab kell…"],["click","#c1"],["on","#c1"],["click","#m1"],["on","#m1"],["click","#pl"],["text","#qt","5"],["click","#add"],["add","#ls",'<div class="ri"><b>ShieldUp 150 micron</b><span>5 db</span><span class="bt" id="mo">📦 Megrendeltem</span></div>'],["cap","…felkerül a <b>Rendelni kell</b> listára."],["wait",800]]],
+          ["Megrendelve", [["cap","Ha leadtad a rendelést: <b>Megrendeltem</b> — átkerül a következő fülre."],["click","#mo"],["text","#ls",""],["on","#to"],["off","#tn"],["wait",1300]]]] },
+    leltar:{ t:"Leltár", ic:"📋", css:".mx .lr{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#16130f;margin-bottom:6px;font-size:13.5px;animation:fvPop .35s}.mx .lr b{flex:1}",
+      html:'<div class="hd"><div><small>Leltár</small><h2>Ma <i>leltár</i> van</h2></div><div class="row"><span class="bt p" id="ex">＋ Export betöltése</span><span class="bt" id="pdf">Leltárív PDF</span></div></div><div class="cd row" style="align-items:center"><span class="lb" style="margin:0;width:90px">Haladás</span><div class="bar" style="flex:1"><i id="br"></i></div><b id="pc">0%</b><span class="bc" id="bc"></span></div><div class="cd" style="flex:1" id="ls"></div><div class="toast fx hide" id="ts">Leltárív elkészült (PDF)</div>',
+      sc:[["Export betöltése", [["cap","Leltárnapon töltsd be a <b>Bizzio exportot</b> (Excel)."],["click","#ex"],["add","#ls",'<div class="lr"><span class="tick" id="k1">✓</span><b>iPhone 15 128GB</b><span>1 db</span></div><div class="lr"><span class="tick" id="k2">✓</span><b>Galaxy A56 256GB</b><span>2 db</span></div><div class="lr"><span class="tick" id="k3">✓</span><b>AirPods Pro 2</b><span>1 db</span></div>'],["wait",700]]],
+          ["Beolvasás", [["cap","Olvasd be sorra a termékeket — mindegyik <b>kipipálódik</b>."],["scan","#bc"],["on","#k1"],["w","#br","33%"],["text","#pc","33%"],["scan","#bc"],["on","#k2"],["w","#br","66%"],["text","#pc","66%"],["scan","#bc"],["on","#k3"],["w","#br","100%"],["text","#pc","100%"],["wait",600]]],
+          ["Leltárív", [["cap","A végén a <b>Leltárív PDF</b> aláírással elkészül."],["click","#pdf"],["show","#ts"],["wait",1500]]]] },
+    tudastar:{ t:"Tudástár", ic:"📚", css:".mx .tc{padding:12px;border-radius:12px;background:#16130f;margin-bottom:8px;transition:opacity .3s,border-color .3s;border:1px solid transparent}.mx .tc.off{opacity:.2}.mx .tc.hit{border-color:#f0c766}",
+      html:'<div class="hd"><div><small>Tudástár</small><h2>Segédlet</h2></div><div class="row"><span class="ch on">📖 Segédlet</span><span class="ch">📘 Kézikönyv</span><span class="ch">🏬 Üzletek</span></div></div><div class="in ph" id="q">Keresés — pl. sztornó, garancia, GLS</div><div class="cd" style="flex:1"><div class="tc" id="a1">🌅 Napnyitás</div><div class="tc" id="a2">↩️ Sztornó — 9 lépés</div><div class="tc" id="a3">🚚 Áru szállítás (GLS)</div><div class="tc" id="a4">🌙 Napzárás</div></div>',
+      sc:[["Keresés", [["cap","Pár betű elég, <b>ékezet nélkül</b> is."],["type","#q","sztorno"],["on2","#a1","off"],["on2","#a3","off"],["on2","#a4","off"],["on2","#a2","hit"],["cap","Kattints a fejezetre — lépésről lépésre leírja, és <b>▶ diásan</b> is lejátszható."],["click","#a2"],["wait",1300]]]] },
+    ma:{ t:"Ma — kezdőlap", ic:"🏠", css:".mx .gr{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;flex:1}.mx .clk{font-size:64px;font-weight:900;letter-spacing:-.03em}.mx .hl{transition:border-color .3s,box-shadow .3s}.mx .hl.on{border-color:#f0c766;box-shadow:0 0 0 3px rgba(240,199,102,.2)}",
+      html:'<div class="hd"><div><small>Szerda, november 18.</small><h2>Jó reggelt, <i>Elek</i> 👋</h2></div><span class="bt">＋ Cetli</span></div><div class="gr"><div class="cd hl" id="a"><span class="lb">Most</span><div class="clk">10:24</div><div>Bent most: <b>Elek</b> · következik: Béla 14:30</div></div><div class="cd hl" id="b"><span class="lb">A héten</span><div>H · Elek 9–20</div><div>K · Béla 9–20</div><div>Sze · Elek / Béla</div></div><div class="cd hl" id="c"><span class="lb">Mai feladatok</span><div>📦 2 csomag vár futárra</div><div>📋 Pénteken leltár</div><div>💰 Kassza zárás előtt</div></div></div>',
+      sc:[["A nap egy pillantással", [["cap","A <b>Most</b> kártyán látod az órát, és hogy ki van bent."],["move","#a"],["on2","#a","on"],["wait",1200],["off2","#a","on"],["cap","Az <b>A héten</b> mutatja az egész hét beosztását."],["move","#b"],["on2","#b","on"],["wait",1200],["off2","#b","on"],["cap","A <b>Mai feladatok</b>ra kattintva oda visz, ahol dolgod van."],["click","#c"],["on2","#c","on"],["wait",1300]]]] },
+    elado:{ t:"Eladássegéd", ic:"💡", css:".mx .sg{padding:12px;border-radius:12px;background:#16130f;margin-bottom:8px;animation:fvPop .35s}",
+      html:'<div class="hd"><div><small>Eladássegéd</small><h2>Mit <i>ajánlj</i> mellé?</h2></div></div><div class="row"><div class="in ph" id="q" style="flex:1">Pl. Galaxy A57, AirPods, tok…</div><span class="bt p" id="go">Keresés</span></div><div class="cd" style="flex:1" id="ls"></div>',
+      sc:[["Ajánlás", [["cap","Írd be a terméket, amit a vevő vesz…"],["type","#q","Galaxy A57"],["click","#go"],["add","#ls",'<div class="sg">🛡️ <b>Üvegfólia</b> — „Ezzel a kijelző is védve van.”</div><div class="sg">📱 <b>Tok</b> — „Egy esés és drága a javítás.”</div><div class="sg">🔌 <b>Gyorstöltő</b> — „A dobozban nincs töltőfej.”</div>'],["cap","…és megmutatja, <b>mit és hogyan</b> érdemes mellé ajánlani."],["wait",1600]]]] },
+    specko:{ t:"Speckó", ic:"📱", css:".mx .a4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px;flex:1}.mx .a4 .k{border:1.5px solid #111;border-radius:2px;padding:6px;font-size:10px;color:#111;display:flex;flex-direction:column;gap:3px;animation:fvPop .35s}.mx .a4 .k b{font-size:11px}.mx .a4 .k i{margin-top:auto;border:2px solid #111;text-align:center;font-style:normal;font-weight:900;font-size:13px;padding:2px}",
+      html:'<div class="hd"><div><small>Speckó</small><h2>Telefon-<i>adatlapok</i></h2></div><div class="row"><span class="bt p" id="wd">📄 Word betöltése</span><span class="bt" id="pr">🖨 Nyomtatás</span></div></div><div class="paper a4" id="pg"></div><div class="toast fx hide" id="ts">Nyomtatás elindult</div>',
+      sc:[["Adatlapok", [["cap","Töltsd be a <b>Word-dokumentumot</b> — A4-es adatlapok készülnek belőle."],["click","#wd"],["add","#pg",'<div class="k"><b>Galaxy A56</b>128 GB · 6,7" AMOLED<br>50 MP · 5000 mAh<i>149.990 Ft</i></div><div class="k"><b>iPhone 16</b>128 GB · 6,1" OLED<br>48 MP<i>349.990 Ft</i></div><div class="k"><b>Redmi Note 14</b>256 GB · 120 Hz<br>200 MP<i>119.990 Ft</i></div><div class="k"><b>Pixel 9a</b>128 GB · 6,3"<br>48 MP<i>199.990 Ft</i></div>'],["cap","Egy telefonra kattintva szerkesztheted: ár, <b>tárhely</b>, adatok, logó."],["move","#pg"],["wait",900],["cap","Kész? <b>Nyomtatás</b> — tintatakarékos lap."],["click","#pr"],["show","#ts"],["wait",1500]]]] }
+  };
+  F.beosztas.sc[0][1].unshift(["wait",200]);
+  /* ---------- lejátszó ---------- */
+  var B = null, ST = null;
+  function E(s){ return String(s == null ? "" : s); }
+  function sleep(ms){ return new Promise(function(res){ var t0 = Date.now(), left = ms; (function tick(){ if(!ST || ST.dead) return res(); if(ST.pause){ setTimeout(tick, 120); return; } var dt = Math.min(left, 120); left -= dt; if(left <= 0) return res(); setTimeout(tick, dt); })(); }); }
+  function $(s){ return ST.app.querySelector(s); }
+  function pos(el){ var a = ST.app.getBoundingClientRect(), r = el.getBoundingClientRect(), k = ST.k || 1; return { x:(r.left - a.left + r.width / 2) / k, y:(r.top - a.top + r.height / 2) / k, w:r.width / k, h:r.height / k, l:(r.left - a.left) / k, t:(r.top - a.top) / k }; }
+  async function move(el){ if(!el) return; var p = pos(el); ST.cur.style.transform = "translate(" + (p.x - 4) + "px," + (p.y - 2) + "px)"; await sleep(780); }
+  async function click(el){ if(!el) return; await move(el); ST.cur.classList.add("dn"); el.classList.add("prs"); var p = pos(el), rp = ST.rip; rp.style.left = p.x + "px"; rp.style.top = p.y + "px"; rp.classList.remove("go"); void rp.offsetWidth; rp.classList.add("go"); await sleep(180); ST.cur.classList.remove("dn"); el.classList.remove("prs"); await sleep(260); }
+  async function run(a){
+    var k = a[0], el = a[1] && typeof a[1] === "string" && a[1].charAt(0) === "#" ? $(a[1]) : null;
+    if(k === "cap"){ ST.capP.innerHTML = a[1]; ST.capN.textContent = ++ST.cn; await sleep(500); }
+    else if(k === "wait") await sleep(a[1]);
+    else if(k === "move") await move(el);
+    else if(k === "click") await click(el);
+    else if(k === "type"){ await click(el); el.classList.remove("ph"); el.classList.add("foc"); el.textContent = ""; for(var i = 1; i <= a[2].length; i++){ if(!ST || ST.dead) return; el.textContent = a[2].slice(0, i); await sleep(70); } await sleep(300); el.classList.remove("foc"); }
+    else if(k === "text"){ if(el){ el.classList.remove("ph"); el.textContent = a[2]; } await sleep(250); }
+    else if(k === "on"){ if(el) el.classList.add("on"); await sleep(200); }
+    else if(k === "off"){ if(el) el.classList.remove("on"); }
+    else if(k === "on2"){ if(el) el.classList.add(a[2]); await sleep(200); }
+    else if(k === "off2"){ if(el) el.classList.remove(a[2]); }
+    else if(k === "show"){ if(el) el.classList.remove("hide"); await sleep(400); }
+    else if(k === "hide"){ if(el) el.classList.add("hide"); await sleep(250); }
+    else if(k === "add"){ if(el) el.insertAdjacentHTML("beforeend", a[2]); await sleep(500); }
+    else if(k === "w"){ if(el) el.style.width = a[2]; await sleep(300); }
+    else if(k === "badge"){ if(el){ var s = el.querySelector("span"); s.insertAdjacentHTML("beforeend", '<em style="background:' + a[3] + '">' + a[2] + '</em>'); } await sleep(400); }
+    else if(k === "each"){ ST.app.querySelectorAll(a[1]).forEach(function(x){ x.textContent = a[2]; if(a[3]) x.classList.add(a[3]); }); await sleep(400); }
+    else if(k === "scan"){ if(!el) return; await move(el); var p = pos(el), b = ST.beam; b.style.left = (p.l - 6) + "px"; b.style.width = (p.w + 12) + "px"; b.style.top = p.t + "px"; b.style.setProperty("--h", p.h + "px"); b.classList.remove("go"); void b.offsetWidth; b.classList.add("go"); await sleep(2500); b.classList.remove("go"); }
+  }
+  function fit(){ if(!ST) return; var w = B.querySelector(".fv-stw").clientWidth; ST.k = w / 960; ST.st.style.transform = "scale(" + ST.k + ")"; }
+  async function playScene(i){
+    var me = ++ST.gen; ST.si = i; ST.cn = 0;
+    var f = ST.list[ST.fi], sc = f.sc[i];
+    B.querySelectorAll(".fv-chs button").forEach(function(b, q){ b.classList.toggle("on", q === i); b.querySelector("i").style.setProperty("--p", q < i ? 1 : 0); });
+    var end = ST.st.querySelector(".fv-end"); if(end) end.remove();
+    if(i === 0 || !ST.app){ ST.curSet = 0; ST.st.innerHTML = '<style>' + (f.css || "") + '</style><div class="mx">' + f.html + '</div><div class="fv-beam"></div><div class="fv-rip"></div><div class="fv-cur">' + CUR + '</div>'; }
+    ST.app = ST.st.querySelector(".mx"); ST.cur = ST.st.querySelector(".fv-cur"); ST.rip = ST.st.querySelector(".fv-rip"); ST.beam = ST.st.querySelector(".fv-beam");
+    if(!ST.curSet || i === 0){ ST.curSet = 1; ST.cur.style.transform = "translate(860px,470px)"; } if(false) ST.cur.style.transform = "translate(860px,470px)";
+    B.querySelector(".fv-top b").textContent = f.t; B.querySelector(".fv-top .ic").textContent = f.ic;
+    var steps = sc[1];
+    for(var s = 0; s < steps.length; s++){ if(!ST || ST.dead || me !== ST.gen) return; await run(steps[s]); var bt = B && B.querySelectorAll(".fv-chs button")[i]; if(bt) bt.querySelector("i").style.setProperty("--p", (s + 1) / steps.length); }
+    if(!ST || me !== ST.gen) return;
+    if(i < f.sc.length - 1){ await sleep(500); if(ST && me === ST.gen) playScene(i + 1); }
+    else if(ST.fi < ST.list.length - 1){ await sleep(800); if(ST && me === ST.gen){ ST.fi++; chapters(); playScene(0); } }
+    else showEnd();
+  }
+  function showEnd(){ var d = document.createElement("div"); d.className = "fv-end"; d.innerHTML = '<div><div class="ok">✓</div><b>Ennyi!</b><span style="opacity:.7">Most már próbáld ki magad.</span><div class="acts"><button type="button" data-a="re">↺ Újra</button>' + (ST.dia ? '<button type="button" data-a="dia">📖 Részletes leírás</button>' : '') + '<button type="button" class="pri" data-a="x">✓ Bezárás</button></div></div>'; ST.st.appendChild(d); }
+  function chapters(){ var f = ST.list[ST.fi]; B.querySelector(".fv-chs").innerHTML = f.sc.map(function(s, q){ return '<button type="button" data-c="' + q + '"><i></i><span>' + (q + 1) + '. ' + s[0] + '</span></button>'; }).join(""); B.querySelector(".fv-top small").textContent = "▶ Videós súgó" + (ST.list.length > 1 ? " · " + (ST.fi + 1) + " / " + ST.list.length : ""); }
+  function close(){ if(!B) return; ST.dead = true; var b = B; B = null; ST = null; b.classList.remove("on"); setTimeout(function(){ b.remove(); }, 260); document.removeEventListener("keydown", key, true); removeEventListener("resize", fit); }
+  function key(e){ if(!B) return; if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); close(); } else if(e.key === " "){ e.preventDefault(); e.stopPropagation(); toggle(); } else if(e.key === "ArrowRight"){ e.preventDefault(); e.stopPropagation(); skip(1); } else if(e.key === "ArrowLeft"){ e.preventDefault(); e.stopPropagation(); skip(-1); } }
+  function toggle(){ ST.pause = !ST.pause; B.querySelector(".fv").classList.toggle("paused", ST.pause); B.querySelector('[data-a="pp"]').textContent = ST.pause ? "▶" : "❚❚"; }
+  function skip(d){ var f = ST.list[ST.fi], i = ST.si + d; if(i < 0){ if(ST.fi > 0){ ST.fi--; chapters(); ST.app = null; playScene(0); } return; } if(i >= f.sc.length){ if(ST.fi < ST.list.length - 1){ ST.fi++; chapters(); ST.app = null; playScene(0); } else { ST.gen++; showEnd(); } return; } if(d < 0) ST.app = null; playScene(i); }
+  function open(keys, dia){
+    if(B) close();
+    var list = keys.map(function(k){ return F[k]; }).filter(Boolean); if(!list.length) return false;
+    B = document.createElement("div"); B.className = "fv-back";
+    B.innerHTML = '<div class="fv" role="dialog" aria-modal="true" aria-label="Videós súgó"><div class="fv-top"><span class="ic"></span><div class="tl"><small></small><b></b></div><button type="button" class="fv-b" data-a="pp" title="Szünet (szóköz)">❚❚</button><button type="button" class="fv-b" data-a="x" title="Bezárás (Esc)">✕</button></div><div class="fv-chs"></div><div class="fv-stw"><div class="fv-st"></div></div><div class="fv-cap"><span class="n">1</span><p></p></div><div class="fv-ft"><button type="button" data-a="pv">⏮ Előző</button><button type="button" data-a="re">↺ Újra</button>' + (dia ? '<button type="button" class="lk" data-a="dia">📖 Részletes leírás</button>' : '') + '<button type="button" class="pri" data-a="nx">Tovább ⏭</button></div></div>';
+    document.body.appendChild(B);
+    ST = { list:list, fi:0, si:0, gen:0, st:B.querySelector(".fv-st"), capP:B.querySelector(".fv-cap p"), capN:B.querySelector(".fv-cap .n"), cn:0, dia:dia };
+    B.addEventListener("click", function(e){ if(e.target === B){ close(); return; } var c = e.target.closest("[data-c]"); if(c){ ST.app = null; playScene(+c.dataset.c); return; }
+      var a = e.target.closest("[data-a]"); if(!a) return; var k = a.dataset.a;
+      if(k === "x") close(); else if(k === "pp") toggle(); else if(k === "nx") skip(1); else if(k === "pv") skip(-1);
+      else if(k === "re"){ ST.fi = ST.fi; ST.app = null; chapters(); playScene(0); }
+      else if(k === "dia"){ var d = ST.dia; close(); setTimeout(d, 260); } });
+    document.addEventListener("keydown", key, true); addEventListener("resize", fit);
+    chapters(); requestAnimationFrame(function(){ B.classList.add("on"); fit(); playScene(0); });
+    return true;
+  }
+  window.fpFilm = open; window.fpFilms = F;
+  /* ❓ Súgó → az oldal videós súgója; a részletes diák a végén / alul érhetők el */
+  function activePage(){ var b = document.querySelector("#pageSwitch .ps-btn.active"), p = b && b.dataset.page; if(p === "teendo"){ var pg = document.getElementById("tdPage"); if(pg && pg.classList.contains("rend")) return "rendeles"; } return p || "ma"; }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest("#helpBtn"); if(!b || window.__fgBypass || window.__fvBypass) return;
+    if(document.documentElement.classList.contains("fp-setup")) return;
+    var p = activePage(); if(!F[p]) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open([p], function(){ window.__fvBypass = true; try{ b.click(); }finally{ window.__fvBypass = false; } });
+  }, true);
+  /* első használat: a körbevezetés minden bekapcsolt program filmjét lejátssza */
+  var ORD = ["ma","beosztas","cetli","leltar","kassza","csomag","selejt","teendo","rendeles","tudastar","elado","specko"];
+  function on(p){ if(p === "rendeles"){ var t = document.querySelector('#tdTabs [data-tab="rend"]'); return !!t; } var x = document.querySelector('#pageSwitch .ps-btn[data-page="' + p + '"]'); return !!(x && !x.classList.contains("ps-off") && getComputedStyle(x).display !== "none"); }
+  window.fpGuideTour = function(){ try{ localStorage.setItem("fp_guide_full", "1"); }catch(e){} open(ORD.filter(on)); };
 })();
 </script>
 </body>
