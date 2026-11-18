@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-161510";</script>
+<script>window.FP_BUILD="20261118-170427";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -71259,5 +71259,76 @@ html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-imp .sx-drop:hover{border-color:#
 html.ui-uj:not(.m-app) body.light-theme #sxPage#sxPage .sx-item{background:#fff !important;}
 html.ui-uj:not(.m-app) body.light-theme #sxPage#sxPage .sx-acts .sx-ib{background:#faf7f1 !important;color:#2a2218 !important;}
 </style>
+<style id="sxV3Css">
+/* ===================== PRÓBA 38b: Selejt — nagy fejléc, lista középen, rögzített „Új selejt” kártya jobbra (új kinézet, asztali nézet) ===================== */
+html:not(.ui-uj) #sxPage .sx-mbh{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-mbh{margin:0 0 18px !important;}
+/* számlálók: külön csempék */
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-top{background:none !important;background-image:none !important;border:0 !important;box-shadow:none !important;padding:0 !important;margin:0 0 18px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-top::before,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-top::after{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis{background:none !important;background-image:none !important;border:0 !important;box-shadow:none !important;padding:0 !important;gap:10px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis::before,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis::after{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis .k{background:var(--u1,#15120e) !important;background-image:none !important;border:1px solid var(--u4,rgba(255,255,255,.08)) !important;border-radius:18px !important;padding:14px 16px !important;box-shadow:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis .k::before,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis .k::after{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis .k.warn{border-color:rgba(240,199,102,.5) !important;background:linear-gradient(135deg,rgba(240,199,102,.14),rgba(240,199,102,.03)) !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-tbtn{border-radius:18px !important;}
+html.ui-uj:not(.m-app) body.light-theme #sxPage#sxPage .sx-kpis .k{background:#fff !important;border-color:rgba(0,0,0,.08) !important;} html.ui-uj:not(.m-app) body.light-theme #sxPage#sxPage .sx-kpis .k.warn{background:#fff6df !important;border-color:rgba(200,150,30,.5) !important;}
+/* elrendezés: középen a lista, jobbra a rögzített felíró kártya */
+@media (min-width:1181px){
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid{display:grid !important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;grid-template-areas:"form form" "chk chk" "sum sum" "list list" "imp exp" !important;grid-auto-rows:auto !important;align-items:start !important;gap:16px !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid > .sx-main,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid > .sx-side{display:contents !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid section{margin:0 !important;width:auto !important;max-width:none !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form{grid-area:form !important;position:static !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-ckpanel{grid-area:chk !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum{grid-area:sum !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage #sxSecList{grid-area:list !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-imp{grid-area:imp !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-exp{grid-area:exp !important;}
+  /* a rögzítő felül, teljes szélességben, két oszlopban */
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form{display:grid !important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;column-gap:28px !important;row-gap:0 !important;padding:0 24px 0 !important;align-items:start !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-h{grid-column:1 / -1 !important;display:flex !important;align-items:baseline;gap:14px;margin:0 -24px 16px !important;padding:16px 24px 14px !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-h h3{margin:0 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-kind{grid-column:1 / -1 !important;max-width:520px;margin:0 0 6px !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-row2{grid-column:1 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-found,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-msg{grid-column:1 / -1 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-row3{grid-column:2 !important;grid-row:3 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-f-price{grid-column:1 / -1 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-f:not(.sx-f-date):not(.sx-f-price){grid-column:1 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-f-date{grid-column:2 !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-foot{grid-column:1 / -1 !important;display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:space-between !important;gap:16px !important;margin:16px -24px 0 !important;padding:14px 24px !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form > .sx-foot .sx-add{width:auto !important;min-width:320px;margin:0 !important;}
+}
+/* felíró kártya: piros fejléc-sáv ikonnal */
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form{border:1px solid rgba(232,91,91,.35) !important;box-shadow:0 14px 34px rgba(0,0,0,.3) !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-h{background:linear-gradient(135deg,rgba(232,91,91,.2),rgba(232,91,91,.04)) !important;border-bottom:1px solid rgba(232,91,91,.25) !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-add{height:50px !important;border-radius:16px !important;font-size:16px !important;}
+/* lista: nagyobb, levegősebb */
+html.ui-uj:not(.m-app) body #sxPage#sxPage #sxSecList .sx-h h3{font-size:20px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-item{padding:14px 16px 14px 18px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-what b{font-size:16px !important;}
+</style>
+<script id="sxV3Js">
+/* Selejt: nagy fejléc a többi oldal stílusában (dátum, cím, mai állapot) — csak új kinézetben */
+(function(){
+  function E(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function draw(){
+    var pg = document.getElementById("sxPage"); if(!pg) return;
+    var h = pg.querySelector(":scope > .sx-mbh");
+    if(!document.documentElement.classList.contains("ui-uj")){ if(h) h.remove(); return; }
+    if(!pg.offsetParent) return;
+    var K = pg.querySelectorAll("#sxKpis .k b"), n = function(i){ return K[i] ? (parseInt(K[i].textContent, 10) || 0) : 0; };
+    var sx = n(0), su = n(1), chk = n(2), d = new Date();
+    var wd = d.toLocaleDateString("hu-HU", { weekday:"long" }), dl = d.toLocaleDateString("hu-HU", { month:"long", day:"numeric" });
+    var h1 = sx + su ? 'Mai <span>selejt</span>' : 'Ma még nincs <span>selejt</span>';
+    var chip = sx + su ? '<span class="ma-chip"><i class="r"></i>' + sx + ' db selejt · ' + su + ' db ShieldUp</span>' : '<span class="ma-chip"><i></i>Tiszta nap</span>';
+    var pill = chk ? '<button type="button" class="ma-pill dark" data-sx-go="chk">Ellenőrzés · ' + chk + '</button>' : '';
+    var html = '<div><p>' + E(wd) + ', ' + E(dl) + '</p><h1>' + h1 + '</h1></div><div class="ma-chips">' + chip + pill + '</div>';
+    if(!h){ h = document.createElement("div"); h.className = "mb-head sx-mbh"; pg.prepend(h); }
+    if(h.__last !== html){ h.__last = html; h.innerHTML = html;
+      var b = h.querySelector("[data-sx-go]"); if(b) b.onclick = function(){ var o = document.getElementById("sxCkOpen"); if(o) o.click(); }; }
+  }
+  setInterval(function(){ try{ draw(); }catch(e){} }, 800);
+})();
+</script>
 </body>
 </html>
