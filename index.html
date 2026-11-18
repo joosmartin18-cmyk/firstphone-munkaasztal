@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-155550";</script>
+<script>window.FP_BUILD="20261118-160647";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -71165,5 +71165,53 @@ html.ui-uj.fp-rnav:not(.m-app) body.light-theme #fpTools.hv2{background:rgba(0,0
   addEventListener("scroll", q, { passive:true }); addEventListener("resize", q); setInterval(fit, 1000); setTimeout(fit, 50);
 })();
 </script>
+<style id="orV2Css">
+/* ===================== PRÓBA 37: Rendelés — rendezettebb elrendezés (új kinézet, asztali nézet) ===================== */
+html.ui-uj:not(.m-app) body #orderCard .orn{grid-template-columns:minmax(340px,400px) minmax(0,1fr) !important;gap:20px !important;}
+/* bal: felírás */
+html.ui-uj:not(.m-app) body #orderCard .orn-new{padding:18px !important;border-radius:22px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-cats button{height:54px !important;padding:0 12px !important;border-radius:14px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-cats button i{width:32px !important;height:32px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-f > span{display:block;font-size:11px !important;font-weight:800 !important;letter-spacing:.08em !important;text-transform:uppercase !important;color:var(--utx2,#a59c8c) !important;margin:14px 0 8px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-su{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:6px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-su button{min-height:38px !important;height:auto !important;padding:7px 8px !important;border-radius:11px !important;justify-content:center !important;align-items:center !important;text-align:center !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-su button small{display:none !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-su button b{font-size:12.5px !important;line-height:15px !important;font-weight:700 !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-su button.on{border-color:var(--c) !important;background:color-mix(in srgb,var(--c) 18%,transparent) !important;box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 18%,transparent) !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-add{width:100% !important;height:46px !important;border-radius:14px !important;font-size:15px !important;}
+/* jobb: állapot-folyamat */
+html.ui-uj:not(.m-app) body #orderCard .orn-tabs{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:22px !important;margin:0 0 14px !important;padding:0 !important;background:none !important;border:0 !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button{--k:#f0a63c;position:relative;display:flex !important;align-items:center !important;gap:10px !important;height:58px !important;min-height:0 !important;padding:0 14px !important;border-radius:16px !important;border:1px solid var(--u4,rgba(255,255,255,.1)) !important;background:var(--u1,#15120e) !important;color:var(--utx,#f4efe6) !important;font-size:14px !important;font-weight:700 !important;box-shadow:none !important;text-align:left !important;justify-content:flex-start !important;transition:border-color .2s,background .2s,transform .2s;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button.t-ord{--k:#5b9cf5;} html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button.t-got{--k:#3aa66a;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button:not(:last-child)::after{content:"›";position:absolute;right:-17px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:800;color:var(--utx2,#7d7466);pointer-events:none;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--k) 50%,transparent) !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button.on{border-color:var(--k) !important;background:linear-gradient(135deg,color-mix(in srgb,var(--k) 22%,transparent),color-mix(in srgb,var(--k) 6%,transparent)) !important;color:var(--utx,#f4efe6) !important;box-shadow:0 0 0 3px color-mix(in srgb,var(--k) 15%,transparent) !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button em{margin-left:auto !important;font-style:normal;min-width:28px;height:28px;padding:0 8px;border-radius:999px;display:inline-grid;place-items:center;font-size:14px !important;font-weight:800;background:color-mix(in srgb,var(--k) 22%,transparent) !important;color:var(--k) !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button.on em{background:var(--k) !important;color:#14100a !important;}
+/* szűrők + kereső + gombok egy sorban */
+html.ui-uj:not(.m-app) body #orderCard .orn-fl{margin:0 0 10px !important;gap:6px !important;flex-wrap:wrap;}
+html.ui-uj:not(.m-app) body #orderCard .orn-tools{display:flex !important;flex-wrap:wrap;align-items:center !important;gap:8px !important;margin:0 0 12px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-search{flex:1 1 220px !important;display:flex !important;align-items:center;gap:8px;height:42px;padding:0 14px !important;border-radius:999px !important;border:1px solid var(--u4,rgba(255,255,255,.1)) !important;background:var(--u1,#15120e) !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-search input{flex:1;min-width:0;height:100% !important;border:0 !important;background:transparent !important;box-shadow:none !important;padding:0 !important;outline:none;color:inherit;font-size:14px;}
+html.ui-uj:not(.m-app) body #orderCard .orn-search:focus-within{border-color:#f0c766 !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-tools .action-btn{flex:0 0 auto !important;width:auto !important;height:42px !important;padding:0 16px !important;border-radius:999px !important;font-size:13px !important;}
+/* tételek */
+html.ui-uj:not(.m-app) body #orderCard .orn-rows{padding:12px !important;border-radius:20px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-gh{margin:6px 4px 8px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-gh em{font-style:normal;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);}
+html.ui-uj:not(.m-app) body #orderCard .orn-row{border-radius:16px !important;margin-bottom:8px !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-act button.go{background:linear-gradient(135deg,#5b9cf5,#3f7ee0) !important;color:#fff !important;border:0 !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-act button.ok{background:linear-gradient(135deg,#3ccf8a,#2a9f68) !important;color:#fff !important;border:0 !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-act button.del:hover{color:#ff7a6e !important;border-color:rgba(226,76,76,.4) !important;}
+html.ui-uj:not(.m-app) body #orderCard .orn-empty{padding:40px 10px !important;font-size:15px !important;}
+@media (max-width:1180px){ html.ui-uj:not(.m-app) body #orderCard .orn{grid-template-columns:minmax(0,1fr) !important;} html.ui-uj:not(.m-app) body #orderCard .orn-new{position:static !important;} html.ui-uj:not(.m-app) body #orderCard .orn-su{grid-template-columns:repeat(5,minmax(0,1fr)) !important;} }
+@media (max-width:900px){ html.ui-uj:not(.m-app) body #orderCard .orn-tabs{gap:16px !important;} html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button{font-size:12.5px !important;padding:0 10px !important;} html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-tabs.orn-tabs button:not(:last-child)::after{right:-13px;} html.ui-uj:not(.m-app) body #orderCard .orn-su{grid-template-columns:repeat(3,minmax(0,1fr)) !important;} }
+html.ui-uj:not(.m-app) body.light-theme #orderCard#orderCard .orn-tabs.orn-tabs button:not(.on){background:#fff !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp{display:flex !important;align-items:center;gap:8px;height:44px;padding:0 12px !important;border-radius:12px !important;border:1px solid var(--u4,rgba(255,255,255,.1)) !important;background:var(--u1,#15120e) !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp input{flex:1;min-width:0;height:100% !important;border:0 !important;background:transparent !important;box-shadow:none !important;padding:0 !important;outline:none;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp:focus-within{border-color:#f0c766 !important;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp > i{font-style:normal;}
+html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-row2{display:grid !important;grid-template-columns:minmax(0,1fr) !important;gap:0 !important;}
+</style>
 </body>
 </html>
