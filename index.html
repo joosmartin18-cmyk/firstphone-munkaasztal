@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-172613";</script>
+<script>window.FP_BUILD="20261118-173228";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -68787,14 +68787,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* ===================== a lap (A4) ===================== */
   const money = v=>{ const d = String(v || "").replace(/[^\d]/g, ""); return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, ".") : String(v || ""); };
   /* a lapra csak a lényeg kerül: fontossági sorrendben legfeljebb 6 adat (Martin kérése) */
-  const ESS = ["kijelzo","meret","cpu","tarhely","kamera","akku","halo5g","toltes","viz","anc","ido","hang","tok","ter","sziv","hallas","mic","fej","forditas","keres","garancia","x","ujj","memkartya","os","sim","nfc","bt","wifi","radio","kezeles","halozat","suly","szin"], ESS_MAX = 6;
+  const ESS = ["kijelzo","meret","cpu","tarhely","kamera","akku","halo5g","toltes","viz","anc","ido","hang","tok","ter","sziv","hallas","mic","fej","forditas","keres","garancia","x","ujj","memkartya","os","sim","nfc","bt","wifi","radio","kezeles","halozat","suly","szin"], ESS_MAX = 99;
   const essRank = k=>{ const i = ESS.indexOf(k); return i < 0 ? ESS.length : i; };
   /* tárhely / RAM külön mezőben (Martin kérése): „128” → „128 GB”, „1tb” → „1 TB” */
   const gbOne = v=>{ const s = String(v || "").trim(); if(!s) return ""; if(/tb/i.test(s)) return (s.replace(/[^\d.,]/g, "") || "1") + " TB"; const d = s.replace(/[^\d]/g, ""); return d ? d + " GB" : s; };
   const gbTxt = c=>{ const g = gbOne(c.gb), r = gbOne(c.ram); return g ? g + (r ? " · " + r + " RAM" : "") : ""; };
   /* melyik sor kerül a lapra (a kártyán is ez a szabály) → sorszámok */
   function printedRows(c){ const seen = new Set(), L = [];
-    const gb = !!gbLine(c), hasKi = c.rows.some(r=> r.on && r.v && r.k === "kijelzo"), extra = [];
+    const gb = !!gbLine(c), hasKi = false, extra = [];
     c.rows.forEach((r, i)=>{ if(!r.on) return; if(gb && r.k === "tarhely"){ if(r.v) extra.push(i); return; } if(hasKi && r.k === "meret"){ if(r.v) extra.push(i); return; } const t = pretty(r); if(!t) return; const n = normV(t); if(seen.has(n)) return; seen.add(n); L.push([r.k, i]); });
     const P = new Set(L.map((x, j)=> [essRank(x[0]), j, x[1]]).sort((a, b)=> a[0] - b[0] || a[1] - b[1]).slice(0, ESS_MAX).map(x=> x[2])); extra.forEach(i=> P.add(i)); return P; }
   /* ✨ a lapon rendezettebben jelenik meg (a szerkesztőben az eredeti szöveg marad) */
@@ -68946,7 +68946,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       return { k:it.k, v, du, same, on:!du && !same && it.on !== false }; }).filter(x=> x.v);
     FOUND.sort((a, b)=> (a.du ? 2 : a.on ? 0 : 1) - (b.du ? 2 : b.on ? 0 : 1));
     const nNew = FOUND.filter(x=> !x.du).length;
-    pkMsg(`<div class="sk-fh"><div><b>🌐 ${E(src.name)}</b><small class="sk-sm">Forrás: ${E(src.from)} · ${nNew ? "pipáld ki, mi kerüljön a lapra (a lapra a legfontosabb " + ESS_MAX + " fér)" : "minden adata már rajta van a lapon 👍"}</small></div>${nNew ? `<div class="sk-fall"><button type="button" class="sk-mini" data-fall="1">Mind</button><button type="button" class="sk-mini" data-fall="0">Egyik sem</button></div>` : ""}</div>
+    pkMsg(`<div class="sk-fh"><div><b>🌐 ${E(src.name)}</b><small class="sk-sm">Forrás: ${E(src.from)} · ${nNew ? "pipáld ki, mi kerüljön a lapra" : "minden adata már rajta van a lapon 👍"}</small></div>${nNew ? `<div class="sk-fall"><button type="button" class="sk-mini" data-fall="1">Mind</button><button type="button" class="sk-mini" data-fall="0">Egyik sem</button></div>` : ""}</div>
       <div class="sk-fl">${FOUND.map((x, i)=> `<label class="sk-fi${x.du ? " du" : ""}"><input type="checkbox" data-fnd="${i}"${x.on ? " checked" : ""}${x.du ? " disabled" : ""}><i>${ICO[x.k] || ICO.x}</i><span>${E(pretty({ k:x.k, v:x.v, l:ICON_NAMES[x.k] }))}${x.du ? `<small>✓ már rajta van</small>` : x.same ? `<small>van már ${E(String(ICON_NAMES[x.k] || "ilyen").toLowerCase())} sor — ha bepipálod, ez is odakerül</small>` : ""}</span></label>`).join("")}</div>
       ${src.alt && src.alt.length ? `<div class="sk-alt"><small>Nem ez a telefon?</small>${src.alt.map(a=> `<button type="button" class="sk-mini" data-gsm="${E(a.id)}">${E(a.name)}</button>`).join("")}</div>` : ""}
       <div class="sk-pkb"><button type="button" class="sk-mini" data-a="pkx">Mégse</button>${nNew ? `<button type="button" class="sk-mini pri" data-a="fndok">➕ Hozzáadás a laphoz</button>` : ""}</div>`);
@@ -68956,16 +68956,16 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     pk.querySelectorAll("[data-fnd]:checked").forEach(cb=>{ const x = FOUND[+cb.dataset.fnd]; if(!x || x.du || dupOf(c, x.v)) return; c.rows.push({ k:x.k, v:x.v, on:true, auto:false, l:ICON_NAMES[x.k] || "" }); n++; });
     save(); drawMod(); preview(); hint(n ? `✓ ${n} új adat került a lapra az internetről. Amit nem kérsz, a pipával kikapcsolhatod.` : "Nem jelöltél ki semmit.", !n); }
   /* a lap adatai: rövid, egyértelmű sorok (Martin kérése) */
-  const SKL = { kijelzo:"Kijelző", meret:"Kijelző", cpu:"Processzor", kamera:"Kamera", akku:"Akkumulátor", halo5g:"Hálózat", toltes:"Töltés", viz:"Vízállóság", nfc:"NFC", ujj:"Feloldás", garancia:"Garancia", memkartya:"Memóriakártya", os:"Rendszer", sim:"SIM", anc:"Zajszűrés", ido:"Üzemidő", hang:"Hangzás", tok:"Töltőtok", ter:"Térhangzás", sziv:"Pulzusmérés", hallas:"Hallás", mic:"Mikrofon", fej:"Illesztés", forditas:"Fordítás", keres:"Keresés", wifi:"Wi-Fi", bt:"Bluetooth", radio:"Rádió", suly:"Súly", szin:"Szín", halozat:"Hálózat", kezeles:"Kezelés" };
+  const SKL = { kijelzo:"Kijelző", meret:"Méret", cpu:"Processzor", kamera:"Kamera", akku:"Akkumulátor", halo5g:"Hálózat", toltes:"Töltés", viz:"Vízállóság", nfc:"NFC", ujj:"Feloldás", garancia:"Garancia", memkartya:"Memóriakártya", os:"Rendszer", sim:"SIM", anc:"Zajszűrés", ido:"Üzemidő", hang:"Hangzás", tok:"Töltőtok", ter:"Térhangzás", sziv:"Pulzusmérés", hallas:"Hallás", mic:"Mikrofon", fej:"Illesztés", forditas:"Fordítás", keres:"Keresés", wifi:"Wi-Fi", bt:"Bluetooth", radio:"Rádió", suly:"Súly", szin:"Szín", halozat:"Hálózat", kezeles:"Kezelés" };
   const inchOf = t=>{ const m = String(t || "").match(/(\d+(?:[.,]\d+)?)\s*(?:"|”|col|inch|hüvelyk)/i); return m ? m[1].replace(".", ",") + '"' : ""; };
   function shortV(k, t){ t = String(t || "").replace(/\s+/g, " ").trim();
-    if(k === "cpu"){ t = t.replace(/^\d+\s*magos,?\s*/i, "").replace(/^(octa|hexa|deca|quad)[- ]core,?\s*/i, "").split(/\s+-\s+|\s*;\s*/)[0].replace(/\s*\([^)]*\)/g, "").replace(/,\s*\d+\s*mag(os)?\b.*$/i, "").trim(); }
-    else if(k === "toltes"){ t = t.split(/,\s*/)[0].replace(/(\d)\s*W\b/i, "$1 W").trim(); }
+    if(k === "cpu"){ t = t.replace(/^\d+\s*magos,?\s*/i, "").replace(/^(octa|hexa|deca|quad)[- ]core,?\s*/i, "").replace(/\s*\([^)]*\)/g, "").replace(/,\s*\d+\s*mag(os)?\b.*$/i, "").replace(/\s+-\s+[A-Z]{2,}(\/[A-Z]{2,})*\b/g, " / ").replace(/[\s/]+$/, "").replace(/\s*\/\s*/g, " / ").trim(); }
+    else if(k === "toltes"){ t = t.replace(/(\d)\s*W\b/gi, "$1 W").replace(/\s+töltés$/i, "").trim(); }
     else if(k === "akku"){ t = t.replace(/\bli-?(ion|po|polymer)\b\s*/ig, "").trim(); }
-    else if(k === "kamera"){ t = t.split(/\s*·\s*előlap/i)[0].trim(); }
+
     else if(k === "kijelzo"){ const ty = (t.match(/(dynamic\s+)?(ltpo\s+)?(super\s+)?(\w*\s?)?(amoled|oled|lcd|ips|retina)(\s*2x)?(\s*xdr)?/i) || [])[0], hz = (t.match(/(\d{2,3})\s*hz/i) || [])[1];
       if(ty) t = ty.replace(/^\s+|\s+$/g, "").replace(/\b(dynamic|ltpo)\s+/ig, "").replace(/\s{2,}/g, " ") + (hz ? ", " + hz + " Hz" : ""); }
-    return t.length > 42 ? t.slice(0, 41).replace(/[\s,·]+\S*$/, "") + "…" : t; }
+    return t; }
   /* tárhely a név alatt: a külön mezőből, vagy a tárhely-sorból kiolvasva */
   function gbLine(c){ const g = gbTxt(c); if(g) return g; const r = c.rows.find(x=> x.on && x.k === "tarhely" && x.v); if(!r) return "";
     const t = String(pretty(r) || r.v), s = (t.match(/(\d+\s*(?:GB|TB))(?!\s*RAM)/i) || [])[1], ram = (t.match(/(\d+\s*GB)\s*RAM/i) || [])[1];
@@ -68973,7 +68973,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function cardRows(c){ const seen = new Set(), rows = [], gb = !!gbLine(c);
     for(const r of c.rows){ if(!r.on) continue; if(gb && r.k === "tarhely") continue; const t = pretty(r); if(!t) continue; const n = normV(t); if(seen.has(n)) continue; seen.add(n); rows.push([r.k, t]); }
     const ki = rows.find(x=> x[0] === "kijelzo"), me = rows.find(x=> x[0] === "meret");
-    if(me){ const inch = inchOf(me[1]); if(ki && inch){ ki[1] = inch + " " + shortV("kijelzo", ki[1]); ki.done = 1; rows.splice(rows.indexOf(me), 1); } else if(inch){ me[0] = "kijelzo"; me[1] = inch + (/(\d{2,3})\s*hz/i.test(me[1]) ? ", " + me[1].match(/(\d{2,3})\s*hz/i)[1] + " Hz" : ""); me.done = 1; } }
+
     rows.forEach(x=>{ if(!x.done) x[1] = shortV(x[0], x[1]); });
     if(rows.length > ESS_MAX){ const K = new Set(rows.map((r, i)=> [essRank(r[0]), i]).sort((a, b)=> a[0] - b[0] || a[1] - b[1]).slice(0, ESS_MAX).map(x=> x[1])); for(let i = rows.length - 1; i >= 0; i--) if(!K.has(i)) rows.splice(i, 1); }
     return rows; }
@@ -69082,7 +69082,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         <div class="sk-f2"><div class="sk-f"><label>Kiemelés <i>pl. AKCIÓ, ÚJ</i></label><input type="text" data-c="badge" value="${E(c.badge)}" maxlength="18"></div><div class="sk-f"><label>Logó</label><div class="sk-lrow"><label class="sk-mini">⬆ Saját logó<input type="file" accept="image/*" hidden data-file="card"></label>${c.logo ? `<button type="button" class="sk-mini" data-a="nologo" title="Vissza a könyvtár logójára">✕</button>` : ""}</div></div></div>
         <div class="sk-f"><label>Megjegyzés a kártya aljára <i>nem kötelező</i></label><input type="text" data-c="note" value="${E(c.note || "")}" placeholder="pl. Ajándék tok + fólia!"></div>
         <button type="button" class="sk-del" data-a="delcard">🗑 Telefon törlése a lapról</button></div>
-      <div class="sk-mcol"><div class="sk-f"><label>Adatok <span class="sk-prn"></span><small class="sk-sm">— a lapra a legfontosabb ${ESS_MAX} kerül (sárga csík); az ikont a szövegből választja, rákattintva cserélhető</small></label><div class="sk-rowsed">${c.rows.map(rowHTML).join("")}</div></div>
+      <div class="sk-mcol"><div class="sk-f"><label>Adatok <span class="sk-prn"></span><small class="sk-sm">— minden bepipált adat a lapra kerül (sárga csík), röviden; amit nem kérsz, vedd ki a pipát; az ikont a szövegből választja, rákattintva cserélhető</small></label><div class="sk-rowsed">${c.rows.map(rowHTML).join("")}</div></div>
         <div class="sk-new"><span class="sk-ico" data-nico>${ICO.x}</span><input type="text" data-new placeholder="Új adat — pl. Garancia 3 év, NFC, 25W gyorstöltés…" enterkeyhint="done"><button type="button" class="sk-mini pri" data-a="addrow">➕ Hozzáad</button></div><small class="sk-sm sk-nl">${NL_HINT}</small>
         <div class="sk-net"><button type="button" class="sk-mini net" data-a="enrich">🌐 Kiegészítés az internetről</button><small class="sk-sm">a név alapján megkeresi és felajánlja a hiányzó adatokat (telefon: GSMArena · AirPods: Apple)</small></div></div></div>
       <div class="sk-mf"><span class="sk-sm">Minden azonnal mentődik, és a lapon is látszik.</span><button type="button" class="sk-btn pri" data-a="close">✓ Kész</button></div>
@@ -71424,7 +71424,7 @@ html.ui-uj:not(.m-app) body.light-theme #skPage .sk-lp,html.ui-uj:not(.m-app) bo
     var h = hero.querySelector(".sk-ht");
     if(!document.documentElement.classList.contains("ui-uj")){ if(h) h.remove(); return; }
     var n = pg.querySelectorAll(".sk-list .sk-li").length, pages = pg.querySelectorAll(".sk-pvi .sk-sheet").length || 1, d = new Date();
-    var html = '<p>' + d.toLocaleDateString("hu-HU", { weekday:"long" }) + ', ' + d.toLocaleDateString("hu-HU", { month:"long", day:"numeric" }) + '</p><h1>Telefon-<span>adatlapok</span></h1><small><i><b>' + n + '</b> telefon</i><i><b>' + pages + '</b> A4 oldal</i><i>lapon a 6 legfontosabb adat · tintatakarékos</i></small>';
+    var html = '<p>' + d.toLocaleDateString("hu-HU", { weekday:"long" }) + ', ' + d.toLocaleDateString("hu-HU", { month:"long", day:"numeric" }) + '</p><h1>Telefon-<span>adatlapok</span></h1><small><i><b>' + n + '</b> telefon</i><i><b>' + pages + '</b> A4 oldal</i><i>minden bepipált adat · tintatakarékos</i></small>';
     if(!h){ h = document.createElement("div"); h.className = "sk-ht"; hero.prepend(h); }
     if(h.__l !== html){ h.__l = html; h.innerHTML = html; }
   }
