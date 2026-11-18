@@ -10,7 +10,7 @@ const { chromium } = require('playwright');
   const W = +process.env.W || 1366, H = +process.env.H || 800, LOC = process.env.LOC || 'Kaposvár', LK = process.env.LK || 'new';
   const ctx = await b.newContext({ viewport: { width: W, height: H }, isMobile: W < 500, hasTouch: W < 500, reducedMotion: process.env.RM ? 'reduce' : 'no-preference' });
   await ctx.route(/fonts\.(googleapis|gstatic)|gstatic\.com\/firebasejs/, r => r.abort());   // felhő és külső betűk nélkül
-  await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo, news, ord, sx]) => {
+  await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo, news, ord, sx, sk]) => {
     if (sessionStorage.x) return; sessionStorage.x = 1;
     const s = { configured: true, location: loc, employees: [{ id: 'a', name: 'Teszt Elek Hosszúnevű', hex: '#a78bfa' }].concat(emp2 ? [{ id: 'b', name: 'Minta Béla Ferenc', hex: '#2a5bd7' }] : []), hours: Array(7).fill({ open: '09:00', close: '20:00' }) };
     if (lk) s.uiLook = lk; if (lay) s.layout = lay;
@@ -20,13 +20,19 @@ const { chromium } = require('playwright');
       [['Kirakat rendezése', 'all', k(0)], ['ShieldUp feltöltés', 'a', k(0)], ['Rendelés leadása', 'all', k(-2)], ['Leltár előkészítése', 'a', k(4)], ['Polcok portalanítása', 'all', null]].forEach((x, i) => tds.push({ id: 't' + i, text: x[0], who: x[1], due: x[2], done: {}, t: Date.now() - i })); }
     const ords = ord ? [['su','125 micron','','',3,'need',''],['su','160 micron - tablet','','',null,'need','vevő kérte'],['glass','Privacy','','iPhone 16 Pro',2,'need',''],['case','Könyvtok','Spigen','Samsung Galaxy A56',1,'need','fekete'],['acc','USB-C kábel','2 m','',5,'need',''],['acc','Töltőfej','20 W','',null,'ord',''],['su','gél','','',2,'ord',''],['glass','Sima üveg','','iPhone 15',4,'got','']].map((x, i) => ({ id: 'o' + i, cat: x[0], type: x[1], name: x[2], model: x[3], qty: x[4], st: x[5], note: x[6], t: Date.now() - i * 36e5, stAt: Date.now() - i * 18e5 })) : [];
     localStorage.setItem('firstphone_beosztas_tervezo_v2', JSON.stringify({ year: d.getFullYear(), month: d.getMonth() + 1, schedule: sch, settings: s, todos: tds, orders: ords }));
+    if (sk) { const R = (k, v) => ({ k, v, on: true });
+      const cards = [['Samsung Galaxy A56 5G 8/256GB', '149990', '169990', 'AKCIÓ'], ['iPhone 16 128GB', '349990', '', ''], ['Xiaomi Redmi Note 14 Pro', '119990', '', 'ÚJ'], ['Samsung Galaxy S25 Ultra 12/512GB', '549990', '', ''], ['Motorola Moto G85 5G', '89990', '99990', ''], ['iPhone 15 128GB', '279990', '', ''], ['Google Pixel 9a', '199990', '', ''], ['Nokia G42 5G', '64990', '', '']].map((x, i) => ({ id: 'k' + i, name: x[0], price: x[1], oldPrice: x[2], badge: x[3], note: i === 1 ? '2 év garancia' : '',
+        rows: [R('kijelzo', '6,7" Super AMOLED, 120 Hz'), R('cpu', 'Exynos 1580, 8 mag'), R('tarhely', '256 GB tárhely, 8 GB RAM'), R('kamera', '50 MP + 12 MP + 5 MP'), R('akku', '5000 mAh'), R('toltes', '45 W gyorstöltés'), R('halo5g', '5G'), R('viz', 'IP67 por- és vízálló'), R('os', 'Android 15'), R('suly', '198 g'), R('szin', 'Színek: fekete, kék')] }));
+      localStorage.setItem('firstphone_specko', JSON.stringify({ cards, set: {} }));
+      const lg = t => 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="160"><text x="300" y="115" font-family="Arial" font-weight="900" font-size="110" text-anchor="middle" fill="#1428a0">' + t + '</text></svg>');
+      localStorage.setItem('firstphone_specko_logos', JSON.stringify([{ id: 'l1', key: 'samsung', name: 'MÁRKA A', data: lg('MÁRKA A') }, { id: 'l2', key: 'iphone', name: 'MÁRKA B', data: lg('MÁRKA B') }])); }
     if (sx) { const tk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
       const it = [['iPhone 15 tok (sérült)', '5999123456789', 1, 'Sérült', 'x'], ['Samsung A56 üvegfólia', '5999000111222', 2, 'Törött', 'x'], ['ShieldUp 125 micron', '', 3, 'Hibás', 'su'], ['USB-C kábel 1 m', '5990011223344', 1, 'Csomagolás sérült', 'x'], ['ShieldUp gél', '', 1, '', 'su']].map((x, i) => ({ id: 'sx' + i, date: tk, time: String(9 + i).padStart(2, '0') + ':1' + i, name: x[0], code: x[1], qty: x[2], reason: x[3], by: 'Teszt Elek', kind: x[4] }));
       localStorage.setItem('firstphone_selejt', JSON.stringify({ items: it, lastBy: 'Teszt Elek', imp2026: true })); }
     localStorage.setItem('firstphone_welcome_seen', '1');
     localStorage.setItem('firstphone_cloud_off', '1');
     { const NS = ['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16', 'sugo-diak-2026-11-16']; localStorage.setItem('fp_ui_news_seen', JSON.stringify(NS.slice(0, NS.length - (+news || 0)))); }
-  }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '', process.env.NEWS || '', process.env.ORD || '', process.env.SX || '']);
+  }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '', process.env.NEWS || '', process.env.ORD || '', process.env.SX || '', process.env.SK || '']);
   if (process.env.NOW && ctx.clock) await ctx.clock.install({ time: new Date(process.env.NOW) });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(3500);
