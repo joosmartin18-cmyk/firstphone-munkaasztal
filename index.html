@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-174258";</script>
+<script>window.FP_BUILD="20261118-221453";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -26198,6 +26198,8 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
         void f.offsetWidth; f.classList.add("shake"); go.disabled = false; go.textContent = "Belépés →"; } };
     b.querySelector("#fcOff").onclick = ()=>{ lsSet(OFF_KEY, "1"); b.classList.add("out"); done(); setTimeout(()=> b.remove(), 260); S.state = "offl"; status(); };
   }
+  /* boltok, amelyek nem használják a Munkaasztalt: az admin listákban nem látszanak (boltkód) */
+  window.FP_HIDE_SHOPS = ["VASN"];
   /* ---------- admin: boltválasztó ---------- */
   async function storeList(){
     const today = new Date(), tk = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
@@ -26323,7 +26325,8 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     if(s.e) out.push(String(s.e).toLowerCase()); return Array.from(new Set(out)); }
   function shopRows(users){
     const seen = new Set(), rows = [];
-    (window.FP_SHOPS || []).slice().sort((a, b)=> a.n.localeCompare(b.n, "hu")).forEach(s=>{
+    /* a bolt nem használja a Munkaasztalt (Martin kérése) — nem jelenik meg a listában */
+    (window.FP_SHOPS || []).filter(s=> !(window.FP_HIDE_SHOPS || []).includes(String(s.c).toUpperCase())).slice().sort((a, b)=> a.n.localeCompare(b.n, "hu")).forEach(s=>{
       const M = shopMails(s); if(!M.length) return; const ex = M.find(e=> users[e]), e = ex || M[0]; if(seen.has(e)) return; M.forEach(m=> seen.add(m));
       rows.push({ name:s.n, code:s.c, email:e, good:M[0], alias:!!(ex && ex !== M[0]), u:users[e] || null });
     });
@@ -26363,8 +26366,9 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     const users = {}; (r.users || []).forEach(u=> users[String(u.email).toLowerCase()] = u);
     let rows = shopRows(users), open = null, flt = "all";
     const top = box.querySelector(".fc-pw-top");
-    if(top && !top.querySelector(".fc-pw-f")) top.insertAdjacentHTML("beforeend", `<div class="ax-seg fc-pw-f">${[["all","Mind"],["never","⏳ Nem lépett be"],["noacc","Nincs fiók"],["dis","⛔ Letiltva"]].map(([k, t])=> `<button type="button" data-pf2="${k}" class="${k === "all" ? "on" : ""}">${t}</button>`).join("")}</div>`);
-    const kindOf = x=> x.admin ? "adm" : !x.u ? "noacc" : x.u.disabled ? "dis" : !x.u.last ? "never" : "ok";
+    if(top && !top.querySelector(".fc-pw-f")) top.insertAdjacentHTML("beforeend", `<div class="ax-seg fc-pw-f">${[["all","Mind"],["ok","✓ Aktív"],["setup","○ Nem aktív"],["never","⏳ Nem lépett be"],["noacc","Nincs fiók"],["dis","⛔ Letiltva"]].map(([k, t])=> `<button type="button" data-pf2="${k}" class="${k === "all" ? "on" : ""}">${t}</button>`).join("")}</div>`);
+    const shopOk = x=>{ try{ return window.__axShopOk ? window.__axShopOk(x.email) : null; }catch(e){ return null; } };
+    const kindOf = x=> x.admin ? "adm" : !x.u ? "noacc" : x.u.disabled ? "dis" : !x.u.last ? "never" : (shopOk(x) && shopOk(x).ok) ? "ok" : "setup";
     const draw = ()=>{
       const f = q.value.trim().toLowerCase();
       const L = rows.filter(x=> (!f || (x.name + " " + x.code + " " + x.email + " " + x.good).toLowerCase().includes(f)) && (flt === "all" || kindOf(x) === flt));
@@ -26373,7 +26377,8 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
       try{ root.dispatchEvent(new CustomEvent("axacc", { detail:{ has, noacc, never, dis } })); }catch(e){}
       list.innerHTML = L.map(x=>{
         const k = kindOf(x);
-        const st = k === "noacc" ? `<span class="fc-pw-st no">— nincs fiók</span>` : k === "dis" ? `<span class="fc-pw-st dis">⛔ letiltva</span>` : k === "never" ? `<span class="fc-pw-st wait">⏳ még nem lépett be</span>` : `<span class="fc-pw-st ok">✓ aktív</span>`;
+        const so = shopOk(x);
+        const st = k === "noacc" ? `<span class="fc-pw-st no">— nincs fiók</span>` : k === "dis" ? `<span class="fc-pw-st dis">⛔ letiltva</span>` : k === "never" ? `<span class="fc-pw-st wait">⏳ még nem lépett be</span>` : k === "setup" ? `<span class="fc-pw-st wait" title="${esc(so && so.miss.length ? "Hiányzik: " + so.miss.join(", ") : "Még nincs beállítva")}">○ nem aktív — ${esc(so && so.miss.length ? "hiányzik: " + so.miss.join(", ") : "nincs beállítva")}</span>` : `<span class="fc-pw-st ok">✓ aktív</span>`;
         const meta = x.u ? `utolsó belépés: ${x.u.last ? dt(x.u.last) : "még soha"} · jelszó: ${dt(x.u.pwAt || x.u.created)}` : "még nincs létrehozva";
         const act = !x.u ? `<button type="button" data-a="new">＋ Fiók létrehozása</button>`
           : `<button type="button" data-a="pw">🔑 Új jelszó</button>${x.admin ? "" : `<button type="button" data-a="reset" title="Új jelszó, letiltás feloldása, belépési cím javítása">↺ Újrakezdés</button><button type="button" class="warn" data-a="dis">${x.u.disabled ? "✅ Engedélyezés" : "⛔ Letiltás"}</button>`}`;
@@ -29432,7 +29437,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2 > .pw2-s{align-self:flex-start !important;}
     #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2:hover{border-color:rgba(240,199,102,.35) !important;transform:translateY(-1px);}
     #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:#3aa66a;}
-    #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-never::before{background:#f0a63c;} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-dis::before{background:#e24c4c;} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-noacc::before{background:rgba(255,255,255,.14);} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-adm::before{background:linear-gradient(90deg,#f0c766,#d9ad46);}
+    #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-never::before{background:#f0a63c;} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-setup::before{background:#8b95a7;} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-setup{opacity:.82;} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-dis::before{background:#e24c4c;} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-noacc::before{background:rgba(255,255,255,.14);} #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-adm::before{background:linear-gradient(90deg,#f0c766,#d9ad46);}
     #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.k-noacc{background:transparent !important;border-style:dashed !important;}
     #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2.open{grid-column:1/-1;border-color:rgba(240,199,102,.55) !important;}
     #fcAdmin#fcAdmin#fcAdmin .pw2-h{display:flex;align-items:center;gap:12px;min-width:0;}
@@ -29523,6 +29528,33 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     #fcAdmin#fcAdmin#fcAdmin.th-light .ax-cr .ch-f{background:#fff !important;}
     #fcAdmin#fcAdmin#fcAdmin.th-light .ax-cr .ch-nm{color:#6b5f4c !important;}
     @media (max-width:900px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-chat.v2{grid-template-columns:1fr !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-list{padding:12px !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-cr .ch-m .ch-col{max-width:86% !important;} }
+
+    /* ===== Irányítópult v2: figyelem-panel elöl, tömör számlálók, idősáv, alul 3 kártya ===== */
+    @media (min-width:1100px){
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on{display:grid !important;grid-template-columns:repeat(12,minmax(0,1fr)) !important;gap:16px !important;align-items:start !important;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > *{margin:0 !important;min-width:0;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .axh{grid-column:1 / -1;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2{display:contents !important;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(1){grid-column:1 / span 5;grid-row:2;align-self:stretch;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-kpis{grid-column:6 / -1;grid-row:2;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ui-tl{grid-column:1 / -1;grid-row:3;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(2){grid-column:1 / span 4;grid-row:4;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(5) > .ax-card:nth-child(1){grid-column:5 / span 4;grid-row:4;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(5) > .ax-card:nth-child(2){grid-column:9 / span 4;grid-row:4;}
+    }
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpis{display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:10px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi{position:relative;min-height:0 !important;height:auto !important;padding:14px 14px 12px !important;border-radius:18px !important;border:1px solid var(--ax-line) !important;background:rgba(255,255,255,.03) !important;box-shadow:none !important;overflow:hidden;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi.alert{border-color:var(--ax-line) !important;background:linear-gradient(135deg,rgba(226,76,76,.14),rgba(226,76,76,.02)) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi.alert::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#ff6b5e;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi b{font-size:30px !important;line-height:1.1 !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi small{font-size:10.5px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi p{font-size:11.5px !important;margin-top:2px !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi .bar{margin-top:8px !important;height:5px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi:hover{border-color:rgba(240,199,102,.45) !important;transform:translateY(-1px);}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(1){border:1px solid rgba(240,199,102,.4) !important;background:radial-gradient(120% 90% at 0% 0%,rgba(240,199,102,.14),transparent 60%),linear-gradient(180deg,rgba(31,26,20,.95),rgba(18,15,12,.95)) !important;box-shadow:0 18px 40px rgba(0,0,0,.35) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(1) .ax-ch h3{font-size:20px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ui-tl{border-radius:22px !important;}
+    @media (min-width:1100px) and (max-width:1400px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpis{grid-template-columns:repeat(2,minmax(0,1fr)) !important;} }
 `; } document.body.appendChild(st); axEmoStart(); }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
@@ -29944,9 +29976,14 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       })();
       /* --- adatok betöltése --- */
       try{ const all = await storeList(); list = all.filter(x=> !x.orph); orph = all.filter(x=> x.orph); }catch(e){ loadErr = e; }
+      /* Fiókok: egy bolt akkor „aktív”, ha van neve és be van állítva (üzlet, dolgozók) — Martin kérése */
+      window.__axShopOk = em=>{ const x = list.find(y=> String(y.email || "").toLowerCase() === String(em || "").toLowerCase()); if(!x) return null;
+        let st = {}; try{ st = JSON.parse((x.raw || {})[ST_KEY] || "null") || {}; }catch(e){} const s = st.settings || {}, miss = [];
+        if(!String(s.location || x.loc || "").trim()) miss.push("bolt neve"); if(!s.configured) miss.push("beállítások"); if(!(s.employees || []).length) miss.push("dolgozók");
+        return { ok:!miss.length, miss }; };
       const have = new Set(list.map(x=> String(x.email || "").toLowerCase())), cm = accCodeMap();
       const sidOf = e=>{ try{ const st = window.fpStoreFromEmail && fpStoreFromEmail(e); return st ? st.id : ""; }catch(_){ return ""; } }, haveId = new Set(list.map(x=> sidOf(x.email)).filter(Boolean));
-      none = (window.FP_SHOPS || []).map(s=> ({ n:s.n, a:s.a, c:s.c, id:s.id, e:(cm[String(s.c).toUpperCase()] || s.e).toLowerCase() })).filter(s=> !have.has(s.e) && !haveId.has(s.id)).sort((a, c)=> a.n.localeCompare(c.n, "hu"));
+      none = (window.FP_SHOPS || []).filter(s=> !(window.FP_HIDE_SHOPS || []).includes(String(s.c).toUpperCase())).map(s=> ({ n:s.n, a:s.a, c:s.c, id:s.id, e:(cm[String(s.c).toUpperCase()] || s.e).toLowerCase() })).filter(s=> !have.has(s.e) && !haveId.has(s.id)).sort((a, c)=> a.n.localeCompare(c.n, "hu"));
       const cfgRef = colFor(S.user.uid).doc("news_cfg"), appRef = colFor(S.user.uid).doc("app_cfg");
       const rd = async r=>{ try{ const d = await r.get(); return d.exists && d.data() && d.data().v ? JSON.parse(d.data().v) : null; }catch(e){ return null; } };
       const [nc, ac, lg] = await Promise.all([rd(cfgRef), rd(appRef), rd(logRef)]);
@@ -70628,6 +70665,7 @@ html body .tts .hsd-toc button:hover{border-color:var(--a) !important;background
 @media (max-width:640px){ .hsd-toc{display:none;} }
 @media (min-width:641px) and (max-width:860px) and (min-height:900px){ html body .hsd-back .tts.tts{height:min(980px,calc(100vh - 32px));height:min(980px,calc(100dvh - 32px));} }
 @media print{ .hsd-back{display:none !important;} }
+body:has(#fcAdmin) .hsd-back.hsd-news{display:none !important;}
 html body .hsd-back .tts-foot .cnt{display:block !important;visibility:visible !important;position:static !important;font-size:13px !important;font-weight:700 !important;color:rgba(245,239,228,.6) !important;width:auto !important;height:auto !important;background:none !important;}
 
 /* --- v2: lépésenkénti jelenetek (a lépés szövegéből), a kiemelt lépéssel együtt váltanak --- */
@@ -70865,7 +70903,7 @@ html body .hx-scr .hx-sn .bc.bc{width:200px;height:70px;border-radius:6px;backgr
       spec.n = body.length; spec.toc = body.map(function(s){ return { ic:s.tocIc || s.ic || "•", h:s.h }; }); spec.sec = D.slice(0, -1).reduce(function(a, b){ return a + b; }, 0);
       spec.steps = spec.steps != null ? spec.steps : body.reduce(function(a, s){ return a + s.items.filter(function(x){ return !x.ti; }).length; }, 0);
       if(back){ var old = back; back = null; clearTimeout(st && st.tm); old.remove(); doc.removeEventListener("keydown", onKey, true); }
-      back = doc.createElement("div"); back.className = "tts-back hsd-back";
+      back = doc.createElement("div"); back.className = "tts-back hsd-back" + (spec.cls ? " " + spec.cls : "");
       back.innerHTML = '<div class="tts" tabindex="-1" role="dialog" aria-modal="true" aria-label="' + E(spec.label + ": " + spec.title) + '"><div class="tts-top"><div class="ic">' + E(spec.ic) + '</div><div class="tl"><small>▶ ' + E(spec.label) + '</small><b>' + E(spec.title) + '</b></div><button type="button" class="tts-btn" data-a="pp" title="Szünet (szóköz)">❚❚</button><button type="button" class="tts-btn" data-a="x" title="Bezárás (Esc)">✕</button></div>'
         + '<div class="tts-bars">' + S.map(function(_, q){ return '<i data-q="' + q + '"></i>'; }).join("") + '</div><div class="tts-stage">' + S.map(function(s, q){ return slideHtml(s, q, body.length, spec); }).join("") + '</div>'
         + '<div class="tts-foot"><button type="button" class="nav" data-a="pv">← Vissza</button><span class="cnt"></span><span class="tts-hint">← → lapozás · szóköz: szünet · Esc: bezárás</span><button type="button" class="nav pri" data-a="nv">Tovább →</button></div></div>';
@@ -71039,7 +71077,7 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
     var S = seen(), uj = document.documentElement.classList.contains("ui-uj"), L = NEWS.filter(function(x){ return S.indexOf(x.id) < 0 && (x.both || uj); }); if(!L.length) return true;
     if(window.fpDia){ try{
       var Es = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
-      window.fpDia({ ic:"✨", title:L.length > 1 ? L.length + " újdonság a Munkaasztalon" : L[0].t, label:"Újdonságok", sub:"Ami új a Munkaasztalon — magától lapoz, bármikor megállíthatod", unit:"újdonság", steps:0, cover:L.length > 1, numbered:false, endT:"Ennyi az újdonság!", endX:"Jó munkát! Minden részletet a ❓ súgókban is megtalálsz.",
+      window.fpDia({ cls:"hsd-news", ic:"✨", title:L.length > 1 ? L.length + " újdonság a Munkaasztalon" : L[0].t, label:"Újdonságok", sub:"Ami új a Munkaasztalon — magától lapoz, bármikor megállíthatod", unit:"újdonság", steps:0, cover:L.length > 1, numbered:false, endT:"Ennyi az újdonság!", endX:"Jó munkát! Minden részletet a ❓ súgókban is megtalálsz.",
         slides:L.map(function(n){ return { tag:n.tag || "Újdonság", ic:"", tocIc:"🆕", h:n.t, p:n.x, dev:"Újdonság", news:newsAnim(n) || NEWS_ANIM.spark, items:n.p.map(function(t){ var mm = /^(\S+)\s+([\s\S]+)$/.exec(t), e = mm && !/[A-Za-z\u00C0-\u017F0-9]/.test(mm[1]); return { ti:1, n:e ? mm[1] : "✨", html:Es(e ? mm[2] : t) }; }) }; }),
         onClose:function(){ var S2 = seen(); L.forEach(function(x){ if(S2.indexOf(x.id) < 0) S2.push(x.id); }); try{ localStorage.setItem(K, JSON.stringify(S2)); }catch(e){} } });
       return true; }catch(e){ try{ console.error(e); }catch(_){} } }

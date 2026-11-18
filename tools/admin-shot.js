@@ -2,14 +2,14 @@
 const { chromium } = require('playwright');
 const FAKE = `(function(){
   var _f=window.fetch; window.fetch=function(u,o){ if(String(u).indexOf("/api/admin")>=0){ var body={}; try{ body=JSON.parse((o&&o.body)||"{}"); }catch(e){} var users=[];
-    if(body.action==="list"){ var D=(typeof FP_DOMAIN!=="undefined"?FP_DOMAIN:"firstphone.hu"), i=0; Object.keys(window.FP_LOGIN||{}).forEach(function(l){ i++; if(i%7===0) return; users.push({email:l+"@"+D,last:i%3?Date.now()-i*36e5:0,created:Date.now()-90*864e5,pwAt:Date.now()-i*864e5,disabled:i%11===0}); }); }
+    if(body.action==="list"){ var D=(typeof FP_DOMAIN!=="undefined"?FP_DOMAIN:"firstphone.hu"), i=0; Object.keys(window.FP_LOGIN||{}).forEach(function(l){ i++; if(i%7===0) return; if(i===1){ for(var q=0;q<6;q++) users.push({email:"minta"+q+"@bolt.hu",last:Date.now()-q*36e5,created:Date.now()-90*864e5,pwAt:Date.now()}); } users.push({email:l+"@"+D,last:i%3?Date.now()-i*36e5:0,created:Date.now()-90*864e5,pwAt:Date.now()-i*864e5,disabled:i%11===0}); }); }
     return Promise.resolve(new Response(JSON.stringify({ok:true,users:users}),{headers:{"content-type":"application/json"}})); } return _f.apply(this,arguments); };
   var now=Date.now(), day=864e5;
   var names=["Minta A","Minta B","Minta C","Minta D","Minta E","Minta F"];
   var boltok={}, kv={};
   names.forEach(function(n,i){ var uid="u"+i; boltok[uid]={email:"minta"+i+"@bolt.hu",loc:n,place:"Pláza",addr:"Minta utca "+(i+1),ms:now-i*day*2};
     var d=new Date(), sch={}, T=["a","b","split","multi"]; for(var k=1;k<=31;k++){ if((k+i)%9===0) continue; var t=T[(k+i)%4]; sch[d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(k).padStart(2,"0")]= t==="split"?{type:"split",am:"a",pm:"c"}: t==="multi"?{type:"multi",full:["b"],am:["c"]}:{type:t}; }
-    var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:true,location:n,uiLook:i===1?"old":i===2?"new":undefined,layout:i===1?"old":undefined,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
+    var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:i!==3,location:n,uiLook:i===1?"old":i===2?"new":undefined,layout:i===1?"old":undefined,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
     kv[uid]={firstphone_beosztas_tervezo_v2:{v:JSON.stringify(st),parts:0,by:"dev123456",n:now-i*day*2,t:now},
       firstphone_csomag:{v:JSON.stringify({items:[{id:1},{id:2,outAt:1},{id:3}]}),parts:0,by:"dev",n:now},
       firstphone_kassza:{v:JSON.stringify({n:{"1000":12,"5000":3},back:"20000",report:i%2?"47000":"46000"}),parts:0,by:"dev",n:now}};
