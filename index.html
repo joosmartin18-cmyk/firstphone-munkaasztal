@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-160647";</script>
+<script>window.FP_BUILD="20261118-161510";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -71212,6 +71212,52 @@ html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp input{flex:1;min-width
 html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp:focus-within{border-color:#f0c766 !important;}
 html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-inp > i{font-style:normal;}
 html.ui-uj:not(.m-app) body #orderCard#orderCard .orn-row2{display:grid !important;grid-template-columns:minmax(0,1fr) !important;gap:0 !important;}
+</style>
+<style id="sxV2Css">
+/* ===================== PRÓBA 38: Selejt — rendezettebb elrendezés (új kinézet, asztali nézet) ===================== */
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis .k{border-radius:16px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-kpis .k b{font-size:36px !important;line-height:40px !important;}
+/* felíró űrlap: tiszta fejléc */
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-h{background:none !important;background-image:none !important;border:0 !important;border-bottom:1px solid var(--u4,rgba(255,255,255,.08)) !important;padding:20px 22px 16px !important;margin:0 !important;border-radius:0 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-h::before,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-h::after{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-h h3{font-size:20px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form{border-radius:22px !important;overflow:hidden;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-form .sx-f > span:first-child{font-size:11px !important;letter-spacing:.08em !important;}
+/* mai összesítő → vékony „napi cetli” sáv (a számok fent, a felső sávban látszanak) */
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum{display:flex !important;align-items:center !important;flex-wrap:wrap;gap:10px 12px !important;padding:12px 16px !important;border-radius:18px !important;min-height:0 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum .sx-big,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum .sx-split{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum .sx-k{width:auto !important;margin:0 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum .sx-k::after{content:" · napi cetli";}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum .sx-mini{width:auto !important;margin:0 auto 0 0 !important;font-size:12.5px !important;opacity:.75;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-sum .sx-dayslip{width:auto !important;height:38px !important;padding:0 16px !important;border-radius:999px !important;margin:0 !important;font-size:13px !important;}
+/* tételek: kártyák, jól látható gombok */
+html.ui-uj:not(.m-app) body #sxPage#sxPage #sxSecList{border-radius:22px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-list{gap:8px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grp{margin:8px 2px 2px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-item{position:relative;padding:12px 14px 12px 18px !important;border-radius:16px !important;border:1px solid var(--u4,rgba(255,255,255,.08)) !important;background:rgba(255,255,255,.025) !important;overflow:hidden;align-items:center !important;border-left:3px solid #e85b5b !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-item.su{border-left-color:#5b9cf5 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-item:hover{background:rgba(255,255,255,.045) !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-time{font-size:12px !important;font-weight:800 !important;opacity:.7;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-time::before{display:none !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-what b{font-size:15px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-acts{display:flex !important;gap:5px !important;opacity:1 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-acts .sx-ib{width:34px !important;height:34px !important;border-radius:11px !important;border:1px solid var(--u4,rgba(255,255,255,.1)) !important;background:var(--u1,#15120e) !important;opacity:1 !important;filter:none !important;font-size:14px !important;color:var(--utx,#f4efe6) !important;display:grid !important;place-items:center !important;transition:border-color .15s,background .15s,transform .15s;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-acts .sx-ib:hover{transform:translateY(-1px);border-color:#f0c766 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-acts .sx-ib.sx-chk{color:#3ccf8a !important;font-weight:900 !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-acts .sx-ib.del{color:#ff7a6e !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-acts .sx-ib.del:hover{border-color:rgba(226,76,76,.6) !important;background:rgba(226,76,76,.12) !important;}
+/* feltöltés / letöltés */
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-imp,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-exp{border-radius:22px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-imp .sx-drop{background:transparent !important;border:2px dashed var(--u4,rgba(255,255,255,.14)) !important;border-radius:16px !important;}
+html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-imp .sx-drop:hover{border-color:#f0c766 !important;background:rgba(240,199,102,.05) !important;}
+@media (max-width:1180px){
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid{display:grid !important;grid-template-columns:minmax(0,1fr) !important;grid-template-areas:none !important;gap:16px !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid > .sx-main,html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid > .sx-side{display:contents !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid section{grid-column:1 / -1 !important;grid-row:auto !important;width:auto !important;max-width:none !important;position:static !important;}
+  html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid .sx-form{order:1;} html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid .sx-sum{order:2;} html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid #sxSecList{order:3;} html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid .sx-imp{order:4;} html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid .sx-exp{order:5;} html.ui-uj:not(.m-app) body #sxPage#sxPage .sx-grid .sx-ckpanel{order:0;}
+}
+html.ui-uj:not(.m-app) body.light-theme #sxPage#sxPage .sx-item{background:#fff !important;}
+html.ui-uj:not(.m-app) body.light-theme #sxPage#sxPage .sx-acts .sx-ib{background:#faf7f1 !important;color:#2a2218 !important;}
 </style>
 </body>
 </html>
