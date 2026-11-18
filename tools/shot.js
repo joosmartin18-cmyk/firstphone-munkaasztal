@@ -10,7 +10,7 @@ const { chromium } = require('playwright');
   const W = +process.env.W || 1366, H = +process.env.H || 800, LOC = process.env.LOC || 'Kaposvár', LK = process.env.LK || 'new';
   const ctx = await b.newContext({ viewport: { width: W, height: H }, isMobile: W < 500, hasTouch: W < 500, reducedMotion: process.env.RM ? 'reduce' : 'no-preference' });
   await ctx.route(/fonts\.(googleapis|gstatic)|gstatic\.com\/firebasejs/, r => r.abort());   // felhő és külső betűk nélkül
-  await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo, news, ord, sx, sk]) => {
+  await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo, news, ord, sx, sk, fresh]) => {
     if (sessionStorage.x) return; sessionStorage.x = 1;
     const s = { configured: true, location: loc, employees: [{ id: 'a', name: 'Teszt Elek Hosszúnevű', hex: '#a78bfa' }].concat(emp2 ? [{ id: 'b', name: 'Minta Béla Ferenc', hex: '#2a5bd7' }] : []), hours: Array(7).fill({ open: '09:00', close: '20:00' }) };
     if (lk) s.uiLook = lk; if (lay) s.layout = lay;
@@ -19,6 +19,7 @@ const { chromium } = require('playwright');
     const tds = []; if (todo) { const k = n => { const x = new Date(d); x.setDate(x.getDate() + n); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); };
       [['Kirakat rendezése', 'all', k(0)], ['ShieldUp feltöltés', 'a', k(0)], ['Rendelés leadása', 'all', k(-2)], ['Leltár előkészítése', 'a', k(4)], ['Polcok portalanítása', 'all', null]].forEach((x, i) => tds.push({ id: 't' + i, text: x[0], who: x[1], due: x[2], done: {}, t: Date.now() - i })); }
     const ords = ord ? [['su','125 micron','','',3,'need',''],['su','160 micron - tablet','','',null,'need','vevő kérte'],['glass','Privacy','','iPhone 16 Pro',2,'need',''],['case','Könyvtok','Spigen','Samsung Galaxy A56',1,'need','fekete'],['acc','USB-C kábel','2 m','',5,'need',''],['acc','Töltőfej','20 W','',null,'ord',''],['su','gél','','',2,'ord',''],['glass','Sima üveg','','iPhone 15',4,'got','']].map((x, i) => ({ id: 'o' + i, cat: x[0], type: x[1], name: x[2], model: x[3], qty: x[4], st: x[5], note: x[6], t: Date.now() - i * 36e5, stAt: Date.now() - i * 18e5 })) : [];
+    if (fresh) s.configured = false;
     localStorage.setItem('firstphone_beosztas_tervezo_v2', JSON.stringify({ year: d.getFullYear(), month: d.getMonth() + 1, schedule: sch, settings: s, todos: tds, orders: ords }));
     if (sk) { const R = (k, v) => ({ k, v, on: true });
       const cards = [['Samsung Galaxy S26', '123456', '', ''], ['iPhone 16 128GB', '349990', '', ''], ['Xiaomi Redmi Note 14 Pro', '119990', '', 'ÚJ'], ['Samsung Galaxy S25 Ultra 12/512GB', '549990', '', ''], ['Motorola Moto G85 5G', '89990', '99990', ''], ['iPhone 15 128GB', '279990', '', ''], ['Google Pixel 9a', '199990', '', ''], ['Nokia G42 5G', '64990', '', '']].map((x, i) => ({ id: 'k' + i, name: x[0], price: x[1], oldPrice: x[2], badge: x[3], note: i === 1 ? '2 év garancia' : '',
@@ -32,7 +33,7 @@ const { chromium } = require('playwright');
     localStorage.setItem('firstphone_welcome_seen', '1');
     localStorage.setItem('firstphone_cloud_off', '1');
     { const NS = ['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16', 'sugo-diak-2026-11-16']; localStorage.setItem('fp_ui_news_seen', JSON.stringify(NS.slice(0, NS.length - (+news || 0)))); }
-  }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '', process.env.NEWS || '', process.env.ORD || '', process.env.SX || '', process.env.SK || '']);
+  }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '', process.env.NEWS || '', process.env.ORD || '', process.env.SX || '', process.env.SK || '', process.env.FRESH || '']);
   if (process.env.NOW && ctx.clock) await ctx.clock.install({ time: new Date(process.env.NOW) });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
   await p.goto('http://127.0.0.1:8765/index.html'); await p.mouse.move(W - 5, H - 5); await p.waitForTimeout(3500);
