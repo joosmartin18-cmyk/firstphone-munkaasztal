@@ -25466,7 +25466,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261118-222708";</script>
+<script>window.FP_BUILD="20261118-223317";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -71646,6 +71646,81 @@ html.fp-setup body .app{z-index:99960 !important;}
   html.fp-setup #settingsPanel .set-foot .action-btn{padding:0 16px !important;}
 }
 @media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full).fp-setup #settingsPanel{animation:none !important;} }
+/* ===================== PRÓBA 41b: első beállítás v3 — felül folyamatsáv, középen nagy lépés, tiszta kártyák ===================== */
+html.fp-setup #settingsPanel#settingsPanel{grid-template-columns:minmax(0,1fr) !important;grid-template-rows:auto auto minmax(0,1fr) auto !important;grid-template-areas:"head" "pills" "body" "foot" !important;}
+html.fp-setup #settingsPanel .set-head{display:flex !important;align-items:center !important;gap:16px !important;padding:18px clamp(20px,4vw,56px) 10px !important;background:none !important;border:0 !important;}
+html.fp-setup #settingsPanel .set-head > div:first-child{flex:1;min-width:0;}
+html.fp-setup #settingsPanel .set-head h2{font:800 15px/1.2 'Manrope','Inter',sans-serif !important;letter-spacing:.1em;text-transform:uppercase;color:#f0c766 !important;margin:0 !important;}
+html.fp-setup #settingsPanel .set-head p{display:none !important;}
+html.fp-setup #settingsPanel .set-head .set-head-btns{position:static !important;width:auto !important;flex-direction:row !important;}
+html.fp-setup #settingsPanel .set-head .set-head-btns .action-btn{height:40px !important;padding:0 16px !important;width:auto !important;background:rgba(255,255,255,.06) !important;border:1px solid rgba(255,255,255,.1) !important;color:#f5efe4 !important;}
+/* folyamatsáv */
+html.fp-setup #settingsPanel .set-pills{flex-direction:row !important;align-items:flex-start !important;gap:6px !important;padding:6px clamp(20px,4vw,56px) 4px !important;background:none !important;border:0 !important;overflow:visible !important;}
+html.fp-setup #settingsPanel .set-pill{flex:1 1 0 !important;flex-direction:column !important;align-items:flex-start !important;gap:8px !important;min-height:0 !important;padding:0 !important;border:0 !important;background:none !important;border-radius:0 !important;font-size:12.5px !important;}
+html.fp-setup #settingsPanel .set-pill::before{content:"";display:block;width:100%;height:5px;border-radius:5px;background:rgba(255,255,255,.1);order:-1;transition:background .3s;}
+html.fp-setup #settingsPanel .set-pill.done::before{background:#3aa66a;}
+html.fp-setup #settingsPanel .set-pill.cur::before{background:linear-gradient(90deg,#f0c766,#e08a1e);box-shadow:0 0 12px rgba(240,199,102,.5);}
+html.fp-setup #settingsPanel .set-pill .n{display:none !important;}
+html.fp-setup #settingsPanel .set-pill.cur,html.fp-setup #settingsPanel .set-pill.cur:hover{background:none !important;border:0 !important;color:#f0c766 !important;}
+html.fp-setup #settingsPanel .set-pill .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+/* tartalom: középen, keskenyebb */
+html.fp-setup #settingsPanel .set-body{padding:34px clamp(20px,4vw,56px) 40px !important;}
+html.fp-setup #settingsPanel .set-body{display:block !important;}
+html.fp-setup #settingsPanel .set-body > *{max-width:980px !important;width:auto !important;box-sizing:border-box;margin-left:auto !important;margin-right:auto !important;}
+html.fp-setup #settingsPanel .set-body > *{animation:fpStUp .5s cubic-bezier(.22,1,.36,1) both;}
+html.fp-setup #settingsPanel .set-body > *:nth-child(2){animation-delay:.05s;} html.fp-setup #settingsPanel .set-body > *:nth-child(3){animation-delay:.1s;} html.fp-setup #settingsPanel .set-body > *:nth-child(n+4){animation-delay:.15s;}
+@keyframes fpStUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+html.fp-setup #settingsPanel .set-q{display:flex !important;align-items:flex-start !important;gap:18px !important;margin:0 auto 26px !important;padding:0 !important;background:none !important;border:0 !important;}
+html.fp-setup #settingsPanel .set-q .qn{flex:0 0 auto;width:56px !important;height:56px !important;border-radius:18px !important;display:grid !important;place-items:center !important;font:900 24px 'Manrope',sans-serif !important;background:linear-gradient(135deg,#f0c766,#d9ad46) !important;color:#1c1505 !important;box-shadow:0 12px 28px rgba(240,199,102,.25);}
+html.fp-setup #settingsPanel .set-q h3{font:800 34px/1.15 'Manrope','Inter',sans-serif !important;letter-spacing:-.01em;margin:2px 0 8px !important;color:#f5efe4 !important;}
+html.fp-setup #settingsPanel .set-q p{font-size:15px !important;line-height:1.55 !important;color:rgba(245,239,228,.68) !important;margin:0 !important;max-width:720px;}
+/* bolt-választó */
+html.fp-setup #settingsPanel .store-pick{background:none !important;border:0 !important;padding:0 !important;box-shadow:none !important;}
+html.fp-setup #settingsPanel .sp-search{display:flex !important;align-items:center;gap:10px;height:56px;padding:0 20px !important;margin-bottom:14px !important;border-radius:999px !important;border:1px solid rgba(255,255,255,.12) !important;background:#1a1612 !important;}
+html.fp-setup #settingsPanel .sp-search:focus-within{border-color:#f0c766 !important;box-shadow:0 0 0 4px rgba(240,199,102,.14);}
+html.fp-setup #settingsPanel .sp-search input{flex:1;height:100% !important;border:0 !important;background:transparent !important;box-shadow:none !important;font-size:16px !important;color:#f5efe4 !important;padding:0 !important;outline:none;}
+html.fp-setup #settingsPanel .store-list{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(250px,1fr)) !important;gap:10px !important;max-height:min(46vh,430px) !important;overflow:auto !important;padding:2px !important;background:none !important;border:0 !important;}
+html.fp-setup #settingsPanel .store-list .store{display:flex !important;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 16px !important;border-radius:18px !important;border:1px solid rgba(255,255,255,.08) !important;background:rgba(255,255,255,.03) !important;text-align:left;transition:border-color .15s,transform .15s,background .15s;}
+html.fp-setup #settingsPanel .store-list .store:hover{border-color:rgba(240,199,102,.5) !important;transform:translateY(-2px);}
+html.fp-setup #settingsPanel .store-list .store.on,html.fp-setup #settingsPanel .store-list .store.sel,html.fp-setup #settingsPanel .store-list .store[aria-pressed="true"]{border-color:#f0c766 !important;background:linear-gradient(135deg,rgba(240,199,102,.2),rgba(240,199,102,.05)) !important;}
+html.fp-setup #settingsPanel .store-list .store b{font-size:15px !important;color:#f5efe4 !important;}
+html.fp-setup #settingsPanel .store-list .store small{font-size:12.5px !important;color:rgba(245,239,228,.62) !important;}
+html.fp-setup #settingsPanel .store-list .store i{font-style:normal;font-size:11.5px !important;color:#f0c766 !important;opacity:.85;}
+html.fp-setup #settingsPanel .set-sub{margin:26px auto 12px !important;font-size:13px !important;color:rgba(245,239,228,.6) !important;}
+/* mezők */
+html.fp-setup #settingsPanel .fld > span{font-size:11.5px !important;font-weight:800 !important;letter-spacing:.08em;text-transform:uppercase;color:#a59c8c !important;margin-bottom:7px !important;}
+html.fp-setup #settingsPanel .fld input,html.fp-setup #settingsPanel .set-search input{height:52px !important;border-radius:14px !important;font-size:16px !important;background:#1a1612 !important;border:1px solid rgba(255,255,255,.12) !important;color:#f5efe4 !important;padding:0 16px !important;}
+html.fp-setup #settingsPanel .fld input:focus,html.fp-setup #settingsPanel .set-search input:focus{border-color:#f0c766 !important;box-shadow:0 0 0 4px rgba(240,199,102,.14) !important;}
+html.fp-setup #settingsPanel .set-grid2{gap:16px !important;}
+html.fp-setup #settingsPanel .logo-prev{gap:16px !important;}
+html.fp-setup #settingsPanel .logo-prev .lp{border-radius:20px !important;}
+html.fp-setup #settingsPanel .set-note{border-radius:16px !important;padding:12px 16px !important;}
+html.fp-setup #settingsPanel .emp-card,html.fp-setup #settingsPanel .shop-ph{border-radius:20px !important;background:rgba(255,255,255,.03) !important;border:1px solid rgba(255,255,255,.08) !important;}
+/* nyitvatartás: napok kártyán */
+html.fp-setup #settingsPanel .hours{display:grid !important;gap:8px !important;background:none !important;border:0 !important;padding:0 !important;}
+html.fp-setup #settingsPanel .hrow{border-radius:16px !important;border:1px solid rgba(255,255,255,.08) !important;background:rgba(255,255,255,.03) !important;padding:10px 16px !important;}
+html.fp-setup #settingsPanel .hrow.is-closed{opacity:.55;}
+html.fp-setup #settingsPanel .hday{font-weight:800 !important;font-size:15px !important;}
+/* dolgozók, programok */
+html.fp-setup #settingsPanel .people > *{border-radius:18px !important;}
+html.fp-setup #settingsPanel .add-emp{height:54px !important;border-radius:16px !important;border:2px dashed rgba(240,199,102,.45) !important;background:rgba(240,199,102,.05) !important;color:#f0c766 !important;font-weight:800 !important;}
+html.fp-setup #settingsPanel .app-card{border-radius:18px !important;}
+/* lábsáv: lebegő */
+html.fp-setup #settingsPanel .set-foot{margin:0 clamp(20px,4vw,56px) 18px !important;border:1px solid rgba(255,255,255,.08) !important;border-radius:999px !important;padding:10px 12px 10px 12px !important;background:rgba(26,22,18,.92) !important;box-shadow:0 18px 40px rgba(0,0,0,.45);}
+html.fp-setup #settingsPanel .set-err{bottom:110px !important;}
+@media (max-width:900px){
+  html.fp-setup #settingsPanel .set-pill .t{display:none !important;}
+  html.fp-setup #settingsPanel .set-pill.cur .t{display:block !important;}
+  html.fp-setup #settingsPanel .set-q h3{font-size:24px !important;}
+  html.fp-setup #settingsPanel .set-q .qn{width:44px !important;height:44px !important;font-size:19px !important;border-radius:14px !important;}
+  html.fp-setup #settingsPanel .set-q p{font-size:13.5px !important;}
+  html.fp-setup #settingsPanel .set-body{padding:18px 16px 24px !important;}
+  html.fp-setup #settingsPanel .set-foot{margin:0 10px calc(10px + env(safe-area-inset-bottom)) !important;}
+  html.fp-setup #settingsPanel .set-head .set-head-btns .action-btn{padding:0 12px !important;font-size:12.5px !important;}
+  html.fp-setup #settingsPanel .store-list{grid-template-columns:1fr !important;}
+}
+html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
+@media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full).fp-setup #settingsPanel .set-body > *{animation:none !important;} }
 @media print{ html.fp-setup #settingsPanel{display:none !important;} }
 </style>
 <script id="setupV2Js">
