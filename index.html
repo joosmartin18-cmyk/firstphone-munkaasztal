@@ -29539,12 +29539,12 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > *{margin:0 !important;min-width:0;}
       html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .axh{grid-column:1 / -1;}
       html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2{display:contents !important;}
-      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(1){grid-column:1 / span 5;grid-row:2;align-self:stretch;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2 > .ax-card:has(> .ax-attl){grid-column:1 / span 5;grid-row:2;align-self:stretch;}
       html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-kpis{grid-column:6 / -1;grid-row:2;}
       html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ui-tl{grid-column:1 / -1;grid-row:3;}
-      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(2){grid-column:1 / span 4;grid-row:4;}
-      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(5) > .ax-card:nth-child(1){grid-column:5 / span 4;grid-row:4;}
-      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(5) > .ax-card:nth-child(2){grid-column:9 / span 4;grid-row:4;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2 > .ax-card:has(> .ax-act){grid-column:1 / span 4;grid-row:4;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2 > .ax-card:has(> .ax-dtix){grid-column:5 / span 4;grid-row:4;}
+      html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2 > .ax-card:has(> .ax-dmsg){grid-column:9 / span 4;grid-row:4;}
     }
     html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpis{display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:10px !important;}
     html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi{position:relative;min-height:0 !important;height:auto !important;padding:14px 14px 12px !important;border-radius:18px !important;border:1px solid var(--ax-line) !important;background:rgba(255,255,255,.03) !important;box-shadow:none !important;overflow:hidden;}
@@ -29555,8 +29555,8 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi p{font-size:11.5px !important;margin-top:2px !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi .bar{margin-top:8px !important;height:5px !important;}
     html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpi:hover{border-color:rgba(240,199,102,.45) !important;transform:translateY(-1px);}
-    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(1){border:1px solid rgba(240,199,102,.4) !important;background:radial-gradient(120% 90% at 0% 0%,rgba(240,199,102,.14),transparent 60%),linear-gradient(180deg,rgba(31,26,20,.95),rgba(18,15,12,.95)) !important;box-shadow:0 18px 40px rgba(0,0,0,.35) !important;}
-    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2:nth-child(4) > .ax-card:nth-child(1) .ax-ch h3{font-size:20px !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2 > .ax-card:has(> .ax-attl){border:1px solid rgba(240,199,102,.4) !important;background:radial-gradient(120% 90% at 0% 0%,rgba(240,199,102,.14),transparent 60%),linear-gradient(180deg,rgba(31,26,20,.95),rgba(18,15,12,.95)) !important;box-shadow:0 18px 40px rgba(0,0,0,.35) !important;}
+    html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] > .ax-g2 > .ax-card:has(> .ax-attl) .ax-ch h3{font-size:20px !important;}
     html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ui-tl{border-radius:22px !important;}
     @media (min-width:1100px) and (max-width:1400px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"] .ax-kpis{grid-template-columns:repeat(2,minmax(0,1fr)) !important;} }
 `; } document.body.appendChild(st); axEmoStart(); }
@@ -71915,9 +71915,9 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
     /* a beállítás mindig teljes képernyőn nyílik — csak ez látszik (Martin kérése), a beállított boltnál is */
     var want = !!(p && p.style.display !== "none" && p.innerHTML && !busy());
     var first = !!(p && p.dataset.first === "1" && p.style.display !== "none");
-    /* adminként belépve egy még be nem állított bolt ne dobja fel a bolt-beállító varázslót — helyette az admin felület nyílik */
+    /* adminként belépve egy még be nem állított bolt ne dobja fel a teljes képernyős bolt-beállító varázslót (az admin felületet nem nyitjuk újra magától: bolt megnyitásakor betöltés közben is „nincs beállítva” látszik) */
     var C = window.FP_CLOUD;
-    if(first && C && C.admin){ want = false; first = false; if(!window.__fpAdmAuto && !vis("fcAdmin") && C.authKnown && window.fpAdminChoose){ window.__fpAdmAuto = 1; try{ fpAdminChoose(); }catch(e){} } }
+    if(first && C && C.admin){ want = false; first = false; }
     if(!want){ since = 0; if(H.classList.contains("fp-setup")) H.classList.remove("fp-setup"); H.classList.toggle("fp-setwait", first); return; }
     if(!since) since = Date.now();
     var dl = first ? 600 : 0;
