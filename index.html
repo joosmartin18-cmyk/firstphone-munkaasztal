@@ -60832,6 +60832,167 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   setInterval(rateTick, 20000); setTimeout(rateTick, 4000);
 
+  /* ===================== 🎄 Karácsony (dec. 23., zárás előtt) + 🎆 Év végi összesítő (dec. 27–31.) — PRÓBA 47 ===================== */
+  const YE_LIVE = false; /* Martin jóváhagyásáig csak kézzel (fpXmas(1) / fpYearEnd(1)) nyílik */
+  const yeLs = (k, v)=>{ try{ if(v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } };
+  const yeJ = k=>{ try{ return JSON.parse(localStorage.getItem(k) || "null"); }catch(e){ return null; } };
+  const yeDays = ["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
+  function yeStats(Y){
+    const n = new Date(), todayK = dateKey(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    const per = {}, R = { days:0, shifts:0, hours:0, per, rCnt:0, rSum:0, rTop:{}, cs:0, sx:0, months:{} };
+    Object.keys(state.schedule || {}).forEach(k=>{
+      if(k.indexOf(Y + "-") !== 0 || k > todayK) return;
+      let L = []; try{ L = dayPeople(parseAssign(effAssign(k))); }catch(e){}
+      if(!L.length) return;
+      R.days++; const dt = dayTimesK(k); const o = dt ? toMin(dt.open) : null, c = dt ? toMin(dt.close) : null, mi = dt ? toMin(dt.mid) : null;
+      L.forEach(x=>{ const p = personById(x.id); if(!p) return; R.shifts++;
+        let h = 0; if(o !== null && c !== null){ h = x.part === "am" ? (mi !== null ? mi - o : (c - o) / 2) : x.part === "pm" ? (mi !== null ? c - mi : (c - o) / 2) : c - o; }
+        const q = per[p.id] || (per[p.id] = { p, s:0, h:0 }); q.s++; q.h += h / 60; R.hours += h / 60; });
+      const mo = +k.slice(5, 7); R.months[mo] = (R.months[mo] || 0) + 1;
+    });
+    Object.keys(state.ratings || {}).forEach(k=>{ if(k.indexOf(Y + "-") !== 0) return; Object.values(state.ratings[k] || {}).forEach(r=>{ const s = +(r && r.s) || 0; if(s){ R.rCnt++; R.rSum += s; R.rTop[s] = (R.rTop[s] || 0) + 1; } }); });
+    const cs = yeJ("firstphone_csomag"); if(cs && cs.items) R.cs = cs.items.filter(x=> String(x.inAt || "").indexOf(String(Y)) > -1).length;
+    const sx = yeJ("firstphone_selejt"); if(sx && sx.items) R.sx = sx.items.filter(x=> String(x.date || "").indexOf(String(Y)) > -1).reduce((a, x)=> a + (+x.qty || 0), 0);
+    return R;
+  }
+  /* „tényleg használta”: legalább 30 beosztott nap az évben */
+  const yeActive = R=> R.days >= 30;
+  function yeCss(){
+    if(document.getElementById("yeCss")) return;
+    const st = document.createElement("style"); st.id = "yeCss"; st.textContent = `
+    .ye-back{position:fixed;inset:0;z-index:99995;display:grid;place-items:center;padding:16px;background:radial-gradient(900px 600px at 50% 0%,rgba(251,172,1,.16),transparent 65%),rgba(6,6,10,.86);animation:yeFade .4s ease both;overflow:hidden;font-family:'Inter',sans-serif;}
+    .ye-back.out{animation:yeFade .3s ease reverse forwards;} @keyframes yeFade{from{opacity:0}to{opacity:1}}
+    .ye-back .ye-box{position:relative;width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;box-sizing:border-box;border-radius:28px;background:#15151a !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 100px rgba(0,0,0,.65);color:#f3f1ea;text-align:center;padding:30px 26px 22px;animation:yePop .55s cubic-bezier(.2,.9,.3,1.15) both;}
+    @keyframes yePop{from{transform:translateY(20px) scale(.95);opacity:0}to{transform:none;opacity:1}}
+    .ye-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#ddd;cursor:pointer;font-size:14px;z-index:3;}
+    .ye-kick{display:inline-block;padding:5px 13px;border-radius:99px;background:rgba(251,172,1,.12);border:1px solid rgba(251,172,1,.3);color:#f0c766;font:700 12px 'Inter',sans-serif;letter-spacing:.04em;}
+    .ye-h{margin:14px 0 6px;font:800 34px/1.12 'Poppins',sans-serif;letter-spacing:-.02em;color:#fff;}
+    .ye-h em{font-style:normal;background:linear-gradient(135deg,#fde08a,#FBAC01);-webkit-background-clip:text;background-clip:text;color:transparent;}
+    .ye-p{margin:0 auto 18px;max-width:460px;color:#b9b4a6;font-size:14.5px;line-height:1.55;} .ye-p b{color:#fff;}
+    .ye-back .ye-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:200px;padding:14px 22px;border-radius:99px !important;border:0 !important;background:linear-gradient(135deg,#fbc94a,#FBAC01) !important;color:#1a1204 !important;font:800 15px 'Inter',sans-serif;cursor:pointer;box-shadow:0 10px 26px rgba(251,172,1,.3);transition:transform .15s;} .ye-btn:hover{transform:translateY(-2px);}
+    .ye-lnk{display:block;margin:10px auto 0;border:0;background:none;color:#9f9a8d;font:700 13px 'Inter',sans-serif;cursor:pointer;}
+    .ye-dots{display:flex;gap:5px;justify-content:center;margin:18px 0 0;} .ye-dots i{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.15);transition:all .35s;} .ye-dots i.on{width:24px;background:#FBAC01;}
+    .ye-sl{animation:yeSl .5s cubic-bezier(.2,.8,.2,1) both;} @keyframes yeSl{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+    .ye-big{font:900 92px/1 'Poppins',sans-serif;letter-spacing:-.04em;background:linear-gradient(180deg,#fff3c4,#FBAC01 70%,#b77b00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 30px rgba(251,172,1,.25));margin:6px 0 2px;animation:yeYr 1s cubic-bezier(.2,.9,.3,1.2) .15s both;}
+    @keyframes yeYr{from{transform:scale(.6);opacity:0;letter-spacing:.2em}to{transform:none;opacity:1}}
+    .ye-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 18px;}
+    .ye-t{padding:16px 10px 14px;border-radius:20px;background:#1e1e25;border:1px solid rgba(255,255,255,.07);animation:yeUp .5s cubic-bezier(.2,.8,.2,1) both;}
+    .ye-t .ic{font-size:24px;} .ye-t b{display:block;margin:6px 0 2px;font:800 28px/1 'Poppins',sans-serif;color:#fff;} .ye-t small{display:block;color:#a9a497;font:600 12px 'Inter',sans-serif;}
+    @keyframes yeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    .ye-team{display:grid;gap:8px;margin:16px 0 18px;text-align:left;}
+    .ye-m{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:18px;background:#1e1e25;border:1px solid rgba(255,255,255,.07);animation:yeUp .5s cubic-bezier(.2,.8,.2,1) both;}
+    .ye-m .op-av{width:42px;height:42px;flex:0 0 42px;border-radius:50%;font-size:14px;box-shadow:0 0 0 2px #1e1e25,0 0 0 4px var(--pc);}
+    .ye-m span{flex:1;min-width:0;} .ye-m span b{display:block;font:800 16px 'Poppins',sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .ye-m span small{color:#a9a497;font-size:12.5px;font-weight:600;}
+    .ye-m em{font-style:normal;flex:none;padding:6px 12px;border-radius:99px;background:rgba(251,172,1,.12);color:#f0c766;font:800 12px 'Inter',sans-serif;}
+    .ye-fw{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;}
+    .ye-fw i{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);opacity:0;animation:yeBoom 2.4s ease-out var(--d) infinite;}
+    @keyframes yeBoom{0%{opacity:0;transform:translate(0,0) scale(.4)}12%{opacity:1}70%{opacity:.9}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.2)}}
+    .ye-glass{font-size:54px;display:inline-block;animation:yeClink 1.6s ease-in-out infinite;transform-origin:50% 90%;} @keyframes yeClink{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+    /* karácsony */
+    .ye-back .xm-box{background:radial-gradient(500px 260px at 50% -10%,rgba(251,172,1,.22),transparent 70%),linear-gradient(180deg,#141a24,#15151a 60%) !important;}
+    .xm-snow{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;}
+    .xm-snow i{position:absolute;top:-10px;left:var(--l);width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:.75;animation:xmFall var(--t) linear var(--d) infinite;}
+    @keyframes xmFall{to{transform:translate(var(--w),560px)}}
+    .xm-tree{position:relative;width:120px;height:132px;margin:0 auto 4px;}
+    .xm-tree svg{width:100%;height:100%;overflow:visible;}
+    .xm-tree .lt{animation:xmTw 1.6s ease-in-out infinite;} .xm-tree .lt:nth-of-type(2n){animation-delay:.5s} .xm-tree .lt:nth-of-type(3n){animation-delay:1s}
+    @keyframes xmTw{0%,100%{opacity:1}50%{opacity:.25}}
+    .xm-star{transform-origin:60px 14px;animation:xmStar 3s ease-in-out infinite;} @keyframes xmStar{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+    .xm-ppl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 14px;} .xm-ppl span{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 4px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font:700 13px 'Inter',sans-serif;} .xm-ppl .op-av{width:26px;height:26px;flex:0 0 26px;border-radius:50%;font-size:10px;}
+    .xm-next{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;padding:9px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#cfcabd;font:600 13px 'Inter',sans-serif;} .xm-next b{color:#fff;}
+    html body .ye-back.ye-back{background-color:rgba(6,6,10,.88) !important;}
+    html body .ye-back .ye-box.ye-box{background-color:#15151a !important;opacity:1 !important;}
+    html body .ye-back .ye-btn.ye-btn{background-color:#FBAC01 !important;color:#1a1204 !important;}
+    html body.light-theme .ye-back .ye-box.ye-box{background-color:#fffdf8 !important;}
+    html.fp-lite .xm-snow,html.fp-lite .ye-fw{display:none;} html.fp-lite .ye-glass,html.fp-lite .xm-star,html.fp-lite .xm-tree .lt{animation:none;}
+    @media (prefers-reduced-motion:reduce){ html:not(.fp-anim-full) .xm-snow,html:not(.fp-anim-full) .ye-fw{display:none;} }
+    @media (max-width:520px){ .ye-back .ye-box{padding:26px 16px 18px;border-radius:24px;} .ye-h{font-size:27px;} .ye-big{font-size:72px;} .ye-tiles{grid-template-columns:repeat(2,1fr);gap:8px;} .ye-t b{font-size:24px;} .ye-back .ye-btn{width:100%;min-width:0;} }
+    body.light-theme .ye-back .ye-box{background:#fffdf8 !important;color:#1d1b16;border-color:rgba(0,0,0,.08);} body.light-theme .ye-back .xm-box{background:radial-gradient(500px 260px at 50% -10%,rgba(251,172,1,.25),transparent 70%),linear-gradient(180deg,#eef3fb,#fffdf8 60%) !important;}
+    body.light-theme .ye-h,body.light-theme .ye-t b,body.light-theme .ye-m span b,body.light-theme .ye-p b,body.light-theme .xm-next b{color:#1d1b16;} body.light-theme .ye-p,body.light-theme .xm-next{color:#5d584c;}
+    body.light-theme .ye-t,body.light-theme .ye-m,body.light-theme .xm-ppl span,body.light-theme .xm-next{background:#f6f2e8;border-color:rgba(0,0,0,.07);} body.light-theme .ye-m .op-av{box-shadow:0 0 0 2px #f6f2e8,0 0 0 4px var(--pc);}
+    body.light-theme .xm-snow i{background:#9fb4d6;} body.light-theme .ye-x{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);color:#333;}
+    `; document.head.appendChild(st);
+  }
+  function yeShell(cls){
+    yeCss(); const b = document.createElement("div"); b.className = "ye-back";
+    b.innerHTML = `<div class="ye-box ${cls || ""}" role="dialog"></div>`; document.body.appendChild(b);
+    const close = ()=>{ b.classList.add("out"); setTimeout(()=> b.remove(), 300); };
+    b.addEventListener("click", e=>{ if(e.target.closest(".ye-x") || e.target.closest("[data-yeclose]")) close(); });
+    document.addEventListener("keydown", function k(e){ if(e.key === "Escape"){ document.removeEventListener("keydown", k); if(b.isConnected) close(); } });
+    return { b, box:b.firstElementChild, close };
+  }
+  const yeFw = ()=> `<div class="ye-fw">${Array.from({ length:36 }, (_, i)=>{ const g = i % 4, cx = [22, 76, 50, 34][g], cy = [26, 22, 14, 34][g], a = (i * 37) % 360 * Math.PI / 180, r = 60 + (i * 13) % 50;
+    return `<i style="left:${cx}%;top:${cy}%;--c:${["#FBAC01","#ff6b8a","#6bc7ff","#8ef0b0"][g]};--x:${Math.round(Math.cos(a) * r)}px;--y:${Math.round(Math.sin(a) * r)}px;--d:${(g * .6).toFixed(1)}s"></i>`; }).join("")}</div>`;
+  const yeNum = v=> String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  function yeCount(root){ root.querySelectorAll("[data-n]").forEach(el=>{ const to = +el.dataset.n, dec = el.dataset.dec ? 1 : 0, t0 = performance.now(), D = 1100;
+    const f = t=>{ const k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3), v = to * e; el.textContent = dec ? v.toFixed(1).replace(".", ",") : yeNum(v); if(k < 1 && el.isConnected) requestAnimationFrame(f); };
+    if(document.documentElement.classList.contains("fp-lite")) el.textContent = dec ? to.toFixed(1).replace(".", ",") : yeNum(to); else requestAnimationFrame(f); }); }
+  function yearEndOpen(force){
+    if(document.querySelector(".ye-back")) return;
+    const n = new Date(), Y = n.getMonth() === 0 ? n.getFullYear() - 1 : n.getFullYear(), R = yeStats(Y);
+    if(!force && !yeActive(R)) return;
+    const loc = (state.settings.location || "").trim(), team = Object.values(R.per).filter(x=> x.s > 0).sort((a, b)=> b.s - a.s);
+    const RE = ["", "😫", "😕", "😐", "🙂", "🤩"], top = Object.keys(R.rTop).sort((a, b)=> R.rTop[b] - R.rTop[a])[0];
+    const tiles = [["📅", R.days, "nap nyitva, beosztással"], ["👥", R.shifts, "műszak a beosztásban"], ["⏱️", R.hours, "óra munka"]]
+      .concat(R.cs ? [["📦", R.cs, "csomag kezelve"]] : []).concat(R.sx ? [["🗑️", R.sx, "selejt rögzítve"]] : [])
+      .concat(R.rCnt ? [[RE[top] || "⭐", R.rSum / R.rCnt, "átlagos műszak-értékelés", 1]] : []).slice(0, 6);
+    const S = yeShell(""); let i = 0; const N = 4;
+    const dots = ()=> `<div class="ye-dots">${Array.from({ length:N }, (_, k)=> `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div>`;
+    const draw = ()=>{
+      let h = "";
+      if(i === 0) h = `<span class="ye-kick">FirstPhone${loc ? " " + esc(loc) : ""} · Munkaasztal</span><div class="ye-big">${Y}</div><h2 class="ye-h">Ez volt a <em>mi évünk</em></h2>
+        <p class="ye-p">Egy rövid visszatekintés arra, mennyi mindent csináltatok idén a Munkaasztallal.</p><button type="button" class="ye-btn" data-yenx="1">Nézzük! →</button>`;
+      else if(i === 1) h = `<span class="ye-kick">${Y} számokban</span><h2 class="ye-h">Egy év a <em>boltban</em></h2>
+        <div class="ye-tiles">${tiles.map((t, k)=> `<div class="ye-t" style="animation-delay:${(.08 * k).toFixed(2)}s"><div class="ic">${t[0]}</div><b data-n="${t[3] ? t[1].toFixed(1) : Math.round(t[1])}"${t[3] ? ' data-dec="1"' : ""}>0</b><small>${t[2]}</small></div>`).join("")}</div>
+        <button type="button" class="ye-btn" data-yenx="1">Tovább →</button>`;
+      else if(i === 2) h = `<span class="ye-kick">Köszönjük, csapat!</span><h2 class="ye-h">Nélkületek <em>nem ment volna</em></h2>
+        <div class="ye-team">${team.length ? team.map((x, k)=> `<div class="ye-m" style="--pc:${x.p.hex};animation-delay:${(.07 * k).toFixed(2)}s">${avHtml(x.p)}<span><b>${esc(x.p.name)}</b><small>${x.s} műszak · kb. ${yeNum(x.h)} óra</small></span><em>Köszönjük!</em></div>`).join("") : `<p class="ye-p">Köszönjük mindenkinek az egész éves munkát!</p>`}</div>
+        <button type="button" class="ye-btn" data-yenx="1">Tovább →</button>`;
+      else h = `${yeFw()}<div class="ye-glass">🥂</div><h2 class="ye-h">Köszönjük, hogy <em>egész évben</em> használtátok!</h2>
+        <p class="ye-p">Minden beosztás, cetli, leltár és üzenet sokat segített. <b>Tali ${Y + 1}-ben!</b></p>
+        <h2 class="ye-h" style="font-size:30px;margin-top:4px"><em>Boldog új évet!</em> 🎆</h2><p class="ye-p" style="margin-bottom:16px">Pihenjétek ki magatokat — jövőre is itt leszünk.</p>
+        <button type="button" class="ye-btn" data-yeclose="1">Boldog új évet! 🎉</button>`;
+      S.box.innerHTML = `<button type="button" class="ye-x" title="Bezárás" data-yeclose="1">✕</button><div class="ye-sl">${h}</div>${dots()}`;
+      yeCount(S.box);
+    };
+    S.box.addEventListener("click", e=>{ if(e.target.closest("[data-yenx]")){ i = Math.min(N - 1, i + 1); draw(); } });
+    draw(); return S;
+  }
+  function xmasOpen(force){
+    if(document.querySelector(".ye-back")) return;
+    const n = new Date(), key = dateKey(n.getFullYear(), n.getMonth() + 1, n.getDate());
+    let ppl = []; try{ ppl = dayPeople(parseAssign(effAssign(key))).map(x=> personById(x.id)).filter(Boolean); }catch(e){}
+    let nx = ""; for(let k = 1; k < 10; k++){ const d = new Date(n.getFullYear(), n.getMonth(), n.getDate() + k), kk = dateKey(d.getFullYear(), d.getMonth() + 1, d.getDate()), dt = dayTimesK(kk), pa = (state.schedule || {})[kk];
+      if(dt && !(pa && pa.type === "unnep")){ nx = `${HU_MONTHS[d.getMonth()].toLowerCase()} ${d.getDate()}., ${yeDays[d.getDay()]} ${dt.open}-tól`; break; } }
+    const snow = `<div class="xm-snow">${Array.from({ length:40 }, (_, i)=> `<i style="--l:${(i * 41) % 100}%;--s:${2 + i % 4}px;--t:${(6 + (i * 7) % 7).toFixed(1)}s;--d:-${((i * 13) % 60 / 10).toFixed(1)}s;--w:${(i % 2 ? 1 : -1) * (10 + i % 30)}px"></i>`).join("")}</div>`;
+    const tree = `<div class="xm-tree"><svg viewBox="0 0 120 132"><path class="xm-star" d="M60 2l3.5 8 8.5.6-6.5 5.4 2.1 8.3L60 19.8l-7.6 4.5 2.1-8.3-6.5-5.4 8.5-.6z" fill="#FBAC01"/>
+      <path d="M60 22L30 62h12L20 94h14L8 120h104L86 94h14L78 62h12z" fill="#1f8a5b"/><path d="M60 22L30 62h12L20 94h14L8 120h52z" fill="#23a06a"/><rect x="52" y="120" width="16" height="10" rx="2" fill="#7a4a24"/>
+      ${[[50,50,"#ff6b6b"],[70,58,"#FBAC01"],[40,80,"#6bc7ff"],[78,86,"#ff6b8a"],[58,76,"#fff3c4"],[30,108,"#FBAC01"],[90,110,"#6bc7ff"],[60,104,"#ff6b6b"],[48,96,"#8ef0b0"],[74,40,"#fff3c4"]].map(([x, y, c])=> `<circle class="lt" cx="${x}" cy="${y}" r="3.6" fill="${c}"/>`).join("")}</svg></div>`;
+    const S = yeShell("xm-box");
+    S.box.innerHTML = `${snow}<button type="button" class="ye-x" title="Bezárás" data-yeclose="1">✕</button><div class="ye-sl" style="position:relative">${tree}
+      <span class="ye-kick">${HU_MONTHS[n.getMonth()]} ${n.getDate()}. · Karácsony előtt</span>
+      <h2 class="ye-h"><em>Boldog Karácsonyt!</em></h2>
+      <p class="ye-p">Köszönjük az egész éves munkát${ppl.length ? " — és a mai napot is" : ""}! Kellemes ünnepeket és jó pihenést kívánunk.</p>
+      ${ppl.length ? `<div class="xm-ppl">${ppl.map(p=> `<span>${avHtml(p)}${esc(shortName(p))}</span>`).join("")}</div>` : ""}
+      ${nx ? `<div class="xm-next">🗓️ Legközelebb nyitunk: <b>${nx}</b></div><br>` : ""}
+      <button type="button" class="ye-btn" data-yeclose="1">Köszönjük! 🎄</button></div>`;
+    return S;
+  }
+  window.fpXmas = xmasOpen; window.fpYearEnd = yearEndOpen;
+  function yeTick(){
+    try{
+      if(!YE_LIVE || !state.settings.configured || document.querySelector(".ye-back, .rt-back, .shift-back, .modal-backdrop.show, .popup-backdrop.show")) return;
+      if(document.documentElement.classList.contains("fc-locked") || (window.FP_CLOUD && FP_CLOUD.admin)) return;
+      const n = new Date(), Y = n.getFullYear(), mo = n.getMonth(), d = n.getDate();
+      if(mo === 11 && d === 23 && !yeLs("firstphone_xmas_" + Y)){
+        const dt = dayTimesK(dateKey(Y, 12, 23)), cm = dt ? toMin(dt.close) : null, now = n.getHours() * 60 + n.getMinutes();
+        if(cm !== null && now >= cm - 60){ yeLs("firstphone_xmas_" + Y, "1"); xmasOpen(); return; }
+      }
+      if(mo === 11 && d >= 27 && !yeLs("firstphone_ye_" + Y)){ const R = yeStats(Y); if(yeActive(R)){ yeLs("firstphone_ye_" + Y, "1"); yearEndOpen(); } }
+    }catch(e){}
+  }
+  setInterval(yeTick, 30000); setTimeout(yeTick, 6000);
+
   /* ===================== Summary ===================== */
   function computeCounts(){
     const counts = {};
