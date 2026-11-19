@@ -32115,6 +32115,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     `;
     document.head.appendChild(st);
   }
+  window.fpAdminChoose = ()=> adminChoose();
   async function adminChoose(){
     if(window.FP_EMBED){ try{ window.parent.postMessage({ fpEmb:"close" }, location.origin); }catch(e){} return; }
     const r = await adminPicker(); if(!r || r.uid === S.target) return;
@@ -71744,6 +71745,9 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
     /* a beállítás mindig teljes képernyőn nyílik — csak ez látszik (Martin kérése), a beállított boltnál is */
     var want = !!(p && p.style.display !== "none" && p.innerHTML && !busy());
     var first = !!(p && p.dataset.first === "1" && p.style.display !== "none");
+    /* adminként belépve egy még be nem állított bolt ne dobja fel a bolt-beállító varázslót — helyette az admin felület nyílik */
+    var C = window.FP_CLOUD;
+    if(first && C && C.admin){ want = false; first = false; if(!window.__fpAdmAuto && !vis("fcAdmin") && C.authKnown && window.fpAdminChoose){ window.__fpAdmAuto = 1; try{ fpAdminChoose(); }catch(e){} } }
     if(!want){ since = 0; if(H.classList.contains("fp-setup")) H.classList.remove("fp-setup"); H.classList.toggle("fp-setwait", first); return; }
     if(!since) since = Date.now();
     var dl = first ? 600 : 0;
