@@ -67072,6 +67072,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   window.fpPrintSchedule = fpPrintSchedule;
   { const pb = document.getElementById("printBtn"); if(pb) pb.onclick = ()=>{ fpPrintSchedule().catch(e=> toast("Nyomtatás hiba: " + (e && e.message || e))); }; }
   window.fpSubIds = ()=> subIdsInMonth();
+  /* keltezés minden beosztás-nyomtatványon (Martin kérése): „Kelt: Kaposvár, 2026. november 19.” — a bolt városa + a mai nap */
+  function keltCity(){ let c = String((state.settings && state.settings.location) || "").trim(); c = c.split(/\s+[-–—]\s+/)[0].replace(/\s+(TESCO|Tesco|FORUM|Forum|Pláza|Plaza|Árkád|Arkád)\b.*$/, "").replace(/\s+(I|V|X|L)+\.?$/i, "").trim(); return c; }
+  function keltStr(){ const d = new Date(), c = keltCity(); return `Kelt: ${c ? c + ", " : ""}${d.getFullYear()}. ${HU_MONTHS[d.getMonth()].toLowerCase()} ${d.getDate()}.`; }
+  window.__fpKelt = keltStr;
   async function drawScheduleCanvas(personKey){ try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
     const W = 5432, H = 7680; // 8K-class raster, A4 aspect ratio
     const canvas = document.createElement("canvas");
@@ -67282,7 +67286,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.textAlign = "left";
     ctx.fillText(companyLine() || workplaceName(), marginX+W*0.02, y+footH*0.8);
     ctx.textAlign = "right";
-    ctx.fillText(`Generálva: ${new Date().toLocaleDateString("hu-HU")}`, W-marginX-W*0.02, y+footH*0.8);
+    ctx.save(); ctx.font = `800 ${Math.round(W*0.0125)}px Manrope, Arial, sans-serif`; ctx.fillStyle = C.light ? "#111" : (C.text || "#111"); ctx.fillText(keltStr(), W-marginX-W*0.02, y+footH*0.8); ctx.restore();
     ctx.textAlign = "left";
 
     return canvas;
@@ -67695,6 +67699,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
     // ---- Jelmagyarázat ----
     let legendY = y + total*rowH + H*0.024;
+    const attKelt = ()=>{ ctx.save(); ctx.textAlign = "left"; ctx.fillStyle = BLACK; ctx.font = `700 ${Math.round(W*0.0125)}px Manrope, Arial, sans-serif`; ctx.fillText(keltStr(), marginX, Math.min(H - H*0.018, legendY + H*0.045)); ctx.restore(); };
     const legendBoxS = H*0.014;
     function legendItem(lx, color, textColor, label){
       ctx.fillStyle = color; ctx.fillRect(lx, legendY-legendBoxS*0.8, legendBoxS, legendBoxS);
@@ -67722,6 +67727,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       cx += gap; ctx.fillText(t1, cx, base); cx += w1 + W*0.02;
       ctx.beginPath(); ctx.moveTo(cx, base + 4); ctx.lineTo(cx + gap - W*0.008, base + 4); ctx.stroke();
       cx += gap; ctx.fillText(t2, cx, base);
+      attKelt();
       return canvas;
     }
     lx = legendItem(lx, VACATION_BG, VACATION_TEXT, "Szabadság");
@@ -67759,6 +67765,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       ctx.fillText(sumNote, boxX+boxPadX+wLabel+wValue, baseY);
     }
 
+    attKelt();
     return canvas;
   }
 
@@ -67967,6 +67974,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     lg.forEach(([c, t])=>{ ctx.fillStyle = c; ctx.fillRect(lx, ly - H * 0.011, H * 0.013, H * 0.013); ctx.strokeStyle = "#9a9aa6"; ctx.lineWidth = 1.5; ctx.strokeRect(lx, ly - H * 0.011, H * 0.013, H * 0.013); ctx.fillStyle = DIM; ctx.fillText(t, lx + H * 0.019, ly); lx += H * 0.019 + ctx.measureText(t).width + W * 0.03; });
     ctx.textAlign = "right"; ctx.fillStyle = FAINT; ctx.fillText("Érk. = érkezés · Táv. = távozás · Kézjegy = a munkavállaló kézjegye", W - mX, ly); ctx.textAlign = "left";
     const sgY = H - H * 0.035;
+    ctx.font = F(700, W * 0.0125); ctx.fillStyle = INK; ctx.textAlign = "left"; ctx.fillText(keltStr(), mX, Math.min(sgY - H * 0.032, ly + H * 0.03));
     [["munkáltató aláírása", mX + tw * 0.04], ["munkavállaló aláírása", mX + tw * 0.56]].forEach(([t, x])=>{ ctx.strokeStyle = "#16161c"; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(x, sgY - H * 0.012); ctx.lineTo(x + tw * 0.4, sgY - H * 0.012); ctx.stroke(); ctx.font = F(700, W * 0.0105); ctx.fillStyle = DIM; ctx.textAlign = "center"; ctx.fillText(t, x + tw * 0.2, sgY + H * 0.004); ctx.textAlign = "left"; });
     return cv;
   }
@@ -68003,7 +68011,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.font = F(400, W * 0.0112); ctx.fillStyle = DIM; ctx.fillText("* a kereskedelemről szóló 2005. évi CLXIV. törvény · Forrás: az egyszerűsített foglalkoztatásról szóló 2010. évi LXXV. törvény (Efo. tv.) 1. §", mX, y + H * 0.004);
     /* kelt + aláírások */
     const sy = H - H * 0.11; ctx.font = F(700, W * 0.0145); ctx.fillStyle = INK;
-    ctx.fillText(`Kelt: ${state.settings.location || ""}, ${state.year}. ${HU_MONTHS[state.month - 1].toLowerCase()} ……`, mX, sy - H * 0.05);
+    ctx.fillText(keltStr(), mX, sy - H * 0.05);
     [["munkáltató aláírása", d.cn], ["munkavállaló aláírása", d.n]].forEach(([t, nm], i)=>{ const x = mX + (W - mX * 2) * (0.02 + 0.53 * i), w = (W - mX * 2) * 0.42;
       ctx.strokeStyle = INK; ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(x, sy + H * 0.03); ctx.lineTo(x + w, sy + H * 0.03); ctx.stroke();
       ctx.textAlign = "center"; ctx.font = F(700, W * 0.0125); ctx.fillStyle = DIM; ctx.fillText(t, x + w / 2, sy + H * 0.05); if(nm){ ctx.font = F(800, W * 0.0125); ctx.fillStyle = INK; ctx.fillText(nm, x + w / 2, sy + H * 0.069); } ctx.textAlign = "left"; });
@@ -68011,6 +68019,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   window.fpEfoCanvas = d=> drawEfoCanvas(d);
 
+  window.__fpDocTest = { s:drawScheduleCanvas, a:drawAttendanceCanvas, e:drawEfoCanvas, i:drawEfoInfoCanvas };
   async function exportAttendanceSheet(personKey, opt){
     try{
       toast("Jelenléti ív készítése…");
