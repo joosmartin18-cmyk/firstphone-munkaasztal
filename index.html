@@ -60833,7 +60833,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   setInterval(rateTick, 20000); setTimeout(rateTick, 4000);
 
   /* ===================== 🎄 Karácsony (dec. 23., zárás előtt) + 🎆 Év végi összesítő (dec. 27–31.) — PRÓBA 47 ===================== */
-  const YE_LIVE = false; /* Martin jóváhagyásáig csak kézzel (fpXmas(1) / fpYearEnd(1)) nyílik */
+  const YE_LIVE = true; /* Martin jóváhagyta (2026-11-19) — kézi próba: fpXmas(1) / fpYearEnd(1) */
   const yeLs = (k, v)=>{ try{ if(v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }catch(e){ return null; } };
   const yeJ = k=>{ try{ return JSON.parse(localStorage.getItem(k) || "null"); }catch(e){ return null; } };
   const yeDays = ["vasárnap","hétfő","kedd","szerda","csütörtök","péntek","szombat"];
