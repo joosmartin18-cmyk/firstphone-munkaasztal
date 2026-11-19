@@ -72524,5 +72524,41 @@ body.light-theme #shiftModal .sh-n{background:rgba(0,0,0,.03);border-color:rgba(
 body.light-theme #shiftModal .sh-dots i{background:rgba(0,0,0,.1);} body.light-theme #shiftModal .sh-dots i.on{background:linear-gradient(90deg,#fbc94a,#FBAC01);}
 @media (max-width:520px){ #shiftModal .sh-h{padding:22px 16px 14px;} #shiftModal .sh-sl{padding:6px 14px 2px;} #shiftModal .sh-dots{margin:12px 16px 2px;} #shiftModal .sh-n{margin:12px 14px 16px;} #shiftModal .sh-h h2{font-size:21px;} }
 </style>
+<style id="rtV2Css">
+/* ===== PRÓBA 46: „Milyen volt a mai műszak?” értékelő ablak v2 (mindkét kinézet) ===== */
+.rt-back.rt-back{background:radial-gradient(700px 420px at 50% 0%,rgba(251,172,1,.14),transparent 65%),rgba(8,8,12,.76) !important;}
+.rt-back .rt-box{width:min(540px,100%) !important;padding:0 !important;border-radius:26px !important;background:#16161b !important;border:1px solid rgba(255,255,255,.08) !important;box-shadow:0 40px 90px rgba(0,0,0,.6) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;color:#f3f1ea !important;overflow:hidden;max-height:calc(100vh - 32px);overflow-y:auto;box-sizing:border-box;}
+.rt-back .rt-glow{display:none !important;}
+.rt-back .rt-x{top:14px !important;right:14px !important;background:rgba(255,255,255,.06) !important;border-color:rgba(255,255,255,.1) !important;color:#ddd !important;z-index:2;}
+.rt-back .rt-top{text-align:center;padding:26px 22px 18px;background:radial-gradient(420px 160px at 50% -30%,rgba(251,172,1,.3),transparent 70%),linear-gradient(180deg,rgba(251,172,1,.07),transparent);border-bottom:1px solid rgba(255,255,255,.06);}
+.rt-back .rt-top::before{content:"★";display:grid;place-items:center;width:58px;height:58px;margin:0 auto 12px;border-radius:50%;background:linear-gradient(145deg,#fbc94a,#FBAC01) !important;background-color:#FBAC01 !important;color:#1a1204;font-size:28px;box-shadow:inset 0 0 0 40px #FBAC01,0 10px 26px rgba(251,172,1,.35) !important;}
+.rt-back .rt-pill{background:rgba(255,255,255,.06) !important;border:1px solid rgba(255,255,255,.08) !important;color:#cfcabd !important;font:600 12.5px 'Inter',sans-serif !important;}
+.rt-back .rt-top h2{margin:10px 0 4px !important;font:800 24px 'Poppins',sans-serif !important;color:#fff !important;letter-spacing:-.01em;}
+.rt-back .rt-top p{margin:0 !important;color:#a9a497 !important;font-size:13px !important;}
+.rt-back .rt-ppl{margin:16px 22px 0 !important;}
+.rt-back .rt-p{background:#1e1e25 !important;border:1px solid rgba(255,255,255,.1) !important;color:#f3f1ea !important;}
+.rt-back .rt-p.on{border-color:#FBAC01 !important;background:rgba(251,172,1,.12) !important;box-shadow:0 0 0 3px rgba(251,172,1,.15) !important;}
+.rt-back .rt-faces{margin:16px 22px 12px !important;gap:8px !important;}
+.rt-back .rt-faces button{background:#1e1e25 !important;border:1px solid rgba(255,255,255,.07) !important;border-radius:18px !important;padding:14px 2px 11px !important;box-shadow:none !important;color:#f3f1ea !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
+.rt-back .rt-faces button:hover{border-color:var(--rc) !important;background:#23232b !important;}
+.rt-back .rt-faces button.on{background:color-mix(in srgb,var(--rc) 16%,#1e1e25) !important;border-color:var(--rc) !important;box-shadow:0 0 0 3px color-mix(in srgb,var(--rc) 22%,transparent),0 10px 24px color-mix(in srgb,var(--rc) 25%,transparent) !important;}
+.rt-back .rt-faces b{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:99px;background:color-mix(in srgb,var(--rc) 18%,transparent);margin-top:4px;}
+.rt-back .rt-faces small{color:#bdb8aa !important;font-size:10.5px !important;}
+.rt-back .rt-note{display:block;width:calc(100% - 44px) !important;margin:0 22px !important;background:#1e1e25 !important;border:1px solid rgba(255,255,255,.1) !important;border-radius:16px !important;color:#f3f1ea !important;padding:12px 14px !important;font:500 13.5px 'Inter',sans-serif !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
+.rt-back .rt-note:focus{border-color:#FBAC01 !important;outline:none;}
+.rt-back .rt-foot{margin:14px 22px 20px !important;}
+.rt-back .rt-foot{display:flex !important;gap:10px !important;} .rt-back .rt-foot .action-btn{flex:1 1 0 !important;min-width:0 !important;width:auto !important;margin:0 !important;border-radius:99px !important;padding:13px !important;font:800 14px 'Inter',sans-serif !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
+.rt-back .rt-later{background:rgba(255,255,255,.04) !important;border:1px solid rgba(255,255,255,.1) !important;color:#cfcabd !important;box-shadow:none !important;}
+.rt-back .rt-save{background:linear-gradient(135deg,#fbc94a,#FBAC01) !important;border:0 !important;color:#1a1204 !important;box-shadow:0 8px 22px rgba(251,172,1,.3) !important;}
+.rt-back .rt-save:disabled{opacity:.4 !important;box-shadow:none !important;}
+body.light-theme .rt-back .rt-box{background:#fffdf8 !important;color:#1d1b16 !important;border-color:rgba(0,0,0,.08) !important;}
+body.light-theme .rt-back .rt-top h2{color:#1d1b16 !important;} body.light-theme .rt-back .rt-top p{color:#6d685b !important;}
+body.light-theme .rt-back .rt-pill{background:rgba(0,0,0,.04) !important;border-color:rgba(0,0,0,.07) !important;color:#5d584c !important;}
+body.light-theme .rt-back :is(.rt-p,.rt-faces button,.rt-note){background:#f6f2e8 !important;border-color:rgba(0,0,0,.08) !important;color:#1d1b16 !important;}
+body.light-theme .rt-back .rt-faces small{color:#6d685b !important;}
+body.light-theme .rt-back .rt-later{background:transparent !important;border-color:rgba(0,0,0,.12) !important;color:#4a463d !important;}
+body.light-theme .rt-back .rt-x{background:rgba(0,0,0,.05) !important;border-color:rgba(0,0,0,.1) !important;color:#333 !important;}
+@media (max-width:520px){ .rt-back .rt-top{padding:22px 16px 14px;} .rt-back .rt-faces{margin:14px 12px 10px !important;gap:5px !important;} .rt-back .rt-faces button{padding:10px 1px 8px !important;border-radius:14px !important;} .rt-back .rt-note{width:calc(100% - 24px) !important;margin:0 12px !important;} .rt-back .rt-foot{margin:12px 12px 16px !important;} .rt-back .rt-ppl{margin:14px 12px 0 !important;} .rt-back .rt-top h2{font-size:20px !important;} }
+</style>
 </body>
 </html>
