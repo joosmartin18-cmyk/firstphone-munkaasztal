@@ -1,4 +1,4 @@
-// Admin felület helyi próbája ál-felhővel (kitalált boltokkal): PIN=1 (menü rögzítve), NAV=dash|shops|sched|acc|inbox|tix|ann|docs|train|set|data, TH=dark|light, LK=new|old, W, H, O, EV, FULL=1
+// Admin felület helyi próbája ál-felhővel (kitalált boltokkal): PIN=1 (menü rögzítve), NAV=dash|shops|sched|kedv|acc|inbox|tix|ann|docs|train|set|data, TH=dark|light, LK=new|old, W, H, O, EV, FULL=1
 const { chromium } = require('playwright');
 const FAKE = `(function(){
   var _f=window.fetch; window.fetch=function(u,o){ if(String(u).indexOf("/api/admin")>=0){ var body={}; try{ body=JSON.parse((o&&o.body)||"{}"); }catch(e){} var users=[];
@@ -12,7 +12,8 @@ const FAKE = `(function(){
     var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:i!==3,location:n,uiLook:i===1?"old":i===2?"new":undefined,layout:i===1?"old":undefined,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
     kv[uid]={firstphone_beosztas_tervezo_v2:{v:JSON.stringify(st),parts:0,by:"dev123456",n:now-i*day*2,t:now},
       firstphone_csomag:{v:JSON.stringify({items:[{id:1},{id:2,outAt:1},{id:3}]}),parts:0,by:"dev",n:now},
-      firstphone_kassza:{v:JSON.stringify({n:{"1000":12,"5000":3},back:"20000",report:i%2?"47000":"46000"}),parts:0,by:"dev",n:now}};
+      firstphone_kassza:{v:JSON.stringify({n:{"1000":12,"5000":3},back:"20000",report:i%2?"47000":"46000"}),parts:0,by:"dev",n:now},
+      firstphone_kedvezmeny:{v:JSON.stringify({items:(function(){var P=[["acc","Tempered üvegfólia","5999123400017",4990],["acc","USB-C gyorstöltő 25W","5999123400024",7990],["ph","Okostelefon 128 GB","8801234567890",149990],["acc","Bluetooth fülhallgató","5999123400048",19990],["ph","Okostelefon 256 GB","8801234567906",219990]],N=["Teszt Elek","Próba Anna","Minta Béla"],o=[];for(var j=0;j<(i%4)+2;j++){var p=P[(i+j)%5],dd=new Date(now-((i*3+j*5)%35)*day);o.push({id:"k"+i+"_"+j,t:p[0],nm:p[1],code:p[2],imei:p[0]==="ph"?"35693803564380"+((j+i)%10):"",o:p[3],n:Math.round(p[3]*0.7/10)*10,d:dd.getFullYear()+"-"+String(dd.getMonth()+1).padStart(2,"0")+"-"+String(dd.getDate()).padStart(2,"0"),ask:N[(i+j)%3],giv:N[(i+j+1)%3],note:j%3===0?"bemutató darab":"",at:now-j*1000});}return o;})(),del:[]}),parts:0,by:"dev",n:now}};
   });
   var chat={u0:[{from:"s",name:"Teszt Elek · Minta A",text:"Szia! Megjött a heti áru, mindent bevételeztünk.",ms:now-3600e3},{from:"a",name:"Admin",text:"Köszönöm, szuper!",ms:now-3000e3},{from:"s",name:"Teszt Elek · Minta A",text:"A kassza ma 1000 Ft-tal több, holnap átnézem.",ms:now-600e3}],
     u1:[{from:"s",name:"Próba Anna · Minta B",text:"A nyomtató nem húzza be a papírt a cetlinél.",ms:now-7200e3,type:"bug",cat:"nyomtatas",page:"cetli",st:"new",prio:"hi"}],
