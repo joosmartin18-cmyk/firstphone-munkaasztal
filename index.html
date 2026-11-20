@@ -32441,7 +32441,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
           <h3 class="lt-h">📥 Bizzio export betöltése</h3>
           <ol class="lt-steps"><li><b>1</b><span>A <b>Bizzióban</b> nyisd meg a készletet, és exportáld</span></li><li><b>2</b><span>Mentsd el <b>.xlsx</b> fájlként</span></li><li><b>3</b><span>Húzd ide, vagy kattints a kiválasztáshoz</span></li></ol>
           <label class="lt-drop" id="ltDrop"><input type="file" id="ltFile" accept=".xlsx,.xlsm,.xlsb,.xls,.ods,.fods,.csv,.tsv,.txt,.numbers,.xml,.html,.htm,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" hidden>
-            <span class="ic">📊</span><b>Húzd ide a Bizzio exportot vagy bármilyen Excel fájlt</b><span>.xlsx · .xls · .ods · .csv … — vagy kattints a kiválasztáshoz</span></label>
+            <span class="ic">📊</span><b>Húzd ide a Bizzio exportot vagy bármilyen Excel fájlt</b><span>.xlsx · .xls · .ods · .csv … — vagy kattints a kiválasztáshoz</span><span class="lt-two">Kettőt is betölthetsz egyszerre (pl. <b>telefonok</b> + <b>ShieldUp / AirPods</b>) — vagy később a „➕ Export hozzáadása” gombbal.</span></label>
         </section>
         <section class="panel lt-card lt-upcoming">
           <h3 class="lt-h">📆 Következő leltárak</h3>
@@ -62675,7 +62675,24 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         + d.items.slice(0, 6).map(it=> `<div><span>${ltEsc(it.name)}</span><span>${ltEsc(it.group || "—")}</span><span>${ltEsc(it.code || "—")}</span><span>${ltEsc(it.lot || "—")}</span><span>${it.qty}</span></div>`).join("") + `</div>`;
     }catch(e){ R.parsed = null; ok.disabled = true; box.innerHTML = `<div class="lt-map-err">⚠ ${ltEsc(e.message || "Nem sikerült értelmezni.")}</div>`; }
   }
+  /* több export egy leltárba (Martin: pl. az egyik csak telefon, a másik ShieldUp / AirPods) */
+  let ltAddMode = false;
+  function ltMergeParsed(d){
+    const key = x=> [String(x.name || "").trim().toUpperCase(), String(x.code || "").trim().toUpperCase(), String(x.lot || "").trim().toUpperCase(), x.lot ? "" : (+x.qty || 0)].join("|");
+    const seen = new Set(ltData.items.map(key)); let added = 0, dup = 0;
+    const items = ltData.items.slice(); d.items.forEach(x=>{ const k = key(x); if(seen.has(k)){ dup++; return; } seen.add(k); items.push(x); added++; });
+    const files = [ltData.meta.file, d.meta.file].filter(Boolean), ex = [ltData.meta.exported, d.meta.exported].filter(Boolean);
+    const meta = Object.assign({}, ltData.meta, { file:files.join(" + "), exported:ex.filter((v, i)=> ex.indexOf(v) === i).join(" · "), files:(ltData.meta.files || [ltData.meta.file]).concat([d.meta.file]).filter(Boolean) });
+    const keepProg = ltProg;
+    ltData = Object.assign({}, ltData, { items, meta }); ltType = ltGuessType(items);
+    if(keepProg){ ltProg = keepProg; ltProg.sig = ltSig(); ltSaveProg(); }
+    try{ localStorage.setItem(LT_KEY, JSON.stringify({ items, meta:Object.assign({}, meta, { exportDate: meta.exportDate ? new Date(meta.exportDate).toISOString() : null }), type:ltType, day:ltData.day, adhoc:ltData.adhoc })); }catch(e){}
+    ltRender();
+    toast(`Hozzáadva: ${added} sor${dup ? ` (${dup} már benne volt)` : ""} — összesen ${items.length} ✓`);
+  }
   function ltApplyParsed(d){
+    if(ltAddMode && ltData && !ltViewOld){ ltAddMode = false; ltMergeParsed(d); return; }
+    ltAddMode = false;
     if(ltData && !ltViewOld && ltProg) ltArchive(ltData, ltType, ltProg);
     ltDoneToday = null;
     if(ltAtt.length) ltAttReset();
@@ -62772,12 +62789,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const wd = ltWd(today), dl = today.toLocaleDateString("hu-HU", { month:"long", day:"numeric" });
     let h1, chip, pill = "";
     if(ltData && ltViewOld){ h1 = `Korábbi <span>leltár</span>`; chip = `<span class="ma-chip"><i></i>Visszanézés · ${ltEsc(ltData.day ? ltDayLbl(ltData.day) : "korábbi nap")}</span>`; pill = `<button type="button" class="ma-pill dark" data-lt-go="pdf">Leltárív PDF</button>`; }
-    else if(ltData){ h1 = `${ltEsc(tn)} <span>leltár</span>`; chip = `<span class="ma-chip"><i></i>Export betöltve · <b>${ltData.items.length}</b> sor</span>`; pill = `<button type="button" class="ma-pill dark" data-lt-go="pdf">Leltárív PDF</button>`; }
+    else if(ltData){ h1 = `${ltEsc(tn)} <span>leltár</span>`; chip = `<span class="ma-chip"><i></i>${ltData.meta && ltData.meta.files && ltData.meta.files.length > 1 ? ltData.meta.files.length + " export" : "Export betöltve"} · <b>${ltData.items.length}</b> sor</span>`; pill = `<button type="button" class="ma-pill" data-lt-go="add">＋ Export hozzáadása</button><button type="button" class="ma-pill dark" data-lt-go="pdf">Leltárív PDF</button>`; }
     else if(ltDoneToday){ h1 = `Mai leltár <span>kész</span>`; chip = `<span class="ma-chip"><i></i>Lezárva${first ? " · következő: " + (dd === 1 ? "holnap" : dd + " nap múlva") : ""}</span>`; }
     else if(isToday || ltAdhoc){ h1 = isToday ? `Ma <span>leltár</span> van` : `Soron kívüli <span>leltár</span>`; chip = `<span class="ma-chip"><i class="r"></i>Még nincs betöltve export</span>`; pill = `<button type="button" class="ma-pill dark" data-lt-go="file">＋ Export betöltése</button>`; }
     else { h1 = `Leltár <span>${dd === 1 ? "holnap" : dd + " nap múlva"}</span>`; chip = `<span class="ma-chip"><i class="r"></i>Ma nincs leltár</span>`; pill = document.getElementById("ltAdhocBtn") ? `<button type="button" class="ma-pill dark" data-lt-go="adhoc">＋ Soron kívüli</button>` : ""; }
     h.innerHTML = `<div><p>${ltEsc(wd)}, ${ltEsc(dl)}</p><h1>${h1}</h1></div><div class="ma-chips">${chip}${pill}</div>`;
-    h.querySelectorAll("[data-lt-go]").forEach(b=> b.onclick = ()=>{ const k = b.dataset.ltGo, el = document.getElementById(k === "pdf" ? "ltPdfBtn" : k === "file" ? "ltFile" : "ltAdhocBtn"); if(el) el.click(); });
+    h.querySelectorAll("[data-lt-go]").forEach(b=> b.onclick = ()=>{ const k = b.dataset.ltGo; if(k === "add"){ ltAddMode = true; const f = document.getElementById("ltFile"); if(f) f.click(); return; } const el = document.getElementById(k === "pdf" ? "ltPdfBtn" : k === "file" ? "ltFile" : "ltAdhocBtn"); if(el) el.click(); });
     /* kártyacímek emoji nélkül, mint a kezdőlapon */
     let rx = null; try{ rx = new RegExp("^\\s*(?:\\p{Extended_Pictographic}|\\p{Regional_Indicator})(?:\\uFE0F|\\u200D\\p{Extended_Pictographic}\\uFE0F?)*\\s*", "u"); }catch(e){}
     if(rx) pg.querySelectorAll(".lt-h, .lt-side-h, .lt-att-h b, .lt-kicker").forEach(el=>{ const n = el.firstChild; if(n && n.nodeType === 3 && rx.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(rx, ""); });
@@ -62878,10 +62895,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     if(!ltProg || ltProg.sig !== ltSig()) ltLoadProg();
     drop.hidden = true; info.hidden = false; box.hidden = false;
     const m = ltData.meta;
-    info.innerHTML = `<div class="fi">${ltEsc(((m.file || "").match(/\.([a-z0-9]{2,5})$/i) || [,"XLSX"])[1].toUpperCase())}</div><div class="fn"><b>${ltEsc(m.file || "Excel")}</b>
+    info.innerHTML = `<div class="fi">${(m.files && m.files.length > 1) ? m.files.length + "×" : ltEsc(((m.file || "").match(/\.([a-z0-9]{2,5})$/i) || [,"XLSX"])[1].toUpperCase())}</div><div class="fn"><b>${ltEsc(m.file || "Excel")}</b>
       <span>${ltData.items.length} sor${m.exported ? " · " + ltEsc(m.exported) : ""}</span></div>
-      ${ltRaw ? `<button class="action-btn secondary" id="ltCols" title="Oszlopok ellenőrzése / átállítása">🧩</button>` : ""}<button class="action-btn secondary" id="ltChange" title="Másik fájl betöltése">🔄</button>`;
-    document.getElementById("ltChange").onclick = ()=> document.getElementById("ltFile").click();
+      ${ltRaw ? `<button class="action-btn secondary" id="ltCols" title="Oszlopok ellenőrzése / átállítása">🧩</button>` : ""}<button class="action-btn secondary" id="ltChange" title="Másik fájl betöltése (a mostanit lecseréli)">🔄</button>`
+      + `<button class="action-btn secondary lt-addx" id="ltAddExp" title="Még egy export hozzáadása ehhez a leltárhoz (pl. telefonok + ShieldUp / AirPods)">➕ Export hozzáadása</button>`;
+    document.getElementById("ltChange").onclick = ()=>{ ltAddMode = false; document.getElementById("ltFile").click(); };
+    document.getElementById("ltAddExp").onclick = ()=>{ ltAddMode = true; document.getElementById("ltFile").click(); };
     const lc = document.getElementById("ltCols"); if(lc) lc.onclick = ()=> ltMapOpen();
     document.querySelectorAll("#ltType button").forEach(b=> b.classList.toggle("on", b.dataset.t === ltType));
     ltSecs = ltSections(ltData.items);
@@ -63166,6 +63185,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       catch(e){ ltMapOpen("⚠ " + ltEsc(e.message) + " Állítsd be az oszlopokat:"); return; }
       ltApplyParsed(d);
     }catch(err){
+      ltAddMode = false;
       toast("Hiba: " + (err && err.message ? err.message : "nem sikerült beolvasni a fájlt"));
     }
   }
@@ -63179,12 +63199,15 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         else if(D.day === ltYmd(ltToday())){ ltData = D; ltType = s.type || ltGuessType(s.items); } else { ltOld = Object.assign(D, { type:s.type }); ltArchive(D, s.type, ltProgFor(D)); } }
     }catch(e){}
     const inp = document.getElementById("ltFile"), drop = document.getElementById("ltDrop");
-    inp.onchange = ()=>{ ltLoadFile(inp.files[0]); inp.value = ""; };
+    inp.multiple = true;
+    const ltLoadMany = async fl=>{ const L = Array.from(fl || []).filter(Boolean); for(let i = 0; i < L.length; i++){ if(i > 0){ if(!ltData) break; ltAddMode = true; } await ltLoadFile(L[i]); } };
+    window.__ltLoadMany = ltLoadMany;
+    inp.onchange = ()=>{ const fl = Array.from(inp.files || []); inp.value = ""; ltLoadMany(fl); };
     ["dragenter","dragover"].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add("over"); }));
     ["dragleave","drop"].forEach(ev=> drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove("over"); }));
-    drop.addEventListener("drop", e=>{ const f = e.dataTransfer && e.dataTransfer.files[0]; if(f) ltLoadFile(f); });
+    drop.addEventListener("drop", e=>{ const fl = e.dataTransfer && e.dataTransfer.files; if(fl && fl.length) ltLoadMany(fl); });
     document.getElementById("ltPage").addEventListener("dragover", e=> e.preventDefault());
-    document.getElementById("ltPage").addEventListener("drop", e=>{ e.preventDefault(); const f = e.dataTransfer && e.dataTransfer.files[0]; if(f) ltLoadFile(f); });
+    document.getElementById("ltPage").addEventListener("drop", e=>{ e.preventDefault(); const fl = e.dataTransfer && e.dataTransfer.files; if(!fl || !fl.length) return; if(ltData && !ltViewOld && !(e.target.closest && e.target.closest("#ltDrop"))){ ltAddMode = true; } ltLoadMany(fl); });
     document.querySelectorAll("#ltType button").forEach(b=> b.onclick = ()=>{ ltType = b.dataset.t; if(ltViewOld){ ltRenderData(); return; }
       try{ const s = JSON.parse(localStorage.getItem(LT_KEY) || "null"); if(s){ s.type = ltType; localStorage.setItem(LT_KEY, JSON.stringify(s)); } }catch(e){}
       ltRenderData(); });
@@ -72573,7 +72596,8 @@ html body.light-theme .fg-offer.fg-offer,html body.light-theme .fg-card.fg-card{
           ["Lista másolása", [["add","#ls",'<div class="ri"><b>ShieldUp 150 micron</b><span>5 db</span></div><div class="ri"><b>Üvegfólia iPhone 16</b><span>3 db</span></div>'],["cap","A <b>📋 Lista másolása</b> az egészet kimásolja — beillesztheted e-mailbe vagy chatbe."],["click","#cp"],["show","#ts"],["wait",1400]], toast("Rendelési lista kimásolva")]] },
     leltar:{ t:"Leltár", ic:"📋", css:".mx .lr{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#16130f;margin-bottom:6px;font-size:13.5px;animation:fvPop .35s}.mx .lr b{flex:1}",
       html:'<div class="hd"><div><small>Leltár</small><h2 id="ht">Ma <i>leltár</i> van</h2></div><div class="row"><span class="bt" id="ad">＋ Soron kívüli</span><span class="bt p" id="ex">＋ Export betöltése</span><span class="bt" id="pdf">Leltárív PDF</span></div></div><div class="cd row" style="align-items:center"><span class="lb" style="margin:0;width:90px">Haladás</span><div class="bar" style="flex:1"><i id="br"></i></div><b id="pc">0%</b><span class="bc" id="bc"></span></div><div class="cd" style="flex:1" id="ls"><span class="lb">Következő leltárak: hétfő · péntek (ünnepnapkor hétköznapra tolva)</span></div>',
-      sc:[["Export betöltése", [["cap","Leltárnapon töltsd be a <b>Bizzio exportot</b> (Excel)."],["click","#ex"],["text","#ls",""],["add","#ls",'<div class="lr"><span class="tick" id="k1">✓</span><b>iPhone 15 128GB</b><span>1 db</span></div><div class="lr"><span class="tick" id="k2">✓</span><b>Galaxy A56 256GB</b><span>2 db</span></div><div class="lr"><span class="tick" id="k3">✓</span><b>AirPods Pro 2</b><span>1 db</span></div>'],["wait",700]]],
+      sc:[["Két export egy leltárba", [["cap","Ha két exportod van (pl. <b>csak telefonok</b> és <b>csak ShieldUp / AirPods</b>), mindkettőt betöltheted: <b>jelöld ki egyszerre a kettőt</b>, vagy húzd be őket együtt."],["click","#ex"],["text","#ls",""],["add","#ls",'<div class="lr"><b>telefonok.xlsx</b><span>12 sor</span></div>'],["cap","Ha az egyiket már betöltötted, a <b>„＋ Export hozzáadása”</b> gombbal teheted mellé a másikat — a már kipipált tételek megmaradnak."],["add","#ls",'<div class="lr"><b>shieldup.xlsx</b><span>+ 8 sor</span></div>'],["wait",1500]]],
+          ["Export betöltése", [["cap","Leltárnapon töltsd be a <b>Bizzio exportot</b> (Excel)."],["click","#ex"],["text","#ls",""],["add","#ls",'<div class="lr"><span class="tick" id="k1">✓</span><b>iPhone 15 128GB</b><span>1 db</span></div><div class="lr"><span class="tick" id="k2">✓</span><b>Galaxy A56 256GB</b><span>2 db</span></div><div class="lr"><span class="tick" id="k3">✓</span><b>AirPods Pro 2</b><span>1 db</span></div>'],["wait",700]]],
           ["Beolvasás, kipipálás", [["text","#ls",""],["add","#ls",'<div class="lr"><span class="tick" id="k1">✓</span><b>iPhone 15 128GB</b><span>1 db</span></div><div class="lr"><span class="tick" id="k2">✓</span><b>Galaxy A56 256GB</b><span>2 db</span></div><div class="lr"><span class="tick" id="k3">✓</span><b>AirPods Pro 2</b><span>1 db</span></div>'],["cap","Olvasd be sorra a termékeket — mindegyik <b>kipipálódik</b>, fent látod a haladást."],["scan","#bc"],["on","#k1"],["w","#br","33%"],["text","#pc","33%"],["scan","#bc"],["on","#k2"],["w","#br","66%"],["text","#pc","66%"],["scan","#bc"],["on","#k3"],["w","#br","100%"],["text","#pc","100%"],["wait",600]]],
           ["Leltárív aláírással", [["cap","A végén <b>Leltárív PDF</b>: beírod, ki leltározott, és elektronikusan aláírod."],["click","#pdf"],["show","#sg"],["wait",1200],["hide","#sg"],["show","#ts"],["wait",1300]], '<div class="pop fx hide" id="sg" style="left:300px;top:120px;width:360px"><div class="lb">Ki leltározott? · aláírás</div><div class="in">Elek</div><div style="height:90px;border-radius:10px;background:#fff;color:#111;display:grid;place-items:center;font:italic 30px cursive">Elek ✍</div></div>' + toast("Leltárív elkészült (PDF)")],
           ["Soron kívüli leltár", [["cap","Bármikor indíthatsz <b>soron kívüli</b> leltárt is."],["click","#ad"],["text","#ht","Soron kívüli leltár"],["wait",1300]]]] },
@@ -73439,6 +73463,12 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-nav .ui-navtop:has(> .ui-adlogo:not([hidd
 html.axr-rail body #fcAdmin#fcAdmin#fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-navtop .ui-adlogo{display:none !important}
 @media (min-width:900px) and (max-width:1099px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-navtop .ui-adlogo{display:none !important} }
 #fcAdmin.th-light .ax-nav .ui-navtop .ui-adlogo{filter:drop-shadow(0 2px 4px rgba(120,80,0,.2))}
+</style>
+<style id="ltTwoCss">
+/* Leltár: több export (PRÓBA 51) */
+#ltDrop .lt-two{display:block;margin-top:6px;font-size:12px;opacity:.85}
+#ltFileInfo{flex-wrap:wrap}
+#ltFileInfo .lt-addx{flex:1 1 100%;margin-top:6px;white-space:nowrap}
 </style>
 </body>
 </html>
