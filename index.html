@@ -70397,6 +70397,9 @@ html.ui-uj body #ltPage#ltPage #ltHist{ margin-top:16px !important; }
     if(!an.querySelector(".ui-navtop")){ var tp = document.createElement("div"); tp.className = "ui-navtop"; tp.innerHTML = '<button type="button" class="ui-pinbtn" aria-label="Menü rögzítése">' + ICO + '</button><b>Admin</b>'; an.insertBefore(tp, an.firstChild);
       tp.querySelector("button").addEventListener("click", function(e){ e.stopPropagation(); setm(H.classList.contains("axr-rail") ? "pin" : "rail"); }); setm(get()); }
     var a2 = an.querySelector(".ui-navtop");
+    /* hivatalos FirstPhone logó + „Admin” (Martin kérése) */
+    if(a2 && !a2.querySelector(".ui-adlogo") && window.fpLogoFor){ var lg = document.createElement("img"); lg.className = "ui-adlogo"; lg.alt = "FirstPhone"; lg.hidden = true; var bb = a2.querySelector("b"); a2.insertBefore(lg, bb);
+      try{ Promise.resolve(window.fpLogoFor("")).then(function(u){ if(u){ lg.src = u; lg.hidden = false; a2.classList.add("has-lg"); } }).catch(function(){}); }catch(e){} }
     [["Áttekintés", ["dash","shops","sched","kedv","acc"]], ["Kommunikáció", ["inbox","tix","ann","docs","train"]], ["Rendszer", ["set","data"]]].forEach(function(g){
       var h = an.querySelector('.ui-grp[data-g="' + g[0] + '"]'); if(!h){ h = document.createElement("div"); h.className = "ui-grp"; h.setAttribute("data-g", g[0]); h.textContent = g[0]; }
       if(a2.nextSibling !== h) a2.after(h); a2 = h;
@@ -73428,5 +73431,14 @@ html.old-rsplit:not(.ui-uj) #tdTabs{display:none !important}
   setInterval(sync, 800);
 })();
 </script>
+<style id="adLogoCss">
+/* admin bal felső sarok: hivatalos FirstPhone logó + „Admin” */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav .ui-navtop .ui-adlogo{height:20px;width:auto;max-width:118px;object-fit:contain;flex:0 1 auto;min-width:0;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav .ui-navtop:has(> .ui-adlogo:not([hidden])) b::before{content:none !important}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-nav .ui-navtop:has(> .ui-adlogo:not([hidden])) b{flex:none !important;overflow:visible !important;text-overflow:clip !important;font:700 15px/20px Manrope,Inter,system-ui,sans-serif !important;color:var(--ax-tx,#f3f1ea) !important;margin-left:2px}
+html.axr-rail body #fcAdmin#fcAdmin#fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-navtop .ui-adlogo{display:none !important}
+@media (min-width:900px) and (max-width:1099px){ html body #fcAdmin#fcAdmin#fcAdmin .ax-nav:not(:hover):not(:focus-within) .ui-navtop .ui-adlogo{display:none !important} }
+#fcAdmin.th-light .ax-nav .ui-navtop .ui-adlogo{filter:drop-shadow(0 2px 4px rgba(120,80,0,.2))}
+</style>
 </body>
 </html>
