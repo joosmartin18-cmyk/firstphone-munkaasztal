@@ -73351,6 +73351,19 @@ html:not(.ui-uj) #kdPage .kd-hd small{font:600 12.5px Inter,sans-serif !importan
 html:not(.ui-uj) #kdPage .kd-card{border-radius:18px !important}
 html:not(.ui-uj) #kdPage .k3-sh b{font-size:15px}
 html:not(.ui-uj) #kdPage .k3-tile{padding:12px 14px}html:not(.ui-uj) #kdPage .k3-tile .ti{width:42px;height:42px}
+/* Csomag havi összesítő (teljes szélességben): összeg · átadás-gyűrű · Elvitte / Vár csempék */
+@media (min-width:701px) and (max-width:1500px){
+  html:not(.ui-uj) .cs2-car.tot{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1.6fr) !important;gap:18px 26px !important;align-items:center !important;padding:18px 22px !important}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot b,html:not(.ui-uj) .cs2-car.tot .cs2-tot #csTot{font-size:44px}
+  html:not(.ui-uj) .cs2-car.tot .cs2-ring{width:92px;height:92px}
+  html:not(.ui-uj) .cs2-car.tot .cs2-ring::after{content:"átadva";position:absolute;left:0;right:0;top:calc(50% + 11px);text-align:center;font:700 10px Inter,sans-serif;color:var(--text-dim);letter-spacing:.04em}
+  html:not(.ui-uj) .cs2-car.tot .cs2-ring #csRingTx{transform:translateY(-6px)}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot-st{display:grid !important;grid-template-columns:1fr 1fr;gap:12px}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot-st span{display:grid !important;grid-template-columns:auto 1fr;align-items:center !important;justify-content:start;column-gap:6px;row-gap:6px;padding:14px 18px !important;border-radius:16px !important;font:700 13px Inter,sans-serif !important;color:var(--text-dim) !important;border-left-width:4px !important}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot-st span b{grid-column:1 / -1;font:800 30px/1 Poppins,sans-serif !important}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot-st .o{border-left-color:#30b37a !important;background:linear-gradient(90deg,rgba(48,179,122,.12),transparent 70%),var(--bg-cell) !important}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot-st .w{border-left-color:#f0a030 !important;background:linear-gradient(90deg,rgba(240,160,48,.12),transparent 70%),var(--bg-cell) !important}
+}
 /* Csomag logók: kitöltik a dobozt, nincs fehér keret */
 html:not(.ui-uj) .cs2-logo.has{padding:0 !important;overflow:hidden !important;background:#fff !important}
 html:not(.ui-uj) .cs2-logo.has img{width:100% !important;height:100% !important;max-width:none !important;max-height:none !important;object-fit:cover !important}
