@@ -33,7 +33,7 @@ const { chromium } = require('playwright');
     localStorage.setItem('firstphone_welcome_seen', '1');
     if (!guide) { localStorage.setItem('fp_guide_full', '1'); localStorage.setItem('fp_guide_seen', JSON.stringify({ ma:1, beosztas:1, cetli:1, leltar:1, kassza:1, csomag:1, selejt:1, teendo:1, rendeles:1, tudastar:1, elado:1, specko:1 })); }
     localStorage.setItem('firstphone_cloud_off', '1');
-    { const NS = ['uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16', 'sugo-diak-2026-11-16']; localStorage.setItem('fp_ui_news_seen', JSON.stringify(NS.slice(0, NS.length - (+news || 0)))); }
+    { const NS = ['dolgozoi-kedvezmeny-2026-11-19', 'uj-kinezet-2026-11', 'uj-kinezet-2026-11-09', 'frissites-2026-11-15', 'tudastar-diak-2026-11-15', 'cetli-szallitas-2026-11-16', 'cetli-tobb-egyben-2026-11-16', 'zen-hangok-2026-11-16', 'teendok-uj-2026-11-16', 'sugo-diak-2026-11-16']; localStorage.setItem('fp_ui_news_seen', JSON.stringify(NS.slice(0, NS.length - (+news || 0)))); }
   }, [LOC, LK === 'none' ? '' : LK, process.env.LAY || '', process.env.EMP2 || '', process.env.SCH || '', process.env.TODO || '', process.env.NEWS || '', process.env.ORD || '', process.env.SX || '', process.env.SK || '', process.env.FRESH || '', process.env.GUIDE || '']);
   if (process.env.NOW && ctx.clock) await ctx.clock.install({ time: new Date(process.env.NOW) });
   const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));

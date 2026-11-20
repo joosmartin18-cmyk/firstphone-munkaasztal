@@ -73333,5 +73333,57 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
   };
 })();
 </script>
+<style id="oldFitCss">
+/* ===== PRÓBA 50: régi kinézet igazítása (Martin kérése) — Csomag kártyák, Kedvezmény oldal, Teendők / Rendelés külön ===== */
+@media (min-width:1061px) and (max-width:1500px){
+  html:not(.ui-uj) .cs2-cars{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
+  html:not(.ui-uj) .cs2-car.tot{grid-column:1 / -1 !important;grid-template-columns:auto 1fr auto !important}
+  html:not(.ui-uj) .cs2-car.tot .cs2-tot-st{grid-column:auto !important}
+}
+/* Dolgozói kedvezmény — a régi kinézet színeivel és panel-fejlécével */
+html:not(.ui-uj) #kdPage{--k1:var(--bg-panel,#16161b);--k2:var(--bg-panel2,#1e1e25);--k3:var(--bg-cell,#26262f);--kl:var(--border,rgba(255,255,255,.08));--kl2:var(--border,rgba(255,255,255,.14));--kt:var(--text,#f3f1ea);--kd:var(--text-dim,#a9a497)}
+html:not(.ui-uj) #kdPage .kd-hd{display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:16px 18px;border-radius:18px;background:var(--bg-panel);border:1px solid var(--border);box-shadow:inset 0 3px 0 #3ecf8e}
+html:not(.ui-uj) #kdPage .kd-hd::before{content:"🏷️";flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:rgba(62,207,142,.14);border:1px solid rgba(62,207,142,.35)}
+html:not(.ui-uj) #kdPage .kd-hd > div{display:flex;flex-direction:column-reverse}
+html:not(.ui-uj) #kdPage .kd-hd h2{font:800 20px/1.2 Poppins,sans-serif !important;margin:0 !important}
+html:not(.ui-uj) #kdPage .kd-hd h2 em{color:inherit !important}
+html:not(.ui-uj) #kdPage .kd-hd small{font:600 12.5px Inter,sans-serif !important;letter-spacing:0 !important;text-transform:none !important;margin-top:3px}
+html:not(.ui-uj) #kdPage .kd-card{border-radius:18px !important}
+html:not(.ui-uj) #kdPage .k3-sh b{font-size:15px}
+html:not(.ui-uj) #kdPage .k3-tile{padding:12px 14px}html:not(.ui-uj) #kdPage .k3-tile .ti{width:42px;height:42px}
+/* Teendők és Rendelés külön menüpont a régi kinézetben: a felső fülsor rejtve, a menügombok váltanak */
+html.old-rsplit:not(.ui-uj) #tdTabs{display:none !important}
+</style>
+<script id="oldFitJs">
+(function(){
+  function sync(){
+    var H = document.documentElement; if(H.classList.contains("ui-uj")) return;
+    var ps = document.getElementById("pageSwitch"); if(!ps) return;
+    var tb = ps.querySelector('.ps-btn[data-page="teendo"]'), rtab = document.querySelector('#tdTabs [data-tab="rend"]'), ttab = document.querySelector('#tdTabs [data-tab="todo"]'); if(!tb || !rtab) return;
+    var rb = ps.querySelector('.ps-btn[data-page="rendeles"]');
+    if(!rb){
+      rb = document.createElement("button"); rb.type = "button"; rb.className = "ps-btn"; rb.setAttribute("data-page", "rendeles"); rb.title = "Rendelés — ShieldUp, üvegfólia, tok, tartozék";
+      rb.innerHTML = '<i class="ps-i">🛒</i> <span class="ps-t">Rendelés</span>'; tb.after(rb);
+      rb.addEventListener("click", function(){ rb.__now = 1; if(!document.body.classList.contains("page-teendo")) tb.click();
+        setTimeout(function(){ var t = document.querySelector('#tdTabs [data-tab="rend"]'); if(t) t.click(); rb.__now = 0; sync(); try{ window.dispatchEvent(new Event("resize")); }catch(e){} }, 60); });
+      tb.addEventListener("click", function(){ setTimeout(function(){ var pg = document.getElementById("tdPage"), t = document.querySelector('#tdTabs [data-tab="todo"]'); if(!rb.__now && pg && pg.classList.contains("rend") && t) t.click(); sync(); try{ window.dispatchEvent(new Event("resize")); }catch(e){} }, 60); });
+    }
+    var featOff = false; try{ featOff = !!(window.fpFtOn && !window.fpFtOn("rend")); }catch(e){}
+    rb.hidden = featOff || tb.hidden || tb.classList.contains("ps-off");
+    rb.classList.toggle("ps-off", tb.classList.contains("ps-off"));
+    H.classList.toggle("old-rsplit", !rb.hidden);
+    var onT = document.body.classList.contains("page-teendo"), pg = document.getElementById("tdPage"), isR = !!(pg && pg.classList.contains("rend"));
+    if(rb.hidden && isR && ttab){ /* a rendelés ki van kapcsolva: marad a teendő fül */ }
+    var was = rb.classList.contains("active");
+    rb.classList.toggle("active", onT && isR); if(onT) tb.classList.toggle("active", !isR);
+    if(was !== rb.classList.contains("active")){ try{ window.dispatchEvent(new Event("resize")); }catch(e){} }
+    if(onT){ var pt = document.getElementById("pageTitle"), psb = document.getElementById("pageSub"), want = isR ? "Rendelés" : "Teendők";
+      if(pt && pt.textContent !== want){ pt.textContent = want; if(psb) psb.textContent = isR ? "ShieldUp, üvegfólia, tok, tartozék — rendelni kell → megrendelve → megjött" : "Közös to-do lista · dolgozónként vagy mindkettőnek · határidővel"; } }
+  }
+  window.fpOldRendSync = sync;
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", function(){ setTimeout(sync, 300); }); else setTimeout(sync, 300);
+  setInterval(sync, 800);
+})();
+</script>
 </body>
 </html>
