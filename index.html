@@ -32371,7 +32371,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       S.authKnown = true;
       S.user = u || null;
       if(!u){ bootHide(); S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; } status(); if(lsGet(OFF_KEY) !== "1") login(); else { try{ newsInit(); }catch(e){} } return; }
-      const l = document.getElementById("fcLogin"); if(l) l.remove(); document.documentElement.classList.remove("fc-locked");
+      const l = document.getElementById("fcLogin");
+      /* friss belépés után a betöltő azonnal takar, amíg a felhő be nem tölt — különben az üres gépen az első beállítás villant fel (Martin: „belépek és egyből ezt mutatja”) */
+      if(l){ try{ if(window.self === window.top){ BOOT.done = false; BOOT.el = null; bootShow(true); } }catch(e){} }
+      if(l) l.remove(); document.documentElement.classList.remove("fc-locked");
       let CL = {}; try{ CL = (await u.getIdTokenResult()).claims || {}; }catch(e){}
       S.sup = (u.email || "").toLowerCase() === ADMIN;
       S.admin = S.sup || CL.admin === true;
@@ -72133,7 +72136,11 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
 (function(){
   var since = 0;
   function vis(id){ var e = document.getElementById(id); return !!(e && e.getClientRects().length && getComputedStyle(e).display !== "none"); }
-  function busy(){ var H = document.documentElement; return !!(vis("fpBoot") || vis("fcLogin") || (H.classList.contains("fc-locked") && (vis("fcLogin") || vis("fcAdmin")))); }
+  /* felhő-betöltés folyamatban: be van lépve, de a bolt adatai még nem jöttek meg (vagy a belépés még nem ismert) */
+  function cloudBusy(){ var C = window.FP_CLOUD; try{ if(!C || !C.enabled || localStorage.getItem("firstphone_cloud_off") === "1" || C.state === "offl" || C.lastErr) return false; }catch(e){ return false; }
+    if(C.user && !C.on) return true; if(!C.authKnown && Date.now() - T0 < 15000) return true; return false; }
+  var T0 = Date.now();
+  function busy(){ var H = document.documentElement; return !!(vis("fpBoot") || vis("fcLogin") || cloudBusy() || (H.classList.contains("fc-locked") && (vis("fcLogin") || vis("fcAdmin")))); }
   function tick(){
     var p = document.getElementById("settingsPanel"), H = document.documentElement;
     /* a beállítás mindig teljes képernyőn nyílik — csak ez látszik (Martin kérése), a beállított boltnál is */
@@ -72143,6 +72150,7 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
     var C = window.FP_CLOUD;
     if(first && C && C.admin){ want = false; first = false; }
     if(!want){ since = 0; if(H.classList.contains("fp-setup")) H.classList.remove("fp-setup"); H.classList.toggle("fp-setwait", first); return; }
+    if(first && cloudBusy()){ since = 0; H.classList.add("fp-setwait"); return; }
     if(!since) since = Date.now();
     var dl = first ? 600 : 0;
     H.classList.toggle("fp-setwait", first && Date.now() - since < dl);
@@ -73722,6 +73730,56 @@ html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core){animation-iteration-count:in
     return cur;
   }
   window.fpAdBoot = { show:show, done:function(n){ if(cur) cur.done(n); } };
+})();
+</script>
+<style id="liveCss">
+/* PRÓBA 52 — élő állapotsorok (csak új kinézet, bolt + admin): pöttyök lüktetnek, csíkok feltöltődnek, sorok beúsznak — csak transform/opacity */
+@keyframes fpDotP{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+@keyframes fpGrowX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes fpRowIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+html.ui-uj :is(.nd-st > i, .ax-ldot, .mb-dot, .ma-chip > i, .fc-chip > i, .ax-dt, .lt-st > .dot, .tab-btn > .dot, .cs-dot, #_fpd){animation:fpDotP 2.2s ease-in-out infinite !important;animation-iteration-count:infinite !important;}
+@media (prefers-reduced-motion:reduce){html.ui-uj:not(.fp-anim-full) :is(%s, #_fpd){animation-duration:4s !important;}}
+@media print{html.ui-uj :is(.nd-st > i, .ax-ldot, .mb-dot, .ma-chip > i, .fc-chip > i, .ax-dt, .lt-st > .dot, .tab-btn > .dot, .cs-dot, #_fpd){animation:none !important;}}
+</style>
+<script id="liveJs">
+(function(){
+  var H = document.documentElement, T = null;
+  function on(){ return H.classList.contains("ui-uj") && !(window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches && !H.classList.contains("fp-anim-full")); }
+  function vis(e){ var r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight + 200; }
+  function play(el, kf, opt){ try{ if(!el.animate) return; var a = el.animate(kf, opt); }catch(e){} }
+  function roots(){
+    var a = document.getElementById("fcAdmin");
+    if(a && vis(a)){ var p = a.querySelector(".ax-pane.on"); return p ? [p] : [a]; }
+    return [document.body]; }
+  function bars(root){
+    var n = 0, all = root.querySelectorAll("div, span, em, u");
+    for(var i = 0; i < all.length && n < 60; i++){ var e = all[i], r;
+      if(e.childElementCount < 1 || e.childElementCount > 12) continue;
+      r = e.getBoundingClientRect(); if(r.height < 3 || r.height > 12 || r.width < 30 || r.bottom < 0 || r.top > innerHeight + 100) continue;
+      var c = getComputedStyle(e); if(parseFloat(c.borderRadius) < 2 && c.overflow !== "hidden") continue;
+      for(var j = 0; j < e.children.length; j++){ var ch = e.children[j], cs = getComputedStyle(ch); if(cs.transform !== "none" || ch.getAnimations && ch.getAnimations().length) continue;
+        var cr = ch.getBoundingClientRect(); if(cr.width < 2 || cr.height < 2) continue;
+        ch.style.transformOrigin = "left center"; play(ch, [{ transform:"scaleX(0)" }, { transform:"scaleX(1)" }], { duration:900, delay:80 + j * 60, easing:"cubic-bezier(.2,.8,.2,1)", fill:"backwards" }); n++; } }
+  }
+  function rows(root){
+    var done = 0, all = root.querySelectorAll("div, ul, ol, tbody, section");
+    for(var i = 0; i < all.length && done < 8; i++){ var e = all[i]; if(e.childElementCount < 3) continue;
+      var f = e.firstElementChild, k = f && f.className && typeof f.className === "string" ? f.className.trim().split(/\s+/)[0] : (f ? f.tagName : "");
+      if(!k) continue; var same = 0; for(var j = 0; j < e.children.length && j < 6; j++){ var x = e.children[j]; if((x.className && typeof x.className === "string" ? x.className.trim().split(/\s+/)[0] : x.tagName) === k) same++; }
+      if(same < 3) continue; var r = e.getBoundingClientRect(); if(r.width < 200 || !vis(e)) continue;
+      var fr = f.getBoundingClientRect(); if(fr.height < 22 || fr.height > 260) continue;
+      if(e.closest("[data-fp-rows]") && e.closest("[data-fp-rows]") !== e) continue;
+      e.setAttribute("data-fp-rows", "1"); done++;
+      for(var q = 0; q < e.children.length && q < 16; q++){ var c2 = e.children[q]; if(!vis(c2)) continue; if(getComputedStyle(c2).transform !== "none") continue;
+        play(c2, [{ opacity:0, transform:"translateY(10px)" }, { opacity:1, transform:"none" }], { duration:420, delay:q * 45, easing:"cubic-bezier(.2,.9,.3,1)", fill:"backwards" }); } }
+    root.querySelectorAll("[data-fp-rows]").forEach(function(x){ x.removeAttribute("data-fp-rows"); });
+  }
+  function kick(){ if(!on()) return; clearTimeout(T); T = setTimeout(function(){ var t0 = performance.now(); try{ roots().forEach(function(r){ bars(r); rows(r); }); }catch(e){} window.__fpLiveMs = Math.round(performance.now() - t0); }, 90); }
+  window.fpLiveKick = kick;
+  document.addEventListener("click", function(e){ var t = e.target && e.target.closest && e.target.closest("[data-page],[data-nav],[data-scv],[data-tab],.ps-btn,.ax-seg button,[data-scs],.ui-nav a,.ui-nav button"); if(t) setTimeout(kick, 60); }, true);
+  /* indulás: amikor a betöltő eltűnt */
+  var w0 = Date.now(), iv = setInterval(function(){ if(document.getElementById("fpBoot") || document.getElementById("fpAdBoot")) return; if(Date.now() - w0 > 30000 || document.readyState === "complete"){ clearInterval(iv); setTimeout(kick, 250); } }, 250);
+  var adSeen = false; setInterval(function(){ var a = document.getElementById("fpAdBoot"); if(a) adSeen = true; else if(adSeen){ adSeen = false; setTimeout(kick, 350); } }, 300);
 })();
 </script>
 </body>
