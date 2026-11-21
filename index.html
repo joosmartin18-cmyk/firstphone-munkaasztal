@@ -32242,6 +32242,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         try{ if(S.pending.size){ for(const k of Array.from(S.pending)) await push(k); } await firebase.auth().signOut(); }catch(e){}
         if(S.admin) lsDel(ADMIN_KEY); SYNC.forEach(lsDel); location.reload(); }; }
     if(!old) document.body.appendChild(el); document.documentElement.classList.add("fc-mton");
+    if(!m.until){ el.classList.add("fc-mt-nou"); el.querySelectorAll(".fc-mt-cdx").forEach(e=>{ if(e.namespaceURI === "http://www.w3.org/2000/svg"){ const fs = +e.getAttribute("font-size") || 24; e.setAttribute("font-size", Math.max(9, Math.round(fs * .42))); e.setAttribute("letter-spacing", "1.5"); e.textContent = "HAMAROSAN"; } }); el.querySelectorAll(".fc-mt-mv text").forEach(t=>{ if(/^(MÉG ENNYI|INDULÁSIG|NYITÁSIG)$/.test(t.textContent.trim())) t.style.display = "none"; }); }
     try{ const lg = el.querySelector(".fc-mt-logo"); if(lg && window.fpLogoFor) Promise.resolve(window.fpLogoFor("")).then(u=>{ if(u){ lg.src = u; lg.hidden = false; } }).catch(()=>{}); }catch(e){}
     const tick = ()=>{ const left = m.until ? m.until - Date.now() : 1; if(left <= 0){ mtDraw(); return; }
       if(m.until){ const sec = Math.max(0, Math.floor(left / 1000)), mi = Math.floor(sec / 60), s = sec % 60, p = n=> String(n).padStart(2, "0"), v = (mi > 99 ? mi : p(mi)) + ":" + p(s);
@@ -74399,6 +74400,79 @@ html body #fcMt#fcMt .fc-mt-bigt{font:800 46px/1 Poppins,Inter,sans-serif;color:
 html body #fcMt#fcMt .fc-mt-mv .mv3-dg.mv3-go{animation:mv3_flp .5s ease;}
 html #fcMt#fcMt .fc-mt-mv *:not([class*="-dr"]):not(.mv3-dg){animation-iteration-count:infinite !important;}
 @media (max-height:700px){html body #fcMt#fcMt .fc-mt-mv{transform:scale(.82);margin:6px auto 0;}}
+</style>
+<style id="axV4Css">
+/* PRÓBA 55 — admin v4 (Martin: „más kinézet, látványosabb, jobban átlátható”): Boltok, Beállítások, Adatok, Dokumentumok, Közlemények, Üzenetek */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-phs .ax-stc{position:relative;overflow:hidden;min-width:112px;padding:12px 16px 12px 16px !important;border-radius:16px !important;background:linear-gradient(160deg,color-mix(in srgb,var(--sc,#FBAC01) 16%,transparent),rgba(255,255,255,.02)) !important;border:1px solid color-mix(in srgb,var(--sc,#FBAC01) 32%,transparent) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-phs .ax-stc::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--sc,#FBAC01);}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-phs .ax-stc b{font:800 28px/1.1 Poppins,sans-serif !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-pane:is([data-pane="shops"],[data-pane="set"],[data-pane="data"],[data-pane="docs"],[data-pane="ann"],[data-pane="inbox"]) .ax-card{position:relative;overflow:hidden;border-radius:20px !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-pane:is([data-pane="shops"],[data-pane="set"],[data-pane="data"],[data-pane="docs"],[data-pane="ann"],[data-pane="inbox"]) .ax-card::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:linear-gradient(90deg,var(--cc,#FBAC01),transparent 75%);opacity:.9;pointer-events:none;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ch .v4i{flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;margin-right:10px;background:color-mix(in srgb,var(--cc,#FBAC01) 20%,transparent);color:var(--cc,#FBAC01);}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ch .v4i svg{width:19px;height:19px;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ch{display:flex !important;align-items:center !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-pane.v4in .ax-card,html body #fcAdmin#fcAdmin#fcAdmin .ax-pane.v4in .ax-scard{animation:v4In .45s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0) * 50ms);}
+@keyframes v4In{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* Boltok kártyák */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard{position:relative;overflow:hidden;border-radius:20px !important;transition:transform .22s ease,border-color .22s ease !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard:hover{transform:translateY(-3px);border-color:rgba(251,172,1,.45) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--st,#8a8f98);}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard.v4on{--st:#3ecf8e;} html body #fcAdmin#fcAdmin#fcAdmin .ax-scard.v4off{--st:#6b6355;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .h .ax-av{box-shadow:0 0 0 3px #0d0b08,0 0 0 5px var(--st,#8a8f98) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k > span{position:relative;overflow:hidden;border-radius:14px !important;background:color-mix(in srgb,var(--kc) 12%,rgba(255,255,255,.02)) !important;border:1px solid color-mix(in srgb,var(--kc) 26%,transparent) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k > span small{color:var(--kc) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k > span:nth-child(1){--kc:#c98a3a} html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k > span:nth-child(2){--kc:#e2585a} html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k > span:nth-child(3){--kc:#6f7ff5} html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k > span:nth-child(4){--kc:#3ecf8e}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k b{font:800 22px/1.1 Poppins,sans-serif !important;white-space:nowrap;} html body #fcAdmin#fcAdmin#fcAdmin .ax-scard .k b.ax-ksv{font-size:15px !important;} html body #fcAdmin#fcAdmin#fcAdmin .ax-log:has(> .ax-empty){padding-left:0;} html body #fcAdmin#fcAdmin#fcAdmin .ax-log:has(> .ax-empty)::before{display:none;}
+/* Dokumentumok */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-doc .ic{flex:none;width:46px !important;height:54px !important;border-radius:8px 14px 8px 8px !important;display:grid !important;place-items:end center !important;padding-bottom:7px;background:var(--fc,#8a8f98) !important;color:#fff !important;font:900 10.5px Inter,sans-serif !important;letter-spacing:.06em;position:relative;box-shadow:0 6px 16px color-mix(in srgb,var(--fc) 35%,transparent);}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-doc .ic::before{content:"";position:absolute;right:0;top:0;width:14px;height:14px;background:rgba(255,255,255,.35);border-bottom-left-radius:6px;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-doc{border-radius:18px !important;transition:transform .2s ease,border-color .2s !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-doc:hover{transform:translateX(3px);border-color:rgba(251,172,1,.4) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-dgot{border-radius:14px !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-dgot b{color:#3ecf8e !important;font:800 20px Poppins,sans-serif !important;}
+/* Napló idővonal */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-log{position:relative;padding-left:20px;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-log::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,#FBAC01,rgba(251,172,1,.08));border-radius:2px;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-lg{position:relative;border-radius:12px;padding:9px 12px !important;margin:0 0 6px !important;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-lg::before{content:"";position:absolute;left:-19px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#0d0b08;box-shadow:0 0 0 2px #FBAC01;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-lg:first-child::before{background:#FBAC01;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-lg time{display:inline-block;padding:3px 9px;border-radius:99px;background:rgba(251,172,1,.1);color:#f0c766 !important;font:700 11.5px Inter,sans-serif !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-lg{background:#fff;border-color:rgba(0,0,0,.06) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-lg::before{background:#fff;}
+@media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fcAdmin .v4in *{animation:none !important}}
+</style>
+<script id="axV4Js">
+(function(){
+  var SV = function(p){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; };
+  var I = { shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', cpu:'<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/>', check:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>', folder:'<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
+    mega:'<path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>', eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', send:'<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',
+    tool:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>', bolt:'<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>', lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>', bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>', dot:'<circle cx="12" cy="12" r="4"/>', store:'<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/>' };
+  var M = [["Kommunikáció","chat","#5b95ff"],["GIPHY","grid","#d6589a"],["Programok","grid","#8e7ff5"],["Biztonsági","shield","#3ecf8e"],["Rendszer","cpu","#6bb6ff"],["Adat-ellen","check","#3ecf8e"],["Tevékenység","list","#FBAC01"],["Gazdátlan","folder","#f0953a"],["Régi","folder","#f0953a"],["Új dokumentum","up","#c98a3a"],["Kiküldött","folder","#c98a3a"],["Egyszer","lock","#e2585a"],["Új közlemény","mega","#5b95ff"],["Előnézet","eye","#b794ff"],["Kint","send","#3ecf8e"],["Karbantartás","tool","#f0953a"],["Gyors","bolt","#FBAC01"],["Chat","chat","#5b95ff"],["Program","grid","#8e7ff5"],["Admin","user","#d9ad46"],["Értesít","bell","#f0953a"],["Még nem","store","#9aa3b5"],["Boltok","store","#4fb3c4"]];
+  var FT = function(n){ n = String(n || "").toLowerCase(); var e = (n.match(/\.([a-z0-9]{2,5})$/) || [,""])[1];
+    if(e === "pdf") return ["PDF", "#e2585a"]; if(/^xls|csv|ods/.test(e)) return ["XLS", "#2fae6b"]; if(/^doc|odt|rtf/.test(e)) return ["DOC", "#3d7be0"]; if(/^(png|jpe?g|gif|webp|heic)$/.test(e)) return ["KÉP", "#9a6cf0"]; if(/^ppt/.test(e)) return ["PPT", "#f0953a"]; if(/^(zip|rar|7z)$/.test(e)) return ["ZIP", "#8a8f98"]; return [e ? e.toUpperCase().slice(0, 4) : "FÁJL", "#8a8f98"]; };
+  function deco(){
+    var A = document.getElementById("fcAdmin"); if(!A) return; var p = A.querySelector(".ax-pane.on"); if(!p) return;
+    p.querySelectorAll(".ax-ch:not([data-v4])").forEach(function(c){ c.setAttribute("data-v4", "1"); var h = c.querySelector("h3,h4"); if(!h) return; var t = h.textContent.trim(), k = null;
+      for(var i = 0; i < M.length; i++) if(t.indexOf(M[i][0]) === 0){ k = M[i]; break; } if(!k) k = [0, "dot", "#FBAC01"];
+      var card = c.closest(".ax-card"); if(card) card.style.setProperty("--cc", k[2]); c.style.setProperty("--cc", k[2]);
+      var s = document.createElement("span"); s.className = "v4i"; s.innerHTML = SV(I[k[1]]); c.insertBefore(s, c.firstChild); });
+    p.querySelectorAll(".ax-scard:not([data-v4])").forEach(function(c){ c.setAttribute("data-v4", "1"); var d = c.querySelector(".ax-dt"); c.classList.add(d && d.classList.contains("on") ? "v4on" : "v4off"); });
+    p.querySelectorAll(".ax-doc .ic:not([data-v4])").forEach(function(ic){ ic.setAttribute("data-v4", "1"); var b = ic.closest(".ax-doc").querySelector(".tx b"), f = FT(b && b.textContent); ic.textContent = f[0]; ic.style.setProperty("--fc", f[1]); });
+  }
+  function enter(){ var p = document.querySelector("#fcAdmin .ax-pane.on"); if(!p) return; var i = 0;
+    p.querySelectorAll(".ax-card, .ax-scard").forEach(function(c){ if(i < 18) c.style.setProperty("--i", i++); });
+    p.classList.remove("v4in"); void p.offsetWidth; p.classList.add("v4in"); setTimeout(function(){ p.classList.remove("v4in"); }, 1400); }
+  document.addEventListener("click", function(e){ var t = e.target && e.target.closest && e.target.closest("#fcAdmin [data-nav]"); if(t) setTimeout(function(){ deco(); enter(); }, 60); }, true);
+  setInterval(deco, 700);
+})();
+</script>
+<style id="mtFixCss">
+html body #fcMt#fcMt .fc-mt-grid{display:none !important;}
+html body #fcMt#fcMt.fc-mt-nou .fc-mt-bigt,html body #fcMt#fcMt.fc-mt-nou .mv3-flip{display:none !important;}
+html body #fcMt#fcMt.fc-mt-nou .fc-mt-mv:has(.mv3-flip)::before{content:"HAMAROSAN";font:800 34px Poppins,Inter,sans-serif;color:#FBAC01;letter-spacing:.06em;}
 </style>
 </body>
 </html>
