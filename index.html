@@ -29856,7 +29856,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
               <div data-stp-p="ops" hidden><div class="ax-g2"><div class="ax-card ax-mtc"><div class="ax-ch"><h3>🛠️ Karbantartás</h3><span class="ax-b ax-mtst"></span></div>
                   <p class="ax-hint">Bekapcsolva minden boltnál egy teljes képernyős „Karbantartás” jelzés jelenik meg, és addig nem lehet dolgozni. A beállított idő után <b>magától</b> megszűnik. Te (admin) közben mindent látsz.</p>
                   <textarea class="ax-in ax-ta ax-mtmsg" maxlength="300" placeholder="A Munkaasztalt épp frissítjük — pár perc, és újra használhatod."></textarea>
-                  <div class="ax-fl"><label>Meddig?</label>${seg("ax-mtd", "mtd", [["30","30 perc"],["60","1 óra"],["120","2 óra"],["eod","Ma estig"],["0","Amíg ki nem kapcsolom"]], "30")}</div>
+                  <div class="ax-fl"><label>Meddig?</label>${seg("ax-mtd", "mtd", [["30","30 perc"],["60","1 óra"],["120","2 óra"],["eod","Ma estig"],["tm10","Holnap 10:00"],["at","Pontos időpont"],["0","Amíg ki nem kapcsolom"]], "30")}<input type="datetime-local" class="ax-in ax-mtat" style="margin-top:8px;max-width:260px"></div>
                   <div class="ax-row"><button type="button" class="ax-btn pri" data-x="mton">🛠️ Karbantartás indítása</button><button type="button" class="ax-btn danger" data-x="mtoff">✓ Karbantartás vége</button></div></div>
                 <div class="ax-card"><div class="ax-ch"><h3>⚡ Gyors műveletek</h3><small>minden boltnál</small></div>
                   <div class="ax-op"><span class="ic">🔄</span><div><b>Minden bolt frissítése most</b><small>A boltoknál újratölt az oldal (ha épp gépelnek, megvárja). Új verzió után hasznos.</small><em class="ax-oprl"></em></div><button type="button" class="ax-btn" data-x="opsrl">Frissítés</button></div>
@@ -30598,9 +30598,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         if(a === "anotesave"){ cfgSet("anote", ($(".ax-anote").value || "").trim().slice(0, 140)); return true; }
         if(a === "mton"){ if(!arm(x, "Biztosan? Kattints újra")) return true;
           const d = (b.querySelector(".ax-mtd .on") || {}).dataset || {}, v = d.mtd || "30", now = Date.now();
-          const until = v === "0" ? 0 : v === "eod" ? (()=>{ const t = new Date(); t.setHours(23, 59, 0, 0); return t.getTime(); })() : now + (+v) * 60000;
+          const atV = ($(".ax-mtat") || {}).value || "", until = v === "0" ? 0 : v === "eod" ? (()=>{ const t = new Date(); t.setHours(23, 59, 0, 0); return t.getTime(); })() : v === "tm10" ? (()=>{ const t = new Date(); t.setDate(t.getDate() + 1); t.setHours(10, 0, 0, 0); return t.getTime(); })() : v === "at" ? (atV ? new Date(atV).getTime() : 0) : now + (+v) * 60000;
+          if(v === "at" && !(until > now)){ toast2("Adj meg egy jövőbeli időpontot a „Pontos időpont” mezőben."); x.classList.remove("armed"); return true; }
           appC.mt = { on:true, msg:($(".ax-mtmsg").value || "").trim().slice(0, 300), until, at:now }; x.classList.remove("armed"); x.textContent = "🛠️ Karbantartás frissítése";
-          cfgPush(`🛠️ Karbantartás bekapcsolva${until ? " " + hhmm(until) + "-ig" : ""}`); return true; }
+          cfgPush(`🛠️ Karbantartás bekapcsolva${until ? " " + (new Date(until).toDateString() !== new Date().toDateString() ? new Date(until).toLocaleDateString("hu-HU", { month:"short", day:"numeric" }) + " " : "") + hhmm(until) + "-ig" : ""}`); return true; }
         if(a === "mtoff"){ const bo = $('[data-x="mton"]'); if(bo) bo.textContent = "🛠️ Karbantartás indítása"; appC.mt = { on:false, at:Date.now() }; cfgPush("🛠️ Karbantartás vége"); return true; }
         if(a === "opsrl"){ appC.rl = Date.now(); cfgPush("🔄 Minden bolt frissítése"); return true; }
         if(a === "opslo"){ if(!arm(x, "Mindenkit kiléptet — kattints újra")) return true; appC.lo = Date.now(); x.classList.remove("armed"); x.textContent = "Kijelentkeztetés"; cfgPush("🚪 Minden bolt kijelentkeztetése"); return true; }
@@ -32318,9 +32319,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     if(!m.until){ el.classList.add("fc-mt-nou"); el.querySelectorAll(".fc-mt-cdx").forEach(e=>{ if(e.namespaceURI === "http://www.w3.org/2000/svg"){ const fs = +e.getAttribute("font-size") || 24; e.setAttribute("font-size", Math.max(9, Math.round(fs * .42))); e.setAttribute("letter-spacing", "1.5"); e.textContent = "HAMAROSAN"; } }); el.querySelectorAll(".fc-mt-mv text").forEach(t=>{ if(/^(MÉG ENNYI|INDULÁSIG|NYITÁSIG)$/.test(t.textContent.trim())) t.style.display = "none"; }); }
     try{ const lg = el.querySelector(".fc-mt-logo"); if(lg && window.fpLogoFor) Promise.resolve(window.fpLogoFor("")).then(u=>{ if(u){ lg.src = u; lg.hidden = false; } }).catch(()=>{}); }catch(e){}
     const tick = ()=>{ const left = m.until ? m.until - Date.now() : 1; if(left <= 0){ mtDraw(); return; }
-      if(m.until){ const sec = Math.max(0, Math.floor(left / 1000)), mi = Math.floor(sec / 60), s = sec % 60, p = n=> String(n).padStart(2, "0"), v = (mi > 99 ? mi : p(mi)) + ":" + p(s);
+      if(m.until){ const sec = Math.max(0, Math.floor(left / 1000)), hh = Math.floor(sec / 3600), mi = Math.floor(sec / 60), s = sec % 60, p = n=> String(n).padStart(2, "0"), v = hh ? hh + ":" + p(mi % 60) + ":" + p(s) : p(mi) + ":" + p(s);
+        if(hh && !el.dataset.lg){ el.dataset.lg = "1"; el.querySelectorAll(".fc-mt-cdx").forEach(e=>{ if(e.namespaceURI === "http://www.w3.org/2000/svg"){ const fs = +e.getAttribute("font-size") || 24; e.setAttribute("font-size", Math.round(fs * .72)); } }); el.classList.add("fc-mt-long"); }
         el.querySelectorAll(".fc-mt-cdx").forEach(e=>{ if(e.textContent !== v) e.textContent = v; });
-        const d = v.replace(":", "").slice(-4); el.querySelectorAll("[data-d]").forEach(g=>{ const n = d[+g.dataset.d]; if(n != null && g.textContent !== n){ g.textContent = n; g.classList.remove("mv3-go"); void g.offsetWidth; g.classList.add("mv3-go"); } }); }
+        const d = (hh ? p(Math.min(99, hh)) + p(mi % 60) : p(mi) + p(s)); el.querySelectorAll("[data-d]").forEach(g=>{ const n = d[+g.dataset.d]; if(n != null && g.textContent !== n){ g.textContent = n; g.classList.remove("mv3-go"); void g.offsetWidth; g.classList.add("mv3-go"); } }); }
       const bg = el.querySelector(".fc-mt-big"); if(bg && m.until){ const sec = Math.max(0, Math.floor(left / 1000)), h = Math.floor(sec / 3600), mi = Math.floor(sec % 3600 / 60), s = sec % 60, p = n=> String(n).padStart(2, "0"); bg.textContent = h ? h + ":" + p(mi) + ":" + p(s) : p(mi) + ":" + p(s); }
       const cd = el.querySelector(".fc-mt-cd"); if(cd){ const mm = Math.max(1, Math.ceil(left / 60000)); cd.textContent = `· még kb. ${mm >= 60 ? Math.floor(mm / 60) + " óra" + (mm % 60 ? " " + (mm % 60) + " perc" : "") : mm + " perc"}`; }
       mtT = setTimeout(tick, m.until ? 1000 : 20000); };
@@ -74564,6 +74566,11 @@ html body #fcAdmin#fcAdmin#fcAdmin .ch-rq{display:flex !important;flex-direction
 html body #fcAdmin#fcAdmin#fcAdmin .ch-rq b{display:block !important;font:800 11px Inter,sans-serif !important;color:#b3a8ff !important;line-height:1.3 !important;}
 html body #fcAdmin#fcAdmin#fcAdmin .ch-rq span{display:block !important;font:500 12px Inter,sans-serif !important;color:#c9c2b2 !important;line-height:1.35 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;max-width:280px !important;}
 html body #fcAdmin#fcAdmin#fcAdmin .ch-rq::before,html body #fcAdmin#fcAdmin#fcAdmin .ch-rq::after{display:none !important;content:none !important;}
+</style>
+<style id="mtAtCss">
+html body #fcAdmin .ax-mtat{display:none;}
+html body #fcAdmin .ax-fl:has(.ax-mtd [data-mtd="at"].on) .ax-mtat{display:block;}
+html body #fcMt#fcMt.fc-mt-long .fc-mt-bigt{font-size:36px;}
 </style>
 </body>
 </html>
