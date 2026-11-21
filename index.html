@@ -74014,7 +74014,7 @@ html body #adDet#adDet#adDet#adDet .ax-dc:hover{transform:translateY(-2px);borde
 html body #adDet#adDet#adDet#adDet .ax-dc header .ic{width:32px !important;height:32px !important;border-radius:10px !important;background:color-mix(in srgb,var(--c) 20%,transparent) !important;color:var(--c) !important;display:grid !important;place-items:center !important;}
 html body #adDet#adDet#adDet#adDet .ic svg{width:18px;height:18px;display:block;}
 html body #adDet#adDet#adDet#adDet .ax-dtl .ic svg{width:22px;height:22px;}
-html body #adDet#adDet#adDet#adDet .ax-drwc.dx-on{display:flex !important;flex-direction:column !important;gap:12px !important;} html body #adDet#adDet#adDet#adDet .ax-drwc.dx-on > *{margin:0 !important;} html body #adDet#adDet#adDet#adDet .dx-cols{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:12px;align-items:start;}
+html body #adDet#adDet#adDet#adDet .ax-drwc.dx-on[hidden]{display:none !important;} html body #adDet#adDet#adDet#adDet .ax-drwc.dx-on:not([hidden]){display:flex !important;flex-direction:column !important;gap:12px !important;} html body #adDet#adDet#adDet#adDet .ax-drwc.dx-on > *{margin:0 !important;} html body #adDet#adDet#adDet#adDet .dx-cols{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:12px;align-items:start;}
 html body #adDet#adDet#adDet#adDet .dx-cols > div{display:flex;flex-direction:column;gap:12px;min-width:0;}
 html body #adDet#adDet#adDet#adDet .dx-cols .ax-dgrid{grid-template-columns:1fr !important;margin:0 !important;}
 html body #adDet#adDet#adDet#adDet .dx-cols > div > *{margin:0 !important;}
@@ -74085,6 +74085,59 @@ html body #fcAdmin#fcAdmin .ax-pane.on .ax-card:hover{transform:translateY(-2px)
   document.addEventListener("click", function(e){ var t = e.target && e.target.closest && e.target.closest("#fcAdmin [data-nav]"); if(!t) return;
     setTimeout(function(){ var p = document.querySelector("#fcAdmin .ax-pane.on"); if(!p) return; var n = 0;
       p.querySelectorAll("b, strong, .ax-kv b, .ax-num").forEach(function(el){ if(n > 24 || el.childElementCount) return; var s = el.textContent.trim(); if(!/^\d{1,5}$/.test(s)) return; var fs = parseFloat(getComputedStyle(el).fontSize); if(fs < 22) return; var r = el.getBoundingClientRect(); if(!r.width || r.top > innerHeight) return; n++; cnt(el, +s, 650); }); }, 120); }, true);
+})();
+</script>
+<style id="detFx2Css">
+/* PRÓBA 53b — adatlap Beállítások és Műveletek fül: ikonos csempék */
+html body #adDet#adDet#adDet#adDet .ds2-h{position:relative;overflow:hidden;border-radius:16px !important;background:linear-gradient(135deg,rgba(251,172,1,.14),rgba(255,255,255,.02) 60%) !important;border:1px solid rgba(251,172,1,.25) !important;}
+html body #adDet#adDet#adDet#adDet .ds2 h5{display:flex;align-items:center;gap:8px;}
+html body #adDet#adDet#adDet#adDet .ds2 h5::before{content:"";width:8px;height:8px;border-radius:50%;background:#FBAC01;box-shadow:0 0 0 4px rgba(251,172,1,.18);}
+html body #adDet#adDet#adDet#adDet .ds2-t{position:relative !important;overflow:hidden !important;border-radius:14px !important;transition:transform .2s ease,opacity .2s ease,border-color .2s ease !important;}
+html body #adDet#adDet#adDet#adDet .ds2-t:hover{transform:translateY(-2px);}
+html body #adDet#adDet#adDet#adDet .ds2-t:not(.on){opacity:.62;}
+html body #adDet#adDet#adDet#adDet .ds2-t:not(.on) .dx-si{filter:grayscale(1);}
+html body #adDet#adDet#adDet#adDet .ds2-t .dx-si{flex:none;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;margin-right:10px;background:color-mix(in srgb,var(--c,#FBAC01) 18%,transparent);color:var(--c,#FBAC01);}
+html body #adDet#adDet#adDet#adDet .ds2-t .dx-si svg{width:18px;height:18px;}
+html body #adDet#adDet#adDet#adDet .ds2-t{display:flex !important;align-items:center !important;}
+html body #adDet#adDet#adDet#adDet .dx-opg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:4px;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op{position:relative;display:flex !important;flex-direction:column !important;align-items:stretch !important;gap:8px !important;padding:14px !important;margin:0 !important;border-radius:14px !important;background:linear-gradient(160deg,color-mix(in srgb,var(--oc,#FBAC01) 10%,rgba(255,255,255,.03)),rgba(255,255,255,.015)) !important;border:1px solid color-mix(in srgb,var(--oc,#FBAC01) 24%,rgba(255,255,255,.06)) !important;transition:transform .2s ease !important;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op:hover{transform:translateY(-2px);}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op > div{flex:1;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op .ic{width:38px !important;height:38px !important;border-radius:12px !important;display:grid !important;place-items:center !important;background:color-mix(in srgb,var(--oc,#FBAC01) 20%,transparent) !important;color:var(--oc,#FBAC01) !important;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op .ic svg{width:19px;height:19px;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op > .ax-btn,html body #adDet#adDet#adDet#adDet .dx-opg .ax-op > .ax-dopb,html body #adDet#adDet#adDet#adDet .dx-opg .ax-op > .ax-b{align-self:flex-start;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op.wide{grid-column:1/-1;}
+html body #adDet#adDet#adDet#adDet .dx-opg .ax-op.bad{--oc:#e2585a;}
+@media (max-width:760px){html body #adDet#adDet#adDet#adDet .dx-opg{grid-template-columns:1fr;}}
+</style>
+<script id="detFx2Js">
+(function(){
+  var SV = function(p){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; };
+  var I = {
+    chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', shops:'<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/>',
+    gif:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M8 12h2v2H8a2 2 0 0 1 0-4h2M13 10v4M16 14v-4h3M16 12h2"/>', bug:'<rect x="8" y="6" width="8" height="14" rx="4"/><path d="M19 7l-3 2M5 7l3 2M20 13h-4M4 13h4M10 4l1 2M14 4l-1 2"/>',
+    cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>', tag:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+    inv:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>', cash:'<rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M16 15h2"/>',
+    box:'<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>', trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>',
+    todo:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>', bulb:'<path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
+    phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>', bike:'<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h2l3 11.5M5.5 17.5L9 9h6l-3 8.5"/>',
+    book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>', dot:'<circle cx="12" cy="12" r="4"/>',
+    win:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/>', ext:'<path d="M14 3h7v7M10 14L21 3M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/>',
+    ref:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>', out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+    tool:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>', dl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>'
+  };
+  var DS = [["Chat","chat","#5b95ff"],["Boltok","shops","#4fb3c4"],["GIF","gif","#d6589a"],["Hiba","bug","#f0953a"],["Beosztás","cal","#7b8cff"],["Cetli","tag","#FBAC01"],["Leltár","inv","#30b37a"],["Kassza","cash","#e2bf55"],["Csomag","box","#c98a3a"],["Selejt","trash","#e2585a"],["Dolgozói","tag","#3ecf8e"],["Teendők","todo","#d6589a"],["Eladás","bulb","#f0c766"],["Speckó","phone","#8e7ff5"],["Wolt","bike","#4fb3c4"],["Tudás","book","#5b95ff"]];
+  var OP = [["Bolt megnyitása","win","#FBAC01"],["Megnyitás teljes","ext","#f0c766"],["Frissítés","ref","#5b95ff"],["Kijelentkeztetés","out","#e2585a",1],["Karbantartás","tool","#f0953a"],["Üzenet","chat","#8e7ff5"],["Selejt","trash","#e2585a",1],["Leltárak","inv","#e2585a",1],["Adatok letöltése","dl","#30b37a"]];
+  function find(L, t){ t = String(t || "").trim(); for(var i = 0; i < L.length; i++) if(t.indexOf(L[i][0]) === 0) return L[i]; return null; }
+  function deco(m){
+    m.querySelectorAll(".ds2-t:not([data-dx])").forEach(function(t){ t.setAttribute("data-dx", "1"); var b = t.querySelector(".ds2-tx b"), k = find(DS, b && b.textContent) || [0, "dot", "#FBAC01"];
+      var s = document.createElement("span"); s.className = "dx-si"; s.style.setProperty("--c", k[2]); s.innerHTML = SV(I[k[1]]); t.insertBefore(s, t.firstChild); });
+    m.querySelectorAll('.ax-drwc[data-dtp="ops"] .ax-dc:not([data-dx])').forEach(function(sec){ sec.setAttribute("data-dx", "1"); var ops = [].slice.call(sec.querySelectorAll(":scope > .ax-op")); if(!ops.length) return;
+      var g = document.createElement("div"); g.className = "dx-opg"; sec.insertBefore(g, ops[0]);
+      ops.forEach(function(o){ var b = o.querySelector("b"), k = find(OP, b && b.textContent) || [0, "dot", "#FBAC01"], ic = o.querySelector(".ic"); o.style.setProperty("--oc", k[2]); if(k[3]) o.classList.add("bad"); if(ic) ic.innerHTML = SV(I[k[1]]); if(o.querySelector("ul")) o.classList.add("wide"); g.appendChild(o); }); });
+  }
+  var ob = new MutationObserver(function(){ var m = document.getElementById("adDet"); if(m) deco(m); });
+  function hook(){ if(document.body){ ob.observe(document.body, { childList:true, subtree:true }); } else setTimeout(hook, 200); } hook();
 })();
 </script>
 </body>
