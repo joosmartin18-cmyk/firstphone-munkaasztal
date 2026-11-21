@@ -73899,14 +73899,63 @@ html body #fcLogin#fcLogin .lk-fx .glow{background:radial-gradient(circle,rgba(2
     var I = ["📅","📦","💰","✅","🏷️","📱"], bb = "";
     I.forEach(function(e, i){ var x = [7, 18, 29, 71, 82, 93][i]; bb += '<span class="bb" style="left:' + x + '%;--d:' + (16 + (i * 3) % 9) + 's;--w:' + (-(i * 2.3)).toFixed(1) + 's">' + e + '</span>'; });
     var fx = document.createElement("div"); fx.className = "lk-fx";
-    fx.innerHTML = '<div class="glow"></div>' + bb;
+    fx.innerHTML = '<div class="lk-wave"><svg viewBox="0 0 2400 600" preserveAspectRatio="none"><defs><linearGradient id="lkW1" x1="0" x2="1"><stop offset="0" stop-color="#FBAC01" stop-opacity="0"/><stop offset=".3" stop-color="#FBAC01" stop-opacity=".55"/><stop offset=".7" stop-color="#F07F12" stop-opacity=".45"/><stop offset="1" stop-color="#FBAC01" stop-opacity="0"/></linearGradient><linearGradient id="lkW2" x1="0" x2="1"><stop offset="0" stop-color="#f0c766" stop-opacity="0"/><stop offset=".5" stop-color="#f0c766" stop-opacity=".35"/><stop offset="1" stop-color="#f0c766" stop-opacity="0"/></linearGradient></defs>'
+      + '<path d="M0 420 C300 300 600 300 900 380 S1500 520 1800 400 S2250 300 2400 380 L2400 600 L0 600Z" fill="url(#lkW1)" opacity=".55"/>'
+      + '<path d="M0 470 C350 380 650 420 1000 460 S1650 520 2000 430 S2300 420 2400 450" fill="none" stroke="url(#lkW2)" stroke-width="3"/>'
+      + '<path d="M0 500 C400 440 700 520 1100 500 S1700 430 2050 500 S2300 520 2400 490" fill="none" stroke="url(#lkW2)" stroke-width="1.5"/></svg></div>';
     bg.appendChild(fx); shine(l);
   }
-  function shine(l){ var cd = l.querySelector(".lk-card"); if(cd && !cd.querySelector(".lk-hdl")){ var h = document.createElement("i"); h.className = "lk-hdl"; cd.insertBefore(h, cd.firstChild); }
+  function shine(l){
+    var mn = l.querySelector(".lk-main"), hi = l.querySelector(".lk-hi");
+    if(mn && !mn.querySelector(".lk-lock")){ var lk = document.createElement("div"); lk.className = "lk-lock"; lk.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path class="sh" d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'; mn.insertBefore(lk, mn.firstChild); }
+    if(hi && !hi.closest(".lk-ntf")){ var w = document.createElement("div"); w.className = "lk-ntf"; w.innerHTML = '<i class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/></svg></i><div class="tx"><div class="tt"><b>FIRSTPHONE MUNKAASZTAL</b><small>most</small></div></div>'; hi.parentNode.insertBefore(w, hi); w.querySelector(".tx").appendChild(hi); }
+    var cd = l.querySelector(".lk-card"); if(cd && !cd.querySelector(".lk-hdl")){ var h = document.createElement("i"); h.className = "lk-hdl"; cd.insertBefore(h, cd.firstChild); }
     var av = l.querySelector(".lk-av"); if(av && !av.querySelector(".lk-avr")){ if(getComputedStyle(av).position === "static") av.style.position = "relative"; var r = document.createElement("i"); r.className = "lk-avr"; r.innerHTML = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(251,172,1,.35)" stroke-width="1.5" stroke-dasharray="3 6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#FBAC01" stroke-width="3" stroke-dasharray="30 266" stroke-linecap="round"/><circle cx="50" cy="3" r="4" fill="#f0c766"/></svg>'; av.appendChild(r); }
     var b = l.querySelector(".fc-go"); if(b && !b.querySelector(".lk-shine")){ var s = document.createElement("span"); s.className = "lk-shine"; b.appendChild(s); } }
   setInterval(add, 400); add();
 })();
 </script>
+<style id="lkLockCss">
+/* ===== belépő v3 — prémium zárképernyő: nincs emoji/folt, lassan úszó sárga hullám, lakat, nagy óra, értesítés-kártya, tiszta alsó panel ===== */
+html body #fcLogin#fcLogin#fcLogin .lk-bg.lk-bg.lk-bg{background:#0a0908 !important;background-image:radial-gradient(90% 60% at 50% 0%,#1d160a 0%,#0a0908 60%) !important;}
+html body #fcLogin#fcLogin .lk-bg::before, html body #fcLogin#fcLogin .lk-bg::after, html body #fcLogin#fcLogin::before, html body #fcLogin#fcLogin::after, html body #fcLogin#fcLogin#fcLogin .lk-bg > i.a1, html body #fcLogin#fcLogin#fcLogin .lk-bg > i.a2, html body #fcLogin#fcLogin#fcLogin .lk-bg > i.a3, html body #fcLogin#fcLogin .lk-bg > i, html body #fcLogin#fcLogin .lk-bg .lk-dots, html body #fcLogin#fcLogin .lk-fx .bb, html body #fcLogin#fcLogin .lk-fx .glow{display:none !important;}
+html body #fcLogin#fcLogin .lk-wave{position:absolute;left:0;bottom:0;width:200%;height:62vh;animation:lkWave 38s ease-in-out infinite alternate !important;opacity:.9;}
+html body #fcLogin#fcLogin .lk-wave svg{display:block;width:100%;height:100%;}
+@keyframes lkWave{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+html body #fcLogin#fcLogin .lk-chips, html body #fcLogin#fcLogin .lk-foot, html body #fcLogin#fcLogin .lk-tag{display:none !important;}
+html body #fcLogin#fcLogin .lk-brand{margin:6px 0 clamp(14px,5vh,52px) !important;opacity:1;}
+html body #fcLogin#fcLogin .lk-brand img{height:26px !important;width:auto !important;}
+html body #fcLogin#fcLogin .lk-lock{order:0;color:#fff;width:22px;height:22px;margin:0 0 6px;opacity:.9;}
+html body #fcLogin#fcLogin .lk-lock svg{width:100%;height:100%;display:block;}
+html body #fcLogin#fcLogin .lk-lock .sh{transform-origin:16px 11px;animation:lkShack 3.2s ease-in-out 1.4s infinite !important;}
+@keyframes lkShack{0%,70%,100%{transform:none}78%{transform:translateY(-2px) rotate(-14deg)}86%{transform:none}}
+html body #fcLogin#fcLogin .lk-brand{order:-1;}
+html body #fcLogin#fcLogin .lk-clock .lg-d{font-family:-apple-system,"SF Pro Display",Inter,system-ui,sans-serif !important;font-size:clamp(16px,2.4vh,21px) !important;font-weight:600 !important;color:rgba(255,255,255,.86) !important;letter-spacing:.01em !important;text-transform:none !important;}
+html body #fcLogin#fcLogin .lk-clock .lg-t{font-family:-apple-system,"SF Pro Display",Inter,system-ui,sans-serif !important;font-size:clamp(64px,min(19vh,24vw),176px) !important;font-weight:650 !important;letter-spacing:-.025em !important;line-height:.98 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;text-shadow:none !important;font-variant-numeric:tabular-nums;}
+html body #fcLogin#fcLogin .lk-ntf{order:2;display:flex;align-items:center;gap:12px;width:min(400px,100%);margin:clamp(16px,4vh,40px) 0 0;padding:12px 14px;border-radius:22px;background:rgba(32,29,24,.92);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 14px 34px rgba(0,0,0,.45);text-align:left;animation:lkNtf .7s .55s cubic-bezier(.2,.9,.3,1.15) both !important;}
+html body #fcLogin#fcLogin .lk-ntf .ic{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg,#FFD45C,#FBAC01) !important;}
+html body #fcLogin#fcLogin .lk-ntf .ic svg{width:22px;height:22px;}
+html body #fcLogin#fcLogin .lk-ntf .tx{flex:1;min-width:0;}
+html body #fcLogin#fcLogin .lk-ntf .tt{display:flex;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:.06em;color:rgba(255,255,255,.55);margin-bottom:2px;}
+html body #fcLogin#fcLogin .lk-ntf .tt b{font-weight:700;}
+html body #fcLogin#fcLogin .lk-ntf .tt small{font-size:11px;letter-spacing:0;}
+html body #fcLogin#fcLogin .lk-ntf .lk-hi{margin:0 !important;font-size:15px !important;line-height:1.3 !important;text-align:left !important;color:#fff !important;font-weight:700 !important;}
+html body #fcLogin#fcLogin .lk-ntf .lk-hi span{color:rgba(255,255,255,.72) !important;font-weight:500 !important;}
+@keyframes lkNtf{from{opacity:0;transform:translateY(-14px) scale(.96)}to{opacity:1;transform:none}}
+html body #fcLogin#fcLogin .lk-card{background:rgba(18,17,15,.97) !important;border:1px solid rgba(255,255,255,.08) !important;box-shadow:0 -10px 60px rgba(0,0,0,.6) !important;}
+@media (min-width:701px){html body #fcLogin#fcLogin .lk-card{border:1px solid rgba(255,255,255,.08) !important;}}
+html body #fcLogin#fcLogin .lk-card .lk-hdl{background:rgba(255,255,255,.18) !important;}
+html body #fcLogin#fcLogin .lk-card .lk-hdl::after{display:none !important;}
+html body #fcLogin#fcLogin .lk-card label{font-size:11px !important;letter-spacing:.08em !important;color:rgba(255,255,255,.5) !important;}
+html body #fcLogin#fcLogin .fc-in > i{display:none !important;}
+html body #fcLogin#fcLogin .fc-in{background:#1d1b18 !important;border:1px solid rgba(255,255,255,.08) !important;border-radius:14px !important;box-shadow:none !important;}
+html body #fcLogin#fcLogin .fc-in:focus-within{border-color:#FBAC01 !important;box-shadow:0 0 0 3px rgba(251,172,1,.18) !important;}
+html body #fcLogin#fcLogin .fc-in input{padding-left:16px !important;color:#fff !important;}
+html body #fcLogin#fcLogin .fc-eye{font-size:0 !important;width:40px !important;opacity:.6;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center/19px no-repeat !important;}
+html body #fcLogin#fcLogin .fc-go{background:#FBAC01 !important;background-image:linear-gradient(180deg,#FFC13A,#FBAC01) !important;color:#1a1408 !important;border-radius:14px !important;box-shadow:0 10px 26px rgba(251,172,1,.28) !important;font-weight:800 !important;}
+html body #fcLogin#fcLogin .lg-off{color:rgba(255,255,255,.55) !important;}
+@media (max-height:720px){html body #fcLogin#fcLogin .lk-ntf{margin-top:12px}html body #fcLogin#fcLogin .lk-lock{display:none}}
+@media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) body #fcLogin#fcLogin .lk-wave{animation:none !important;}}
+</style>
 </body>
 </html>
