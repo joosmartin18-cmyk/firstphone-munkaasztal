@@ -27795,7 +27795,7 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     /* válasz, reakciók, „ír” */
     .ch-m{position:relative;}
     .ch-act{display:flex;gap:2px;align-self:center;margin:0 6px;opacity:0;pointer-events:none;transition:opacity .15s;}
-    .ch-m:hover .ch-act,.ch-m.act .ch-act{opacity:1;pointer-events:auto;}
+    .ch-m:hover .ch-act,.ch-m.chact .ch-act{opacity:1;pointer-events:auto;}
     .ch-act button{width:28px;height:28px;border-radius:50%;border:1px solid var(--border,#2b2b33);background:var(--bg-panel,#17171c);color:var(--text-dim,#9c9ca6);font-size:14px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0;transition:transform .12s,color .12s,border-color .12s;}
     .ch-act button:hover{color:var(--text,#ececf1);border-color:#8e7ff5;transform:scale(1.08);}
     .ch-rq{display:flex;flex-direction:column;gap:1px;max-width:100%;min-width:0;margin:0 0 3px;padding:6px 10px 6px 11px;border:0;border-left:3px solid #8e7ff5;border-radius:10px;background:color-mix(in srgb,#8e7ff5 13%,transparent);color:inherit;font:inherit;text-align:left;cursor:pointer;}
@@ -28285,12 +28285,12 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
       if(g){ e.stopPropagation(); const t = list.querySelector(`.ch-m[data-id="${CSS.escape(g.dataset.goto)}"]`); if(t){ t.scrollIntoView({ block:"center", behavior:"smooth" }); t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash"); } else toast2("Ez az üzenet már nincs a listában."); return; }
       const row = e.target.closest(".ch-m[data-id]"), m = row ? C.find(row.dataset.id) : null;
       if(!m) return;
-      if(e.target.closest("[data-rep]")){ e.stopPropagation(); row.classList.remove("act"); C.reply(m); return; }
+      if(e.target.closest("[data-rep]")){ e.stopPropagation(); row.classList.remove("chact"); C.reply(m); return; }
       const db = e.target.closest("[data-del]");
       if(db){ e.stopPropagation(); if(!C.del) return;
-        if(db.dataset.arm !== "1"){ db.dataset.arm = "1"; db.classList.add("arm"); db.textContent = "Törlöd?"; db.title = "Kattints újra a törléshez"; row.classList.add("act", "delq");
+        if(db.dataset.arm !== "1"){ db.dataset.arm = "1"; db.classList.add("arm"); db.textContent = "Törlöd?"; db.title = "Kattints újra a törléshez"; row.classList.add("chact", "delq");
           setTimeout(()=>{ if(db.isConnected && db.dataset.arm === "1"){ db.dataset.arm = ""; db.classList.remove("arm"); db.textContent = "🗑"; row.classList.remove("delq"); } }, 3500); return; }
-        row.classList.remove("act", "delq"); row.classList.add("dying");
+        row.classList.remove("chact", "delq"); row.classList.add("dying");
         const bb = row.querySelector(".ch-bb"); if(bb){ const r = bb.getBoundingClientRect(); for(let k = 0; k < 14; k++){ const pz = document.createElement("i"); pz.className = "ch-dust"; const a = Math.random() * Math.PI * 2, d = 30 + Math.random() * 50;
             pz.style.cssText = `left:${r.left + Math.random() * r.width}px;top:${r.top + Math.random() * r.height}px;--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d - 20}px;animation-delay:${Math.random() * .12}s`; document.body.appendChild(pz); setTimeout(()=> pz.remove(), 900); } }
         try{ window.fpSound && fpSound("info", .3); }catch(_){}
@@ -28302,9 +28302,9 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
         const p = document.createElement("div"); p.className = "ch-rxp"; p.innerHTML = RX_EMO.map(x=> `<button type="button" data-e="${x}">${x}</button>`).join("");
         document.body.appendChild(p); const r = ro.getBoundingClientRect(), w = p.offsetWidth;
         p.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2)) + "px"; p.style.top = Math.max(8, r.top - p.offsetHeight - 8) + "px";
-        p.onclick = ev=>{ const b = ev.target.closest("[data-e]"); if(!b) return; ev.stopPropagation(); closeP(); row.classList.remove("act"); C.react(m, b.dataset.e); };
+        p.onclick = ev=>{ const b = ev.target.closest("[data-e]"); if(!b) return; ev.stopPropagation(); closeP(); row.classList.remove("chact"); C.react(m, b.dataset.e); };
         setTimeout(()=> document.addEventListener("click", closeP, { once:true }), 0); return; }
-      if(touch() && e.target.closest(".ch-bb")){ const on = row.classList.contains("act"); list.querySelectorAll(".ch-m.act").forEach(x=> x.classList.remove("act")); if(!on) row.classList.add("act"); }
+      if(touch() && e.target.closest(".ch-bb")){ const on = row.classList.contains("chact"); list.querySelectorAll(".ch-m.chact").forEach(x=> x.classList.remove("chact")); if(!on) row.classList.add("chact"); }
     });
     list.addEventListener("dblclick", e=>{ const C = list._ix; const row = e.target.closest(".ch-m[data-id]"); if(!C || !row || !e.target.closest(".ch-bb")) return; const m = C.find(row.dataset.id); if(m){ try{ getSelection().removeAllRanges(); }catch(_){} C.react(m, "❤️"); } });
   }
@@ -74556,7 +74556,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .cp-lbl.cp-grp,html body .ch-pop .cp-lbl.cp-g
 html body #fcAdmin#fcAdmin#fcAdmin .cp-stk button{display:flex !important;flex-direction:column !important;align-items:center !important;height:auto !important;min-height:0 !important;padding:8px 2px 6px !important;border:0 !important;border-radius:16px !important;background:rgba(255,255,255,.05) !important;box-shadow:none !important;}
 html body #fcAdmin#fcAdmin#fcAdmin .cp-stk button:hover{background:rgba(251,172,1,.16) !important;}
 /* admin chat: az üzenet-sor „act” osztálya ütközött egy általános admin gomb-stílussal (nagy kerek doboz jelent meg törléskor) */
-html body #fcAdmin#fcAdmin#fcAdmin .ch-m,html body #fcAdmin#fcAdmin#fcAdmin .ch-m.act,html body #fcAdmin#fcAdmin#fcAdmin .ch-m.rep,html body #fcAdmin#fcAdmin#fcAdmin .ch-m.delq{background:transparent !important;background-image:none !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;outline:0 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ch-m,html body #fcAdmin#fcAdmin#fcAdmin .ch-m.chact,html body #fcAdmin#fcAdmin#fcAdmin .ch-m.rep,html body #fcAdmin#fcAdmin#fcAdmin .ch-m.delq{background:transparent !important;background-image:none !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;outline:0 !important;}
 html body #fcAdmin#fcAdmin#fcAdmin .ch-m.deleted div.ch-bb.ch-del{background:transparent !important;background-image:none !important;color:#a99f8c !important;border:1.5px dashed rgba(255,255,255,.18) !important;box-shadow:none !important;font-style:italic;}
 html body #fcAdmin#fcAdmin#fcAdmin .ch-act .dl.arm{width:auto !important;padding:0 10px !important;font:800 11px Inter,sans-serif !important;}
 /* admin chat: válasz-idézet minden böngészőben egyformán (Safariban gombként jelent meg) */
