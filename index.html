@@ -2,6 +2,13 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://securetoken.googleapis.com" crossorigin>
+<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
+<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js">
+<link rel="preload" as="script" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js">
 <script>/* ===== 🤖 automatikus hibanapló: a böngészőben előforduló hibák (a bolt nem lát belőle semmit) → az admin a 🐞 Hibajegyeknél látja ===== */
 (function(){
   var Q = window.__fpErrQ = [], seen = {}, n = 0;
@@ -25643,19 +25650,21 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     S.pushFail = 0; S.errAt = 0; if(!S.pending.size) S.pendAt = 0;
     status();
   }
-  async function readDoc(id, d, c){
+  async function readDoc(id, d, c, pm){
     c = c || col();
     if(d.del) return null;
     if(!d.parts) return d.v == null ? null : String(d.v);
-    let out = "";
-    for(let i = 0; i < d.parts; i++){ const p = await c.doc(id + "__" + i).get(); if(!p.exists) return undefined; out += p.data().v || ""; }
-    return out;
+    /* a darabok párhuzamosan (és ha a teljes lekérés már tartalmazza őket, onnan — nincs második letöltés) */
+    const P = await Promise.all(Array.from({ length:d.parts }, (_, i)=>{ const k = id + "__" + i; if(pm && pm[k]) return pm[k]; return c.doc(k).get().then(p=> p.exists ? p.data() : null); }));
+    if(P.some(p=> !p)) return undefined;
+    return P.map(p=> p.v || "").join("");
   }
   /* első belépés / újratöltés: a felhő az irányadó; ha a felhő még üres, felajánljuk a gépen lévő adatok feltöltését */
   async function pull(){
     const snap = await col().get();
     const remote = {};
-    for(const doc of snap.docs){ if(doc.id.includes("__")) continue; remote[doc.id] = doc.data(); }
+    const pm = {};
+    for(const doc of snap.docs){ if(doc.id.includes("__")){ pm[doc.id] = doc.data(); continue; } remote[doc.id] = doc.data(); }
     const hasRemote = SYNC.some(k=> !NOSEED.includes(k) && remote[k] && !remote[k].del);
     const localKeys = SYNC.filter(k=> !NOSEED.includes(k) && lsGet(k) !== null);
     let changed = false;
@@ -25670,9 +25679,10 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
         else { localKeys.forEach(lsDel); changed = true; }
       }
     } else {
-      for(const k of SYNC){
-        const d = remote[k]; if(!d) continue;
-        const v = await readDoc(k, d); if(v === undefined) continue;
+      const vals = await Promise.all(SYNC.map(k=> remote[k] ? readDoc(k, remote[k], null, pm).catch(()=> undefined) : undefined));
+      for(let i = 0; i < SYNC.length; i++){
+        const k = SYNC[i], d = remote[k]; if(!d) continue;
+        const v = vals[i]; if(v === undefined) continue;
         const cur = lsGet(k);
         if(v === null){ if(cur !== null){ lsDel(k); changed = true; } }
         else if(v !== cur){ lsSet(k, v); changed = true; }
@@ -32326,16 +32336,21 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
   }
   window.addEventListener("beforeunload", e=>{ if(S.pending.size){ e.preventDefault(); e.returnValue = ""; } });
   /* ---------- indítás ---------- */
-  function load(src){ return new Promise((res, rej)=>{ const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
-  async function loadSdk(){
+  function load(src){ return new Promise((res, rej)=>{ const s = document.createElement("script"); s.src = src; s.async = false; s.onload = res; s.onerror = rej; (document.head || document.documentElement).appendChild(s); }); }
+  /* a 3 fájl párhuzamosan töltődik (async=false → sorrendben futnak), és azonnal indul — nem várja meg a 10 MB-os oldal végét */
+  let sdkP = null;
+  async function loadSdk1(){
     const V = "10.12.2", bases = [`https://www.gstatic.com/firebasejs/${V}/`, `https://cdn.jsdelivr.net/npm/firebase@${V}/`];
-    for(const b of bases){ try{ await load(b + "firebase-app-compat.js"); await Promise.all([load(b + "firebase-auth-compat.js"), load(b + "firebase-firestore-compat.js")]); if(window.firebase && firebase.firestore) return true; }catch(e){} }
+    for(const b of bases){ try{ if(window.firebase && firebase.firestore && firebase.auth) return true; await Promise.all([load(b + "firebase-app-compat.js"), load(b + "firebase-auth-compat.js"), load(b + "firebase-firestore-compat.js")]); if(window.firebase && firebase.firestore) return true; }catch(e){} }
     return false;
   }
+  function loadSdk(){ if(!sdkP) sdkP = loadSdk1().then(ok=>{ if(!ok) sdkP = null; return ok; }); return sdkP; }
+  try{ if(!(window.self !== window.top) && lsGet(OFF_KEY) !== "1") loadSdk(); }catch(e){}
   async function start(){
+    const sdk = loadSdk();
     document.readyState === "loading" ? await new Promise(r=> document.addEventListener("DOMContentLoaded", r)) : 0;
     status();
-    if(!(await loadSdk())){ bootHide(); S.state = "offl"; S.lastErr = "A felhő nem érhető el (nincs internet?)"; status();
+    if(!(await sdk)){ bootHide(); S.state = "offl"; S.lastErr = "A felhő nem érhető el (nincs internet?)"; status();
       S.sdkTry = (S.sdkTry || 0) + 1; const again = ()=>{ window.removeEventListener("online", again); clearTimeout(S.sdkT); start(); };
       window.addEventListener("online", again); S.sdkT = setTimeout(again, Math.min(60000, 5000 * S.sdkTry)); return; }
     S.lastErr = "";
