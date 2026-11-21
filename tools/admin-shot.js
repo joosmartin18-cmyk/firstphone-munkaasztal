@@ -10,6 +10,9 @@ const FAKE = `(function(){
   names.forEach(function(n,i){ var uid="u"+i; boltok[uid]={email:"minta"+i+"@bolt.hu",loc:n,place:"Pláza",addr:"Minta utca "+(i+1),ms:now-i*day*2};
     var d=new Date(), sch={}, T=["a","b","split","multi"]; for(var k=1;k<=31;k++){ if((k+i)%9===0) continue; var t=T[(k+i)%4]; sch[d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(k).padStart(2,"0")]= t==="split"?{type:"split",am:"a",pm:"c"}: t==="multi"?{type:"multi",full:["b"],am:["c"]}:{type:t}; }
     var st={year:d.getFullYear(),month:d.getMonth()+1,schedule:sch,settings:{configured:i!==3,location:n,uiLook:i===1?"old":i===2?"new":undefined,layout:i===1?"old":undefined,employees:[{id:"a",name:"Teszt Elek",hex:"#a78bfa"},{id:"b",name:"Próba Anna",hex:"#4fb3c4"},{id:"c",name:"Minta Béla",hex:"#f0953a"}],hours:Array(7).fill({open:"09:00",close:"20:00"})}};
+    var kd=function(k){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(k).padStart(2,"0");};
+    st.reqs={}; st.reqs[kd(d.getDate())]=[{id:"r1"+i,p:"b",t:"off",why:"orvos"}]; st.reqs[kd(5+i)]=[{id:"r2"+i,p:"c",t:"am"},{id:"r3"+i,p:"a",t:"free"}];
+    if(i===0){ sch[kd(d.getDate())]={type:"a",by:"admin",af:1,nt:"egyedül van, nincs váltótárs"}; }
     kv[uid]={firstphone_beosztas_tervezo_v2:{v:JSON.stringify(st),parts:0,by:"dev123456",n:now-i*day*2,t:now},
       firstphone_csomag:{v:JSON.stringify({items:[{id:1},{id:2,outAt:1},{id:3}]}),parts:0,by:"dev",n:now},
       firstphone_kassza:{v:JSON.stringify({n:{"1000":12,"5000":3},back:"20000",report:i%2?"47000":"46000"}),parts:0,by:"dev",n:now},

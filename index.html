@@ -28625,7 +28625,7 @@ service cloud.firestore {
       P.push({ id:"sub:" + sb.name, part:sb.part || "full", sub:true, nm:sb.name + (fc ? ` (${fc})` : "") }); });
     const people = P.map(x=>{ const e = emp(x.id), from = x.part === "pm" ? mid : open, to = x.part === "am" ? mid : close;
       return { id:x.id, name:x.sub ? x.nm : (e ? e.name : "?"), hex:x.sub ? "#9aa3b5" : (e && e.hex) || "#7b8cff", part:x.part, from, to, sub:!!x.sub }; }).filter(x=> x.name !== "?");
-    return { closed:false, hol, adm, hn, open, mid, close, people, dow };
+    return { closed:false, hol, adm, hn, open, mid, close, people, dow, nt:(a && !hol && a.nt) ? String(a.nt) : "" };
   }
   /* magyar munkaszüneti napok (húsvét és pünkösd számolva) */
   function huHolidays(y){
@@ -30704,8 +30704,17 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         m.style.left = (lx + b.scrollLeft) + "px"; m.style.top = (r.bottom - host.top + b.scrollTop + 6) + "px";
         m.addEventListener("click", e=>{ const t = e.target.closest("[data-rpm]"); if(!t) return; m.remove(); rptRun("wt", "pdf", { detail:t.dataset.rpm === "det" }); });
         setTimeout(()=> document.addEventListener("click", function h(e){ if(!m.contains(e.target)){ m.remove(); document.removeEventListener("click", h, true); } }, true), 0); }
+      /* 🙋 dolgozói kérések az adminban: a bolt gépén beírt (state.reqs) + a telefonról küldött (cal/{dolgozó}.req) */
+      const RQA = { off:["❌","nem tud jönni"], free:["🏖️","szabadságot kér"], am:["🌅","csak délelőtt"], pm:["🌇","csak délután"], want:["✋","szeretne dolgozni"] };
+      function admReqs(x, k){ const st = stOf(x), E = (st.settings || {}).employees || [], nm = id=>{ const e = E.find(z=> z.id === id); return e ? e.name : ""; }, out = [], seen = {};
+        (((st.reqs || {})[k]) || []).forEach(r=>{ if(r && RQA[r.t] && nm(r.p)){ seen[r.id] = 1; out.push({ n:nm(r.p), t:r.t, why:r.why || "", tel:false }); } });
+        const D = calAdm.data[x.uid] || {}; Object.keys(D).forEach(pid=>{ const L = (D[pid] && D[pid].req) || []; if(!Array.isArray(L)) return; L.forEach(s=>{ try{ const r = typeof s === "string" ? JSON.parse(s) : s; if(r && r.d === k && RQA[r.t] && nm(pid) && !seen[r.id]){ seen[r.id] = 1; out.push({ n:nm(pid), t:r.t, why:r.why || "", tel:true }); } }catch(e){} }); });
+        return out; }
+      const rqTxt = r=> `${RQA[r.t][0]} ${r.n} — ${RQA[r.t][1]}${r.why ? " (" + r.why + ")" : ""}${r.tel ? " · telefonról" : ""}`;
+      function admReqN(x, Y, Mo){ let n = 0; const nD = new Date(Y, Mo, 0).getDate(); for(let d = 1; d <= nD; d++) n += admReqs(x, `${Y}-${p2(Mo)}-${p2(d)}`).length; return n; }
       function drawSched(){
         const box = $(".ax-sct"); if(!box) return;
+        if(scV === "month" || scV === "today") calAdmLoad();
         const q = ($(".ax-scq").value || "").trim().toLowerCase(), today = dKey(new Date());
         const [Y, Mo] = scYm.split("-").map(Number), nD = new Date(Y, Mo, 0).getDate();
         $(".ax-scml").textContent = scV === "today" ? dLbl(scDay) : scV === "hol" ? `${scYear}` : `${Y}. ${HU_M[Mo - 1]}`;
@@ -30751,7 +30760,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
               return `<div class="nd-bar">${segs}${isToday && nowM > sd.open && nowM < sd.close ? `<b style="left:${P(nowM)}%"></b>` : ""}</div><div class="nd-ax"><span>${fromM(sd.open)}</span><span>${fromM(sd.close)}</span></div>`; })() : "";
             const ppl = sd.people.map(pp=>{ const inn = nowIn.includes(pp); return `<div class="nd-p${inn ? " in" : ""}${pp.sub ? " sub" : ""}" style="--h:${esc(pp.hex)}"><i>${esc(String(pp.name).split(/\s+/).map(s=> s[0]).join("").slice(0, 2).toUpperCase())}</i><span><b>${esc(pp.name)}</b><small>${pp.part === "am" ? "délelőtt" : pp.part === "pm" ? "délután" : "egész nap"} · ${fromM(pp.from)}–${fromM(pp.to)}${pp.sub ? " · helyettes" : ""}</small></span>${inn ? `<em>bent</em>` : ""}</div>`; }).join("");
             return `<section class="ax-card nd-c ${st2}${sd.adm ? " adm" : ""}"><header><button type="button" class="ax-tln nd-n" data-uid="${esc(x.uid)}">${axAv(x)}<span><b>${esc(shortN(x))}</b><small>${oc ? "Nyitva " + oc : st2 === "closed" ? "ma nincs nyitva" : ""}${sd.adm ? " · admin rögzítette" : ""}</small></span></button><span class="nd-st ${st2}${nowIn.length ? " live" : ""}"><i></i>${stTxt}</span></header>
-              ${bar}${st2 === "empty" ? `<div class="nd-empty">Erre a napra nincs senki beosztva — kattints a bolt nevére a beosztáshoz.</div>` : ppl ? `<div class="nd-ps">${ppl}</div>` : ""}</section>`; }).join("");
+              ${bar}${sd.nt ? `<div class="nd-nt">📝 ${esc(sd.nt)}</div>` : ""}${(()=>{ const RQ = admReqs(x, scDay); return RQ.length ? `<div class="nd-rq"><b>Kérések erre a napra</b>${RQ.map(r=> `<span>${esc(rqTxt(r))}</span>`).join("")}</div>` : ""; })()}${st2 === "empty" ? `<div class="nd-empty">Erre a napra nincs senki beosztva — kattints a bolt nevére a beosztáshoz.</div>` : ppl ? `<div class="nd-ps">${ppl}</div>` : ""}</section>`; }).join("");
           box.innerHTML = dcards ? `<div class="nd">${dcards}</div>` : `<div class="ax-card"><div class="ax-empty">Nincs a szűrésnek megfelelő bolt.</div></div>`;
           void rows; void ticks;
         } else {
@@ -30771,11 +30780,12 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
               const days = Array.from({ length:first }, ()=> `<i class="x"></i>`).join("") + Array.from({ length:nD }, (_, i)=>{ const d = i + 1, kk = kOf(d), sd = schDay(st, kk), w = dw(d), td = kk === today ? " td" : "", we = w > 4 ? " we" : "";
                 const tip = sd.hol ? `${kk}: ünnep${sd.hn ? " — " + esc(sd.hn) : ""}` : sd.closed ? `${kk}: zárva` : !sd.people.length ? `${kk}: nincs beosztva` : `${kk}:\n` + esc(sd.people.map(pp=> pp.name + " — " + PART_T[pp.part] + " " + fromM(pp.from) + "–" + fromM(pp.to)).join("\n"));
                 const body = sd.hol ? `<u class="z">ünnep</u>` : sd.closed ? `<u class="z">zárva</u>` : !sd.people.length ? `<u class="r">üres</u>` : sd.people.slice(0, 3).map(pp=> `<s class="${pp.part}" style="--h:${esc(pp.hex)}">${esc(fnm2(pp.name))}${pp.part === "am" ? " DE" : pp.part === "pm" ? " DU" : ""}</s>`).join("") + (sd.people.length > 3 ? `<s class="more">+${sd.people.length - 3}</s>` : "");
-                return `<i class="d${we}${td}${sd.hol ? " h" : sd.closed ? " c" : !sd.people.length ? " e" : ""}${sd.adm ? " ad" : ""}" title="${tip}"><b>${d}</b>${body}</i>`; }).join("");
+                const RQ = admReqs(x, kk), tip2 = tip + (sd.nt ? `\n📝 ${esc(sd.nt)}` : "") + (RQ.length ? "\n\nKérések:\n" + esc(RQ.map(rqTxt).join("\n")) : "");
+                return `<i class="d${we}${td}${sd.hol ? " h" : sd.closed ? " c" : !sd.people.length ? " e" : ""}${sd.adm ? " ad" : ""}" title="${tip2}"><b>${d}${RQ.length ? `<q class="rqd" title="kérés">${RQ.length}</q>` : ""}${sd.nt ? `<q class="ntd" title="megjegyzés"></q>` : ""}</b>${body}</i>`; }).join("");
               const E = ((st.settings || {}).employees || []).filter(e=> e.name);
               const pct = op ? Math.round((op - emp) / op * 100) : 100;
               return `<section class="ax-card sm2-c" data-scs="${esc(x.uid)}" title="Kattints a bolt teljes naptárához">
-                <header>${axAv(x)}<div class="tt"><b>${esc(shortN(x))}</b><small>${op ? `${op - emp}/${op} nap beosztva` : "egész hónapban zárva"}</small></div>${emp ? `<span class="ax-b r">${emp} üres nap</span>` : `<span class="ax-b g">✓ kész</span>`}</header>
+                <header>${axAv(x)}<div class="tt"><b>${esc(shortN(x))}</b><small>${op ? `${op - emp}/${op} nap beosztva` : "egész hónapban zárva"}</small></div>${(()=>{ const n = admReqN(x, Y, Mo); return n ? `<span class="ax-b rqb" title="Dolgozói kérések ebben a hónapban">🙋 ${n} kérés</span>` : ""; })()}${emp ? `<span class="ax-b r">${emp} üres nap</span>` : `<span class="ax-b g">✓ kész</span>`}</header>
                 <div class="sm2-bar"><i style="width:${pct}%"></i></div>
                 <div class="sm2-lg">${E.map(e=> `<span style="--h:${esc(e.hex || "#7b8cff")}"><i></i>${esc(e.name)}</span>`).join("") || `<span class="none">nincs dolgozó</span>`}</div>
                 <div class="sm2-w">${HDW.map((d, i)=> `<em${i > 4 ? ' class="we"' : ""}>${d}</em>`).join("")}</div>
@@ -30788,7 +30798,8 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
             const cells = Array.from({ length:first }, ()=> `<div class="cd x"></div>`).join("") + Array.from({ length:nD }, (_, i)=>{ const d = i + 1, kk = kOf(d), sd = schDay(st, kk), w = dw(d), em = !sd.closed && !sd.hol && !sd.people.length;
               sd.people.forEach(pp=>{ if(cnt[pp.id] === undefined){ cnt[pp.id] = 0; ppl.push({ id:pp.id, name:pp.name, hex:pp.hex, sub:true }); } if(!sd.hol) cnt[pp.id] += pp.part === "full" ? 1 : .5; });
               const body = sd.hol ? `<span class="z">🎉 ${sd.hn ? esc(sd.hn) : "ünnep"}</span>` : sd.closed ? `<span class="z">zárva</span>` : sd.people.length ? sd.people.map(pp=> `<span class="pn ${pp.part}${pp.sub ? " sub" : ""}" style="--h:${pp.hex}" title="${esc(pp.name)} — ${PART_T[pp.part]} ${fromM(pp.from)}–${fromM(pp.to)}"><b>${esc(pp.name)}</b><u>${esc(avIni(pp.name))}</u><small>${pp.part !== "full" ? `<i>${pp.part === "am" ? "DE" : "DU"}</i>` : ""}${tShort(fromM(pp.from))}–${tShort(fromM(pp.to))}</small></span>`).join("") : `<span class="z bad">⚠ nincs beosztva</span>`;
-              return `<div class="cd${w > 4 ? " we" : ""}${sd.closed && !sd.hol ? " c" : ""}${sd.hol ? " h" : ""}${em ? " e" : ""}${kk === today ? " td" : ""}${sd.adm ? " ad" : ""}"><span class="dn">${d}<small>${HU_D[w].slice(0, 2)}</small></span>${body}</div>`; }).join("");
+              const RQ = admReqs(x, kk), rqH = RQ.length ? `<span class="rq2" title="${esc(RQ.map(rqTxt).join("\n"))}">${RQ.map(r=> `<em>${RQA[r.t][0]} ${esc(String(r.n).split(/\s+/).slice(-1)[0])}: ${esc(RQA[r.t][1])}${r.why ? " · " + esc(r.why) : ""}</em>`).join("")}</span>` : "", ntH = sd.nt ? `<span class="nt2" title="${esc(sd.nt)}">📝 ${esc(sd.nt)}</span>` : "";
+              return `<div class="cd${w > 4 ? " we" : ""}${sd.closed && !sd.hol ? " c" : ""}${sd.hol ? " h" : ""}${em ? " e" : ""}${kk === today ? " td" : ""}${sd.adm ? " ad" : ""}${RQ.length ? " rq" : ""}"><span class="dn">${d}<small>${HU_D[w].slice(0, 2)}</small></span>${body}${ntH}${rqH}</div>`; }).join("");
             const hs = (()=>{ const H2 = se.hours || [], AB = ["H","K","Sze","Cs","P","Szo","V"], sg = i=>{ const h = H2[i]; return !h || h.closed ? "zárva" : `${tShort(h.open)}–${tShort(h.close)}`; }, out2 = []; let i = 0; if(!H2.length) return ""; while(i < 7){ let j = i; while(j + 1 < 7 && sg(j + 1) === sg(i)) j++; out2.push(`${AB[i]}${j > i ? "–" + AB[j] : ""}: ${sg(i)}`); i = j + 1; } return out2.join(" · "); })();
             main = `<div class="ax-card ax-moc"><div class="ax-moh">${axAv(x, true)}<div class="tt"><h3>${esc(shortN(x))}</h3><small>${se.address ? "📍 " + esc(se.address) + " · " : ""}${hs ? "🕘 " + esc(hs) : ""}</small></div><span class="ax-sp"></span>${r0.emp ? `<span class="ax-b r">⚠ ${r0.emp} nap beosztás nélkül</span>` : `<span class="ax-b g">✓ minden nap beosztva</span>`}<button type="button" class="ax-btn" data-uid="${esc(x.uid)}">🏬 Bolt adatai</button><button type="button" class="ax-btn pri" data-x="scpdf1">⬇ PDF — ez a bolt</button></div>
               <div class="ax-mop">${ppl.map(p=> `<span style="--h:${p.hex}"><i></i>${esc(p.name)}${p.sub ? " · helyettes" : ""} <em>${String(cnt[p.id] || 0).replace(".", ",")} nap</em></span>`).join("") || `<span class="none">Még nincs dolgozó felvéve.</span>`}</div>
@@ -30847,7 +30858,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
           calAdm.at = Date.now(); calAdm.err = ""; }
         catch(e){ calAdm.err = (e && e.message) || String(e); calAdm.at = Date.now(); }
         calAdm.busy = false;
-        if(b.isConnected && paneOn("sched") && scV === "cal") drawSched();
+        if(b.isConnected && paneOn("sched") && (scV === "cal" || scV === "month" || scV === "today")) drawSched();
       }
       function drawCalAdm(box){
         $(".ax-scf").innerHTML = "";
@@ -59874,6 +59885,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       cell.appendChild(num);
       { const RQ = reqsOf(key); if(RQ.length && !(pa && pa.kind === "unnep") && (activeTab === "planner" || activeTab === "prev" || RQ.some(r=> r.p === activeTab))){ const L2 = activeTab === "planner" || activeTab === "prev" ? RQ : RQ.filter(r=> r.p === activeTab), cl = L2.some(r=> reqClash(r, a, key));
         const rb = document.createElement("span"); rb.className = "day-req" + (cl ? " clash" : ""); rb.textContent = (cl ? "⚠ " : "🙋") + (L2.length > 1 ? L2.length : ""); rb.title = (cl ? "⚠ Ütközik a beosztással!\n" : "") + L2.map(reqLine).join("\n"); cell.appendChild(rb); } }
+      if(a && a.nt && a.type !== "unnep"){ const nb = document.createElement("span"); nb.className = "day-nt"; nb.title = "Admin megjegyzés: " + a.nt; nb.textContent = "📝 " + a.nt; cell.appendChild(nb); }
       if(dt && dt.custom && !(pa && pa.kind === "unnep")){ const hb = document.createElement("span"); hb.className = "day-hrs"; hb.title = "Egyedi nyitvatartás erre a napra"; hb.textContent = `🕘 ${tShortH(dt.open)}–${tShortH(dt.close)}`; cell.appendChild(hb); }
 
       const badgeWrap = document.createElement("div");
@@ -60470,6 +60482,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       <div class="modal-sub">Ebben a boltban <b>egy dolgozó</b> van, nincs váltótárs. Minden <b>nyitvatartási napra</b> beírja őt <b>nyitástól zárásig</b>. A zárva tartott napokat, az ünnepeket és a már beosztott napokat <b>kihagyja</b>.</div>
       ${E.length ? `<label class="af-l">Ki legyen beírva?<select id="afWho">${E.map(e=> `<option value="${String(e.id).replace(/"/g, "&quot;")}">${String(e.name).replace(/</g, "&lt;")}</option>`).join("")}</select></label>
       <label class="af-l">Melyik időszakra?<select id="afSc"><option value="month">Csak ${mon}</option><option value="year">${mon} – ${state.year}. december 31.</option></select></label>
+      <label class="af-l">Megjegyzés <small>(nem kötelező — minden kitöltött napnál látszik, az adminban is)</small><input id="afNt" maxlength="120" placeholder="pl. egyedül van, nincs váltótárs"></label>
       <div class="cm-stats" id="afSt"></div>` : `<div class="cm-warn">⚠️ Ebben a boltban még nincs dolgozó felvéve — előbb a ⚙ Beállításokban vegyél fel legalább egy dolgozót.</div>`}
       <div class="modal-actions"><button class="action-btn secondary" id="afNo">Mégse</button>${E.length ? `<button class="action-btn" id="afOk">👑 Kitöltés</button>` : ""}</div></div>`;
     document.body.appendChild(bg); requestAnimationFrame(()=> bg.classList.add("show"));
@@ -60481,7 +60494,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     bg.querySelector("#afOk").onclick = ()=>{
       const L = st(), who = bg.querySelector("#afWho").value; if(!L.length) return;
       try{ localStorage.setItem("firstphone_admfill_bak", JSON.stringify({ at:Date.now(), keys:L })); }catch(e){}
-      const at = Date.now(); L.forEach(k=>{ state.schedule[k] = { type:who, by:"admin", at, af:1 }; });
+      const at = Date.now(), nt = String((bg.querySelector("#afNt") || {}).value || "").trim().slice(0, 120); L.forEach(k=>{ state.schedule[k] = Object.assign({ type:who, by:"admin", at, af:1 }, nt ? { nt } : {}); });
       saveState(); renderAll(); close();
       try{ toast(`👑 ${L.length} nyitvatartási nap kitöltve. Visszavonás: a „Kitöltés visszavonása” gomb.`); }catch(e){}
       admFillBtn(); };
@@ -73552,8 +73565,9 @@ html.axr-rail body #fcAdmin#fcAdmin#fcAdmin .ax-nav:not(:hover):not(:focus-withi
 </style>
 <style id="afCss">
 #afModal .af-l{display:flex;flex-direction:column;gap:6px;text-align:left;font-size:13px;font-weight:700;margin:12px 0 0;}
-#afModal .af-l select{font:inherit;font-weight:600;padding:10px 12px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);color:inherit;}
-html.ui-uj #afModal .af-l select{background:#1d1b17 !important;color:#fff !important;}
+#afModal .af-l small{font-weight:500;opacity:.7;}
+#afModal .af-l input,#afModal .af-l select{font:inherit;font-weight:600;padding:10px 12px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);color:inherit;}
+html.ui-uj #afModal .af-l input,html.ui-uj #afModal .af-l select{background:#1d1b17 !important;color:#fff !important;}
 #afModal .cm-stats{margin-top:14px;}
 html:not(.ui-uj) #afModal .modal{background:var(--bg-panel,#17181c) !important;opacity:1 !important;}
 #afModal{background:rgba(0,0,0,.62) !important;}
@@ -73561,6 +73575,25 @@ html:not(.ui-uj) #afModal .modal{background:var(--bg-panel,#17181c) !important;o
 html body #afModal #afOk{background:linear-gradient(135deg,#FBAC01,#f0c766) !important;color:#1a1408 !important;border:0 !important;font-weight:800;}
 html body #afModal #afOk:disabled{opacity:.45;}
 html body #afModal .cm-ico{background:rgba(251,172,1,.16) !important;box-shadow:inset 0 0 0 2px rgba(251,172,1,.45) !important;}
+</style>
+<style id="admRqCss">
+html body #fcAdmin .ax-mcal .cd .rq2{display:flex;flex-direction:column;gap:2px;margin-top:3px;}
+html body #fcAdmin .ax-mcal .cd .rq2 em{font-style:normal;font-size:10.5px;line-height:1.25;padding:2px 5px;border-radius:6px;background:rgba(80,160,255,.14);color:#9cc8ff;border:1px solid rgba(80,160,255,.3);white-space:normal;overflow-wrap:anywhere;}
+html body #fcAdmin .ax-mcal .cd .nt2,html body #fcAdmin .nd-nt{display:block;font-size:10.5px;line-height:1.25;padding:2px 5px;margin-top:3px;border-radius:6px;background:rgba(251,172,1,.12);color:#f0c766;border:1px solid rgba(251,172,1,.3);overflow-wrap:anywhere;}
+html body #fcAdmin .nd-nt{font-size:12px;padding:6px 9px;margin:8px 0 0;}
+html body #fcAdmin .sm2-g i b q{quotes:none;font-size:9.5px;margin-left:3px;font-weight:700;}
+html body #fcAdmin .sm2-g i b q.rqd{display:inline-block;min-width:13px;height:13px;line-height:13px;text-align:center;border-radius:99px;background:#3d8bff;color:#fff;font-size:9px;padding:0 3px;vertical-align:1px;}
+html body #fcAdmin .sm2-g i b q.ntd{display:inline-block;width:8px;height:8px;border-radius:99px;background:#FBAC01;vertical-align:1px;}
+html body #fcAdmin .sm2-g i b q::before,html body #fcAdmin .sm2-g i b q::after{content:none;}
+html body #fcAdmin .ax-b.rqb{background:rgba(80,160,255,.14) !important;color:#9cc8ff !important;border:1px solid rgba(80,160,255,.3) !important;}
+html body #fcAdmin .nd-rq{display:flex;flex-direction:column;gap:3px;margin:8px 0 0;padding:7px 9px;border-radius:10px;background:rgba(80,160,255,.1);border:1px solid rgba(80,160,255,.28);font-size:12px;}
+html body #fcAdmin .nd-rq b{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#9cc8ff;}
+html[data-theme="light"] body #fcAdmin .ax-mcal .cd .rq2 em,html[data-theme="light"] body #fcAdmin .ax-b.rqb,html[data-theme="light"] body #fcAdmin .nd-rq b{color:#1f5fae !important;}
+html[data-theme="light"] body #fcAdmin .ax-mcal .cd .nt2,html[data-theme="light"] body #fcAdmin .nd-nt{color:#8a5a00;}
+.cal-day .day-nt,.day-nt{display:block;font-size:10.5px;line-height:1.2;margin:2px 4px 0;padding:2px 5px;border-radius:6px;background:rgba(251,172,1,.14);color:#c88a00;border:1px solid rgba(251,172,1,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 8px);}
+html.ui-uj .day-nt{color:#f0c766;}
+@media print{.day-nt{display:none !important;}}
+html.m-app .day-nt{display:none !important;}
 </style>
 </body>
 </html>
