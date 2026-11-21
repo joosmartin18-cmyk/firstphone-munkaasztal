@@ -28152,8 +28152,81 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     { id:"sad",   e:"🥲", l:"Jaj…",       a:"float",  c:"#8a8f9c" },
     { id:"run",   e:"🏃", l:"Megyek!",    a:"bounce", c:"#d6589a" },
     { id:"night", e:"😴", l:"Jó éjt!",    a:"float",  c:"#5361c9" },
-    { id:"star",  e:"🌟", l:"Ügyes vagy!",a:"spin",   c:"#e2bf55" }
+    { id:"star",  e:"🌟", l:"Ügyes vagy!",a:"spin",   c:"#e2bf55" },
+    { id:"shop", e:"🏪", l:"Nyitunk!", a:"bounce", c:"#FBAC01", g:"b" },
+    { id:"closed", e:"🔒", l:"Zártunk", a:"pop", c:"#8a8f9c", g:"b" },
+    { id:"phone", e:"📱", l:"Új telefon", a:"float", c:"#4fb3c4", g:"b" },
+    { id:"sold", e:"🛒", l:"Eladva!", a:"bounce", c:"#30b37a", g:"b" },
+    { id:"cash", e:"💵", l:"Megvan a kassza", a:"zoom", c:"#2ea472", g:"b" },
+    { id:"card", e:"💳", l:"Kártyás", a:"pulse", c:"#6f7ff5", g:"b" },
+    { id:"pkg", e:"📬", l:"Csomag jött", a:"bounce", c:"#c47f2c", g:"b" },
+    { id:"truck", e:"🚚", l:"Úton van", a:"float", c:"#d9ad46", g:"b" },
+    { id:"inv", e:"📋", l:"Leltár kész", a:"pop", c:"#30b37a", g:"b" },
+    { id:"tag", e:"🏷️", l:"Akció!", a:"shake", c:"#e2585a", g:"b" },
+    { id:"fix", e:"🔧", l:"Megjavítva", a:"spin", c:"#9aa3b5", g:"b" },
+    { id:"charge", e:"🔋", l:"Feltöltve", a:"pulse", c:"#3ecf8e", g:"b" },
+    { id:"plug", e:"🔌", l:"Töltő kell", a:"shake", c:"#f0953a", g:"b" },
+    { id:"glass", e:"🛡️", l:"Fólia fent", a:"zoom", c:"#4fb3c4", g:"b" },
+    { id:"busy", e:"🏃‍♀️", l:"Sok a vevő", a:"bounce", c:"#d6589a", g:"b" },
+    { id:"queue", e:"👥", l:"Sor van", a:"shake", c:"#f0a030", g:"b" },
+    { id:"check", e:"✅", l:"Kész!", a:"pop", c:"#30b37a", g:"b" },
+    { id:"todo", e:"📝", l:"Teendő", a:"float", c:"#d9ad46", g:"b" },
+    { id:"clock", e:"⏰", l:"Mindjárt", a:"shake", c:"#f0953a", g:"b" },
+    { id:"cal", e:"📅", l:"Beosztás", a:"float", c:"#6f7ff5", g:"b" },
+    { id:"smile", e:"😊", l:"Mosoly", a:"pulse", c:"#f0c766", g:"e" },
+    { id:"grin", e:"😁", l:"Szuper nap", a:"bounce", c:"#f0a030", g:"e" },
+    { id:"cool", e:"😎", l:"Laza", a:"float", c:"#4fb3c4", g:"e" },
+    { id:"think", e:"🤔", l:"Hmm…", a:"float", c:"#9aa3b5", g:"e" },
+    { id:"tired", e:"😮‍💨", l:"Fáradt", a:"float", c:"#8a8f9c", g:"e" },
+    { id:"angry", e:"😤", l:"Grr", a:"shake", c:"#e2585a", g:"e" },
+    { id:"cry", e:"😭", l:"Bőgök", a:"shake", c:"#5b95ff", g:"e" },
+    { id:"hug", e:"🤗", l:"Ölelés", a:"pulse", c:"#d6589a", g:"e" },
+    { id:"wink", e:"😉", l:"Kacsintás", a:"pop", c:"#f0c766", g:"e" },
+    { id:"party2", e:"🥳", l:"Buli!", a:"spin", c:"#b46ee0", g:"e" },
+    { id:"mind", e:"🤯", l:"Hű!", a:"zoom", c:"#f0953a", g:"e" },
+    { id:"cold", e:"🥶", l:"Hideg van", a:"shake", c:"#5b95ff", g:"e" },
+    { id:"hot", e:"🥵", l:"Meleg van", a:"pulse", c:"#ff6a3d", g:"e" },
+    { id:"shh", e:"🤫", l:"Psszt", a:"float", c:"#9aa3b5", g:"e" },
+    { id:"facepalm", e:"🤦", l:"Jaj ne", a:"shake", c:"#d9ad46", g:"e" },
+    { id:"shrug", e:"🤷", l:"Nem tudom", a:"float", c:"#9aa3b5", g:"e" },
+    { id:"heart2", e:"💛", l:"Sárga szív", a:"pulse", c:"#FBAC01", g:"e" },
+    { id:"broken", e:"💔", l:"Szomorú", a:"float", c:"#e2585a", g:"e" },
+    { id:"100", e:"💯", l:"Száz százalék", a:"zoom", c:"#e2585a", g:"e" },
+    { id:"muscle", e:"💪", l:"Erő!", a:"bounce", c:"#f0953a", g:"e" },
+    { id:"morning", e:"☀️", l:"Jó reggelt!", a:"spin", c:"#f0c766", g:"k" },
+    { id:"day", e:"🌤️", l:"Szép napot!", a:"float", c:"#4fb3c4", g:"k" },
+    { id:"evening", e:"🌙", l:"Jó estét!", a:"float", c:"#6f7ff5", g:"k" },
+    { id:"bye", e:"👋", l:"Szia!", a:"wave", c:"#4fb3c4", g:"k" },
+    { id:"thanks2", e:"🙌", l:"Köszönöm!", a:"bounce", c:"#d9ad46", g:"k" },
+    { id:"ok2", e:"👌", l:"Rendben", a:"pop", c:"#30b37a", g:"k" },
+    { id:"yes", e:"👍", l:"Igen", a:"bounce", c:"#30b37a", g:"k" },
+    { id:"no", e:"👎", l:"Nem", a:"shake", c:"#e2585a", g:"k" },
+    { id:"sorry", e:"🙇", l:"Bocsi", a:"float", c:"#9aa3b5", g:"k" },
+    { id:"welcome", e:"🤝", l:"Szívesen", a:"pulse", c:"#d9ad46", g:"k" },
+    { id:"gl", e:"🍀", l:"Sok sikert!", a:"spin", c:"#30b37a", g:"k" },
+    { id:"rest", e:"🛋️", l:"Pihenj!", a:"float", c:"#a8774e", g:"k" },
+    { id:"xmas", e:"🎄", l:"Boldog karácsonyt!", a:"float", c:"#30b37a", g:"u" },
+    { id:"santa", e:"🎅", l:"Mikulás", a:"bounce", c:"#e2585a", g:"u" },
+    { id:"gift", e:"🎁", l:"Ajándék", a:"bounce", c:"#e2585a", g:"u" },
+    { id:"snow", e:"⛄", l:"Hóember", a:"float", c:"#5b95ff", g:"u" },
+    { id:"ny", e:"🎆", l:"BÚÉK!", a:"spin", c:"#b46ee0", g:"u" },
+    { id:"cheers", e:"🥂", l:"Egészség!", a:"shake", c:"#f0c766", g:"u" },
+    { id:"bday", e:"🎂", l:"Boldog szülinapot!", a:"pop", c:"#d6589a", g:"u" },
+    { id:"balloon", e:"🎈", l:"Lufi", a:"float", c:"#e2585a", g:"u" },
+    { id:"easter", e:"🐣", l:"Kellemes húsvétot", a:"bounce", c:"#f0c766", g:"u" },
+    { id:"summer", e:"🏖️", l:"Nyár!", a:"float", c:"#4fb3c4", g:"u" },
+    { id:"heart3", e:"💝", l:"Szeretettel", a:"pulse", c:"#d6589a", g:"u" },
+    { id:"trophy", e:"🏆", l:"Bajnok!", a:"zoom", c:"#FBAC01", g:"u" },
+    { id:"pizza", e:"🍕", l:"Pizza?", a:"spin", c:"#f0953a", g:"f" },
+    { id:"burger", e:"🍔", l:"Ebéd", a:"bounce", c:"#c47f2c", g:"f" },
+    { id:"tea", e:"🍵", l:"Tea", a:"float", c:"#30b37a", g:"f" },
+    { id:"cake", e:"🍰", l:"Süti", a:"pop", c:"#d6589a", g:"f" },
+    { id:"donut", e:"🍩", l:"Fánk", a:"spin", c:"#d6589a", g:"f" },
+    { id:"choco", e:"🍫", l:"Csoki", a:"shake", c:"#a8774e", g:"f" },
+    { id:"energy", e:"⚡", l:"Energia", a:"pulse", c:"#FBAC01", g:"f" },
+    { id:"water", e:"💧", l:"Igyál vizet", a:"float", c:"#5b95ff", g:"f" }
   ];
+  const STK_G = [["","Kedvencek"],["b","Bolt és munka"],["e","Érzések"],["k","Köszönés"],["u","Ünnepek"],["f","Étel és ital"]];
   const stkHtml = id=>{ const s = STK.find(x=> x.id === id); if(!s) return ""; return `<span class="se">${s.e}</span><span class="sl" style="--sc:${s.c}">${esc(s.l)}</span>`; };
   /* csak ellenőrzött képcím: https vagy beágyazott (feltöltött) kép */
   const gifSafe = u=>{ u = String(u || "").trim(); if(/^data:image\/(gif|png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(u)) return u; if(!/^https:\/\/[^\s"'<>]+$/i.test(u)) return "";
@@ -28356,7 +28429,7 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
         let body = "";
         if(tab === "gp") body = gpKey() ? `<div class="cp-gps"><input type="search" class="cp-gq" placeholder="Keresés a GIPHY-n… (pl. köszi, hello, party)" value="${esc(gpQ)}" autocomplete="off"></div><div class="cp-gl">${gpTags.map(x=> `<button type="button" data-gt="${esc(x)}">${esc(x)}</button>`).join("")}</div><div class="cp-gg"><div class="cp-gm">Betöltés…</div></div><a class="cp-gpb" href="https://giphy.com/" target="_blank" rel="noopener">Powered by <b>GIPHY</b></a>`
           : `<div class="cp-form"><p><b>🔎 GIPHY keresés</b> — ehhez az adminnak egyszer meg kell adnia egy (ingyenes) GIPHY kulcsot: Admin → Beállítások → <i>GIPHY kulcs</i>.</p><p>Addig is: nyisd meg a <a href="https://giphy.com/" target="_blank" rel="noopener"><b>giphy.com</b></a> oldalt, keress egy GIF-et, másold ki a linkjét, és illeszd be a <b>🔗 Link</b> fülön.</p><button type="button" class="cp-btn" data-g="url">🔗 Link beillesztése</button></div>`;
-        if(tab === "stk") body = `<div class="cp-lbl">Animált matricák — kattints, és már megy is</div><div class="cp-stk">${STK.map(s=> `<button type="button" data-s="${s.id}" class="stk-${s.a}" title="${esc(s.l)}"><span class="se">${s.e}</span><small>${esc(s.l)}</small></button>`).join("")}</div>`;
+        if(tab === "stk") body = `<div class="cp-lbl">Animált matricák (${STK.length}) — kattints, és már megy is</div>` + STK_G.map(g=>{ const L = STK.filter(s=> (s.g || "") === g[0]); return L.length ? `<div class="cp-lbl cp-grp">${esc(g[1])}</div><div class="cp-stk">${L.map(s=> `<button type="button" data-s="${s.id}" class="stk-${s.a}" title="${esc(s.l)}"><span class="se">${s.e}</span><small>${esc(s.l)}</small></button>`).join("")}</div>` : ""; }).join("");
         if(tab === "url") body = `<div class="cp-form"><p>Másold be egy GIF címét — pl. a <b>GIPHY</b> oldaláról (a GIF oldalának linkje is jó), vagy bármilyen <b>.gif</b> képcímet (jobb klikk → <i>Képcím másolása</i>).</p><input type="url" class="cp-url" placeholder="https://giphy.com/gifs/… vagy https://….gif"><div class="cp-prev">Előnézet</div><button type="button" class="cp-btn cp-sendurl" disabled>Küldés</button></div>`;
         if(tab === "up") body = `<div class="cp-form"><p>Válassz egy GIF-et (vagy képet) a gépedről / telefonodról — legfeljebb <b>700 KB</b>.</p><button type="button" class="cp-btn ghost cp-pick">📁 Fájl kiválasztása</button><input type="file" class="cp-file" accept="image/gif,image/webp,image/png,image/jpeg" hidden><div class="cp-prev">Még nincs kiválasztva</div><button type="button" class="cp-btn cp-sendup" disabled>Küldés</button></div>`;
         pop.innerHTML = `<div class="cp-tabs">${T.map(([k, l])=> `<button type="button" class="txt${tab === k ? " on" : ""}" data-g="${k}">${l}</button>`).join("")}</div><div class="cp-body">${body}</div>`;
@@ -29628,7 +29701,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
   /* díszítő emojik eltávolítása az admin felületről (a chat üzenetei, a jegyek szövege és a beviteli mezők érintetlenek) */
   let axEmoRx = null, axEmoOn = false;
   try{ axEmoRx = new RegExp("(?:\\p{Extended_Pictographic}|\\p{Regional_Indicator})(?:\\uFE0F|\\u200D\\p{Extended_Pictographic}\\uFE0F?|[\\u{1F3FB}-\\u{1F3FF}])*", "gu"); }catch(e){}
-  const AXEMO_SKIP = "textarea,input,select,[contenteditable],script,style,svg,iframe,.ch-list,.ch-bar,.ch-act,.ch-f,.ch-pick,.ch-emo,.ax-ttx,.ax-tt,.ax-ct small,.tx,.ax-av,.ax-meav,.ax-prev,.ax-mtxt,.ax-trci,.ax-tmsg,.ax-ann-tx,.ax-log,.ax-dlog";
+  const AXEMO_SKIP = "textarea,input,select,[contenteditable],script,style,svg,iframe,.ch-pop,.ch-rxp,.ch-stk,.ch-rq,.ch-list,.ch-bar,.ch-act,.ch-f,.ch-pick,.ch-emo,.ax-ttx,.ax-tt,.ax-ct small,.tx,.ax-av,.ax-meav,.ax-prev,.ax-mtxt,.ax-trci,.ax-tmsg,.ax-ann-tx,.ax-log,.ax-dlog";
   function axEmoClean(root){
     if(!axEmoRx || !root) return;
     if(root.nodeType === 3){ root = root.parentNode; if(!root) return; }
@@ -74473,6 +74546,20 @@ html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-lg::before{background:#fff;}
 html body #fcMt#fcMt .fc-mt-grid{display:none !important;}
 html body #fcMt#fcMt.fc-mt-nou .fc-mt-bigt,html body #fcMt#fcMt.fc-mt-nou .mv3-flip{display:none !important;}
 html body #fcMt#fcMt.fc-mt-nou .fc-mt-mv:has(.mv3-flip)::before{content:"HAMAROSAN";font:800 34px Poppins,Inter,sans-serif;color:#FBAC01;letter-spacing:.06em;}
+</style>
+<style id="stk2Css">
+.cp-lbl.cp-grp{position:sticky;top:-8px;z-index:1;margin:6px -8px 4px;padding:6px 10px;background:var(--bg-panel,#17171c);color:#f0c766;}
+.cp-stk small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;padding:0 3px;}
+.cp-body{height:300px !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ch-pop,html body .ch-pop{background:#17140e !important;background-color:#17140e !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .cp-lbl.cp-grp,html body .ch-pop .cp-lbl.cp-grp{background:#17140e !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .cp-stk button{display:flex !important;flex-direction:column !important;align-items:center !important;height:auto !important;min-height:0 !important;padding:8px 2px 6px !important;border:0 !important;border-radius:16px !important;background:rgba(255,255,255,.05) !important;box-shadow:none !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .cp-stk button:hover{background:rgba(251,172,1,.16) !important;}
+/* admin chat: válasz-idézet minden böngészőben egyformán (Safariban gombként jelent meg) */
+html body #fcAdmin#fcAdmin#fcAdmin .ch-rq{display:flex !important;flex-direction:column !important;align-items:flex-start !important;height:auto !important;min-height:0 !important;width:auto !important;max-width:min(320px,100%) !important;padding:6px 10px 6px 11px !important;margin:0 0 4px !important;border:0 !important;border-left:3px solid #8e7ff5 !important;border-radius:10px !important;background:rgba(142,127,245,.14) !important;box-shadow:none !important;overflow:hidden !important;text-align:left !important;-webkit-appearance:none;appearance:none;}
+html body #fcAdmin#fcAdmin#fcAdmin .ch-rq b{display:block !important;font:800 11px Inter,sans-serif !important;color:#b3a8ff !important;line-height:1.3 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ch-rq span{display:block !important;font:500 12px Inter,sans-serif !important;color:#c9c2b2 !important;line-height:1.35 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;max-width:280px !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ch-rq::before,html body #fcAdmin#fcAdmin#fcAdmin .ch-rq::after{display:none !important;content:none !important;}
 </style>
 </body>
 </html>
