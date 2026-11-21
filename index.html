@@ -29646,7 +29646,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
   /* admin oldalfejléc a bolti oldalak stílusában: dátum felül, a cím utolsó szava sárga */
   function axHeadFx(){ const A = document.getElementById("fcAdmin"); if(!A) return;
     const h = A.querySelector(".ax-ph .ax-h1"); if(!h) return;
-    if(!h.querySelector("span")){ const s = h.textContent.trim(), i = s.lastIndexOf(" "); h.innerHTML = i > 0 ? esc(s.slice(0, i)) + " <span>" + esc(s.slice(i + 1)) + "</span>" : "<span>" + esc(s) + "</span>"; }
+    const s0 = h.textContent.trim();
+    if(h.dataset.fx !== s0){ const s = s0, i = s.lastIndexOf(" "); h.innerHTML = i > 0 ? esc(s.slice(0, i)) + " <span>" + esc(s.slice(i + 1)) + "</span>" : esc(s); h.dataset.fx = s;
+      /* címváltáskor egyszeri, könnyű beúszás + sárga csík (csak transform/opacity) */
+      h.classList.remove("axh-in"); void h.offsetWidth; h.classList.add("axh-in"); }
     const p = h.parentNode; let k = p.querySelector(".ax-kick");
     if(!k){ k = document.createElement("small"); k.className = "ax-kick"; p.insertBefore(k, h); }
     const d = new Date(), DW = ["Vasárnap","Hétfő","Kedd","Szerda","Csütörtök","Péntek","Szombat"], t = DW[d.getDay()] + ", " + d.toLocaleDateString("hu-HU", { month:"long", day:"numeric" }) + " · Admin";
@@ -73824,5 +73827,18 @@ html.ui-uj :is(.nd-st > i, .ax-ldot, .mb-dot, .ma-chip > i, .fc-chip > i, .ax-dt
   var adSeen = false; setInterval(function(){ var a = document.getElementById("fpAdBoot"); if(a) adSeen = true; else if(adSeen){ adSeen = false; setTimeout(kick, 350); } }, 300);
 })();
 </script>
+<style id="axTitleCss">
+/* admin oldalcímek: tiszta fehér cím, többszavasnál az utolsó szó FirstPhone sárga; nincs folyamatos fénycsík (az folyton rajzolt) — címváltáskor egyszeri beúszás + kinyúló sárga csík */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1{background:none !important;-webkit-background-clip:border-box !important;background-clip:border-box !important;color:#fff !important;-webkit-text-fill-color:currentColor !important;animation:none !important;position:relative;padding-bottom:10px;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-ph .ax-h1{color:#1b1508 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1 > span{background:linear-gradient(90deg,#FFD45C,#FBAC01) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important;-webkit-text-fill-color:transparent !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-ph .ax-h1 > span{background:linear-gradient(90deg,#d99500,#c27c00) !important;-webkit-background-clip:text !important;background-clip:text !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1::after{content:"";position:absolute;left:2px;bottom:0;width:46px;height:4px;border-radius:99px;background:linear-gradient(90deg,#FBAC01,#f0c766);transform-origin:left center;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in{animation:axhIn .55s cubic-bezier(.2,.9,.3,1) both !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in::after{animation:axhBar .7s .15s cubic-bezier(.2,.9,.3,1) both;}
+@keyframes axhIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes axhBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in, html:not(.fp-anim-full) body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in::after{animation:none !important;}}
+</style>
 </body>
 </html>
