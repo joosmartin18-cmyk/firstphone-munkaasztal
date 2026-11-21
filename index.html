@@ -25661,7 +25661,13 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
   }
   /* első belépés / újratöltés: a felhő az irányadó; ha a felhő még üres, felajánljuk a gépen lévő adatok feltöltését */
   async function pull(){
-    const snap = await col().get();
+    /* gyors, „csak a változás” lekérés: a gép tárolójában (IndexedDB) megmaradt adatokra a felhő csak a változásokat küldi (folytatási jel) —
+       a get() mindig mindent letöltene. Ha 25 mp alatt nem jön friss válasz a szervertől, marad a régi teljes lekérés. */
+    const snap = await new Promise((res, rej)=>{ let done = false, un = null;
+      const fin = (f, x)=>{ if(done) return; done = true; clearTimeout(to); try{ un && un(); }catch(e){} f(x); };
+      const to = setTimeout(()=> col().get().then(s=> fin(res, s), e=> fin(rej, e)), 25000);
+      try{ un = col().onSnapshot({ includeMetadataChanges:true }, s=>{ if(s.metadata && s.metadata.fromCache) return; fin(res, s); }, e=> col().get().then(s=> fin(res, s), e2=> fin(rej, e2))); }
+      catch(e){ col().get().then(s=> fin(res, s), e2=> fin(rej, e2)); } });
     const remote = {};
     const pm = {};
     for(const doc of snap.docs){ if(doc.id.includes("__")){ pm[doc.id] = doc.data(); continue; } remote[doc.id] = doc.data(); }
