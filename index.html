@@ -32219,7 +32219,13 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     const on = !!(m.on && (!m.until || Date.now() < m.until));
     if(!on){ if(old){ old.classList.add("out"); setTimeout(()=> old.remove(), 300); } document.documentElement.classList.remove("fc-mton"); return; }
     css(); const el = old || document.createElement("div"); el.id = "fcMt"; el.className = "fc-mt";
-    el.innerHTML = `<div class="fc-mt-c" role="alertdialog" aria-label="Karbantartás"><div class="fc-mt-ic"><span>🛠️</span></div><h2>Karbantartás</h2><p>${esc(m.msg || "A Munkaasztalt épp frissítjük — pár perc, és újra használhatod.")}</p>${m.until ? `<div class="fc-mt-t">Várható vége: <b>${hhmm(m.until)}</b> <span class="fc-mt-cd"></span></div>` : ""}<div class="fc-mt-bar"><i></i></div><small>Az oldal magától visszaáll — nem kell frissíteni. Az adataid megmaradnak.</small></div>`;
+    el.innerHTML = `<div class="fc-mt-c" role="alertdialog" aria-label="Karbantartás"><div class="fc-mt-ic"><span>🛠️</span></div><h2>Karbantartás</h2><p>${esc(m.msg || "A Munkaasztalt épp frissítjük — pár perc, és újra használhatod.")}</p>${m.until ? `<div class="fc-mt-t">Várható vége: <b>${hhmm(m.until)}</b> <span class="fc-mt-cd"></span></div>` : ""}<div class="fc-mt-bar"><i></i></div><small>Az oldal magától visszaáll — nem kell frissíteni. Az adataid megmaradnak.</small>${S.user ? `<button type="button" class="fc-mt-out">Kijelentkezés</button>` : ""}</div>`;
+    { const ob = el.querySelector(".fc-mt-out"); if(ob) ob.onclick = async ()=>{
+        /* karbantartás alatt is ki lehet lépni (Martin kérése) — kétszeri kattintás, előtte minden függő mentés lefut */
+        if(!ob.classList.contains("arm")){ ob.classList.add("arm"); ob.textContent = "Biztosan kijelentkezel? Kattints újra"; setTimeout(()=>{ if(ob.isConnected){ ob.classList.remove("arm"); ob.textContent = "Kijelentkezés"; } }, 5000); return; }
+        ob.disabled = true; ob.textContent = "Kijelentkezés…";
+        try{ if(S.pending.size){ for(const k of Array.from(S.pending)) await push(k); } await firebase.auth().signOut(); }catch(e){}
+        if(S.admin) lsDel(ADMIN_KEY); SYNC.forEach(lsDel); location.reload(); }; }
     if(!old) document.body.appendChild(el); document.documentElement.classList.add("fc-mton");
     const tick = ()=>{ const left = m.until ? m.until - Date.now() : 1; if(left <= 0){ mtDraw(); return; }
       const cd = el.querySelector(".fc-mt-cd"); if(cd){ const mm = Math.max(1, Math.ceil(left / 60000)); cd.textContent = `· még kb. ${mm >= 60 ? Math.floor(mm / 60) + " óra" + (mm % 60 ? " " + (mm % 60) + " perc" : "") : mm + " perc"}`; }
@@ -32273,6 +32279,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     };
     bb.onclick = open; window.fpOpenDocs = open;
   }
+  window.__fpMtDraw = ()=> mtDraw();
   function admApply(){
     const CF = appCfg();
     try{ const lo = +CF.lo || 0, md = S.user && S.user.metadata, si = Date.parse(md && md.lastSignInTime || "") || 0;
@@ -74231,6 +74238,11 @@ html body #fcAdmin#fcAdmin#fcAdmin.th-light .kda2 .k4-c .pc,html body #fcAdmin#f
 @media (max-width:1180px){html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-top{grid-template-columns:1fr 1fr;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-sum{grid-column:1/-1;}}
 @media (max-width:640px){html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-top{grid-template-columns:1fr;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums b{font-size:24px;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-q{grid-template-columns:1fr;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .go{display:none;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c footer{flex-direction:column;align-items:stretch;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ab{justify-content:flex-end;}}
 @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fcAdmin .kda2 *{animation:none !important;}}
+</style>
+<style id="mtOutCss">
+html body #fcMt .fc-mt-out{display:block;margin:16px auto 0;padding:10px 20px;border-radius:99px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:inherit;font:700 13.5px Inter,system-ui,sans-serif;cursor:pointer;transition:background .2s,border-color .2s;}
+html body #fcMt .fc-mt-out:hover{background:rgba(255,255,255,.12);}
+html body #fcMt .fc-mt-out.arm{border-color:#e2585a;background:rgba(226,88,90,.18);color:#ffb3b3;}
 </style>
 </body>
 </html>
