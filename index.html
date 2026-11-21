@@ -73667,8 +73667,8 @@ html.m-app .day-nt{display:none !important;}
 #fpAdBoot .ab-dr::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,#FBAC01 30%,#f0c766 50%,#FBAC01 70%,transparent);opacity:.7;}
 #fpAdBoot .ab-dr.l::after{right:0;} #fpAdBoot .ab-dr.r::after{left:0;}
 #fpAdBoot.open .ab-dr.l{transform:translateX(-102%);} #fpAdBoot.open .ab-dr.r{transform:translateX(102%);}
-#fpAdBoot .ab-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;transition:opacity .3s,transform .45s cubic-bezier(.6,0,.2,1);}
-#fpAdBoot.open .ab-c{opacity:0;transform:scale(1.15);}
+#fpAdBoot .ab-c{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;transition:opacity .3s,transform .45s cubic-bezier(.6,0,.2,1);}
+#fpAdBoot.open .ab-c,#fpAdBoot.open .ab-mq{opacity:0;transform:scale(1.15);transition:opacity .3s,transform .45s;}
 #fpAdBoot .ab-logo{height:28px;width:auto;margin-bottom:6px;opacity:0;transition:opacity .4s;} #fpAdBoot .ab-logo.on{opacity:1;}
 #fpAdBoot .ab-tag{font-size:11px;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:#FBAC01;margin-bottom:22px;opacity:.9;}
 #fpAdBoot .ab-rad{position:relative;width:230px;height:230px;margin-bottom:24px;border-radius:50%;overflow:hidden;background:radial-gradient(circle,rgba(251,172,1,.08) 0%,rgba(251,172,1,.02) 60%,transparent 70%);box-shadow:inset 0 0 0 1px rgba(251,172,1,.25);}
@@ -73690,6 +73690,21 @@ html.m-app .day-nt{display:none !important;}
 #fpAdBoot .ab-bar{width:min(320px,80vw);height:5px;border-radius:99px;overflow:hidden;background:rgba(251,172,1,.14);}
 #fpAdBoot .ab-bar b{display:block;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#FBAC01,#f0c766);transform-origin:0 50%;transform:scaleX(.04);transition:transform .5s cubic-bezier(.2,.8,.2,1);}
 #fpAdBoot .ab-n{margin-top:12px;height:18px;font-size:13px;font-weight:800;color:#f0c766;}
+#fpAdBoot .ab-rw{margin:14px 0 40px;} #fpAdBoot .ab-rw .ab-rad{margin-bottom:0;}
+#fpAdBoot .ab-tick{position:absolute;left:50%;top:50%;width:290px;height:290px;margin:-145px;border-radius:50%;pointer-events:none;animation:abSpin 14s linear infinite;}
+#fpAdBoot .ab-tick svg{width:100%;height:100%;display:block;}
+#fpAdBoot .ab-mq{position:absolute;z-index:1;left:0;right:0;height:34px;overflow:hidden;opacity:.55;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);}
+#fpAdBoot .ab-mq.t{top:9%;} #fpAdBoot .ab-mq.b{bottom:9%;}
+#fpAdBoot .ab-mq div{display:flex;gap:10px;width:max-content;animation:abMq 38s linear infinite;}
+#fpAdBoot .ab-mq.b div{animation-direction:reverse;animation-duration:44s;}
+#fpAdBoot .ab-mq span{flex:none;padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;color:#d9cdb3;background:rgba(255,255,255,.035);box-shadow:inset 0 0 0 1px rgba(251,172,1,.16);white-space:nowrap;}
+#fpAdBoot .ab-flash{position:absolute;left:50%;top:50%;width:200px;height:200px;margin:-100px;border-radius:50%;box-shadow:0 0 0 3px rgba(251,172,1,.9),0 0 60px rgba(251,172,1,.55);opacity:0;pointer-events:none;}
+#fpAdBoot.fin .ab-flash{animation:abFlash .6s ease-out forwards;}
+#fpAdBoot.fin .ab-core{animation:abPop .45s cubic-bezier(.2,.9,.3,1.4) both !important;}
+#fpAdBoot .ab-n b{font-size:18px;color:#fff;margin-right:4px;}
+@keyframes abMq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes abFlash{0%{opacity:1;transform:scale(.3)}100%{opacity:0;transform:scale(3.2)}}
+@keyframes abPop{0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
 @keyframes abSpin{to{transform:rotate(360deg)}}
 @keyframes abBlip{0%{opacity:0;transform:scale(.3)}8%{opacity:1;transform:scale(1.2)}20%{transform:scale(1)}70%{opacity:.6}100%{opacity:0}}
 @keyframes abCore{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
@@ -73699,8 +73714,9 @@ html body #fpAdBoot#fpAdBoot .ab-dr.r{background-image:radial-gradient(120% 80% 
 html body #fpAdBoot#fpAdBoot .ab-sw{background:conic-gradient(from 0deg,rgba(251,172,1,0) 0deg,rgba(251,172,1,0) 280deg,rgba(251,172,1,.42) 358deg,#FBAC01 360deg) !important;}
 html body #fpAdBoot#fpAdBoot .ab-core{background:linear-gradient(145deg,#FBAC01,#f0c766) !important;background-color:#FBAC01 !important;}
 html body #fpAdBoot#fpAdBoot .ab-c{background:none !important;border:0 !important;box-shadow:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
-html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core){animation-iteration-count:infinite !important;}
-@media (max-width:480px){#fpAdBoot .ab-rad{width:180px;height:180px}#fpAdBoot h2{font-size:24px}}
+html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core,.ab-tick,.ab-mq div){animation-iteration-count:infinite !important;}
+@media (max-width:480px){#fpAdBoot .ab-rad{width:180px;height:180px}#fpAdBoot h2{font-size:24px}#fpAdBoot .ab-tick{width:230px;height:230px;margin:-115px}#fpAdBoot .ab-mq.t{top:3%}#fpAdBoot .ab-mq.b{bottom:3%}}
+@media (max-height:700px){#fpAdBoot .ab-mq{display:none}}
 @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fpAdBoot .ab-sw{animation-duration:5s !important}}
 </style>
 <script id="adBootJs">
@@ -73713,9 +73729,12 @@ html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core){animation-iteration-count:in
     var bl = "", P = [[30,38],[68,30],[74,64],[40,72],[22,58],[56,18],[84,46],[48,52]];
     P.forEach(function(p, i){ var a = Math.atan2(p[1] - 50, p[0] - 50) * 180 / Math.PI + 90; if(a < 0) a += 360; bl += '<i class="ab-bl" style="left:' + p[0] + '%;top:' + p[1] + '%;animation-delay:' + (a / 360 * 2.6).toFixed(2) + 's"></i>'; });
     var ST = ["Boltok", "Beosztás", "Fiókok", "Kedvezmények", "Üzenetek", "Hibajegyek"];
-    el.innerHTML = '<div class="ab-dr l"></div><div class="ab-dr r"></div><div class="ab-c"><img class="ab-logo" alt="FirstPhone"><div class="ab-tag">Admin központ</div>'
-      + '<div class="ab-rad"><i class="rg"></i><i class="rg"></i><i class="rg"></i><i class="ax"></i><i class="ax h"></i><div class="ab-sw"></div>' + bl
-      + '<div class="ab-core"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></svg></div></div>'
+    var NM = []; try{ (window.FP_SHOPS || []).forEach(function(s){ var n = String(s.n || "").trim(); if(n && NM.indexOf(n) < 0 && (window.FP_HIDE_SHOPS || []).indexOf(String(s.c || "").toUpperCase()) < 0) NM.push(n); }); }catch(e){}
+    var half = Math.ceil(NM.length / 2), mq = function(L){ if(!L.length) return ""; var h = L.map(function(n){ return "<span>" + n.replace(/[<&]/g, "") + "</span>"; }).join(""); return h + h; };
+    var MQ = NM.length > 3 ? '<div class="ab-mq t"><div>' + mq(NM.slice(0, half)) + '</div></div><div class="ab-mq b"><div>' + mq(NM.slice(half)) + '</div></div>' : "";
+    el.innerHTML = '<div class="ab-dr l"></div><div class="ab-dr r"></div>' + MQ + '<div class="ab-c"><img class="ab-logo" alt="FirstPhone"><div class="ab-tag">Admin központ</div>'
+      + '<div class="ab-rw" style="position:relative"><div class="ab-tick"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="none" stroke="rgba(251,172,1,.35)" stroke-width=".6" stroke-dasharray=".6 2.4"/><circle cx="50" cy="50" r="48" fill="none" stroke="#FBAC01" stroke-width="1" stroke-dasharray="14 287" stroke-linecap="round"/></svg></div><div class="ab-rad"><i class="rg"></i><i class="rg"></i><i class="rg"></i><i class="ax"></i><i class="ax h"></i><div class="ab-sw"></div>' + bl
+      + '<div class="ab-core"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></svg></div></div><i class="ab-flash"></i></div>'
       + '<h2>Minden bolt <em>egy helyen</em></h2><p class="ab-sub">Összegyűjtöm a boltok friss adatait a felhőből…</p>'
       + '<div class="ab-steps">' + ST.map(function(s, i){ return '<span style="animation-delay:' + (0.15 + i * 0.12).toFixed(2) + 's"><b></b>' + s + '</span>'; }).join("") + '</div>'
       + '<div class="ab-bar"><b></b></div><div class="ab-n"></div></div>';
@@ -73725,8 +73744,9 @@ html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core){animation-iteration-count:in
     var n = 0; (function lg(){ var im = el.querySelector(".ab-logo"); if(!im) return; if(window.fpLogoFor){ try{ Promise.resolve(window.fpLogoFor("")).then(function(u){ if(u){ im.src = u; im.classList.add("on"); } }).catch(function(){}); }catch(e){} return; } if(++n < 30) setTimeout(lg, 100); })();
     cur = { el:el, done:function(cnt){ if(fin) return; fin = true; clearInterval(tick);
         for(var i = 0; i < steps.length; i++) steps[i].classList.add("ok"); bar.style.transform = "scaleX(1)";
-        var nn = el.querySelector(".ab-n"); if(nn && cnt) nn.textContent = cnt + " bolt betöltve";
-        setTimeout(function(){ el.classList.add("open"); el.style.pointerEvents = "none"; setTimeout(function(){ el.remove(); if(cur && cur.el === el) cur = null; }, 800); }, 380); } };
+        el.classList.add("fin");
+        var nn = el.querySelector(".ab-n"); if(nn && cnt){ nn.innerHTML = '<b>0</b> bolt betöltve'; var bb = nn.querySelector("b"), t0 = performance.now(); (function st(now){ var p = Math.min(1, (now - t0) / 420); bb.textContent = Math.round(cnt * (1 - Math.pow(1 - p, 3))); if(p < 1 && el.isConnected) requestAnimationFrame(st); })(t0); }
+        setTimeout(function(){ el.classList.add("open"); el.style.pointerEvents = "none"; setTimeout(function(){ el.remove(); if(cur && cur.el === el) cur = null; }, 800); }, 520); } };
     return cur;
   }
   window.fpAdBoot = { show:show, done:function(n){ if(cur) cur.done(n); } };
