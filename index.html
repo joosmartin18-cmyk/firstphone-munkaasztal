@@ -73909,9 +73909,26 @@ html body #fcLogin#fcLogin .lk-fx .glow{background:radial-gradient(circle,rgba(2
     var mn = l.querySelector(".lk-main"), hi = l.querySelector(".lk-hi");
     if(mn && !mn.querySelector(".lk-lock")){ var lk = document.createElement("div"); lk.className = "lk-lock"; lk.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path class="sh" d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'; mn.insertBefore(lk, mn.firstChild); }
     if(hi && !hi.closest(".lk-ntf")){ var w = document.createElement("div"); w.className = "lk-ntf"; w.innerHTML = '<i class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/></svg></i><div class="tx"><div class="tt"><b>FIRSTPHONE MUNKAASZTAL</b><small>most</small></div></div>'; hi.parentNode.insertBefore(w, hi); w.querySelector(".tx").appendChild(hi); }
+    avInit(l);
     var cd = l.querySelector(".lk-card"); if(cd && !cd.querySelector(".lk-hdl")){ var h = document.createElement("i"); h.className = "lk-hdl"; cd.insertBefore(h, cd.firstChild); }
     var av = l.querySelector(".lk-av"); if(av && !av.querySelector(".lk-avr")){ if(getComputedStyle(av).position === "static") av.style.position = "relative"; var r = document.createElement("i"); r.className = "lk-avr"; r.innerHTML = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(251,172,1,.35)" stroke-width="1.5" stroke-dasharray="3 6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#FBAC01" stroke-width="3" stroke-dasharray="30 266" stroke-linecap="round"/><circle cx="50" cy="3" r="4" fill="#f0c766"/></svg>'; av.appendChild(r); }
     var b = l.querySelector(".fc-go"); if(b && !b.querySelector(".lk-shine")){ var s = document.createElement("span"); s.className = "lk-shine"; b.appendChild(s); } }
+  /* bolt-jelvény: a gépen tárolt bolt képe (ha ezen a gépen már használták), admin = korona, különben kezdőbetűk */
+  function localShop(){ try{ var st = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"), se = st && st.settings || {}; var ph = String(se.shopPhoto || ""); return { ph:/^data:image\/|^https:\/\//.test(ph) ? ph : "", loc:String(se.location || "") }; }catch(e){ return { ph:"", loc:"" }; } }
+  var CROWN = '<svg viewBox="0 0 24 24" fill="#1a1408"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/><rect x="5" y="20" width="14" height="2" rx="1"/></svg>';
+  var STORE = '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/></svg>';
+  function avDraw(l){ var av = l.querySelector("#lkAv"), em = l.querySelector("#fcEmail"), hit = l.querySelector("#fcHit"); if(!av || !em) return;
+    var v = em.value.trim().toLowerCase(), h = hit ? hit.textContent : "", ls = localShop(), fold = function(s){ return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); };
+    var isAd = v === "admin" || /^\u{1F451}/u.test(h), name = h.replace(/^[^\s]+\s*/, "").trim();
+    var mine = ls.ph && (!v || (ls.loc && (fold(name).indexOf(fold(ls.loc).split(/\s+/)[0]) >= 0 || fold(ls.loc).indexOf(v) >= 0)));
+    av.classList.remove("ph", "ad", "ini", "df"); av.style.removeProperty("background-image");
+    var ic = l.querySelector(".lk-ntf .ic"); if(ic){ ic.classList.toggle("ph", !!mine && !isAd); if(mine && !isAd) ic.style.setProperty("background-image", "url('" + ls.ph.replace(/'/g, "%27") + "')", "important"); else ic.style.removeProperty("background-image"); }
+    if(isAd){ av.classList.add("ad"); av.innerHTML = CROWN; }
+    else if(mine){ av.classList.add("ph"); av.style.setProperty("background-image", "url('" + ls.ph.replace(/'/g, "%27") + "')", "important"); av.innerHTML = ""; }
+    else if(name && v){ av.classList.add("ini"); av.innerHTML = "<span>" + name.split(/[\s,·-]+/).filter(Boolean).slice(0, 2).map(function(w){ return w[0]; }).join("").toUpperCase().replace(/[<&>]/g, "") + "</span>"; }
+    else { av.classList.add("df"); av.innerHTML = STORE; }
+    var t = l.querySelector(".lk-ntf .tt b"); if(t) t.textContent = isAd ? "ADMIN" : (name && v) ? name.toUpperCase() : (mine && ls.loc) ? ls.loc.toUpperCase() : "FIRSTPHONE MUNKAASZTAL"; }
+  function avInit(l){ var em = l.querySelector("#fcEmail"); if(!em || em.__lkAv) return; em.__lkAv = 1; em.addEventListener("input", function(){ setTimeout(function(){ avDraw(l); }, 0); }); avDraw(l); }
   setInterval(add, 400); add();
 })();
 </script>
@@ -73931,7 +73948,7 @@ html body #fcLogin#fcLogin .lk-lock .sh{transform-origin:16px 11px;animation:lkS
 @keyframes lkShack{0%,70%,100%{transform:none}78%{transform:translateY(-2px) rotate(-14deg)}86%{transform:none}}
 html body #fcLogin#fcLogin .lk-brand{order:-1;}
 html body #fcLogin#fcLogin .lk-clock .lg-d{font-family:-apple-system,"SF Pro Display",Inter,system-ui,sans-serif !important;font-size:clamp(16px,2.4vh,21px) !important;font-weight:600 !important;color:rgba(255,255,255,.86) !important;letter-spacing:.01em !important;text-transform:none !important;}
-html body #fcLogin#fcLogin .lk-clock .lg-t{font-family:-apple-system,"SF Pro Display",Inter,system-ui,sans-serif !important;font-size:clamp(64px,min(19vh,24vw),176px) !important;font-weight:650 !important;letter-spacing:-.025em !important;line-height:.98 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;text-shadow:none !important;font-variant-numeric:tabular-nums;}
+html body #fcLogin#fcLogin .lk-clock .lg-t{font-family:-apple-system,"SF Pro Display",Inter,system-ui,sans-serif !important;font-size:clamp(60px,min(15.5vh,24vw),168px) !important;font-weight:650 !important;letter-spacing:-.025em !important;line-height:.98 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;text-shadow:none !important;font-variant-numeric:tabular-nums;}
 html body #fcLogin#fcLogin .lk-ntf{order:2;display:flex;align-items:center;gap:12px;width:min(400px,100%);margin:clamp(16px,4vh,40px) 0 0;padding:12px 14px;border-radius:22px;background:rgba(32,29,24,.92);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 14px 34px rgba(0,0,0,.45);text-align:left;animation:lkNtf .7s .55s cubic-bezier(.2,.9,.3,1.15) both !important;}
 html body #fcLogin#fcLogin .lk-ntf .ic{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg,#FFD45C,#FBAC01) !important;}
 html body #fcLogin#fcLogin .lk-ntf .ic svg{width:22px;height:22px;}
@@ -73947,6 +73964,23 @@ html body #fcLogin#fcLogin .lk-card{background:rgba(18,17,15,.97) !important;bor
 html body #fcLogin#fcLogin .lk-card .lk-hdl{background:rgba(255,255,255,.18) !important;}
 html body #fcLogin#fcLogin .lk-card .lk-hdl::after{display:none !important;}
 html body #fcLogin#fcLogin .lk-card label{font-size:11px !important;letter-spacing:.08em !important;color:rgba(255,255,255,.5) !important;}
+html body #fcLogin#fcLogin .lk-card .lk-av{display:grid !important;place-items:center;position:absolute !important;left:50% !important;top:-40px !important;width:76px !important;height:76px !important;margin-left:-38px !important;border-radius:50% !important;background:#1d1b18 !important;background-size:cover !important;background-position:center !important;box-shadow:0 0 0 4px #121110,0 0 0 6px rgba(251,172,1,.55),0 12px 30px rgba(0,0,0,.5) !important;transition:transform .35s cubic-bezier(.2,.9,.3,1.3);font-size:0;overflow:hidden;}
+html body #fcLogin#fcLogin .lk-card .lk-av svg{width:34px;height:34px;}
+html body #fcLogin#fcLogin .lk-card .lk-av.df, html body #fcLogin#fcLogin .lk-card .lk-av.ad, html body #fcLogin#fcLogin .lk-card .lk-av.ini{background:linear-gradient(145deg,#FFD45C,#FBAC01) !important;}
+html body #fcLogin#fcLogin .lk-card .lk-av.ad{box-shadow:0 0 0 4px #121110,0 0 0 6px #FBAC01,0 0 30px rgba(251,172,1,.55) !important;transform:scale(1.06);}
+html body #fcLogin#fcLogin .lk-card .lk-av.ini span{font-size:26px;font-weight:800;color:#1a1408;letter-spacing:-.02em;}
+html body #fcLogin#fcLogin .lk-card .lk-av.ph{background-color:#1d1b18 !important;}
+html body #fcLogin#fcLogin .lk-card .lk-av .lk-avr{display:none !important;}
+html body #fcLogin#fcLogin .lk-card{padding-top:50px !important;}
+html body #fcLogin#fcLogin .lk-ntf{margin-bottom:58px !important;margin-top:clamp(12px,2.6vh,32px) !important;}
+html body #fcLogin#fcLogin .lk-brand{margin-bottom:clamp(8px,3vh,40px) !important;}
+@media (max-height:860px){html body #fcLogin#fcLogin .lk-lock{display:none !important;}}
+@media (max-height:740px){html body #fcLogin#fcLogin .lk-ntf{display:none !important;}html body #fcLogin#fcLogin .lk-clock{margin-bottom:56px !important;}}
+@media (min-width:701px){html body #fcLogin#fcLogin .lk-card{margin-bottom:clamp(12px,3vh,40px) !important;}}
+html body #fcLogin#fcLogin .lk-ntf .ic.ph{background-size:cover !important;background-position:center !important;}
+html body #fcLogin#fcLogin .lk-ntf .ic.ph svg{display:none;}
+html body #fcLogin#fcLogin .lk-card .lk-hdl{display:none !important;}
+html body #fcLogin#fcLogin .lk-main{padding-bottom:0 !important;}
 html body #fcLogin#fcLogin .fc-in > i{display:none !important;}
 html body #fcLogin#fcLogin .fc-in{background:#1d1b18 !important;border:1px solid rgba(255,255,255,.08) !important;border-radius:14px !important;box-shadow:none !important;}
 html body #fcLogin#fcLogin .fc-in:focus-within{border-color:#FBAC01 !important;box-shadow:0 0 0 3px rgba(251,172,1,.18) !important;}
