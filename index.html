@@ -73434,21 +73434,24 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
     var mx = Math.max.apply(null, MB.map(function(b){ return b.s + b.p; }).concat([1]));
     var paid = A0.reduce(function(a, x){ return a + (+x.n || 0); }, 0), orig = A0.reduce(function(a, x){ return a + (+x.o || 0); }, 0);
     var PER = { all:"minden időszak", cur:"ebben a hónapban", prev:"az előző hónapban", year:"idén" }[A.m];
-    var hero = '<div class="k2-hero"><div class="k2-tot"><small>Összesítő · ' + PER + ' · ' + A0.length + ' tétel · ' + Object.keys(act).length + ' bolt</small>'
-      + '<div class="k2-nums"><div><em>Fizetett (vásárlás)</em><b>' + ft(paid) + '</b></div><div class="kv"><em>Kedvezmény · átlag −' + avg(L0) + '%</em><b>' + ft(sum(L0)) + '</b></div><div class="og"><em>Eredeti ár</em><b>' + ft(orig) + '</b></div></div>'
-      + '<div class="k2-bars">' + MB.map(function(b){ return '<div class="k2-bar' + (b.k === mk ? " on" : "") + '" title="' + esc(b.l + ": fizetett " + ft(b.p) + " · kedvezmény " + ft(b.s) + " · " + b.n + " tétel") + '"><span class="st" style="height:' + Math.max(4, Math.round((b.s + b.p) / mx * 100)) + '%"><i class="dc" style="flex:' + (b.s || 0) + ' 0 0"></i><i class="pd" style="flex:' + (b.p || (b.s ? 0 : 1)) + ' 0 0"></i></span><em>' + esc(b.l) + '</em></div>'; }).join("") + '</div><div class="k2-leg"><span><i class="pd"></i>fizetett</span><span><i class="dc"></i>kedvezmény</span></div></div>'
-      + '<div class="k2-tiles"><div class="k2-t" style="--c:#6bb6ff"><span class="ic">' + IC.acc + '</span><b>' + (A0.length - ph) + '</b><small>tartozék</small></div><div class="k2-t" style="--c:#b794ff"><span class="ic">' + IC.ph + '</span><b>' + ph + '</b><small>telefon · IMEI-vel</small></div>'
-      + '<button type="button" class="k2-t k2-tb2' + (A.unc ? " on" : "") + '" id="kdaUncT" style="--c:' + (nUnc ? "#f0953a" : "#3ecf8e") + '"><span class="ic dot"></span><b>' + nUnc + '</b><small>' + (nUnc ? "ellenőrzésre vár" : "minden ellenőrizve") + '</small></button><div class="k2-t" style="--c:#ff8f8f"><span class="ic dot"></span><b>' + nBad + '</b><small>javított rögzítés</small></div></div>'
-      + '<div class="k2-cfg"><small>Kedvezményt engedélyezők</small><b>' + APL.length + '</b><span>' + (APL.length ? APL.map(esc).join(", ") : "Még nincs engedélyező megadva") + '</span><button type="button" class="ax-btn" id="kdaSetT">' + IC.gear + (A.set ? " Beállítások bezárása" : " Beállítások") + '</button></div></div>';
+    var nAcc = A0.length - ph, dPct = A0.length ? nAcc / A0.length : 0, cir = 2 * Math.PI * 34, aPct = orig ? Math.round(paid / orig * 100) : 0;
+    if(!A._init){ A._init = 1; if(nUnc) A.tab = "check"; }
+    var hero = '<div class="k4-top"><div class="k4-sum"><small>Összesítő · ' + PER + ' · ' + A0.length + ' tétel · ' + Object.keys(act).length + ' bolt</small>'
+      + '<div class="k4-nums"><div class="pd"><em>Fizetett (vásárlás)</em><b>' + ft(paid) + '</b></div><div class="kv"><em>Kedvezmény · átlag −' + avg(L0) + '%</em><b>' + ft(sum(L0)) + '</b></div><div class="og"><em>Eredeti ár</em><b>' + ft(orig) + '</b></div></div>'
+      + '<div class="k4-split" title="Az eredeti árból ennyit fizettek ki"><i style="width:' + aPct + '%"></i><span>fizetett ' + aPct + '%</span><span class="r">kedvezmény ' + (orig ? 100 - aPct : 0) + '%</span></div></div>'
+      + '<div class="k4-don"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="rgba(183,148,255,.55)" stroke-width="9"/><circle class="a" cx="40" cy="40" r="34" fill="none" stroke="#6bb6ff" stroke-width="9" stroke-linecap="round" stroke-dasharray="' + (cir * dPct).toFixed(1) + ' ' + cir.toFixed(1) + '" transform="rotate(-90 40 40)"/></svg><div class="c"><b>' + A0.length + '</b><small>tétel</small></div>'
+      + '<ul><li class="ac"><i></i>' + nAcc + ' tartozék</li><li class="ph"><i></i>' + ph + ' telefon</li>' + (nBad ? '<li class="bd"><i></i>' + nBad + ' javított</li>' : "") + '</ul></div>'
+      + '<div class="k4-mo"><small>Utolsó 6 hónap</small><div class="k4-bars">' + MB.map(function(b){ return '<div class="k4-bar' + (b.k === mk ? " on" : "") + '" title="' + esc(b.l + ": fizetett " + ft(b.p) + " · kedvezmény " + ft(b.s) + " · " + b.n + " tétel") + '"><span><i class="p" style="height:' + Math.round(b.p / mx * 100) + '%"></i><i class="s" style="height:' + Math.round(b.s / mx * 100) + '%"></i></span><em>' + b.l + '</em></div>'; }).join("") + '</div></div></div>'
+      + '<button type="button" class="k4-alert ' + (nUnc ? "warn" : "ok") + '" id="kdaUncT"><span class="ic">' + (nUnc ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9.5"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>') + '</span><span class="tx"><b>' + (nUnc ? nUnc + " kedvezmény vár ellenőrzésre" : "Minden kedvezmény ellenőrizve") + '</b><small>' + (nUnc ? "Nézd át és jelöld „Rendben”-nek — kattints ide" : "Szép munka — nincs teendő") + '</small></span>' + (nUnc ? '<span class="go">Ellenőrzés ' + IC.chev + '</span>' : "") + '</button>';
     var setP = A.set ? '<div class="k2-set">'
       + '<div class="k2-sr"><div><b>Kedvezményt engedélyezők</b><small>A boltban a „Ki adta ki / engedélyezte?” résznél csak ők választhatók (és kézzel beírt név). Bolti dolgozó ott nem jelenik meg.</small></div>'
       + '<div class="kda-apl">' + (APL.length ? APL.map(function(n, i){ return '<span class="kda-apc">' + esc(n) + '<button type="button" data-kapd="' + i + '" title="Eltávolítás">×</button></span>'; }).join("") : '<span class="k2-none">Még nincs megadva senki.</span>') + '</div>'
       + '<div class="k2-add"><input class="ax-in" id="kdaApN" maxlength="60" placeholder="Engedélyező neve"><button type="button" class="ax-btn" id="kdaApA">Hozzáadás</button></div></div></div>' : "";
-    var bar = '<div class="k2-tb"><div class="ax-seg">' + [["store","Boltonként"],["person","Dolgozónként"],["all","Összes tétel"]].map(function(t){ return '<button type="button" data-kta="' + t[0] + '" class="' + (A.tab === t[0] ? "on" : "") + '">' + t[1] + '</button>'; }).join("") + '</div>'
+    var bar = '<div class="k2-tb k4-tb"><div class="ax-seg">' + [["check","Ellenőrzés" + (nUnc ? " · " + nUnc : "")],["store","Boltonként"],["person","Dolgozónként"],["all","Összes tétel"]].map(function(t){ return '<button type="button" data-kta="' + t[0] + '" class="' + (A.tab === t[0] ? "on" : "") + '">' + t[1] + '</button>'; }).join("") + '</div>'
       + '<div class="k2-f"><input class="ax-in" id="kdaQ" type="search" placeholder="Keresés: termék, IMEI, név…" value="' + esc(A.q) + '"><select class="ax-in" id="kdaS"><option value="">Minden bolt</option>' + shops.slice().sort(function(a, b){ return api.name(a).localeCompare(api.name(b), "hu"); }).map(function(x){ return '<option value="' + esc(x.uid) + '"' + (A.s === x.uid ? " selected" : "") + '>' + esc(api.name(x)) + '</option>'; }).join("") + '</select>'
       + '<select class="ax-in" id="kdaT"><option value="">Minden típus</option><option value="acc"' + (A.t === "acc" ? " selected" : "") + '>Tartozék</option><option value="ph"' + (A.t === "ph" ? " selected" : "") + '>Telefon</option></select>'
       + '<select class="ax-in" id="kdaM"><option value="all"' + (A.m === "all" ? " selected" : "") + '>Minden időszak</option><option value="cur"' + (A.m === "cur" ? " selected" : "") + '>Ez a hónap</option><option value="prev"' + (A.m === "prev" ? " selected" : "") + '>Előző hónap</option><option value="year"' + (A.m === "year" ? " selected" : "") + '>Idén</option></select>'
-      + '<button type="button" class="ax-btn k2-unc' + (A.unc ? " on" : "") + '" id="kdaUnc">Csak ellenőrizetlen' + (nUnc ? " (" + nUnc + ")" : "") + '</button><button type="button" class="ax-btn" id="kdaX">' + IC.dl + ' Excel</button></div></div>';
+      + '<button type="button" class="ax-btn k2-unc' + (A.unc ? " on" : "") + '" id="kdaUnc">Csak ellenőrizetlen' + (nUnc ? " (" + nUnc + ")" : "") + '</button><button type="button" class="ax-btn k4-apb" id="kdaSetT">' + IC.gear + ' Engedélyezők (' + APL.length + ')</button><button type="button" class="ax-btn" id="kdaX">' + IC.dl + ' Excel</button></div></div>';
     var chip = A.s ? '<div class="k2-chip">Szűrve: <b>' + esc(api.name(shops.find(function(x){ return x.uid === A.s; }) || {})) + '</b><button type="button" id="kdaSX">× szűrő törlése</button></div>' : "";
     var tbl = function(L, showShop){ if(!L.length) return '<div class="kd-empty">Nincs rögzített kedvezmény ezekkel a szűrőkkel.</div>';
       return '<div class="kda-tw"><table class="k2-tbl"><tr><th>Dátum</th>' + "" + '<th>Termék</th><th>Kérte</th><th>Engedélyezte</th><th class="num">Ár</th><th class="num">Kedvezmény</th><th></th></tr>'
@@ -73473,7 +73476,16 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
         + '<label>Engedélyezte<input class="ax-in" data-e="giv" list="kdaApL" maxlength="60" value="' + esc(r.giv) + '"><datalist id="kdaApL">' + APL.map(function(n){ return '<option value="' + esc(n) + '">'; }).join("") + '</datalist></label><label class="w2">Megjegyzés<input class="ax-in" data-e="note" maxlength="140" value="' + esc(r.note || "") + '"></label>'
         + '<div class="k2-edb"><span class="k2-edm"></span><button type="button" class="ax-btn" data-kex="1">Mégse</button><button type="button" class="ax-btn k2-prim" data-kes="1">Javítás mentése</button></div></div></td></tr>'; };
     var body = "";
-    if(A.tab === "store"){
+    var ckCard = function(r, i){ var c = colOf[r._x.uid], P = pct(r.o, r.n);
+      return '<article class="k4-c" style="--i:' + i + '" data-kid="' + esc(r.id) + '"><header><span class="ti ' + (r.t === "ph" ? "ph" : "acc") + '">' + (r.t === "ph" ? IC.ph : IC.acc) + '</span><div class="nm"><b>' + esc(r.nm) + '</b><small>' + esc(r.ft ? "FT/FP " + r.ft : (r.code || "—")) + (r.imei ? " · " + esc(r.imei) : "") + '</small></div><span class="pc">−' + P + '%</span></header>'
+        + '<div class="k4-pr"><s>' + ft(r.o) + '</s><b>' + ft(r.n) + '</b><em>−' + ft(r.o - r.n) + '</em></div>'
+        + '<div class="k4-who"><span class="pn"><span class="kd-av" style="--c:' + c(r.ask) + '">' + esc(ini(r.ask)) + '</span><span><small>Kérte</small>' + esc(r.ask) + '</span></span><i class="ar">' + IC.chev + '</i><span class="pn"><span class="kd-av" style="--c:' + c(r.giv) + '">' + esc(ini(r.giv)) + '</span><span><small>Engedélyezte</small>' + esc(r.giv || "—") + '</span></span></div>'
+        + (r.note ? '<p class="k4-nt">' + esc(r.note) + '</p>' : "")
+        + '<footer><span class="k4-meta"><b>' + esc(api.name(r._x).replace(/^FirstPhone\s+/i, "")) + '</b> · ' + esc(String(r.d).replace(/-/g, ".")) + '.</span><span class="k4-ab"><button type="button" class="k2-del" data-kdel="' + esc(r.id) + '">Törlés</button><button type="button" class="k2-ed" data-ked2="' + esc(r.id) + '">Javítás</button><button type="button" class="k4-ok" data-kchk="' + esc(r.id) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> Rendben</button></span></footer></article>'; };
+    if(A.tab === "check"){
+      var U = base.filter(function(r){ return !r._bad && !r.chk; }).sort(function(a, b){ return String(b.d).localeCompare(String(a.d)) || (b.at || 0) - (a.at || 0); });
+      body = U.length ? '<div class="k4-q">' + U.map(ckCard).join("") + '</div>' : '<div class="k4-done"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Minden kedvezmény ellenőrizve</b><small>Ha új rögzítés érkezik, itt jelenik meg.</small></div>';
+    } else if(A.tab === "store"){
       var SS = shops.map(function(x){ var L = L0.filter(function(r){ return r._x === x; }); return { x:x, L:L, s:sum(L) }; }).filter(function(g){ return !A.s || g.x.uid === A.s; }).sort(function(a, b){ return b.s - a.s || ok(b.L).length - ok(a.L).length; });
       var smx = Math.max.apply(null, SS.map(function(g){ return g.s; }).concat([1]));
       body = '<div class="k2-rank">' + SS.map(function(g, i){ var L = ok(g.L), ac = L.filter(function(r){ return r.t !== "ph"; }).length;
@@ -73489,6 +73501,8 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
           + '<span class="vl"><b>' + ft(e[2]) + '</b><small>átlag −' + avg(L) + '%</small></span><span class="ch">' + IC.chev + '</span></button>' + (op ? '<div class="k2-pi">' + tbl(L, false) + '</div>' : "") + '</div>'; }).join("") + '</div>' : '<div class="kd-empty">Nincs rögzített kedvezmény ezekkel a szűrőkkel.</div>';
     } else body = tbl(L0, true);
     el.innerHTML = hero + setP + bar + chip + body;
+    if(A._lastTab !== A.tab){ el.classList.remove("k4-anim"); void el.offsetWidth; el.classList.add("k4-anim"); A._lastTab = A.tab; } else el.classList.remove("k4-anim");
+    el.querySelectorAll("[data-ked2]").forEach(function(b){ b.onclick = function(){ A.tab = "all"; A.edit = b.dataset.ked2; re(); }; });
     var re = function(){ window.fpKdAdmin(el, api); };
     el.querySelector("#kdaSetT").onclick = function(){ A.set = !A.set; re(); };
     el.querySelectorAll("[data-kta]").forEach(function(b){ b.onclick = function(){ A.tab = b.dataset.kta; re(); }; });
@@ -73505,10 +73519,10 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
       if(el.querySelector("#kdaPctS")) el.querySelector("#kdaPctS").onclick = async function(){ var v = Math.round(+String(el.querySelector("#kdaPct").value).replace(",", ".")); if(!(v > 0 && v < 100)){ api.toast("1 és 99 közötti szám kell."); return; } this.disabled = true; try{ await api.setCfg("kdPct", v, "Dolgozói kedvezmény: " + v + "%"); }catch(e){} this.disabled = false; re(); };
     }
     var tU = function(){ A.unc = !A.unc; if(A.unc && A.tab === "store") A.tab = "all"; re(); };
-    el.querySelector("#kdaUnc").onclick = tU; el.querySelector("#kdaUncT").onclick = tU;
+    el.querySelector("#kdaUnc").onclick = tU; el.querySelector("#kdaUncT").onclick = function(){ A.tab = "check"; A.unc = false; re(); var t = el.querySelector(".k4-tb"); if(t && t.scrollIntoView) t.scrollIntoView({ behavior:"smooth", block:"start" }); };
     var saveItem = async function(r, fn, msg){ var x = r._x, o = parse((x.raw || {})[KEY] || "null"), it = o.items.find(function(z){ return z.id === r.id; }); if(!it){ api.toast("A tétel már nem található — frissítsd az oldalt."); return false; }
       fn(it); try{ await api.write(x, KEY, o); if(msg) api.log("🏷️", api.name(x) + ": " + msg + " — " + it.nm); return true; }catch(e){ api.toast("⚠ Nem sikerült menteni: " + (e && e.message || e)); return false; } };
-    el.querySelectorAll("[data-kchk]").forEach(function(b){ b.onclick = async function(){ var r = rows.find(function(z){ return z.id === b.dataset.kchk; }); if(!r) return; b.disabled = true; var on = !r.chk;
+    el.querySelectorAll("[data-kchk]").forEach(function(b){ b.onclick = async function(){ var r = rows.find(function(z){ return z.id === b.dataset.kchk; }); if(!r) return; b.disabled = true; var on = !r.chk; var kc = b.closest(".k4-c"); if(kc){ kc.classList.add("out"); await new Promise(function(z){ setTimeout(z, 380); }); }
       if(await saveItem(r, function(it){ if(on) it.chk = { by:api.me(), at:Date.now() }; else delete it.chk; }, on ? "kedvezmény ellenőrizve (rendben)" : "ellenőrzés visszavonva")){ api.toast(on ? "✓ Rendben — ellenőrizve" : "Ellenőrzés visszavonva"); } re(); }; });
     el.querySelectorAll("[data-ked]").forEach(function(b){ b.onclick = function(){ A.edit = A.edit === b.dataset.ked ? "" : b.dataset.ked; re(); }; });
     el.querySelectorAll("[data-kef]").forEach(function(f){ var r = rows.find(function(z){ return z.id === f.dataset.kef; }); if(!r) return;
@@ -74140,5 +74154,83 @@ html body #adDet#adDet#adDet#adDet .dx-opg .ax-op.bad{--oc:#e2585a;}
   function hook(){ if(document.body){ ob.observe(document.body, { childList:true, subtree:true }); } else setTimeout(hook, 200); } hook();
 })();
 </script>
+<style id="kd4Css">
+/* PRÓBA 54 — admin Dolgozói kedvezmény v3: összesítő sáv (számok + arány-csík, kör, 6 hónap), ellenőrzés-sáv, Ellenőrzés fül kártyákkal — csak transform/opacity animációk */
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-top{display:grid;grid-template-columns:minmax(0,1.6fr) auto minmax(0,1fr);gap:14px;align-items:stretch;margin:0 0 12px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-top > div{background:var(--u1) !important;border:1px solid var(--u4);border-radius:20px;padding:16px 18px;position:relative;overflow:hidden;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-sum{background:linear-gradient(135deg,rgba(251,172,1,.13),rgba(255,255,255,.02) 55%),var(--u1) !important;border-color:rgba(251,172,1,.25) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-sum > small,html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-mo > small{display:block;font:800 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--udim);margin-bottom:10px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums{display:flex;flex-wrap:wrap;gap:8px 28px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums em{display:block;font:700 12px Inter,sans-serif;font-style:normal;color:var(--udim);margin-bottom:2px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums b{display:block;font:800 30px/1.1 Poppins,sans-serif;letter-spacing:-.02em;color:var(--utx);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums .kv b{color:#FBAC01;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums .og b{font-size:18px;color:var(--udim);text-decoration:line-through;margin-top:10px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-split{position:relative;height:10px;border-radius:99px;margin:16px 0 22px;background:rgba(251,172,1,.75);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-split i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#d8d2c4,#a59d8b);transform-origin:left;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-split span{position:absolute;top:14px;left:0;font:700 11px Inter,sans-serif;color:var(--udim);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-split span.r{left:auto;right:0;color:#FBAC01;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don{display:flex;align-items:center;gap:14px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don svg{width:96px;height:96px;flex:none;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don .c{position:absolute;left:18px;top:50%;width:96px;margin-top:-20px;text-align:center;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don .c b{display:block;font:800 22px/1 Poppins,sans-serif;color:var(--utx);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don .c small{font:700 10.5px Inter,sans-serif;color:var(--udim);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font:700 12.5px Inter,sans-serif;color:var(--utx);white-space:nowrap;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don li i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don li.ac i{background:#6bb6ff;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don li.ph i{background:rgba(183,148,255,.85);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-don li.bd i{background:#e2585a;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bars{display:flex;align-items:flex-end;gap:8px;height:110px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar span{flex:1;width:100%;max-width:30px;display:flex;flex-direction:column-reverse;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.04);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar i{display:block;width:100%;transform-origin:bottom;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar i.p{background:rgba(216,210,196,.35);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar i.s{background:linear-gradient(180deg,#f0c766,#FBAC01);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar em{font:700 10.5px Inter,sans-serif;font-style:normal;color:var(--udim);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-bar.on em{color:#FBAC01;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert{display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin:0 0 14px;padding:14px 18px;border-radius:18px;cursor:pointer;font:inherit;color:var(--utx);border:1px solid rgba(240,149,58,.45);background:linear-gradient(90deg,rgba(240,149,58,.2),rgba(240,149,58,.04) 60%),var(--u1);transition:transform .2s ease;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert:hover{transform:translateY(-2px);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert.ok{border-color:rgba(62,207,142,.4);background:linear-gradient(90deg,rgba(62,207,142,.16),rgba(62,207,142,.03) 60%),var(--u1);cursor:default;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .ic{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#f0953a;color:#1a1208;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert.ok .ic{background:#3ecf8e;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .ic svg{width:22px;height:22px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert.warn .ic{animation:k4Pulse 2.4s ease-in-out infinite;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .tx{flex:1;min-width:0;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .tx b{display:block;font:800 16px Poppins,sans-serif;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .tx small{color:var(--udim);font-size:12.5px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .go{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:99px;font:800 13px Inter,sans-serif;color:#1a1208;background:linear-gradient(135deg,#f0c766,#FBAC01);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .go svg{width:14px;height:14px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-q{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:18px;background:var(--u1);border:1px solid var(--u4);position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .35s ease,border-color .2s ease;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#f0953a,#FBAC01);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c:hover{border-color:rgba(251,172,1,.4);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c.out{opacity:0;transform:translateX(40px) scale(.96);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c header{display:flex;align-items:center;gap:10px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c .ti{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(107,182,255,.16);color:#6bb6ff;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c .ti.ph{background:rgba(183,148,255,.16);color:#b794ff;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c .nm{flex:1;min-width:0;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c .nm b{display:block;font:700 14px Inter,sans-serif;color:var(--utx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c .nm small{font-size:11.5px;color:var(--udim);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c .pc{flex:none;padding:6px 11px;border-radius:12px;font:800 17px Poppins,sans-serif;color:#1a1208;background:linear-gradient(135deg,#f0c766,#FBAC01);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-pr{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-pr s{color:var(--udim);font-size:13px;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-pr b{font:800 20px Poppins,sans-serif;color:var(--utx);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-pr em{font-style:normal;font:700 12.5px Inter,sans-serif;color:#FBAC01;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-who{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.035);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-who .pn{display:flex;align-items:center;gap:7px;min-width:0;flex:1;font:700 12.5px Inter,sans-serif;color:var(--utx);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-who .pn > span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-who .pn small{display:block;font:700 10px Inter,sans-serif;color:var(--udim);text-transform:uppercase;letter-spacing:.05em;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-who .ar{flex:none;color:var(--udim);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-who .ar svg{width:14px;height:14px;display:block;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nt{margin:0;padding:7px 10px;border-radius:10px;font-size:12.5px;color:var(--utx);background:rgba(251,172,1,.08);border:1px dashed rgba(251,172,1,.3);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-meta{flex:1;min-width:120px;font-size:12px;color:var(--udim);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-meta b{color:var(--utx);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ab{display:flex;gap:6px;align-items:center;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ab .k2-del,html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ab .k2-ed{padding:7px 12px !important;border-radius:99px !important;font:700 12px Inter,sans-serif !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ok{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:0;border-radius:99px;cursor:pointer;font:800 13px Inter,sans-serif;color:#06281a;background:linear-gradient(135deg,#5fe0a6,#2fbf7e);box-shadow:0 6px 16px rgba(62,207,142,.25);transition:transform .15s ease;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ok:hover{transform:translateY(-1px);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ok svg{width:15px;height:15px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-done{display:flex;flex-direction:column;align-items:center;gap:6px;padding:40px 16px;border-radius:20px;border:1px dashed rgba(62,207,142,.4);background:rgba(62,207,142,.05);text-align:center;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-done span{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#3ecf8e;color:#06281a;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-done span svg{width:30px;height:30px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-done b{font:800 17px Poppins,sans-serif;color:var(--utx);} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-done small{color:var(--udim);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-apb svg{width:15px;height:15px;vertical-align:-3px;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k2-hero{display:none !important;}
+/* animáció (fülváltáskor egyszer) */
+html body #fcAdmin#fcAdmin#fcAdmin .kda2.k4-anim .k4-c,html body #fcAdmin#fcAdmin#fcAdmin .kda2.k4-anim .k2-r,html body #fcAdmin#fcAdmin#fcAdmin .kda2.k4-anim .k2-pw{animation:k4In .45s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0) * 45ms);}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2.k4-anim .k4-split i{animation:k4X .9s .15s cubic-bezier(.2,.9,.3,1) both;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2.k4-anim .k4-bar i{animation:k4Y .8s .2s cubic-bezier(.2,.9,.3,1) both;}
+html body #fcAdmin#fcAdmin#fcAdmin .kda2.k4-anim .k4-don .a{animation:k4D .9s .1s cubic-bezier(.2,.9,.3,1) both;}
+@keyframes k4In{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes k4X{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes k4Y{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes k4D{from{stroke-dasharray:0 300}}
+@keyframes k4Pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+html #fcAdmin#fcAdmin .kda2 .k4-alert.warn .ic{animation-iteration-count:infinite !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .kda2 .k4-top > div{background-color:#fff !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .kda2 .k4-c .pc,html body #fcAdmin#fcAdmin#fcAdmin.th-light .kda2 .k4-alert .go{color:#1a1208;}
+@media (max-width:1180px){html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-top{grid-template-columns:1fr 1fr;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-sum{grid-column:1/-1;}}
+@media (max-width:640px){html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-top{grid-template-columns:1fr;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-nums b{font-size:24px;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-q{grid-template-columns:1fr;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-alert .go{display:none;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-c footer{flex-direction:column;align-items:stretch;} html body #fcAdmin#fcAdmin#fcAdmin .kda2 .k4-ab{justify-content:flex-end;}}
+@media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fcAdmin .kda2 *{animation:none !important;}}
+</style>
 </body>
 </html>
