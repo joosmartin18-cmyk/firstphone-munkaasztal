@@ -73850,7 +73850,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in::after{animation:axhBar 
 #fcLogin .lk-fx .rg.c{width:520px;height:520px;margin:-260px;animation:lkSpin 30s linear infinite;}
 #fcLogin .lk-fx .bb{position:absolute;bottom:-60px;width:40px;height:40px;margin-left:-20px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:#1b170f;box-shadow:inset 0 0 0 1px rgba(251,172,1,.3),0 8px 20px rgba(0,0,0,.35);opacity:0;animation:lkRise var(--d,18s) linear var(--w,0s) infinite;}
 #fcLogin .lk-fx .glow{position:absolute;left:50%;top:56%;width:620px;height:620px;margin:-310px;border-radius:50%;background:radial-gradient(circle,rgba(251,172,1,.13) 0%,rgba(251,172,1,0) 65%);}
-#fcLogin .fc-go .lk-shine{position:absolute;top:0;bottom:0;left:0;width:45%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-120%) skewX(-18deg);animation:lkShine 4.5s ease-in-out 1.2s infinite;}
+#fcLogin .fc-go .lk-shine{position:absolute;top:0;bottom:0;left:0;width:38%;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.32) 50%,rgba(255,255,255,0) 100%);transform:translateX(-120%) skewX(-18deg);animation:lkShine 4.5s ease-in-out 1.2s infinite;}
 html body #fcLogin#fcLogin .lk-main > *{animation:lkIn .7s cubic-bezier(.2,.9,.3,1) both !important;}
 html body #fcLogin#fcLogin .lk-main > :nth-child(2){animation-delay:.08s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(3){animation-delay:.18s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(4){animation-delay:.28s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(5){animation-delay:.42s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(6){animation-delay:.52s !important}
 html body #fcLogin#fcLogin .lk-chips > *{animation:lkIn .5s cubic-bezier(.2,.9,.3,1.2) both !important;}
@@ -73858,6 +73858,28 @@ html body #fcLogin#fcLogin .lk-chips > :nth-child(1){animation-delay:.55s !impor
 #fcLogin .lk-av .lk-avr{position:absolute;inset:-9px;border-radius:50%;pointer-events:none;}
 #fcLogin .lk-av .lk-avr svg{display:block;width:100%;height:100%;}
 html body #fcLogin#fcLogin .lk-av .lk-avr{animation:lkSpin 6s linear infinite !important;}
+
+/* ===== telefon-zárképernyő elrendezés (Martin választása): felül logó, középen óriási óra, alul felcsúszó belépő panel ===== */
+html body #fcLogin#fcLogin .lk-wrap{display:block !important;grid-template-columns:none !important;padding:0 !important;max-width:none !important;width:100% !important;min-height:100%;}
+html body #fcLogin#fcLogin .lk-col{display:none !important;}
+html body #fcLogin#fcLogin .lk-main{display:flex !important;flex-direction:column !important;align-items:center !important;width:100% !important;max-width:none !important;min-height:100vh;min-height:100dvh;padding:16px 16px 0 !important;margin:0 !important;gap:0 !important;box-sizing:border-box;}
+html body #fcLogin#fcLogin .lk-brand{order:0;margin:0 0 clamp(10px,4vh,40px) !important;opacity:.9;}
+html body #fcLogin#fcLogin .lk-clock{order:1;display:flex !important;flex-direction:column-reverse !important;align-items:center !important;margin:0 !important;}
+html body #fcLogin#fcLogin .lk-clock .lg-d{font-size:clamp(15px,2.2vh,19px) !important;font-weight:600 !important;letter-spacing:.02em;color:#e9dfca !important;margin:0 0 2px !important;}
+html body #fcLogin#fcLogin .lk-clock .lg-t{font-size:clamp(72px,17vh,156px) !important;line-height:.95 !important;font-weight:200 !important;letter-spacing:-.045em !important;color:#fff4dc !important;-webkit-text-fill-color:#fff4dc !important;background:none !important;text-shadow:0 6px 40px rgba(251,172,1,.25);}
+html body #fcLogin#fcLogin .lk-hi{order:2;margin:clamp(6px,1.6vh,16px) 0 0 !important;font-size:clamp(16px,2.3vh,20px) !important;text-align:center;}
+html body #fcLogin#fcLogin .lk-chips{order:3;width:min(560px,100%) !important;margin:clamp(12px,3vh,28px) 0 0 !important;}
+html body #fcLogin#fcLogin .lk-chips .lk-mq > *{border-radius:16px !important;background:rgba(28,24,16,.78) !important;box-shadow:inset 0 0 0 1px rgba(251,172,1,.18),0 8px 20px rgba(0,0,0,.3) !important;padding:9px 14px !important;}
+html body #fcLogin#fcLogin .lk-foot{order:4;width:min(520px,100%) !important;margin:clamp(10px,2.5vh,22px) 0 12px !important;font-size:12px !important;opacity:.8;}
+html body #fcLogin#fcLogin .lk-card{order:5;margin:auto 0 0 !important;width:min(520px,100%) !important;max-width:none !important;border-radius:30px 30px 0 0 !important;padding:30px 26px calc(22px + env(safe-area-inset-bottom)) !important;background:#17140e !important;border:1px solid rgba(251,172,1,.22) !important;border-bottom:0 !important;box-shadow:0 -18px 50px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06) !important;position:relative;animation:lkSheet .8s .35s cubic-bezier(.2,.9,.25,1) both !important;}
+html body #fcLogin#fcLogin .lk-card .lk-av{display:none !important;}
+html body #fcLogin#fcLogin .lk-card .lk-hdl{position:absolute;left:50%;top:10px;width:44px;height:5px;margin-left:-22px;border-radius:99px;background:rgba(251,172,1,.55);}
+html body #fcLogin#fcLogin .lk-card .lk-hdl::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#FBAC01;transform-origin:left;animation:lkHdl 2.4s ease-in-out infinite;}
+html body #fcLogin#fcLogin .lk-fx .glow{top:30% !important;width:760px;height:760px;margin:-380px;}
+@keyframes lkSheet{from{transform:translateY(110%);opacity:.4}to{transform:none;opacity:1}}
+@keyframes lkHdl{0%,100%{transform:scaleX(.25);opacity:.4}50%{transform:scaleX(1);opacity:1}}
+@media (min-width:701px){html body #fcLogin#fcLogin .lk-card{border-radius:30px !important;border-bottom:1px solid rgba(251,172,1,.22) !important;margin:auto 0 clamp(16px,4vh,40px) !important;}}
+@media (max-height:720px){html body #fcLogin#fcLogin .lk-chips,html body #fcLogin#fcLogin .lk-foot{display:none !important;}html body #fcLogin#fcLogin .lk-clock .lg-t{font-size:clamp(60px,14vh,120px) !important;}html body #fcLogin#fcLogin .lk-brand{margin-bottom:8px !important}}
 @keyframes lkSpin{to{transform:rotate(360deg)}}
 @keyframes lkRise{0%{opacity:0;transform:translateY(0) scale(.8)}12%{opacity:.75}80%{opacity:.5}100%{opacity:0;transform:translateY(-115vh) scale(1)}}
 @keyframes lkBreath{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
@@ -73880,7 +73902,8 @@ html body #fcLogin#fcLogin .lk-fx .glow{background:radial-gradient(circle,rgba(2
     fx.innerHTML = '<div class="glow"></div>' + bb;
     bg.appendChild(fx); shine(l);
   }
-  function shine(l){ var av = l.querySelector(".lk-av"); if(av && !av.querySelector(".lk-avr")){ if(getComputedStyle(av).position === "static") av.style.position = "relative"; var r = document.createElement("i"); r.className = "lk-avr"; r.innerHTML = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(251,172,1,.35)" stroke-width="1.5" stroke-dasharray="3 6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#FBAC01" stroke-width="3" stroke-dasharray="30 266" stroke-linecap="round"/><circle cx="50" cy="3" r="4" fill="#f0c766"/></svg>'; av.appendChild(r); }
+  function shine(l){ var cd = l.querySelector(".lk-card"); if(cd && !cd.querySelector(".lk-hdl")){ var h = document.createElement("i"); h.className = "lk-hdl"; cd.insertBefore(h, cd.firstChild); }
+    var av = l.querySelector(".lk-av"); if(av && !av.querySelector(".lk-avr")){ if(getComputedStyle(av).position === "static") av.style.position = "relative"; var r = document.createElement("i"); r.className = "lk-avr"; r.innerHTML = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(251,172,1,.35)" stroke-width="1.5" stroke-dasharray="3 6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#FBAC01" stroke-width="3" stroke-dasharray="30 266" stroke-linecap="round"/><circle cx="50" cy="3" r="4" fill="#f0c766"/></svg>'; av.appendChild(r); }
     var b = l.querySelector(".fc-go"); if(b && !b.querySelector(".lk-shine")){ var s = document.createElement("span"); s.className = "lk-shine"; b.appendChild(s); } }
   setInterval(add, 400); add();
 })();
