@@ -25521,42 +25521,76 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
 
   /* ⏳ indulási betöltés: a weboldal megnyitásakor, amíg a felhő be nem tölt, egy felugró ablak takar mindent (nem lehet közben dolgozni) */
   const BOOT = { el:null, done:false };
-  function bootShow(){
+  function bootShow(force){
     if(BOOT.done || BOOT.el) return;
-    try{ if(window.self !== window.top || lsGet(OFF_KEY) === "1" || document.documentElement.classList.contains("fp-scanonly") || /[?&]scan=1/.test(location.search)) return; }catch(e){ return; }
+    if(!force) try{ if(window.self !== window.top || lsGet(OFF_KEY) === "1" || document.documentElement.classList.contains("fp-scanonly") || /[?&]scan=1/.test(location.search)) return; }catch(e){ return; }
     const st = document.createElement("style"); st.id = "fpBootCss";
     st.textContent = `
-    #fpBoot{position:fixed;inset:0;z-index:6000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,7,12,.58);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-family:Manrope,'Inter',system-ui,sans-serif;cursor:progress;animation:fpbIn .2s ease both;}
-    #fpBoot.out{opacity:0;transition:opacity .28s ease;pointer-events:none;}
-    #fpBoot .fpb-c{width:min(360px,100%);text-align:center;padding:28px 24px 24px;border-radius:24px;background:var(--u1,var(--bg-panel,#17171c));color:var(--utx,var(--text,#ececf1));border:1px solid var(--u4,var(--border,#2b2b33));box-shadow:0 30px 80px rgba(0,0,0,.45);animation:fpbPop .45s cubic-bezier(.2,.9,.3,1.2) both;cursor:default;}
-    #fpBoot .fpb-ic{position:relative;width:70px;height:70px;margin:0 auto 14px;border-radius:22px;display:grid;place-items:center;background:var(--uacc,#FBAC01);box-shadow:0 12px 30px rgba(251,172,1,.32);}
-    #fpBoot .fpb-ic span{font-size:34px;animation:fpbFl 2s ease-in-out infinite;}
-    #fpBoot .fpb-ic i{position:absolute;inset:-2px;border-radius:24px;border:2px solid rgba(251,172,1,.6);animation:fpbR 1.8s ease-out infinite;} #fpBoot .fpb-ic i + i{animation-delay:.9s;}
-    #fpBoot h2{margin:0 0 6px;font-size:20px;font-weight:800;letter-spacing:-.01em;}
-    #fpBoot p{margin:0 0 16px;font-size:13.5px;line-height:1.5;color:var(--udim,var(--text-dim,#9c9ca6));}
-    #fpBoot .fpb-bar{position:relative;height:6px;border-radius:99px;overflow:hidden;background:var(--u3,rgba(127,127,140,.18));}
-    #fpBoot .fpb-bar b{position:absolute;top:0;bottom:0;width:40%;border-radius:99px;background:var(--uacc,#FBAC01);animation:fpbBar 1.15s ease-in-out infinite;}
-    #fpBoot .fpb-skip{margin-top:16px;border:1px solid var(--u4,var(--border,#2b2b33));background:transparent;color:var(--udim,var(--text-dim,#9c9ca6));border-radius:12px;padding:9px 14px;font:700 12.5px inherit;font-family:inherit;cursor:pointer;}
+    #fpBoot{position:fixed;inset:0;z-index:6000;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;font-family:Manrope,'Inter',system-ui,sans-serif;cursor:progress;color:#f4efe4;
+      background-color:#0d0b08;background-image:radial-gradient(60% 55% at 50% 42%,rgba(251,172,1,.16) 0%,rgba(251,172,1,0) 70%),radial-gradient(120% 90% at 50% 120%,#2a1f08 0%,#0d0b08 60%);animation:fpbIn .25s ease both;}
+    #fpBoot.out{animation:fpbOut .55s cubic-bezier(.6,0,.2,1) forwards;pointer-events:none;}
+    #fpBoot.out .fpb-c{animation:fpbZoom .55s cubic-bezier(.6,0,.2,1) forwards;}
+    #fpBoot .fpb-grid{position:absolute;inset:-20%;background-image:linear-gradient(rgba(251,172,1,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(251,172,1,.06) 1px,transparent 1px);background-size:56px 56px;transform:perspective(600px) rotateX(58deg) translateY(30%);transform-origin:50% 100%;opacity:.8;}
+    #fpBoot .fpb-c{position:relative;width:min(420px,100%);text-align:center;cursor:default;animation:fpbPop .6s cubic-bezier(.2,.9,.3,1.15) both;}
+    #fpBoot .fpb-logo{display:block;height:30px;width:auto;margin:0 auto 26px;opacity:0;transition:opacity .4s;}
+    #fpBoot .fpb-logo.on{opacity:1;}
+    #fpBoot .fpb-orb{position:relative;width:190px;height:190px;margin:0 auto 26px;}
+    #fpBoot .fpb-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(251,172,1,.14);}
+    #fpBoot .fpb-ring.r2{inset:22px;border-color:rgba(251,172,1,.1);}
+    #fpBoot .fpb-sp{position:absolute;inset:0;border-radius:50%;animation:fpbSpin 2.4s linear infinite;}
+    #fpBoot .fpb-sp.s2{inset:22px;animation-duration:3.6s;animation-direction:reverse;}
+    #fpBoot .fpb-sp::before{content:"";position:absolute;left:50%;top:-6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#FBAC01;box-shadow:0 0 0 5px rgba(251,172,1,.18),0 0 18px rgba(251,172,1,.8);}
+    #fpBoot .fpb-sp.s2::before{width:8px;height:8px;margin-left:-4px;top:-4px;background:#f0c766;}
+    #fpBoot .fpb-arc{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:#FBAC01;border-right-color:rgba(251,172,1,.35);animation:fpbSpin 1.2s cubic-bezier(.5,.1,.5,.9) infinite;}
+    #fpBoot .fpb-core{position:absolute;inset:50px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#FBAC01,#f0c766);box-shadow:0 14px 40px rgba(251,172,1,.35),inset 0 -6px 14px rgba(120,70,0,.25);animation:fpbBeat 2.4s ease-in-out infinite;}
+    #fpBoot .fpb-core svg{width:52px;height:52px;}
+    #fpBoot .fpb-core .ar{animation:fpbDrop 1.2s ease-in-out infinite;}
+    #fpBoot .fpb-pk{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:2px;background:#f0c766;opacity:0;animation:fpbPk 2.4s ease-in infinite;}
+    #fpBoot .fpb-pk:nth-child(1){--a:20deg;animation-delay:0s}#fpBoot .fpb-pk:nth-child(2){--a:95deg;animation-delay:.4s}#fpBoot .fpb-pk:nth-child(3){--a:160deg;animation-delay:.8s}
+    #fpBoot .fpb-pk:nth-child(4){--a:220deg;animation-delay:1.2s}#fpBoot .fpb-pk:nth-child(5){--a:285deg;animation-delay:1.6s}#fpBoot .fpb-pk:nth-child(6){--a:335deg;animation-delay:2s}
+    #fpBoot h2{margin:0 0 6px;font-size:26px;font-weight:800;letter-spacing:-.02em;color:#fff;}
+    #fpBoot h2 em{font-style:normal;color:#FBAC01;}
+    #fpBoot .fpb-st{height:20px;margin:0 0 18px;position:relative;overflow:hidden;font-size:14px;font-weight:700;color:#f0c766;}
+    #fpBoot .fpb-st span{position:absolute;left:0;right:0;top:0;opacity:0;animation:fpbSt 7.2s infinite;}
+    #fpBoot .fpb-st span:nth-child(2){animation-delay:1.2s}#fpBoot .fpb-st span:nth-child(3){animation-delay:2.4s}#fpBoot .fpb-st span:nth-child(4){animation-delay:3.6s}#fpBoot .fpb-st span:nth-child(5){animation-delay:4.8s}#fpBoot .fpb-st span:nth-child(6){animation-delay:6s}
+    #fpBoot p{margin:0 auto 20px;max-width:340px;font-size:13.5px;line-height:1.5;color:#b8ad98;}
+    #fpBoot .fpb-bar{position:relative;height:5px;max-width:300px;margin:0 auto;border-radius:99px;overflow:hidden;background:rgba(251,172,1,.14);}
+    #fpBoot .fpb-bar b{position:absolute;top:0;bottom:0;left:0;width:40%;border-radius:99px;background:linear-gradient(90deg,transparent,#FBAC01,#f0c766);animation:fpbBar 1.3s ease-in-out infinite;}
+    #fpBoot .fpb-skip{margin-top:20px;border:1px solid rgba(251,172,1,.35);background:transparent;color:#f0c766;border-radius:99px;padding:9px 16px;font:700 12.5px inherit;font-family:inherit;cursor:pointer;}
     #fpBoot .fpb-skip[hidden]{display:none;}
-    @keyframes fpbIn{from{opacity:0}to{opacity:1}} @keyframes fpbPop{from{opacity:0;transform:translateY(10px) scale(.95)}to{opacity:1;transform:none}}
-    @keyframes fpbFl{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @keyframes fpbR{from{transform:scale(1);opacity:.9}to{transform:scale(1.45);opacity:0}}
-    @keyframes fpbBar{0%{left:-40%}100%{left:100%}}
-    @media (prefers-reduced-motion:reduce){#fpBoot *{animation-duration:2.5s !important;}}`;
+    @keyframes fpbIn{from{opacity:0}to{opacity:1}} @keyframes fpbOut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+    @keyframes fpbZoom{to{transform:scale(1.12);opacity:0}}
+    @keyframes fpbPop{from{opacity:0;transform:translateY(16px) scale(.94)}to{opacity:1;transform:none}}
+    @keyframes fpbGrid{from{background-position:0 0}to{background-position:0 56px}}
+    @keyframes fpbSpin{to{transform:rotate(360deg)}}
+    @keyframes fpbBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    @keyframes fpbDrop{0%{transform:translateY(-5px);opacity:0}30%,70%{opacity:1}100%{transform:translateY(5px);opacity:0}}
+    @keyframes fpbPk{0%{opacity:0;transform:rotate(var(--a)) translateY(-120px) scale(.6)}20%{opacity:1}85%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(-44px) scale(1)}}
+    @keyframes fpbSt{0%{opacity:0;transform:translateY(14px)}4%,15%{opacity:1;transform:none}19%,100%{opacity:0;transform:translateY(-14px)}}
+    @keyframes fpbBar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+    html body #fpBoot#fpBoot{background-color:#0d0b08 !important;background-image:radial-gradient(60% 55% at 50% 42%,rgba(251,172,1,.16) 0%,rgba(251,172,1,0) 70%),radial-gradient(120% 90% at 50% 120%,#2a1f08 0%,#0d0b08 60%) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
+    html body #fpBoot#fpBoot .fpb-c{background:none !important;border:0 !important;box-shadow:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;padding:0 !important;border-radius:0 !important;}
+    html #fpBoot#fpBoot :is(.fpb-sp,.fpb-arc,.fpb-core,.fpb-core .ar,.fpb-pk,.fpb-st span,.fpb-bar b){animation-iteration-count:infinite !important;}
+    @media (max-width:480px){#fpBoot .fpb-orb{width:160px;height:160px}#fpBoot .fpb-core{inset:42px}#fpBoot h2{font-size:22px}}
+    @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fpBoot *{animation-duration:3s !important;}html:not(.fp-anim-full) #fpBoot .fpb-grid{animation:none}}`;
     (document.head || document.documentElement).appendChild(st);
     const b = document.createElement("div"); b.id = "fpBoot"; b.setAttribute("role", "alertdialog"); b.setAttribute("aria-busy", "true"); b.setAttribute("aria-label", "Betöltés");
-    b.innerHTML = '<div class="fpb-c"><div class="fpb-ic"><span>☁️</span><i></i><i></i></div><h2>Betöltés…</h2><p id="fpBootP">A felhőből töltöm a bolt adatait. Egy pillanat, utána mehet a munka.</p><div class="fpb-bar"><b></b></div><button type="button" class="fpb-skip" id="fpBootSkip" hidden>Folytatás a gépen lévő adatokkal</button></div>';
+    b.innerHTML = '<div class="fpb-c"><img class="fpb-logo" alt="FirstPhone"><div class="fpb-orb"><div class="fpb-ring"></div><div class="fpb-ring r2"></div><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><div class="fpb-arc"></div><div class="fpb-sp"></div><div class="fpb-sp s2"></div><div class="fpb-core"><svg viewBox="0 0 48 48" fill="none" stroke="#1a1408" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 34h21a8 8 0 0 0 1-15.9A11 11 0 0 0 15 16.5 9 9 0 0 0 14 34z"/><g class="ar"><path d="M24 20v10"/><path d="M20 26.5l4 4 4-4"/></g></svg></div></div><h2>Felhő <em>szinkron</em></h2><div class="fpb-st"><span>Beosztás betöltése…</span><span>Csomagok, selejt…</span><span>Leltár, kassza…</span><span>Teendők, rendelések…</span><span>Beállítások…</span><span>Mindjárt kész…</span></div><p id="fpBootP">A felhőből töltöm a bolt adatait. Egy pillanat, utána mehet a munka.</p><div class="fpb-bar"><b></b></div><button type="button" class="fpb-skip" id="fpBootSkip" hidden>Folytatás a gépen lévő adatokkal</button></div>';
+    { let n = 0; const lg = ()=>{ const im = b.querySelector(".fpb-logo"); if(!im || !b.isConnected && n) return; if(window.fpLogoFor){ try{ Promise.resolve(window.fpLogoFor("")).then(u=>{ if(u){ im.src = u; im.classList.add("on"); } }).catch(()=>{}); }catch(e){} return; } if(++n < 40) setTimeout(lg, 100); }; setTimeout(lg, 0); }
     (document.body || document.documentElement).appendChild(b); BOOT.el = b;
     BOOT.key = e=>{ if(BOOT.el && !BOOT.el.contains(e.target)){ e.preventDefault(); e.stopPropagation(); } };
     window.addEventListener("keydown", BOOT.key, true);
     BOOT.t1 = setTimeout(()=>{ const p = document.getElementById("fpBootP"); if(p) p.textContent = "Még töltöm… lassú a kapcsolat, kérlek várj egy kicsit."; }, 6000);
     BOOT.t2 = setTimeout(()=>{ const s = document.getElementById("fpBootSkip"); if(s){ s.hidden = false; s.onclick = ()=> bootHide(); } }, 20000);
   }
-  function bootHide(){
+  function bootHide(x){
+    if(BOOT.hold && x !== true) return;
     if(BOOT.done) return; BOOT.done = true; clearTimeout(BOOT.t1); clearTimeout(BOOT.t2);
     if(BOOT.key) window.removeEventListener("keydown", BOOT.key, true);
-    const b = BOOT.el; if(!b) return; b.classList.add("out"); setTimeout(()=>{ b.remove(); const s = document.getElementById("fpBootCss"); if(s) s.remove(); }, 320);
+    const b = BOOT.el; if(!b) return; b.classList.add("out"); setTimeout(()=>{ b.remove(); const s = document.getElementById("fpBootCss"); if(s) s.remove(); }, 560);
   }
   window.fpBootHide = bootHide;
+  window.__fpBootDemo = ()=>{ BOOT.done = false; BOOT.el = null; BOOT.hold = true; bootShow(true); };
   bootShow();
   let dev = lsGet(DEV_KEY); if(!dev){ dev = "d" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); lsSet(DEV_KEY, dev); }
   /* a munkaasztal mentései: ha közös kulcs, feltöltjük (kicsit késleltetve, hogy a gyors gépelés egy mentés legyen) */
