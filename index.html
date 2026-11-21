@@ -60447,6 +60447,59 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     if(n){ try{ renderAll(); }catch(e){} try{ toast(`🎉 Az admin ${n} ünnepnapot frissített a beosztásban.`); }catch(e){} }
     return n;
   };
+  /* 👑 admin: nyitott napok kitöltése nyitástól zárásig (csak nyitvatartási napokon, ünnepet és már beosztott napot kihagyja) */
+  function admFillDays(scope){
+    const out = [], hrs = (state.settings && state.settings.hours) || [], p = n=> String(n).padStart(2, "0");
+    let d0 = new Date(state.year, state.month - 1, 1), d1 = new Date(state.year, state.month, 0);
+    if(scope === "year") d1 = new Date(state.year, 11, 31);
+    for(let d = new Date(d0); d <= d1; d.setDate(d.getDate() + 1)){
+      const k = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`, dow = (d.getDay() + 6) % 7, h = hrs[dow], dh = dayHrsOf(k);
+      const open = !!dh || !!(h && !h.closed && h.open && h.close); if(!open) continue;
+      if(state.schedule[k]) continue;
+      if(!dh){ let hn = ""; try{ hn = holName(k, null); }catch(e){} if(hn) continue; }
+      out.push(k); }
+    return out; }
+  window.fpAdmFill = function(){
+    if(!fpIsAdm()) return;
+    const E = ((state.settings && state.settings.employees) || []).filter(e=> e && e.name);
+    let bg = document.getElementById("afModal"); if(bg) bg.remove();
+    bg = document.createElement("div"); bg.className = "modal-backdrop"; bg.id = "afModal";
+    const mon = `${state.year}. ${HU_MONTHS[state.month - 1].toLowerCase()}`;
+    bg.innerHTML = `<div class="modal cm-modal af-modal" role="dialog"><div class="cm-ico">👑</div><h2>Nyitott napok kitöltése</h2>
+      <div class="modal-sub">Minden <b>nyitvatartási napra</b> beírja a kiválasztott dolgozót <b>nyitástól zárásig</b>. A zárva tartott napokat, az ünnepeket és a már beosztott napokat <b>kihagyja</b>.</div>
+      ${E.length ? `<label class="af-l">Ki legyen beírva?<select id="afWho">${E.map(e=> `<option value="${String(e.id).replace(/"/g, "&quot;")}">${String(e.name).replace(/</g, "&lt;")}</option>`).join("")}</select></label>
+      <label class="af-l">Melyik időszakra?<select id="afSc"><option value="month">Csak ${mon}</option><option value="year">${mon} – ${state.year}. december 31.</option></select></label>
+      <div class="cm-stats" id="afSt"></div>` : `<div class="cm-warn">⚠️ Ebben a boltban még nincs dolgozó felvéve — előbb a ⚙ Beállításokban vegyél fel legalább egy dolgozót.</div>`}
+      <div class="modal-actions"><button class="action-btn secondary" id="afNo">Mégse</button>${E.length ? `<button class="action-btn" id="afOk">👑 Kitöltés</button>` : ""}</div></div>`;
+    document.body.appendChild(bg); requestAnimationFrame(()=> bg.classList.add("show"));
+    const close = ()=>{ bg.classList.remove("show"); setTimeout(()=> bg.remove(), 250); };
+    bg.addEventListener("click", e=>{ if(e.target === bg) close(); }); bg.querySelector("#afNo").onclick = close;
+    if(!E.length) return;
+    const st = ()=>{ const L = admFillDays(bg.querySelector("#afSc").value); bg.querySelector("#afSt").innerHTML = `<div><b>${L.length}</b><small>nap kerül kitöltésre</small></div>`; bg.querySelector("#afOk").disabled = !L.length; return L; };
+    bg.querySelector("#afSc").onchange = st; st();
+    bg.querySelector("#afOk").onclick = ()=>{
+      const L = st(), who = bg.querySelector("#afWho").value; if(!L.length) return;
+      try{ localStorage.setItem("firstphone_admfill_bak", JSON.stringify({ at:Date.now(), keys:L })); }catch(e){}
+      const at = Date.now(); L.forEach(k=>{ state.schedule[k] = { type:who, by:"admin", at, af:1 }; });
+      saveState(); renderAll(); close();
+      try{ toast(`👑 ${L.length} nyitvatartási nap kitöltve. Visszavonás: a „Kitöltés visszavonása” gomb.`); }catch(e){}
+      admFillBtn(); };
+  };
+  window.fpAdmFillUndo = function(){
+    if(!fpIsAdm()) return; let B = null; try{ B = JSON.parse(localStorage.getItem("firstphone_admfill_bak") || "null"); }catch(e){}
+    if(!B || !Array.isArray(B.keys)) return; let n = 0;
+    B.keys.forEach(k=>{ const a = state.schedule[k]; if(a && a.af && a.by === "admin"){ delete state.schedule[k]; n++; } });
+    try{ localStorage.removeItem("firstphone_admfill_bak"); }catch(e){}
+    saveState(); renderAll(); try{ toast(`↩ ${n} kitöltött nap visszavonva.`); }catch(e){} admFillBtn(); };
+  function admFillBtn(){
+    const wrap = document.getElementById("actionsWrap"); if(!wrap) return;
+    let b = document.getElementById("admFillBtn"), u = document.getElementById("admFillUndo");
+    if(!fpIsAdm()){ if(b) b.remove(); if(u) u.remove(); return; }
+    if(!b){ b = document.createElement("button"); b.type = "button"; b.className = "act"; b.id = "admFillBtn"; b.innerHTML = `<i>👑</i><span><b>Nyitott napok kitöltése</b><small>admin · nyitástól zárásig</small></span>`; b.onclick = ()=> window.fpAdmFill(); wrap.appendChild(b); }
+    let has = false; try{ has = !!localStorage.getItem("firstphone_admfill_bak"); }catch(e){}
+    if(has && !u){ u = document.createElement("button"); u.type = "button"; u.className = "act"; u.id = "admFillUndo"; u.innerHTML = `<i>↩</i><span><b>Kitöltés visszavonása</b><small>az utolsó admin-kitöltés</small></span>`; u.onclick = ()=> window.fpAdmFillUndo(); wrap.appendChild(u); }
+    if(!has && u) u.remove(); }
+  setInterval(admFillBtn, 1500); setTimeout(admFillBtn, 300);
   function setAssignment(key, val){
     if(val && fpIsAdm()) val = Object.assign({}, val, { by:"admin", at:Date.now() });
     if(val && !fpIsAdm()){ val = Object.assign({}, val); delete val.by; delete val.at; delete val.hn; }
@@ -73493,6 +73546,18 @@ html.axr-rail body #fcAdmin#fcAdmin#fcAdmin .ax-nav:not(:hover):not(:focus-withi
 #ltDrop .lt-two{display:block;margin-top:6px;font-size:12px;opacity:.85}
 #ltFileInfo{flex-wrap:wrap}
 #ltFileInfo .lt-addx{flex:1 1 100%;margin-top:6px;white-space:nowrap}
+</style>
+<style id="afCss">
+#afModal .af-l{display:flex;flex-direction:column;gap:6px;text-align:left;font-size:13px;font-weight:700;margin:12px 0 0;}
+#afModal .af-l select{font:inherit;font-weight:600;padding:10px 12px;border-radius:10px;border:1px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);color:inherit;}
+html.ui-uj #afModal .af-l select{background:#1d1b17 !important;color:#fff !important;}
+#afModal .cm-stats{margin-top:14px;}
+html:not(.ui-uj) #afModal .modal{background:var(--bg-panel,#17181c) !important;opacity:1 !important;}
+#afModal{background:rgba(0,0,0,.62) !important;}
+#admFillBtn i,#admFillUndo i{font-style:normal;}
+html body #afModal #afOk{background:linear-gradient(135deg,#FBAC01,#f0c766) !important;color:#1a1408 !important;border:0 !important;font-weight:800;}
+html body #afModal #afOk:disabled{opacity:.45;}
+html body #afModal .cm-ico{background:rgba(251,172,1,.16) !important;box-shadow:inset 0 0 0 2px rgba(251,172,1,.45) !important;}
 </style>
 </body>
 </html>
