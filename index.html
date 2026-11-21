@@ -73840,5 +73840,50 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in::after{animation:axhBar 
 @keyframes axhBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in, html:not(.fp-anim-full) body #fcAdmin#fcAdmin#fcAdmin .ax-ph .ax-h1.axh-in::after{animation:none !important;}}
 </style>
+<style id="lkFxCss">
+/* belépő oldal: látványos, de könnyű díszítés (csak transform/opacity, nincs elmosás) — a felhő-betöltő stílusában */
+#fcLogin .lk-fx{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+#fcLogin .lk-fx .rg{position:absolute;left:50%;top:56%;border-radius:50%;}
+#fcLogin .lk-fx .rg svg{display:block;width:100%;height:100%;}
+#fcLogin .lk-fx .rg.a{width:760px;height:760px;margin:-380px;animation:lkSpin 60s linear infinite;}
+#fcLogin .lk-fx .rg.b{width:1120px;height:1120px;margin:-560px;animation:lkSpin 90s linear infinite reverse;opacity:.7;}
+#fcLogin .lk-fx .rg.c{width:520px;height:520px;margin:-260px;animation:lkSpin 30s linear infinite;}
+#fcLogin .lk-fx .bb{position:absolute;bottom:-60px;width:40px;height:40px;margin-left:-20px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:#1b170f;box-shadow:inset 0 0 0 1px rgba(251,172,1,.3),0 8px 20px rgba(0,0,0,.35);opacity:0;animation:lkRise var(--d,18s) linear var(--w,0s) infinite;}
+#fcLogin .lk-fx .glow{position:absolute;left:50%;top:56%;width:620px;height:620px;margin:-310px;border-radius:50%;background:radial-gradient(circle,rgba(251,172,1,.13) 0%,rgba(251,172,1,0) 65%);}
+#fcLogin .fc-go .lk-shine{position:absolute;top:0;bottom:0;left:0;width:45%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-120%) skewX(-18deg);animation:lkShine 4.5s ease-in-out 1.2s infinite;}
+html body #fcLogin#fcLogin .lk-main > *{animation:lkIn .7s cubic-bezier(.2,.9,.3,1) both !important;}
+html body #fcLogin#fcLogin .lk-main > :nth-child(2){animation-delay:.08s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(3){animation-delay:.18s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(4){animation-delay:.28s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(5){animation-delay:.42s !important}html body #fcLogin#fcLogin .lk-main > :nth-child(6){animation-delay:.52s !important}
+html body #fcLogin#fcLogin .lk-chips > *{animation:lkIn .5s cubic-bezier(.2,.9,.3,1.2) both !important;}
+html body #fcLogin#fcLogin .lk-chips > :nth-child(1){animation-delay:.55s !important}html body #fcLogin#fcLogin .lk-chips > :nth-child(2){animation-delay:.62s !important}html body #fcLogin#fcLogin .lk-chips > :nth-child(3){animation-delay:.69s !important}html body #fcLogin#fcLogin .lk-chips > :nth-child(4){animation-delay:.76s !important}html body #fcLogin#fcLogin .lk-chips > :nth-child(5){animation-delay:.83s !important}html body #fcLogin#fcLogin .lk-chips > :nth-child(n+6){animation-delay:.9s !important}
+#fcLogin .lk-av .lk-avr{position:absolute;inset:-9px;border-radius:50%;pointer-events:none;}
+#fcLogin .lk-av .lk-avr svg{display:block;width:100%;height:100%;}
+html body #fcLogin#fcLogin .lk-av .lk-avr{animation:lkSpin 6s linear infinite !important;}
+@keyframes lkSpin{to{transform:rotate(360deg)}}
+@keyframes lkRise{0%{opacity:0;transform:translateY(0) scale(.8)}12%{opacity:.75}80%{opacity:.5}100%{opacity:0;transform:translateY(-115vh) scale(1)}}
+@keyframes lkBreath{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
+@keyframes lkShine{0%{transform:translateX(-120%) skewX(-18deg)}35%,100%{transform:translateX(320%) skewX(-18deg)}}
+@keyframes lkIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+html body #fcLogin#fcLogin .lk-fx .bb{animation:lkRise var(--d,18s) linear var(--w,0s) infinite !important;}
+html body #fcLogin#fcLogin .fc-go .lk-shine{animation:lkShine 4.5s ease-in-out 1.2s infinite !important;}
+html body #fcLogin#fcLogin .lk-fx .glow{background:radial-gradient(circle,rgba(251,172,1,.13) 0%,rgba(251,172,1,0) 65%) !important;}
+@media (max-width:700px){html body #fcLogin#fcLogin .lk-fx .bb{max-height:none;filter:none}#fcLogin .lk-fx{opacity:.5}#fcLogin .lk-fx .rg.c{width:380px;height:380px;margin:-190px}#fcLogin .lk-fx .bb{width:32px;height:32px;font-size:14px;margin-left:-16px}}
+@media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fcLogin .lk-fx .bb{display:none}html:not(.fp-anim-full) #fcLogin .lk-fx .rg{animation-duration:200s !important}}
+</style>
+<script id="lkFxJs">
+(function(){
+  var ring = function(dash, w, col){ return '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="' + col + '" stroke-width="' + w + '" stroke-dasharray="' + dash + '"/></svg>'; };
+  function add(){
+    var l = document.getElementById("fcLogin"); if(!l) return; var bg = l.querySelector(".lk-bg"); if(!bg || bg.querySelector(".lk-fx")) { shine(l); return; }
+    var I = ["📅","📦","💰","✅","🏷️","📱"], bb = "";
+    I.forEach(function(e, i){ var x = [7, 18, 29, 71, 82, 93][i]; bb += '<span class="bb" style="left:' + x + '%;--d:' + (16 + (i * 3) % 9) + 's;--w:' + (-(i * 2.3)).toFixed(1) + 's">' + e + '</span>'; });
+    var fx = document.createElement("div"); fx.className = "lk-fx";
+    fx.innerHTML = '<div class="glow"></div>' + bb;
+    bg.appendChild(fx); shine(l);
+  }
+  function shine(l){ var av = l.querySelector(".lk-av"); if(av && !av.querySelector(".lk-avr")){ if(getComputedStyle(av).position === "static") av.style.position = "relative"; var r = document.createElement("i"); r.className = "lk-avr"; r.innerHTML = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(251,172,1,.35)" stroke-width="1.5" stroke-dasharray="3 6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#FBAC01" stroke-width="3" stroke-dasharray="30 266" stroke-linecap="round"/><circle cx="50" cy="3" r="4" fill="#f0c766"/></svg>'; av.appendChild(r); }
+    var b = l.querySelector(".fc-go"); if(b && !b.querySelector(".lk-shine")){ var s = document.createElement("span"); s.className = "lk-shine"; b.appendChild(s); } }
+  setInterval(add, 400); add();
+})();
+</script>
 </body>
 </html>
