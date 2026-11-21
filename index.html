@@ -25528,6 +25528,9 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
 
   /* ⏳ indulási betöltés: a weboldal megnyitásakor, amíg a felhő be nem tölt, egy felugró ablak takar mindent (nem lehet közben dolgozni) */
   const BOOT = { el:null, done:false };
+  function fpbGreet(){ const h = new Date().getHours(); return h < 5 ? "Szép estét" : h < 10 ? "Jó reggelt" : h < 18 ? "Szép napot" : "Jó estét"; }
+  function fpbHi(){ let nm = ""; try{ const st = JSON.parse(lsGet("firstphone_beosztas_tervezo_v2") || "null"); nm = String((st && st.settings && st.settings.location) || "").replace(/\s*(TESCO|Tesco)\b.*$/, "").replace(/\s+-\s+.*$/, "").trim(); }catch(e){}
+    nm = nm.replace(/[<&>"]/g, ""); return fpbGreet() + (nm ? ", <b>" + nm + "</b>!" : "!"); }
   function bootShow(force){
     if(BOOT.done || BOOT.el) return;
     if(!force) try{ if(window.self !== window.top || lsGet(OFF_KEY) === "1" || document.documentElement.classList.contains("fp-scanonly") || /[?&]scan=1/.test(location.search)) return; }catch(e){ return; }
@@ -25541,7 +25544,8 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     #fpBoot .fpb-c{position:relative;width:min(420px,100%);text-align:center;cursor:default;animation:fpbPop .6s cubic-bezier(.2,.9,.3,1.15) both;}
     #fpBoot .fpb-logo{display:block;height:30px;width:auto;margin:0 auto 26px;opacity:0;transition:opacity .4s;}
     #fpBoot .fpb-logo.on{opacity:1;}
-    #fpBoot .fpb-orb{position:relative;width:190px;height:190px;margin:0 auto 26px;}
+    #fpBoot .fpb-orb{position:relative;width:190px;height:190px;margin:52px auto 60px;}
+    @media (max-height:700px){#fpBoot .fpb-orb{margin:44px auto 50px}#fpBoot .fpb-logo{margin-bottom:14px}#fpBoot p{margin-bottom:12px}}
     #fpBoot .fpb-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(251,172,1,.14);}
     #fpBoot .fpb-ring.r2{inset:22px;border-color:rgba(251,172,1,.1);}
     #fpBoot .fpb-sp{position:absolute;inset:0;border-radius:50%;animation:fpbSpin 2.4s linear infinite;}
@@ -25555,6 +25559,17 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     #fpBoot .fpb-pk{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px;border-radius:2px;background:#f0c766;opacity:0;animation:fpbPk 2.4s ease-in infinite;}
     #fpBoot .fpb-pk:nth-child(1){--a:20deg;animation-delay:0s}#fpBoot .fpb-pk:nth-child(2){--a:95deg;animation-delay:.4s}#fpBoot .fpb-pk:nth-child(3){--a:160deg;animation-delay:.8s}
     #fpBoot .fpb-pk:nth-child(4){--a:220deg;animation-delay:1.2s}#fpBoot .fpb-pk:nth-child(5){--a:285deg;animation-delay:1.6s}#fpBoot .fpb-pk:nth-child(6){--a:335deg;animation-delay:2s}
+    #fpBoot .fpb-hi{font-size:15px;font-weight:700;color:#e9dfca;margin:-8px 0 8px;opacity:0;animation:fpbHiIn .6s .15s cubic-bezier(.2,.9,.3,1.2) forwards;}
+    #fpBoot .fpb-hi b{color:#FBAC01;}
+    #fpBoot .fpb-wave{display:inline-block;transform-origin:70% 80%;animation:fpbWave 1.8s ease-in-out .5s infinite;}
+    #fpBoot .fpb-orbit{position:absolute;inset:-26px;animation:fpbSpin 16s linear infinite;}
+    #fpBoot .fpb-orbit b{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;border-radius:50%;display:grid;place-items:center;background:#1c1810;box-shadow:inset 0 0 0 1px rgba(251,172,1,.35),0 6px 16px rgba(0,0,0,.4);transform:rotate(var(--a)) translateY(-121px) rotate(calc(-1 * var(--a)));}
+    #fpBoot .fpb-orbit b span{display:block;font-size:16px;line-height:1;animation:fpbSpin 16s linear infinite reverse;}
+    #fpBoot .fpb-flash{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px;border-radius:50%;box-shadow:0 0 0 3px rgba(251,172,1,.9),0 0 50px rgba(251,172,1,.5);opacity:0;pointer-events:none;}
+    #fpBoot.out .fpb-flash{animation:fpbFlash .55s ease-out forwards;}
+    @keyframes fpbFlash{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(3.4)}}
+    @keyframes fpbHiIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @keyframes fpbWave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}}
     #fpBoot h2{margin:0 0 6px;font-size:26px;font-weight:800;letter-spacing:-.02em;color:#fff;}
     #fpBoot h2 em{font-style:normal;color:#FBAC01;}
     #fpBoot .fpb-st{height:20px;margin:0 0 18px;position:relative;overflow:hidden;font-size:14px;font-weight:700;color:#f0c766;}
@@ -25577,12 +25592,12 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     @keyframes fpbBar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
     html body #fpBoot#fpBoot{background-color:#0d0b08 !important;background-image:radial-gradient(60% 55% at 50% 42%,rgba(251,172,1,.16) 0%,rgba(251,172,1,0) 70%),radial-gradient(120% 90% at 50% 120%,#2a1f08 0%,#0d0b08 60%) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
     html body #fpBoot#fpBoot .fpb-c{background:none !important;border:0 !important;box-shadow:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;padding:0 !important;border-radius:0 !important;}
-    html #fpBoot#fpBoot :is(.fpb-sp,.fpb-arc,.fpb-core,.fpb-core .ar,.fpb-pk,.fpb-st span,.fpb-bar b){animation-iteration-count:infinite !important;}
-    @media (max-width:480px){#fpBoot .fpb-orb{width:160px;height:160px}#fpBoot .fpb-core{inset:42px}#fpBoot h2{font-size:22px}}
+    html #fpBoot#fpBoot :is(.fpb-sp,.fpb-arc,.fpb-core,.fpb-core .ar,.fpb-pk,.fpb-st span,.fpb-bar b,.fpb-orbit,.fpb-orbit b span,.fpb-wave){animation-iteration-count:infinite !important;}
+    @media (max-width:480px){#fpBoot .fpb-orbit b{transform:rotate(var(--a)) translateY(-104px) rotate(calc(-1 * var(--a)));width:30px;height:30px;margin:-15px}#fpBoot .fpb-orbit b span{font-size:14px}#fpBoot .fpb-orb{width:160px;height:160px}#fpBoot .fpb-core{inset:42px}#fpBoot h2{font-size:22px}}
     @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fpBoot *{animation-duration:3s !important;}html:not(.fp-anim-full) #fpBoot .fpb-grid{animation:none}}`;
     (document.head || document.documentElement).appendChild(st);
     const b = document.createElement("div"); b.id = "fpBoot"; b.setAttribute("role", "alertdialog"); b.setAttribute("aria-busy", "true"); b.setAttribute("aria-label", "Betöltés");
-    b.innerHTML = '<div class="fpb-c"><img class="fpb-logo" alt="FirstPhone"><div class="fpb-orb"><div class="fpb-ring"></div><div class="fpb-ring r2"></div><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><div class="fpb-arc"></div><div class="fpb-sp"></div><div class="fpb-sp s2"></div><div class="fpb-core"><svg viewBox="0 0 48 48" fill="none" stroke="#1a1408" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 34h21a8 8 0 0 0 1-15.9A11 11 0 0 0 15 16.5 9 9 0 0 0 14 34z"/><g class="ar"><path d="M24 20v10"/><path d="M20 26.5l4 4 4-4"/></g></svg></div></div><h2>Felhő <em>szinkron</em></h2><div class="fpb-st"><span>Beosztás betöltése…</span><span>Csomagok, selejt…</span><span>Leltár, kassza…</span><span>Teendők, rendelések…</span><span>Beállítások…</span><span>Mindjárt kész…</span></div><p id="fpBootP">A felhőből töltöm a bolt adatait. Egy pillanat, utána mehet a munka.</p><div class="fpb-bar"><b></b></div><button type="button" class="fpb-skip" id="fpBootSkip" hidden>Folytatás a gépen lévő adatokkal</button></div>';
+    b.innerHTML = '<div class="fpb-c"><img class="fpb-logo" alt="FirstPhone"><div class="fpb-orb"><div class="fpb-ring"></div><div class="fpb-ring r2"></div><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><i class="fpb-pk"></i><div class="fpb-arc"></div><div class="fpb-sp"></div><div class="fpb-sp s2"></div><div class="fpb-orbit">'+[["📅",0],["📦",60],["💰",120],["🗑️",180],["📋",240],["✅",300]].map(function(x){ return '<b style="--a:'+x[1]+'deg"><span>'+x[0]+'</span></b>'; }).join("")+'</div><i class="fpb-flash"></i><div class="fpb-core"><svg viewBox="0 0 48 48" fill="none" stroke="#1a1408" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 34h21a8 8 0 0 0 1-15.9A11 11 0 0 0 15 16.5 9 9 0 0 0 14 34z"/><g class="ar"><path d="M24 20v10"/><path d="M20 26.5l4 4 4-4"/></g></svg></div></div><div class="fpb-hi"><span class="fpb-wave">👋</span> '+fpbHi()+'</div><h2>Felhő <em>szinkron</em></h2><div class="fpb-st"><span>Beosztás betöltése…</span><span>Csomagok, selejt…</span><span>Leltár, kassza…</span><span>Teendők, rendelések…</span><span>Beállítások…</span><span>Mindjárt kész…</span></div><p id="fpBootP">A felhőből töltöm a bolt adatait. Egy pillanat, utána mehet a munka.</p><div class="fpb-bar"><b></b></div><button type="button" class="fpb-skip" id="fpBootSkip" hidden>Folytatás a gépen lévő adatokkal</button></div>';
     { let n = 0; const lg = ()=>{ const im = b.querySelector(".fpb-logo"); if(!im || !b.isConnected && n) return; if(window.fpLogoFor){ try{ Promise.resolve(window.fpLogoFor("")).then(u=>{ if(u){ im.src = u; im.classList.add("on"); } }).catch(()=>{}); }catch(e){} return; } if(++n < 40) setTimeout(lg, 100); }; setTimeout(lg, 0); }
     (document.body || document.documentElement).appendChild(b); BOOT.el = b;
     BOOT.key = e=>{ if(BOOT.el && !BOOT.el.contains(e.target)){ e.preventDefault(); e.stopPropagation(); } };
@@ -73679,6 +73694,10 @@ html.m-app .day-nt{display:none !important;}
 #fpAdBoot .ab-bl{position:absolute;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#f0c766;box-shadow:0 0 0 4px rgba(251,172,1,.18);opacity:0;animation:abBlip 2.6s ease-out infinite;}
 #fpAdBoot .ab-core{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#FBAC01,#f0c766);box-shadow:0 10px 30px rgba(251,172,1,.35);animation:abCore 2.6s ease-in-out infinite;}
 #fpAdBoot .ab-core svg{width:28px;height:28px;}
+#fpAdBoot .ab-hi{font-size:15.5px;font-weight:700;color:#e9dfca;margin:-6px 0 10px;opacity:0;animation:abIn .6s .2s cubic-bezier(.2,.9,.3,1.2) forwards;transform:translateY(8px);}
+#fpAdBoot .ab-hi b{color:#FBAC01;}
+#fpAdBoot .ab-wave{display:inline-block;transform-origin:70% 80%;animation:abWave 1.8s ease-in-out .6s infinite;}
+@keyframes abWave{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}}
 #fpAdBoot h2{margin:0 0 4px;font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff;} #fpAdBoot h2 em{font-style:normal;color:#FBAC01;}
 #fpAdBoot .ab-sub{margin:0 0 18px;font-size:13.5px;color:#b8ad98;}
 #fpAdBoot .ab-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:520px;margin-bottom:18px;}
@@ -73714,7 +73733,7 @@ html body #fpAdBoot#fpAdBoot .ab-dr.r{background-image:radial-gradient(120% 80% 
 html body #fpAdBoot#fpAdBoot .ab-sw{background:conic-gradient(from 0deg,rgba(251,172,1,0) 0deg,rgba(251,172,1,0) 280deg,rgba(251,172,1,.42) 358deg,#FBAC01 360deg) !important;}
 html body #fpAdBoot#fpAdBoot .ab-core{background:linear-gradient(145deg,#FBAC01,#f0c766) !important;background-color:#FBAC01 !important;}
 html body #fpAdBoot#fpAdBoot .ab-c{background:none !important;border:0 !important;box-shadow:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;}
-html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core,.ab-tick,.ab-mq div){animation-iteration-count:infinite !important;}
+html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core,.ab-tick,.ab-mq div,.ab-wave){animation-iteration-count:infinite !important;}
 @media (max-width:480px){#fpAdBoot .ab-rad{width:180px;height:180px}#fpAdBoot h2{font-size:24px}#fpAdBoot .ab-tick{width:230px;height:230px;margin:-115px}#fpAdBoot .ab-mq.t{top:3%}#fpAdBoot .ab-mq.b{bottom:3%}}
 @media (max-height:700px){#fpAdBoot .ab-mq{display:none}}
 @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fpAdBoot .ab-sw{animation-duration:5s !important}}
@@ -73723,6 +73742,9 @@ html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core,.ab-tick,.ab-mq div){animatio
 (function(){
   /* 👑 admin betöltő: teljes képernyős „vezérlőközpont” — radar, felvillanó boltok, kipipálódó lépések, a végén kétfelé nyíló ajtó. Csak transform/opacity. */
   var cur = null;
+  function hi(){ var h = new Date().getHours(), g = h < 5 ? "Szép estét" : h < 10 ? "Jó reggelt" : h < 18 ? "Szép napot" : "Jó estét", n = "Admin";
+    try{ var C = window.FP_CLOUD; if(C && C.adminName && C.adminName !== "Admin" && !C.sup) n = String(C.adminName).split(/\s+/)[0]; }catch(e){}
+    return "Üdv, <b>" + n.replace(/[<&>"]/g, "") + "</b>! " + g + " kíván a FirstPhone csapat."; }
   function show(){
     if(cur) return cur;
     var el = document.createElement("div"); el.id = "fpAdBoot"; el.setAttribute("role", "alertdialog"); el.setAttribute("aria-busy", "true"); el.setAttribute("aria-label", "Admin betöltése");
@@ -73735,7 +73757,7 @@ html #fpAdBoot#fpAdBoot :is(.ab-sw,.ab-bl,.ab-core,.ab-tick,.ab-mq div){animatio
     el.innerHTML = '<div class="ab-dr l"></div><div class="ab-dr r"></div>' + MQ + '<div class="ab-c"><img class="ab-logo" alt="FirstPhone"><div class="ab-tag">Admin központ</div>'
       + '<div class="ab-rw" style="position:relative"><div class="ab-tick"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="none" stroke="rgba(251,172,1,.35)" stroke-width=".6" stroke-dasharray=".6 2.4"/><circle cx="50" cy="50" r="48" fill="none" stroke="#FBAC01" stroke-width="1" stroke-dasharray="14 287" stroke-linecap="round"/></svg></div><div class="ab-rad"><i class="rg"></i><i class="rg"></i><i class="rg"></i><i class="ax"></i><i class="ax h"></i><div class="ab-sw"></div>' + bl
       + '<div class="ab-core"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></svg></div></div><i class="ab-flash"></i></div>'
-      + '<h2>Minden bolt <em>egy helyen</em></h2><p class="ab-sub">Összegyűjtöm a boltok friss adatait a felhőből…</p>'
+      + '<div class="ab-hi"><span class="ab-wave">👋</span> ' + hi() + '</div><h2>Minden bolt <em>egy helyen</em></h2><p class="ab-sub">Egy pillanat, összeszedem neked a boltok friss adatait — addig dőlj hátra.</p>'
       + '<div class="ab-steps">' + ST.map(function(s, i){ return '<span style="animation-delay:' + (0.15 + i * 0.12).toFixed(2) + 's"><b></b>' + s + '</span>'; }).join("") + '</div>'
       + '<div class="ab-bar"><b></b></div><div class="ab-n"></div></div>';
     (document.body || document.documentElement).appendChild(el);
