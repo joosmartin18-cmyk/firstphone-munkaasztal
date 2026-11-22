@@ -74572,5 +74572,54 @@ html body #fcAdmin .ax-mtat{display:none;}
 html body #fcAdmin .ax-fl:has(.ax-mtd [data-mtd="at"].on) .ax-mtat{display:block;}
 html body #fcMt#fcMt.fc-mt-long .fc-mt-bigt{font-size:36px;}
 </style>
+<style id="axShopTblCss">
+/* PRÓBA 56 — Boltok táblázat v2 (Martin): soronként kártya, állapotcsík, színes szám-jelvények, kattintható sor nyíllal */
+html body #fcAdmin#fcAdmin#fcAdmin .ax-card.ax-stw{background:transparent !important;border:0 !important;box-shadow:none !important;padding:0 !important;overflow:visible !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-card.ax-stw::before{display:none !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw .ax-tblw{overflow-x:auto;padding:2px 2px 6px;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl{border-collapse:separate !important;border-spacing:0 8px !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl thead th{background:transparent !important;border:0 !important;padding:4px 10px !important;font:800 10.5px Inter,sans-serif !important;letter-spacing:.09em;color:#8d8472 !important;white-space:nowrap;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl thead th.s{color:#FBAC01 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody tr{cursor:pointer;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody td{background:rgba(255,255,255,.035) !important;border-top:1px solid rgba(255,255,255,.06) !important;border-bottom:1px solid rgba(255,255,255,.06) !important;padding:11px 10px !important;vertical-align:middle;transition:background .2s ease;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody td:first-child{border-left:4px solid var(--st,#6b6355) !important;border-radius:16px 0 0 16px;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody td:last-child{border-right:1px solid rgba(255,255,255,.06) !important;border-radius:0 16px 16px 0;padding-right:40px !important;position:relative;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody td:last-child::after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;margin-top:-5px;border-right:2px solid #8d8472;border-top:2px solid #8d8472;transform:rotate(45deg);transition:transform .2s ease,border-color .2s;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody tr:hover td{background:rgba(251,172,1,.07) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody tr:hover td:last-child::after{border-color:#FBAC01;transform:translateX(3px) rotate(45deg);}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody tr.v4on{--st:#3ecf8e;} html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody tr.v4old{--st:#e2585a;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .ax-sc .ax-av{width:40px !important;height:40px !important;font-size:13px !important;border-radius:12px !important;box-shadow:0 0 0 2px #120f0a,0 0 0 4px var(--st,#6b6355) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .ax-sc b{font:800 14.5px Poppins,Inter,sans-serif !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .ax-sc small{color:#8d8472 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .v4n{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:28px;padding:0 9px;border-radius:9px;font:800 14px Poppins,sans-serif;color:var(--nc);background:color-mix(in srgb,var(--nc) 15%,transparent);border:1px solid color-mix(in srgb,var(--nc) 32%,transparent);}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .v4n.z{opacity:.55;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl th .v4h{display:inline-block;width:13px;height:13px;margin-right:5px;vertical-align:-2px;color:#a99f8c;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl th .v4h svg{width:100%;height:100%;display:block;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-stw table.ax-stbl tbody td{background:#fff !important;border-color:rgba(0,0,0,.07) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-stw table.ax-stbl tbody tr:hover td{background:#fff8e8 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-stw table.ax-stbl .ax-sc .ax-av{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--st,#b8ad98) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl.v4in tbody tr{animation:v4In .4s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0) * 40ms);}
+</style>
+<script id="axShopTblJs">
+(function(){
+  var SV = function(p){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; };
+  var H = { name:'<path d="M3 9l1.5-5h15L21 9"/><path d="M5 13v7h14v-7"/>', ms:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', look:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/>', wait:'<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/>', sx:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>', ks:'<rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/>', lt:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>', emp:'<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 11a3 3 0 1 0 0-6M22 21a5 5 0 0 0-4-5"/>', tix:'<rect x="8" y="6" width="8" height="14" rx="4"/><path d="M19 7l-3 2M5 7l3 2M20 13h-4M4 13h4"/>' };
+  var C = { wait:"#c98a3a", sx:"#e2585a", emp:"#6f7ff5", tix:"#f0953a" };
+  var last = "";
+  function run(){
+    var t = document.querySelector("#fcAdmin .ax-pane.on .ax-stw table.ax-stbl"); if(!t) return;
+    var ks = [].map.call(t.querySelectorAll("thead th"), function(th){ return th.dataset.k; });
+    t.querySelectorAll("thead th:not([data-v4])").forEach(function(th){ th.setAttribute("data-v4", "1"); var k = th.dataset.k; if(H[k]) th.insertAdjacentHTML("afterbegin", '<span class="v4h">' + SV(H[k]) + '</span>'); });
+    var sig = t.tBodies[0] ? t.tBodies[0].rows.length + "|" + (t.tBodies[0].rows[0] || {}).textContent : "";
+    t.querySelectorAll("tbody tr:not([data-v4])").forEach(function(tr, i){ tr.setAttribute("data-v4", "1");
+      var d = tr.querySelector(".ax-dt"), old = tr.querySelector(".ax-b.r");
+      tr.classList.add(d && d.classList.contains("on") ? "v4on" : old ? "v4old" : "v4off");
+      [].forEach.call(tr.cells, function(td, j){ var k = ks[j]; if(!C[k]) return; var s = td.textContent.trim(); if(!/^\d+$/.test(s)) return;
+        td.innerHTML = '<span class="v4n' + (s === "0" ? " z" : "") + '" style="--nc:' + C[k] + '">' + s + '</span>'; }); });
+    if(sig !== last){ last = sig; [].forEach.call(t.tBodies[0] ? t.tBodies[0].rows : [], function(r, i){ r.style.setProperty("--i", Math.min(i, 14)); }); t.classList.remove("v4in"); void t.offsetWidth; t.classList.add("v4in"); }
+  }
+  setInterval(run, 600);
+})();
+</script>
 </body>
 </html>
