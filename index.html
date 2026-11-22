@@ -30126,6 +30126,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       try{ const all = await storeList(); list = all.filter(x=> !x.orph && !fpShopHidden(x)); orph = all.filter(x=> x.orph && !fpShopHidden(x)); }catch(e){ loadErr = e; }
       if(AB) setTimeout(()=> AB.done(list.length), 0);
       /* Fiókok: egy bolt akkor „aktív”, ha van neve és be van állítva (üzlet, dolgozók) — Martin kérése */
+      window.__axDash = ()=> ({ list, stOf, shortN, schDay, axAv:(typeof axAv === "function" ? axAv : null) });
       window.__axShopOk = em=>{ const x = list.find(y=> String(y.email || "").toLowerCase() === String(em || "").toLowerCase()); if(!x) return null;
         let st = {}; try{ st = JSON.parse((x.raw || {})[ST_KEY] || "null") || {}; }catch(e){} const s = st.settings || {}, miss = [];
         if(!String(s.location || x.loc || "").trim()) miss.push("bolt neve"); if(!s.configured) miss.push("beállítások"); if(!(s.employees || []).length) miss.push("dolgozók");
@@ -74701,5 +74702,88 @@ html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].o
 })();
 </script>
 <style id="dash3LCss">html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .ax-card:has(> .ax-attl){background:#fff8e8 !important;background-image:none !important;border-color:rgba(217,149,0,.35) !important;}html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .ax-card:has(> .ax-attl) h3{color:#1b1508 !important;}html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .ax-attl > *{background:#fff !important;color:#1b1508 !important;}</style>
+<style id="dash4Css">
+/* PRÓBA 58 — Irányítópult v4 (Martin a 3-as változatot választotta): 4 nagy szám heti trenddel, egyszerű „Ma a boltokban” Részletek gombbal */
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d3-hero,html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .ax-kpis,html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .ax-card:has(> .ui-tl-g){display:none !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d4-big{grid-column:1/-1 !important;grid-row:2 !important;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d4-today{grid-column:1 / span 7 !important;grid-row:3 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .ax-card:has(> .ax-attl){grid-column:8 / span 5 !important;grid-row:3 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .ax-card:has(> .ax-dtix){grid-column:1 / span 4 !important;grid-row:4 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .ax-card:has(> .ax-dmsg){grid-column:5 / span 4 !important;grid-row:4 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .ax-card:has(> .ax-act){grid-column:9 / span 4 !important;grid-row:4 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk{position:relative;overflow:hidden;padding:16px 18px 0;border-radius:22px;background-color:#17130c !important;background-image:linear-gradient(160deg,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%) !important;border:1px solid color-mix(in srgb,var(--c) 34%,transparent);cursor:pointer;transition:transform .2s ease;animation:v4In .5s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0) * 70ms);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk:hover{transform:translateY(-3px);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk small{display:flex;align-items:center;gap:7px;font:800 11px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#a99f8c;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk small svg{width:16px;height:16px;color:var(--c);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk b{display:block;font:800 46px/1.1 Poppins,sans-serif;color:#fff;margin:6px 0 2px;letter-spacing:-.02em;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk em{font-style:normal;font:700 12.5px Inter,sans-serif;color:#cfc6b4;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk em.up{color:#5fe0a6;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk em.dn{color:#ff8a7a;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk svg.sp{display:block;width:calc(100% + 36px);height:58px;margin:10px -18px 0;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk .ln{stroke-dasharray:400;stroke-dashoffset:400;animation:d4Dl 1.4s .35s cubic-bezier(.3,.8,.3,1) forwards;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk .sfill{opacity:0;animation:d4Fi .8s .9s forwards;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk .pulse{position:absolute;right:16px;top:16px;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 0 color-mix(in srgb,var(--c) 60%,transparent);animation:d4P 2s infinite;}
+@keyframes d4Dl{to{stroke-dashoffset:0}} @keyframes d4Fi{to{opacity:.16}} @keyframes d4P{70%{box-shadow:0 0 0 10px transparent}}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-today{padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-th{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-th h3{margin:0;font:800 18px Poppins,sans-serif;color:#fff;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-th small{color:#a99f8c;font-size:12.5px;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-th small b.r{color:#ff8a7a;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-th .sp{flex:1;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border:0;border-radius:99px;cursor:pointer;font:800 13px Inter,sans-serif;color:#1a1208;background:linear-gradient(135deg,#f0c766,#FBAC01);box-shadow:0 6px 16px rgba(251,172,1,.25);transition:transform .15s;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-btn:hover{transform:translateY(-1px);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid rgba(255,255,255,.06);animation:v4In .4s both;animation-delay:calc(var(--i,0) * 45ms);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .av{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:800 11px Inter,sans-serif;color:#0d0b08;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .nm{width:170px;flex:none;min-width:0;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .nm b{display:block;font:700 13.5px Inter,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .nm small{color:#8d8472;font-size:11.5px;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:6px;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who span{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 5px;border-radius:99px;font:700 12px Inter,sans-serif;color:#f4efe4;background:rgba(255,255,255,.05);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who span i{width:18px;height:18px;border-radius:50%;background:var(--h);display:grid;place-items:center;font:800 8px Inter;font-style:normal;color:#0d0b08;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who span.in{background:rgba(62,207,142,.14);box-shadow:inset 0 0 0 1px rgba(62,207,142,.4);}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who span.in::after{content:"bent";font:800 9.5px Inter;color:#5fe0a6;text-transform:uppercase;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who .no{color:#ff8a7a;background:rgba(226,88,90,.12);padding-left:10px;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who .cl{color:#8d8472;padding-left:10px;}
+@media (max-width:1180px){html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d4-big{grid-template-columns:repeat(2,minmax(0,1fr));} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d4-big,html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d4-today{order:2;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on > .d4-today{order:3;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .nm{width:120px;}}
+@media (max-width:600px){html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-bk b{font-size:34px;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row{flex-wrap:wrap;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-pane[data-pane="dash"].on .d4-row .who{flex-basis:100%;}}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .d4-bk{background-color:#fff !important;background-image:linear-gradient(160deg,color-mix(in srgb,var(--c) 14%,#fff),#fff 70%) !important;} html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .d4-bk small,html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .d4-bk em:not(.up):not(.dn){color:#6b5f48 !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on :is(.d4-bk b,.d4-th h3,.d4-row .nm b,.d4-row .who span){color:#1b1508;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-pane[data-pane="dash"].on .d4-today{background:#fff;border-color:rgba(0,0,0,.07);}
+</style>
+<script id="dash4Js">
+(function(){
+  var SV = function(p){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; };
+  var p2 = function(n){ return String(n).padStart(2, "0"); }, dk = function(d){ return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); };
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); };
+  function J(x, k){ try{ return JSON.parse((x.raw || {})[k] || "null"); }catch(e){ return null; } }
+  function kpi(p, re){ var k = [].find.call(p.querySelectorAll(".ax-kpis .ax-kpi"), function(x){ return re.test(x.textContent); }); if(!k) return [null, ""]; var bs = k.querySelectorAll("b,strong"), v = null; for(var i = 0; i < bs.length; i++){ var t = bs[i].textContent.trim(); if(/^\d+/.test(t)){ v = parseInt(t, 10); break; } } var lf = [].find.call(k.querySelectorAll("*"), function(e){ return !e.childElementCount && /új|sürgős/i.test(e.textContent); }); return [v, lf ? lf.textContent.trim() : ""]; }
+  function spark(vals, col){ var mx = Math.max.apply(null, vals.concat([1])), n = vals.length - 1, pts = vals.map(function(v, i){ return (i * 120 / n).toFixed(1) + "," + (52 - v / mx * 44).toFixed(1); }).join(" ");
+    return '<svg class="sp" viewBox="0 0 120 56" preserveAspectRatio="none"><polygon class="sfill" points="' + pts + ' 120,56 0,56" fill="' + col + '"/><polyline class="ln" points="' + pts + '" fill="none" stroke="' + col + '" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>'; }
+  var last = "";
+  function run(){
+    var p = document.querySelector('#fcAdmin .ax-pane[data-pane="dash"].on'); if(!p || !window.__axDash){ last = ""; return; }
+    var A = window.__axDash(), L = (A.list || []).filter(function(x){ return !(window.fpShopHidden && fpShopHidden(x)); }); if(!L.length) return;
+    var days = []; for(var i = 6; i >= 0; i--){ var d = new Date(); d.setDate(d.getDate() - i); days.push(dk(d)); } var today = days[6];
+    var act = days.map(function(k){ return L.filter(function(x){ var st = A.stOf(x), a = st.att || {}; return a[k] && a[k].length; }).length; });
+    var pk = days.map(function(k){ var n = 0; L.forEach(function(x){ var c = J(x, "firstphone_csomag"); ((c && c.items) || []).forEach(function(it){ if(it.inAt === k) n++; }); }); return n; });
+    var sx = days.map(function(k){ var n = 0; L.forEach(function(x){ var c = J(x, "firstphone_selejt"); ((c && c.items) || []).forEach(function(it){ if(it.date === k) n += (+it.qty || 1); }); }); return n; });
+    var aK = kpi(p, /MA AKTÍV/i), wK = kpi(p, /CSOMAG/i), tK = kpi(p, /NYITOTT JEGY/i);
+    var nowM = new Date().getHours() * 60 + new Date().getMinutes(), open = 0, miss = 0;
+    var rows = L.slice().sort(function(a, b){ return A.shortN(a).localeCompare(A.shortN(b), "hu"); }).map(function(x, i){ var sd = A.schDay(A.stOf(x), today), nm = A.shortN(x), ini = nm.split(/\s+/).map(function(s){ return s[0]; }).join("").slice(0, 2).toUpperCase();
+      var h = 0; for(var j = 0; j < nm.length; j++) h = (h * 31 + nm.charCodeAt(j)) % 360;
+      var who; if(sd.closed || sd.hol){ who = '<span class="cl">' + (sd.hol ? "Ünnep" : "Ma zárva") + '</span>'; } else { open++; if(!sd.people.length){ miss++; who = '<span class="no">Nincs beosztva</span>'; } else who = sd.people.map(function(pp){ var inn = nowM >= pp.from && nowM < pp.to; return '<span class="' + (inn ? "in" : "") + '" style="--h:' + esc(pp.hex) + '"><i>' + esc(String(pp.name).split(/\s+/).map(function(s){ return s[0]; }).join("").slice(0, 2)) + '</i>' + esc(pp.name) + '</span>'; }).join(""); }
+      var oc = sd.open != null && !sd.closed ? Math.floor(sd.open / 60) + ":" + p2(sd.open % 60) + "–" + Math.floor(sd.close / 60) + ":" + p2(sd.close % 60) : "";
+      return '<div class="d4-row" style="--i:' + i + '"><span class="av" style="background:hsl(' + h + ' 62% 55%)">' + esc(ini) + '</span><div class="nm"><b>' + esc(nm) + '</b><small>' + (oc || "—") + '</small></div><div class="who">' + who + '</div></div>'; }).join("");
+    var sig = [act, pk, sx, aK[0], wK[0], tK[0], rows.length, Math.floor(nowM / 5)].join("|"); if(sig === last && p.querySelector(".d4-big")) return; var first = !p.querySelector(".d4-big"); last = sig;
+    var dlt = function(v){ var d = v[6] - v[0]; return d === 0 ? ['', "nincs változás a héten"] : [d > 0 ? "up" : "dn", (d > 0 ? "+" : "−") + Math.abs(d) + " egy hét alatt"]; };
+    var C = [["Aktív boltok ma", aK[0] != null ? aK[0] : act[6], dlt(act), "#3ecf8e", act, SV('<path d="M3 9l1.5-5h15L21 9"/><path d="M5 13v7h14v-7"/>'), "shops"],
+             ["Csomag vár", wK[0] != null ? wK[0] : 0, ["", pk[6] + " érkezett ma"], "#c98a3a", pk, SV('<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/>'), "shops"],
+             ["Selejt ma", sx[6], dlt(sx).map(function(s, i){ return i === 0 ? (s === "up" ? "dn" : s === "dn" ? "up" : s) : s; }), "#e2585a", sx, SV('<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>'), "shops"],
+             ["Nyitott jegy", tK[0] != null ? tK[0] : 0, ["", tK[1] || ""], "#f0953a", null, SV('<rect x="8" y="6" width="8" height="14" rx="4"/><path d="M19 7l-3 2M5 7l3 2M20 13h-4M4 13h4"/>'), "tix"]];
+    var big = p.querySelector(".d4-big"); if(!big){ big = document.createElement("div"); big.className = "d4-big"; var hdr = p.querySelector(".axh"); hdr ? hdr.after(big) : p.prepend(big); }
+    big.innerHTML = C.map(function(c, i){ return '<div class="d4-bk" style="--c:' + c[3] + ';--i:' + i + '" data-d4="' + c[6] + '"><small>' + c[5] + esc(c[0]) + '</small><b>' + c[1] + '</b><em class="' + c[2][0] + '">' + esc(c[2][1]) + '</em>' + (c[4] ? spark(c[4], c[3]) : '<span class="pulse"></span><div style="height:68px"></div>') + '</div>'; }).join("");
+    var td = p.querySelector(".d4-today"); if(!td){ td = document.createElement("section"); td.className = "d4-today"; big.after(td); }
+    td.innerHTML = '<div class="d4-th"><h3>Ma a boltokban</h3><small>' + open + ' nyitva' + (miss ? ' · <b class="r">' + miss + ' beosztás nélkül</b>' : "") + '</small><span class="sp"></span><button type="button" class="d4-btn" data-d4="sched">Részletek ' + SV('<path d="M5 12h14M13 6l6 6-6 6"/>') + '</button></div>' + rows;
+    p.querySelectorAll("[data-d4]").forEach(function(b){ b.onclick = function(){ var n = document.querySelector('#fcAdmin [data-nav="' + b.dataset.d4 + '"]'); if(n) n.click(); }; });
+    if(!first){ big.querySelectorAll(".d4-bk,.ln,.sfill").forEach(function(e){ e.style.animation = "none"; e.style.strokeDashoffset = "0"; if(e.classList.contains("sfill")) e.style.opacity = ".16"; }); td.querySelectorAll(".d4-row").forEach(function(e){ e.style.animation = "none"; }); }
+  }
+  setInterval(run, 800);
+  document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest('#fcAdmin [data-nav="dash"]')){ var p = document.querySelector('#fcAdmin .ax-pane[data-pane="dash"]'); if(p){ var b = p.querySelector(".d4-big"), t = p.querySelector(".d4-today"); if(b) b.remove(); if(t) t.remove(); } last = ""; setTimeout(run, 80); } }, true);
+})();
+</script>
 </body>
 </html>
