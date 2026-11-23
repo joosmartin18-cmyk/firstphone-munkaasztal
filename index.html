@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-152949";</script>
+<script>window.FP_BUILD="20261123-162030";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -32526,7 +32526,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     firebase.auth().onAuthStateChanged(async u=>{
       S.authKnown = true;
       S.user = u || null;
-      if(!u){ bootHide(); S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; } status(); if(lsGet(OFF_KEY) !== "1") login(); else { try{ newsInit(); }catch(e){} } return; }
+      if(!u){ bootHide(); S.on = false; if(S.unsub){ S.unsub(); S.unsub = null; } status(); if(lsGet(OFF_KEY) !== "1"){ let rm = ""; try{ rm = sessionStorage.getItem("fp_relogin_msg") || ""; sessionStorage.removeItem("fp_relogin_msg"); }catch(e){} login(rm || undefined); } else { try{ newsInit(); }catch(e){} } return; }
       const l = document.getElementById("fcLogin");
       /* friss belépés után a betöltő azonnal takar, amíg a felhő be nem tölt — különben az üres gépen az első beállítás villant fel (Martin: „belépek és egyből ezt mutatja”) */
       if(l){ try{ if(window.self === window.top){ BOOT.done = false; BOOT.el = null; bootShow(true); } }catch(e){} }
@@ -32539,6 +32539,13 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       if(S.admin && !S.sup && CL.mustChange){ bootHide(); status(); pwModal(true); return; }
       /* bolt: az admin által adott jelszó egyszer használatos — amíg nem választott sajátot (pwOwn), a saját jelszó képernyő jön (Martin, 2026-11-23) */
       if(S.pwWait) return;   /* a saját jelszó képernyő még nyitva (a „Kész” lap után úgyis újratölt) */
+      /* Martin (2026-11-23): aki ennél korábban lépett be (bolt), azt EGYSZER kiléptetjük — új jelszóval kell belépnie.
+         Az adatok megmaradnak: a gépen semmit nem törlünk, a felhőben minden bolti adat a helyén marad. */
+      { const RELOGIN_AT = 1795447144665, ls = Date.parse((u.metadata && u.metadata.lastSignInTime) || "") || 0;
+        if(!S.admin && ls && ls < RELOGIN_AT){
+          try{ if(S.pending && S.pending.size){ for(const k of Array.from(S.pending)) await push(k); } }catch(e){}
+          try{ sessionStorage.setItem("fp_relogin_msg", "Biztonsági okból újra be kell jelentkezni a kapott új jelszóval. Az adataitok megmaradtak."); }catch(e){}
+          bootHide(); try{ await firebase.auth().signOut(); }catch(e){} return; } }
       if(!S.admin && CL.pwOwn !== true){ try{ CL = (await u.getIdTokenResult(true)).claims || {}; }catch(e){} }
       if(!S.admin && CL.pwOwn !== true && lsGet("fp_pwown_" + u.uid) !== "1" && window.fpShopPw){ bootHide(); S.pwWait = true; status(); shopPwForce(u); return; }
       if(S.admin){
