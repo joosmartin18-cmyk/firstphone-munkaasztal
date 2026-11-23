@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-151211";</script>
+<script>window.FP_BUILD="20261123-152949";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -26460,7 +26460,7 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
         const k = kindOf(x);
         const so = shopOk(x);
         const st = k === "noacc" ? `<span class="fc-pw-st no">— nincs fiók</span>` : k === "dis" ? `<span class="fc-pw-st dis">⛔ letiltva</span>` : k === "never" ? `<span class="fc-pw-st wait">⏳ még nem lépett be</span>` : k === "setup" ? `<span class="fc-pw-st wait" title="${esc(so && so.miss.length ? "Hiányzik: " + so.miss.join(", ") : "Még nincs beállítva")}">○ nem aktív — ${esc(so && so.miss.length ? "hiányzik: " + so.miss.join(", ") : "nincs beállítva")}</span>` : `<span class="fc-pw-st ok">✓ aktív</span>`;
-        const meta = x.u ? `utolsó belépés: ${x.u.last ? dt(x.u.last) : "még soha"} · jelszó: ${dt(x.u.pwAt || x.u.created)}` : "még nincs létrehozva";
+        const meta = x.u ? `utolsó belépés: ${x.u.last ? dt(x.u.last) : "még soha"} · jelszó: ${dt(x.u.pwAt || x.u.created)}${x.u.own ? " · saját jelszó ✓" : " · ideiglenes jelszó (még nem cserélte)"}` : "még nincs létrehozva";
         const act = !x.u ? `<button type="button" data-a="new">＋ Fiók létrehozása</button>`
           : `<button type="button" data-a="pw">🔑 Új jelszó</button>${x.admin ? "" : `<button type="button" data-a="reset" title="Új jelszó, letiltás feloldása, belépési cím javítása">↺ Újrakezdés</button><button type="button" class="warn" data-a="dis">${x.u.disabled ? "✅ Engedélyezés" : "⛔ Letiltás"}</button>`}`;
         const warn = x.alias ? `<div class="fc-pw-warn">⚠ A belépési cím el van írva: <b>${esc(x.email)}</b> → helyesen <b>${esc(x.good)}</b>. Az <b>↺ Újrakezdés</b> kijavítja (a bolt adatai megmaradnak).</div>` : "";
@@ -26475,7 +26475,7 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
         }
         const msg = x.msg ? `<div class="fc-pw-msg ${x.msg.c}">${x.msg.h}</div>` : "";
         const ini = typeof avIni === "function" ? avIni(x.name) : String(x.name || "?").slice(0, 2).toUpperCase(), col = typeof avCol === "function" ? avCol(x.name) : "#777";
-        const m2 = x.u ? `<span><i>Utolsó belépés</i>${x.u.last ? esc(dt(x.u.last)) : "még soha"}</span><span><i>Jelszó beállítva</i>${esc(dt(x.u.pwAt || x.u.created))}</span>` : `<span><i>Fiók</i>még nincs létrehozva</span>`;
+        const m2 = x.u ? `<span><i>Utolsó belépés</i>${x.u.last ? esc(dt(x.u.last)) : "még soha"}</span><span><i>Jelszó beállítva</i>${esc(dt(x.u.pwAt || x.u.created))}</span><span><i>Jelszó</i>${x.u.own ? "saját ✓" : "ideiglenes — még nem cserélte"}</span>` : `<span><i>Fiók</i>még nincs létrehozva</span>`;
         return `<div class="fc-pw-r pw2 k-${k}${ed ? " open" : ""}" data-e="${esc(x.email)}"><div class="pw2-h"><span class="pw2-av" style="--c:${col}">${esc(ini)}</span><div class="pw2-n"><b>${esc(x.name)}</b><small>${esc(x.email)}</small></div>${x.code ? `<em class="pw2-c">${esc(x.code)}</em>` : ""}</div><div class="pw2-s">${st}</div><div class="pw2-m">${m2}</div><div class="fc-pw-a">${act}</div>${warn}${ed}${msg}</div>`;
       }).join("") || `<div class="fc-adm-load">Nincs találat.</div>`;
       list.querySelectorAll(".fc-pw-ed input").forEach(inp=>{ inp.oninput = ()=>{ if(inp.classList.contains("to")) open.to = inp.value; else open.pw = inp.value; }; });
@@ -26581,6 +26581,21 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
       draw();
     });
     load();
+  }
+  /* ---------- bolt első belépése: saját jelszó (a képernyő: window.fpShopPw, PRÓBA 59) ---------- */
+  function shopPwForce(u){
+    const login = String(u.email || "").split("@")[0];
+    fpShopPw({ label:shopName() || ("FirstPhone " + login), login, email:u.email,
+      onDone:async pw=>{
+        let r = await api({ action:"selfpw", password:pw });
+        if(!r.ok && (r.error === "nosa" || r.error === "noapi")){
+          /* a szerver most nem érhető el: a jelszót a böngészőből cseréljük, és ezen a gépen nem kérdezzük újra */
+          try{ await u.updatePassword(pw); lsSet("fp_pwown_" + u.uid, "1"); r = { ok:true }; }catch(e){ return { ok:false, error:"Most nem sikerült — lépj ki, lépj be újra, és próbáld meg még egyszer." }; } }
+        if(!r.ok) return { ok:false, error: r.error === "net" ? "Nincs internet — próbáld újra." : (r.error || "Nem sikerült menteni.") };
+        try{ await firebase.auth().signInWithEmailAndPassword(u.email, pw); }catch(_){}
+        return true; },
+      onNext:()=>{ location.reload(); },
+      onOut:async()=>{ try{ await firebase.auth().signOut(); }catch(_){} location.reload(); } });
   }
   /* ---------- jelszócsere ablak: első belépéskor kötelező (nem zárható be), máskor a 🔑 Jelszavam módosítása gombbal ---------- */
   function pwModal(force){
@@ -32522,6 +32537,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       S.adminName = (u.displayName || "").trim() || "Admin";
       S.adminLbl = S.sup ? "Admin" : "Admin · " + S.adminName;
       if(S.admin && !S.sup && CL.mustChange){ bootHide(); status(); pwModal(true); return; }
+      /* bolt: az admin által adott jelszó egyszer használatos — amíg nem választott sajátot (pwOwn), a saját jelszó képernyő jön (Martin, 2026-11-23) */
+      if(S.pwWait) return;   /* a saját jelszó képernyő még nyitva (a „Kész” lap után úgyis újratölt) */
+      if(!S.admin && CL.pwOwn !== true){ try{ CL = (await u.getIdTokenResult(true)).claims || {}; }catch(e){} }
+      if(!S.admin && CL.pwOwn !== true && lsGet("fp_pwown_" + u.uid) !== "1" && window.fpShopPw){ bootHide(); S.pwWait = true; status(); shopPwForce(u); return; }
       if(S.admin){
         S.target = lsGet(ADMIN_KEY) || null;
         try{ presStart(); }catch(e){}

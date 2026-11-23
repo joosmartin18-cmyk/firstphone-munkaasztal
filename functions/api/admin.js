@@ -56,11 +56,16 @@ export async function onRequest({ request, env }) {
     if (!me) return json({ ok: false, error: "érvénytelen belépés" }, 401);
     const q = await request.json().catch(() => ({}));
 
-    /* saját jelszó cseréje (első belépés után kötelező) — bármelyik admin fiók, a saját fiókjára */
+    /* saját jelszó cseréje (első belépés után kötelező) — admin fiók és bolt is, mindig csak a SAJÁT fiókjára.
+       Bolt: az admin által adott jelszó egyszer használatos; amíg nincs pwOwn jelölés, a program saját jelszót kér. */
     if (q.action === "selfpw") {
-      if (!isAdm(me)) return json({ ok: false, error: "csak az admin" }, 403);
       const pw = String(q.password || "");
       if (!strongPw(pw)) return json({ ok: false, error: "A jelszó legalább 8 karakter legyen, betűvel és számmal." }, 400);
+      if (!isAdm(me)) {
+        const a = attrs(me); a.pwOwn = true;
+        await idt(sa, "accounts:update", { localId: me.localId, password: pw, customAttributes: JSON.stringify(a) });
+        return json({ ok: true });
+      }
       const a = attrs(me); delete a.mustChange;
       await idt(sa, "accounts:update", { localId: me.localId, password: pw, customAttributes: JSON.stringify(a) });
       return json({ ok: true });
@@ -72,7 +77,7 @@ export async function onRequest({ request, env }) {
     if (q.action === "list") {
       const users = []; let page = "";
       do { const j = await idt(sa, "accounts:batchGet?maxResults=500" + (page ? "&nextPageToken=" + encodeURIComponent(page) : ""), null, "GET");
-        (j.users || []).forEach(u => { const a = attrs(u); users.push({ email: u.email || "", name: u.displayName || "", disabled: !!u.disabled, created: +u.createdAt || 0, last: +u.lastLoginAt || 0, pwAt: +u.passwordUpdatedAt || 0, admin: isAdm(u), sup: isSuper(u), must: !!a.mustChange, by: a.by || "" }); });
+        (j.users || []).forEach(u => { const a = attrs(u); users.push({ email: u.email || "", name: u.displayName || "", disabled: !!u.disabled, created: +u.createdAt || 0, last: +u.lastLoginAt || 0, pwAt: +u.passwordUpdatedAt || 0, admin: isAdm(u), sup: isSuper(u), must: !!a.mustChange, own: !!a.pwOwn, by: a.by || "" }); });
         page = j.nextPageToken || ""; } while (page && users.length < 5000);
       return json({ ok: true, users, me: meEmail });
     }
@@ -119,6 +124,8 @@ export async function onRequest({ request, env }) {
       if (!u) return json({ ok: false, error: "nincs ilyen fiók" }, 404);
       /* másik admin új jelszót kap → az ideiglenes, első belépéskor cserélnie kell */
       if (isAdm(u) && !isSuper(u) && email !== meEmail) { const a = attrs(u); a.mustChange = true; await idt(sa, "accounts:update", { localId: u.localId, password: pw, customAttributes: JSON.stringify(a) }); return json({ ok: true, temp: true }); }
+      /* bolt: az admin által adott jelszó ideiglenes — első belépéskor saját jelszót kell választania */
+      if (!isAdm(u)) { const a = attrs(u); delete a.pwOwn; await idt(sa, "accounts:update", { localId: u.localId, password: pw, customAttributes: JSON.stringify(a) }); return json({ ok: true, temp: true }); }
       await idt(sa, "accounts:update", { localId: u.localId, password: pw });
       return json({ ok: true });
     }
@@ -137,7 +144,8 @@ export async function onRequest({ request, env }) {
         if (ex && (!u || ex.localId !== u.localId)) return json({ ok: false, error: "az új belépési cím már egy másik fiókhoz tartozik" }, 409);
       }
       if (u) {
-        await idt(sa, "accounts:update", { localId: u.localId, email: to, password: pw, disableUser: false });
+        const ra = attrs(u); delete ra.pwOwn;
+        await idt(sa, "accounts:update", { localId: u.localId, email: to, password: pw, disableUser: false, customAttributes: JSON.stringify(ra) });
         return json({ ok: true, moved: to !== email });
       }
       await idt(sa, "accounts", { email: to, password: pw, emailVerified: false });

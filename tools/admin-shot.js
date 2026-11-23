@@ -46,7 +46,9 @@ const FAKE = `(function(){
   var db={collection:function(n){return mk(n)},collectionGroup:function(n){return mk(n,n)},doc:function(p){return mk(p)},settings:function(){},enablePersistence:function(){return Promise.resolve()},
     batch:function(){return {set:function(){},update:function(){},delete:function(){},commit:function(){return Promise.resolve()}}},runTransaction:function(){return Promise.resolve()}};
   var user={uid:"adminuid",email:"admin@admin.com",displayName:"",getIdTokenResult:function(){return Promise.resolve({claims:{}})},getIdToken:function(){return Promise.resolve("x")}};
-  var auth={currentUser:window.__nouser?null:user,onAuthStateChanged:function(cb){setTimeout(function(){cb(window.__nouser?null:user)},20);return function(){}},signOut:function(){return Promise.resolve()},setPersistence:function(){return Promise.resolve()}};
+  /* SHOPUSER=1: bolt lépett be ideiglenes jelszóval (nincs pwOwn) · SHOPUSER=own: már saját jelszava van */
+  if(window.__shopuser) user={uid:"shopuid",email:"kaposvar@firstphone.hu",displayName:"",getIdTokenResult:function(){return Promise.resolve({claims:window.__shopuser==="own"?{pwOwn:true}:{}})},getIdToken:function(){return Promise.resolve("x")},updatePassword:function(){return Promise.resolve()}};
+  var auth={currentUser:window.__nouser?null:user,onAuthStateChanged:function(cb){setTimeout(function(){cb(window.__nouser?null:user)},20);return function(){}},signOut:function(){return Promise.resolve()},signInWithEmailAndPassword:function(){return Promise.resolve({user:user})},setPersistence:function(){return Promise.resolve()}};
   var fs=function(){return db}; fs.FieldValue={serverTimestamp:function(){return Date.now()},delete:function(){return null},increment:function(n){return n},arrayUnion:function(){return []},arrayRemove:function(){return []}};
   fs.Timestamp={now:function(){return {toMillis:function(){return Date.now()}}}}; fs.FieldPath={documentId:function(){return "__id"}};
   var au=function(){return auth}; au.Auth={Persistence:{LOCAL:"local",SESSION:"session",NONE:"none"}};
@@ -59,7 +61,8 @@ const FAKE = `(function(){
   await ctx.route(/fonts\.(googleapis|gstatic)/, r => r.abort());
   await ctx.route(/firebasejs|npm\/firebase/, r => r.fulfill({ contentType: 'application/javascript', body: /app-compat/.test(r.request().url()) ? FAKE : '' }));
   if (process.env.NOUSER) await ctx.addInitScript(() => { window.__nouser = 1; });   // NOUSER=1: belépő oldal
-  await ctx.route(/\/api\//, r => r.fulfill({ contentType: 'application/json', body: '{}' }));
+  if (process.env.SHOPUSER) await ctx.addInitScript(v => { window.__shopuser = v; }, process.env.SHOPUSER);
+  await ctx.route(/\/api\//, r => r.fulfill({ contentType: 'application/json', body: process.env.SHOPUSER ? '{"ok":true}' : '{}' }));
   await ctx.addInitScript(([lk, pin]) => {
     if (sessionStorage.x) return; sessionStorage.x = 1;
     const s = { configured: true, location: 'Admin', employees: [], hours: Array(7).fill({ open: '09:00', close: '20:00' }), uiLook: lk };
