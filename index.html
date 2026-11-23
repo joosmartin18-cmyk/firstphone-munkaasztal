@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-162422";</script>
+<script>window.FP_BUILD="20261123-164024";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -31383,7 +31383,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         if(!curU || curU === "*") return; const x = list.find(y=> y.uid === curU); if(!x) return;
         $(".ax-cn").textContent = shortN(x); $(".ax-ce").textContent = [x.email, presT(x)].filter(Boolean).join(" · "); $(".ax-cav").innerHTML = axAv(x);
         const T = (threads[curU] || []).filter(m=> m.type !== "bug");
-        const IXA = { key:"a", nameOf:k=> k === "a" ? "Admin" : shortN(x), delAny:true };
+        const IXA = { key:"a", nameOf:k=> k === "a" ? "Admin" : shortN(x), delAny:false };   /* Martin: az admin is csak a SAJÁT üzenetét törölheti */
         keepScroll(cl, aForce, ()=> (chatHtml(T, "a", (metas[curU] || {})._seen_s, m=> msgPh(m, empsOfState((x.raw || {}).firstphone_beosztas_tervezo_v2), phOfState((x.raw || {}).firstphone_beosztas_tervezo_v2)), IXA) || `<div class="ch-empty"><span>👋</span>Még nem írtatok egymásnak. Írj elsőként!</div>`));
         aForce = false; drawATyp();
         /* csak akkor olvasott, ha tényleg itt vagy és látod */
