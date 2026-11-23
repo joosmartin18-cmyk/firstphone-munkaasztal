@@ -62,7 +62,7 @@ A tulajdonos (Martin) nem programozó: ő mondja meg, mit szeretne, te csinálod
 
 Sorszámok helyett ezekre keress rá (a sorok folyamatosan csúsznak):
 
-- `window.fpKapUj=function` — **ez dönti el, új vagy régi kinézet**: a bolt saját választása (`settings.uiLook` = `"old"`/`"new"`), Bonyhád alapból régi, mindenki más új. Kinézet-váltáskor az oldal újratölt (nem keveri a kettőt).
+- `window.fpKapUj=function` — **ez dönti el, új vagy régi kinézet**: **Martin: Bonyhádon kívül mindenki CSAK az új kinézetet használhatja** (a `uiLook` csak Bonyhádnál számít, ott alapból régi). A Kinézet gomb/választó (`canPick`) csak Bonyhádnál él, az egyszeri kérdés megszűnt. Régi kinézet próbája ezért: `LOC=Bonyhád LK=old`. Kinézet-váltáskor az oldal újratölt (nem keveri a kettőt).
 - `<style id="uiUjSkin">` — az új kinézet és a közös újabb részek CSS-e, `/* ===== PRÓBA N: ... */` megjegyzésekkel tagolva (pl. PRÓBA 26–27 üveg-kinézet, 28 chat, 29 belépő oldal). **Ez a blokk kétszer szerepel a fájlban**: egyszer a fő oldalon, egyszer a beágyazott Cetli-dokumentumban (`<script type="text/plain" id="cetliDoc">`). Ha a `uiUjSkin`-ben cserélsz, számíts 2 találatra, és mindkettőt cseréld.
 - `function fpLayout()` — a régi kinézetben a menü helye: `settings.layout` = `"old"` (felül) / `"new"` (oldalt). Bonyhádnál alapból felül van, amíg ők mást nem választanak (`settings.layPick2`). Az új kinézetben a menü mindig oldalt van.
 - `window.fpUiLookPick` / `function pick(first)` — a 🖥️ Kinézet választó (Új · Régi, menü oldalt · Régi, menü felül).

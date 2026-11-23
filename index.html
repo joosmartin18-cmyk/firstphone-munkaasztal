@@ -6278,7 +6278,7 @@
 </style>
 <!-- PRÓBA: új kinézet (csak a proba ágon) -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
-<script>window.fpKapUj=function(){return (function(){var L="",U="";try{var s=JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2")||"null");L=String((s&&s.settings&&s.settings.location)||"").trim();U=String((s&&s.settings&&s.settings.uiLook)||"");}catch(e){}if(U==="old")return false;if(U==="new")return true;/* a bolt saját választása */if(/^bonyh[aá]d/i.test(L))return false;/* Bonyhád: marad a régi kinézet */if(Date.now()>=Date.UTC(2026,10,9,6,0,0))return true;/* 2026.11.09. 7:00-tól (budapesti idő) mindenkinek */return /^kaposv[aá]r/i.test(L);})();};if(window.fpKapUj())document.documentElement.classList.add("ui-uj");setInterval(function(){var L=!!document.getElementById("fcLogin");if(L)window.fpWasLogin=Date.now();var k=window.fpKapUj()||L,H=document.documentElement;if(H.classList.contains("ui-uj")!==k){if(!L&&Date.now()-(window.fpWasLogin||0)>5000){var a0=document.activeElement;if(a0&&/^(INPUT|TEXTAREA)$/.test(a0.tagName)&&a0.value)return;var rl=0;try{rl=+sessionStorage.getItem("fp_look_rl")||0;}catch(e){}if(Date.now()-rl>15000){try{sessionStorage.setItem("fp_look_rl",String(Date.now()));}catch(e){}location.reload();return;}}if(k&&window.fpUjStart&&Date.now()>=Date.UTC(2026,10,9,6,0,0)&&window.fpUjStart<Date.UTC(2026,10,9,6,0,0)){var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;location.reload();return;}H.classList.toggle("ui-uj",k);try{window.dispatchEvent(new Event("resize"));}catch(e){}}},500);window.fpUjStart=Date.now();</script>
+<script>window.fpKapUj=function(){return (function(){var L="",U="";try{var s=JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2")||"null");L=String((s&&s.settings&&s.settings.location)||"").trim();U=String((s&&s.settings&&s.settings.uiLook)||"");}catch(e){}if(!/^bonyh[aá]d/i.test(L))return true;/* Martin: Bonyhádon kívül mindenki CSAK az új kinézetet használhatja */if(U==="new")return true;return false;/* Bonyhád: alapból régi, de választhat */if(Date.now()>=Date.UTC(2026,10,9,6,0,0))return true;/* 2026.11.09. 7:00-tól (budapesti idő) mindenkinek */return /^kaposv[aá]r/i.test(L);})();};if(window.fpKapUj())document.documentElement.classList.add("ui-uj");setInterval(function(){var L=!!document.getElementById("fcLogin");if(L)window.fpWasLogin=Date.now();var k=window.fpKapUj()||L,H=document.documentElement;if(H.classList.contains("ui-uj")!==k){if(!L&&Date.now()-(window.fpWasLogin||0)>5000){var a0=document.activeElement;if(a0&&/^(INPUT|TEXTAREA)$/.test(a0.tagName)&&a0.value)return;var rl=0;try{rl=+sessionStorage.getItem("fp_look_rl")||0;}catch(e){}if(Date.now()-rl>15000){try{sessionStorage.setItem("fp_look_rl",String(Date.now()));}catch(e){}location.reload();return;}}if(k&&window.fpUjStart&&Date.now()>=Date.UTC(2026,10,9,6,0,0)&&window.fpUjStart<Date.UTC(2026,10,9,6,0,0)){var a=document.activeElement;if(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;location.reload();return;}H.classList.toggle("ui-uj",k);try{window.dispatchEvent(new Event("resize"));}catch(e){}}},500);window.fpUjStart=Date.now();</script>
 <style id="uiUjSkin">
   html.ui-uj{ --u0:#000000; --u1:#181818; --u2:#1F1F1F; --u3:#272727; --u4:#313131; --utx:#FFFFFF; --udim:#9B9B9B; --ufaint:#707070; --uacc:#FBAC01; --uacctx:#000000; --ulink:#FBAC01; }
   html.ui-uj body.light-theme, html.ui-uj body[data-theme="light"], html.ui-uj .th-light{ --u0:#F2F2F2; --u1:#FFFFFF; --u2:#F6F6F6; --u3:#ECECEC; --u4:#DDDDDD; --utx:#111111; --udim:#5C5C5C; --ufaint:#8A8A8A; --uacc:#FBAC01; --uacctx:#000000; --ulink:#8A5A00; }
@@ -25473,7 +25473,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-114214";</script>
+<script>window.FP_BUILD="20261123-142824";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -30183,7 +30183,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
       /* melyik kinézetet használja a bolt — ugyanaz a döntés, mint a bolt gépén (fpKapUj / fpLayout) */
       const lookOf = x=>{ let se = {}; try{ se = (JSON.parse((x.raw || {}).firstphone_beosztas_tervezo_v2 || "null") || {}).settings || {}; }catch(e){}
         const loc = String(se.location || x.loc || "").trim(), u = String(se.uiLook || ""), own = u === "old" || u === "new";
-        const isNew = u === "new" ? true : u === "old" ? false : !/^bonyh[aá]d/i.test(loc);
+        const isNew = !/^bonyh[aá]d/i.test(loc) || u === "new";   /* Bonyhádon kívül mindig új */
         const top = !isNew && (se.layout === "old" || (!se.layPick2 && /^bonyh[aá]d/i.test(loc) && se.layout !== "new"));
         return { isNew, own, t:isNew ? "Új" : top ? "Régi · menü felül" : "Régi · menü oldalt", known:!!(x.raw && x.raw.firstphone_beosztas_tervezo_v2) }; };
       const lookH = x=>{ const L = lookOf(x); if(!L.known) return `<small>—</small>`; return `<span class="ax-look ${L.isNew ? "n" : "o"}" title="${L.own ? "a bolt maga választotta" : "alapbeállítás (még nem választott)"}">${L.t}</span>${L.own ? "" : ` <small class="ax-lookd">alap</small>`}`; };
@@ -71799,12 +71799,16 @@ setInterval(function(){
     });
     document.body.appendChild(b);
   }
-  window.fpUiLookPick = function(){ pick(false); };
+  /* Martin: kinézetet csak Bonyhád választhat — mindenki más csak az újat használja */
+  function canPick(){ var s = st(); return /^bonyh[aá]d/i.test(String((s && s.settings && s.settings.location) || "").trim()); }
+  window.fpUiLookPick = function(){ if(canPick()) pick(false); };
   /* a régi kinézet 🖥️ Kinézet gombja is ezt nyitja */
-  var origLay = window.fpLayoutPick; window.fpLayoutPick = function(){ pick(false); };
-  /* gomb az új kinézet menüjének alján */
+  var origLay = window.fpLayoutPick; window.fpLayoutPick = function(){ if(canPick()) pick(false); };
+  /* gomb az új kinézet menüjének alján (csak Bonyhádon) */
   setInterval(function(){
-    var ps = document.getElementById("pageSwitch"); if(!ps || ps.querySelector(".ui-lookbtn")) return; css();
+    var ps = document.getElementById("pageSwitch"); if(!ps) return; var ex = ps.querySelector(".ui-lookbtn");
+    if(!canPick()){ if(ex) ex.remove(); return; }
+    if(ex) return; css();
     var bt = document.createElement("button"); bt.type = "button"; bt.className = "ui-lookbtn"; bt.title = "Kinézet: új vagy régi"; bt.innerHTML = "<span>🖥️</span>Kinézet";
     bt.onclick = function(e){ e.stopPropagation(); bt.blur(); pick(false); }; ps.appendChild(bt);
   }, 1500);
@@ -71814,8 +71818,8 @@ setInterval(function(){
     if(asked) return; var F = window.FP_CLOUD;
     if(!F || !F.on || F.admin || window.FP_EMBED || window.self !== window.top) return;
     var s = st(); if(!s || !s.settings || !s.settings.configured) return;
-    if(s.settings.uiLook){ clearInterval(iv); return; }
-    if(/^bonyh[aá]d/i.test(String(s.settings.location || "").trim())){ clearInterval(iv); return; }
+    /* az egyszeri kinézet-kérdés megszűnt: Bonyhádon kívül nincs választás, Bonyhád a gombbal válthat */
+    clearInterval(iv); return;
     if(document.getElementById("fpBoot") || document.querySelector(".ui-thback,.fc-full,.fc-back,.fc-adin,.modal-backdrop.show,.popup-backdrop.show,.lay-back,.nw-back,.tour-back,#fcLogin,.fc-pwm,#fcMt")) return;
     asked = true; clearInterval(iv); setTimeout(function(){ pick(true); }, 600);
   }, 1200);
