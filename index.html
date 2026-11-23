@@ -25473,7 +25473,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-111336";</script>
+<script>window.FP_BUILD="20261123-113508";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -62743,10 +62743,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     return v;
   }
   function ltNorm(s){ return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim(); }
-  function ltCategory(name, group){
+  function ltCategory(name, group, code){
     const s = (group || "") + " " + (name || "");
     if(/air\s?pods/i.test(s)) return "AirPods";
-    if(/shield\s?up/i.test(s)) return "ShieldUp";
+    /* ShieldUp: név / csoport (elírással is), vagy a ShieldUp cikkszám (SHP…) */
+    if(/sh[iu]e?ld\s*-?\s*up/i.test(s) || /^SHP\d/i.test(String(code || "").trim())) return "ShieldUp";
     return "Telefon";
   }
   function ltParseWith(rows, hi, map, fileName){
@@ -62769,7 +62770,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       let qty = parseFloat(String(g("qty")).replace(",", "."));
       const lot = ltNum(g("lot"));
       if(!isFinite(qty)) qty = (lot || map.qty < 0) ? 1 : 0;
-      items.push({ name:name.replace(/\s+/g, " "), group:g("group"), code:ltNum(g("code")), lot, qty, cat:ltCategory(name, g("group")) });
+      items.push({ name:name.replace(/\s+/g, " "), group:g("group"), code:ltNum(g("code")), lot, qty, cat:ltCategory(name, g("group"), ltNum(g("code"))) });
     }
     if(!items.length) throw new Error("A táblázatban nem találtam terméket.");
     return { items, meta };
@@ -62860,7 +62861,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       next();
     });
   }
-  const fpXlsx = ()=> fpLoadLib("xlsx", ["https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js", "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"], ()=> !!(window.XLSX && window.XLSX.read));
+  const fpXlsx = ()=> fpLoadLib("xlsx", [new URL("lib/xlsx-0.18.5/xlsx.full.min.js", location.href).href, "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js", "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"], ()=> !!(window.XLSX && window.XLSX.read));
   function ltDecodeText(buf){
     const u8 = new Uint8Array(buf);
     if(u8[0] === 0xFF && u8[1] === 0xFE) return new TextDecoder("utf-16le").decode(u8);
@@ -63005,10 +63006,15 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   function ltSections(items){
     const by = {};
     items.forEach(it=> (by[it.cat] = by[it.cat] || []).push(it));
+    /* Telefon / AirPods: ami IMEI-s / sorozatszámos, az darabonként pipálós; ha egy exportban vegyesen van, a szám nélküli sorok
+       (pl. fólia, tok) nem rontják el a pipálást — azok az „Egyéb” darabos listába kerülnek. A ShieldUp mindig darabos. */
+    ["Telefon","AirPods"].forEach(c=>{ const arr = by[c]; if(!arr) return;
+      const ser = arr.filter(x=> x.qty === 1 && x.lot), rest = arr.filter(x=> !(x.qty === 1 && x.lot));
+      if(ser.length && rest.length){ by[c] = ser; by["Egyéb"] = (by["Egyéb"] || []).concat(rest.map(x=> Object.assign({}, x, { cat:"Egyéb" }))); } });
     const secs = [];
     LT_ORDER.forEach(c=>{
       const arr = by[c]; if(!arr || !arr.length) return;
-      const serial = arr.every(x=> x.qty === 1 && x.lot);
+      const serial = c !== "ShieldUp" && c !== "Egyéb" && arr.every(x=> x.qty === 1 && x.lot);
       if(serial){
         const gm = {};
         arr.forEach(x=>{ const g = (x.group || "Egyéb").trim(); (gm[g] = gm[g] || []).push(x); });
