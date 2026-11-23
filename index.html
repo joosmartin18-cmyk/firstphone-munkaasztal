@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-145445";</script>
+<script>window.FP_BUILD="20261123-151211";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -30299,7 +30299,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         /* ⚙️ beállítások ennél a boltnál — eltérés az általánostól */
         const DS = [["chat","💬 Chat"],["dm","🏬 Boltok egymás közt"],["gif","🎞️ GIF-ek"],["bug","🐞 Hibabejelentés"]].concat((window.FP_APPS || []).map(a=> ["mod:" + a.k, a.i + " " + a.t])).concat([["wolt","🛵 Wolt cetli"]]);
         const isKapX = ()=> /^kaposv[aá]r/i.test(String(((stOf(x).settings || {}).location) || x.loc || "").trim());
-        const LKA = ["mod:cetli","mod:specko","mod:elado"], lockX = ()=> !!((stOf(x).settings || {}).cetliLock);
+        const LKA = ["mod:cetli","mod:specko","mod:elado"], lockX = ()=> !isKapX();   /* Kaposváron kívül alapból zárva */
         const reqX = k=>{ const se = stOf(x).settings || {}; const a = k.slice(4); return +((se.appReq || {})[a] || (a === "cetli" ? se.cetliReq : 0)) || 0; };
         const dsG = k=> LKA.includes(k) && lockX() ? false : k === "wolt" ? (appC.wolt === true || (appC.wolt !== false && isKapX())) : k.startsWith("mod:") ? modOnG(k.slice(4)) : appC[k] !== false;
         const dsOv = k=>{ const p = perOf(x); if(!p) return false; return k.startsWith("mod:") ? !!(p.mods && p.mods[k.slice(4)] !== undefined) : p[k] !== undefined; };
@@ -30308,7 +30308,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
           const AP = {}; (window.FP_APPS || []).forEach(a=> AP["mod:" + a.k] = a);
           const DSC = { chat:"Írhatnak az adminnak", dm:"Írhatnak más boltoknak", gif:"GIF és matrica a chatben", bug:"Hiba bejelentése gomb", wolt:"Csak ahol van Wolt — a Cetli generátorban" };
           const tile = ([k, t])=>{ const on = dsOn(k), ov = dsOv(k), g = dsG(k), sp = t.indexOf(" "), ic = sp > 0 ? t.slice(0, sp) : "•", nm = sp > 0 ? t.slice(sp + 1) : t, a = AP[k];
-            const desc = LKA.includes(k) && lockX() && !on ? (reqX(k) ? "ÚJ BOLT — KÉRTE a bekapcsolást (" + new Date(reqX(k)).toLocaleDateString("hu-HU") + ")" : "Új bolt — alapból ki, amíg nem kérik") : a ? (a.d || "") : (DSC[k] || "");
+            const desc = LKA.includes(k) && lockX() && !on ? (reqX(k) ? "KÉRTE a bekapcsolást (" + new Date(reqX(k)).toLocaleDateString("hu-HU") + ")" : "Alapból ki (csak Kaposváron be) — kérésre kapcsold be") : a ? (a.d || "") : (DSC[k] || "");
             return `<button type="button" class="ds2-t${on ? " on" : " off"}${ov ? " ov" : ""}" data-ds="${k}" role="switch" aria-checked="${on}">
               <span class="ds2-ic">${esc(ic)}</span><span class="ds2-tx"><b>${esc(nm)}</b><small>${esc(desc)}</small></span>
               <span class="ds2-r"><i class="ax-sw${on ? " on" : ""}"></i><em class="${ov ? "o" : ""}">${ov ? (on ? "csak itt BE" : "csak itt KI") : (g ? "általános: be" : "általános: ki")}</em></span></button>`; };
@@ -61503,7 +61503,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* Martin: új boltnál a Cetli, a Speckó és az Eladássegéd a „Továbbiak” közt, zárva — kérésre az admin kapcsolja be */
   const LOCK_APPS = ["cetli","specko","elado"];
   const admModOn = k=>{ let c = {}; try{ c = (window.fpAdminCfg && fpAdminCfg()) || {}; }catch(e){} return !!(c.mods && c.mods[k] === true); };
-  const appLockIn = (set, k)=> !!(set && set.cetliLock) && LOCK_APPS.includes(k) && !admModOn(k);
+  /* Martin (2026-11-23): Kaposváron kívül MINDEN boltnál zárva, amíg az admin be nem kapcsolja (Kaposváron soha) */
+  const appLockIn = (set, k)=> LOCK_APPS.includes(k) && !/^kaposv[aá]r/i.test(String((set && set.location) || "").trim()) && !admModOn(k);
   const cetliLockIn = set=> appLockIn(set, "cetli");
   window.FP_LOCK_APPS = LOCK_APPS;
   window.fpAppLocked = k=>{ try{ return appLockIn(state.settings, k); }catch(e){ return false; } };
@@ -74923,7 +74924,7 @@ body.light-theme .clk-x{color:#6b6458}
 html body .clk-back .clk-x{background:none !important;border:0 !important;box-shadow:none !important}
 </style>
 <script id="cetliLockJs">
-/* Új bolt: Cetli generátor, Speckó, Eladássegéd a menü alján a „Továbbiak” közt, lakattal — „Szeretném használni” kérés az adminnak */
+/* Kaposváron kívül: Cetli generátor, Speckó, Eladássegéd a menü alján a „Továbbiak” közt, lakattal — „Szeretném használni” kérés az adminnak */
 (function(){
   var INFO = {
     cetli:{ ic:"🏷️", t:"Cetli generátor", d:"szállítási címke, megérkezett rendelés, foglaló, visszaáru, köszönő cetli — nyomtatható cetlik a bolti munkához.", ch:["🚚 Szállítási címke","📬 Megérkezett rendelés","🔖 Foglaló","↩️ Visszaáru","💚 Köszönő cetli"] },
@@ -74939,7 +74940,7 @@ html body .clk-back .clk-x{background:none !important;border:0 !important;box-sh
     var b = document.createElement("div"); b.className = "clk-back";
     var draw = function(){ var r = reqAt(k);
       b.innerHTML = '<div class="clk-c" role="dialog" aria-label="' + I.t + '"><div class="clk-ic">' + I.ic + '</div><h3>' + I.t + ' — még nincs bekapcsolva</h3>'
-        + '<p>Új boltként a <b>' + I.t + '</b> alapból ki van kapcsolva: ' + I.d + ' Ha szeretnétek használni, jelezzétek — az admin bekapcsolja, és utána a menüben a helyén lesz.</p>'
+        + '<p>Ennél a boltnál a <b>' + I.t + '</b> alapból ki van kapcsolva: ' + I.d + ' Ha szeretnétek használni, jelezzétek — az admin bekapcsolja, és utána a menüben a helyén lesz.</p>'
         + '<div class="clk-ls">' + I.ch.map(function(c){ return "<span>" + c + "</span>"; }).join("") + '</div>'
         + (r ? '<div class="clk-ok">✓ Jeleztétek: ' + hu(r) + '<br>Az admin hamarosan bekapcsolja.</div>' : '')
         + '<button type="button" class="clk-go" data-c="go">' + (r ? "Újra jelzem" : "Szeretném használni") + '</button>'
