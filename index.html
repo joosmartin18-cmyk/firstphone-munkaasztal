@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-183321";</script>
+<script>window.FP_BUILD="20261123-191504";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -30751,7 +30751,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
             let mm = 0, mp = 0, days = 0;
             months.forEach(m=>{ const n = new Date(Y, m, 0).getDate();
               for(let d = 1; d <= n; d++){ const k = `${Y}-${p2(m)}-${p2(d)}`, sd = schDay(st, k); if(sd.closed || sd.hol) continue;
-                sd.people.filter(pp=> !pp.sub && pp.id === e.id).forEach(pp=>{ let mn = pp.to - pp.from; if(P.brk && mn > 360) mn -= P.brk; mp += mn; if(m === Mo){ mm += mn; days += pp.part === "full" ? 1 : .5; } }); } });
+                sd.people.filter(pp=> !pp.sub && pp.id === e.id).forEach(pp=>{ let mn = pp.to - pp.from; if(P.brk && mn > 360) mn -= P.brk; mp += mn; if(m === Mo){ mm += mn; days += 1; } }); } });
             const expOf = m=> P.fix || wtDays(Y, m) * P.d, exp = months.reduce((a, m)=> a + expOf(m), 0), diff = mp / 60 - exp;
             rows.push({ x, e, P, K, months, hM:mm / 60, hP:mp / 60, exp, expM:expOf(Mo), diff, days }); }); });
         return rows; }
@@ -31012,7 +31012,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
             const cnt = {}, ppl = []; (se.employees || []).filter(e=> e.name).forEach(e=>{ cnt[e.id] = 0; ppl.push({ id:e.id, name:e.name, hex:e.hex || "#7b8cff" }); });
             const first = dw(1);
             const cells = Array.from({ length:first }, ()=> `<div class="cd x"></div>`).join("") + Array.from({ length:nD }, (_, i)=>{ const d = i + 1, kk = kOf(d), sd = schDay(st, kk), w = dw(d), em = !sd.closed && !sd.hol && !sd.people.length;
-              sd.people.forEach(pp=>{ if(cnt[pp.id] === undefined){ cnt[pp.id] = 0; ppl.push({ id:pp.id, name:pp.name, hex:pp.hex, sub:true }); } if(!sd.hol) cnt[pp.id] += pp.part === "full" ? 1 : .5; });
+              sd.people.forEach(pp=>{ if(cnt[pp.id] === undefined){ cnt[pp.id] = 0; ppl.push({ id:pp.id, name:pp.name, hex:pp.hex, sub:true }); } if(!sd.hol) cnt[pp.id] += 1; });
               const body = sd.hol ? `<span class="z">🎉 ${sd.hn ? esc(sd.hn) : "ünnep"}</span>` : sd.closed ? `<span class="z">zárva</span>` : sd.people.length ? sd.people.map(pp=> `<span class="pn ${pp.part}${pp.sub ? " sub" : ""}" style="--h:${pp.hex}" title="${esc(pp.name)} — ${PART_T[pp.part]} ${fromM(pp.from)}–${fromM(pp.to)}"><b>${esc(pp.name)}</b><u>${esc(avIni(pp.name))}</u><small>${pp.part !== "full" ? `<i>${pp.part === "am" ? "DE" : "DU"}</i>` : ""}${tShort(fromM(pp.from))}–${tShort(fromM(pp.to))}</small></span>`).join("") : `<span class="z bad">⚠ nincs beosztva</span>`;
               const RQ = admReqs(x, kk), rqH = RQ.length ? `<span class="rq2" title="${esc(RQ.map(rqTxt).join("\n"))}">${RQ.map(r=> `<em>${RQA[r.t][0]} ${esc(String(r.n).split(/\s+/).slice(-1)[0])}: ${esc(RQA[r.t][1])}${r.why ? " · " + esc(r.why) : ""}</em>`).join("")}</span>` : "", ntH = sd.nt ? `<span class="nt2" title="${esc(sd.nt)}">📝 ${esc(sd.nt)}</span>` : "";
               return `<div class="cd${w > 4 ? " we" : ""}${sd.closed && !sd.hol ? " c" : ""}${sd.hol ? " h" : ""}${em ? " e" : ""}${kk === today ? " td" : ""}${sd.adm ? " ad" : ""}${RQ.length ? " rq" : ""}"><span class="dn">${d}<small>${HU_D[w].slice(0, 2)}</small></span>${body}${ntH}${rqH}</div>`; }).join("");
@@ -61377,7 +61377,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(!dayTimesK(k)) return; // zárva tartó napok nem számítanak
       const pa = parseAssign(state.schedule[k]);
       if(!pa) return;
-      dayPeople(pa).forEach(x=>{ if(x.id in counts) counts[x.id] += x.part === "full" ? 1 : 0.5; });
+      /* Martin (2026-11-23): a „nap” = ledolgozott nap — a fél nap is 1 nap (a PDF-fel, jelenléti ívvel egyezően; a fél napok külön látszanak) */
+      dayPeople(pa).forEach(x=>{ if(x.id in counts) counts[x.id] += 1; });
     });
     return counts;
   }
@@ -67427,7 +67428,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       else if(!dt) body = `<div class="cls">zárva</div>`;
       else if(pa){
         const L = dayPeople(pa).sort((p1, p2)=> order[p1.part] - order[p2.part]).map(it=>{ const pp = personById(it.id); if(!pp) return ""; const part = personPart(it.id, a, key);
-          if(counts[it.id] !== undefined) counts[it.id] += it.part === "full" ? 1 : .5;
+          if(counts[it.id] !== undefined) counts[it.id] += 1;
           const tag = it.part === "am" ? "DE" : it.part === "pm" ? "DU" : "";
           return `<div class="p${pp.sub ? " sub" : ""}"><b>${esc(pp.name)}</b>${pp.sub && pp.from ? `<em class="fr">🏬 ${esc(fromLong(pp.from))}</em>` : ""}<span>${tag ? `<i>${tag}</i>` : ""}${part && !part.holiday ? `${tShort(part.start)}–${tShort(part.end)}` : ""}${pp.sub ? ` <i class="h">HELY.</i>` : ""}</span></div>`; }).join("");
         body = L || `<div class="emp">—</div>`;
@@ -68162,7 +68163,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     // ---- Ledolgozott napok összesítése (a jelmagyarázat sorának jobb oldalán) ----
     // ugyanaz a számítás, mint a tervező összesítő kártyáján (DE/DU megosztott nap = 0.5)
     const workedDays = isSubId(personKey) ? (()=>{ const pre = `${state.year}-${pad2(state.month)}-`, nm = personKey.slice(4); let n = 0;
-      Object.keys(state.subs || {}).forEach(k=>{ if(k.indexOf(pre) !== 0 || !dayTimesK(k) || (state.schedule[k] && state.schedule[k].type === "unnep")) return; subsOf(k).forEach(x=>{ if(x.name === nm) n += x.part === "full" ? 1 : 0.5; }); }); return n; })() : (computeCounts()[personKey] || 0);
+      Object.keys(state.subs || {}).forEach(k=>{ if(k.indexOf(pre) !== 0 || !dayTimesK(k) || (state.schedule[k] && state.schedule[k].type === "unnep")) return; subsOf(k).forEach(x=>{ if(x.name === nm) n += 1; }); }); return n; })() : (computeCounts()[personKey] || 0);
     const sumLabel = "LEDOLGOZOTT: ";
     const wh = Math.floor(workedMin/60), wm = workedMin % 60;
     const sumValue = `${String(workedDays).replace(".", ",")} nap · ${wh}${wm ? ":" + pad2(wm) : ""} óra`;
