@@ -10,6 +10,7 @@ const { chromium } = require('playwright');
   const W = +process.env.W || 1366, H = +process.env.H || 800, LOC = process.env.LOC || 'Kaposvár', LK = process.env.LK || 'new';
   const ctx = await b.newContext({ viewport: { width: W, height: H }, isMobile: W < 500, hasTouch: W < 500, reducedMotion: process.env.RM ? 'reduce' : 'no-preference' });
   await ctx.route(/fonts\.(googleapis|gstatic)|gstatic\.com\/firebasejs/, r => r.abort());   // felhő és külső betűk nélkül
+  if (process.env.PDFJS) await ctx.route(/pdf(\.worker)?\.min\.js/, r => { const w = /worker/.test(r.request().url()); r.fulfill({ status:200, contentType:'application/javascript', body:require('fs').readFileSync(process.env.PDFJS + (w ? '/build/pdf.worker.min.js' : '/build/pdf.min.js')) }); });
   await ctx.addInitScript(([loc, lk, lay, emp2, schd, todo, news, ord, sx, sk, fresh, guide]) => {
     if (sessionStorage.x) return; sessionStorage.x = 1;
     const s = { configured: true, location: loc, employees: [{ id: 'a', name: 'Teszt Elek Hosszúnevű', hex: '#a78bfa' }].concat(emp2 ? [{ id: 'b', name: 'Minta Béla Ferenc', hex: '#2a5bd7' }] : []), hours: Array(7).fill({ open: '09:00', close: '20:00' }) };

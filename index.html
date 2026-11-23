@@ -57048,7 +57048,8 @@ function opParseItems(items){
       names.forEach(nm=>{ let best = null, bd = Infinity; rows.forEach(r=>{ const d = Math.abs(r.y - nm.y); if(d < bd){ bd = d; best = r; } }); if(best && bd < Math.max(nm.h, best.h) * 3.2) best.names.push(nm); });
       rows.forEach(r=>{ if(!r.names.length) return; r.names.sort((a, b)=> b.y - a.y || a.x - b.x);
         let full = r.names.map(n=> n.t).join(' ').replace(/\s+/g, ' ').trim(), code = '';
-        const m = full.match(/^(\d{3,})\s*-\s*(.+)$/); if(m){ code = m[1]; full = m[2]; }
+        const m = full.match(/^([A-Za-z0-9][A-Za-z0-9_.\/]{2,})\s+-\s+(.+)$/) || full.match(/^(\d{3,})\s*-\s*(.+)$/); if(m){ code = m[1]; full = m[2]; }
+        if(/^(Átvétel az üzletben|Csomagátvétel|Házhozszállítás|Szállítás|Szállítási díj|Kiszállítás|Futárszolgálat|GLS|DPD|Foxpost|Packeta|MPL|Posta)\b/i.test(full) && !code){ o.fee = (o.fee || 0) + (opNum(r.sum) || opNum(r.unit)); return; }
         o.items.push({ code, name:full, qty:opNum(r.qty) || 1, price:opNum(r.unit) || (opNum(r.sum) && opNum(r.qty) ? Math.round(opNum(r.sum) / opNum(r.qty)) : opNum(r.sum)) }); });
     }
   }
@@ -57133,7 +57134,7 @@ async function opImport(file, target){
     if(dest && mine && dest.c === mine.c) rtx = ' · <b>a mi boltunkba</b> szól';
     else if(T.route && dest && mine){ set('route', mine.c + '-' + dest.c); rtx = ` · útvonal: <b>${mine.c}-${dest.c}</b>`; }
     else if(dest) rtx = ` · átvevő bolt: <b>${dest.n}</b> (${dest.c})`;
-    try{ const tx = (await opPdfLines(file)).join('\n'), fm = tx.match(/Szállítási\s*díj\s*:?\s*(-?[\d .]+)\s*Ft/i), fee = fm ? opNum(fm[1]) : 0; if(fee > 0){ if(target === 'erkezett') eShipSet(true, fee); else if(SHIPS[target]) shipSet(target, true, fee); } }catch(e){}
+    try{ const tx = (await opPdfLines(file)).join('\n'), fm = tx.match(/Szállítási\s*díj\s*:?\s*(-?[\d .]+)\s*Ft/i), fee = fm ? opNum(fm[1]) : (o.fee || 0); if(fee > 0){ if(target === 'erkezett') eShipSet(true, fee); else if(SHIPS[target]) shipSet(target, true, fee); } }catch(e){}
     const payNum = o.pay ? opNum(o.pay) : null, pay = payNum === 0 ? 'paid' : 'store';
     T.setPay(pay); document.querySelectorAll(T.pills + ' .pill').forEach(p=> p.classList.toggle('active', p.dataset.status === pay));
     const notes = []; if(o.coupon && opNum(o.coupon)) notes.push('Kupon: ' + o.coupon.replace(/\s+/g, ' ')); if(payNum && payNum > 0) notes.push('Fizetendő: ' + o.pay.replace(/\s+/g, ' '));
