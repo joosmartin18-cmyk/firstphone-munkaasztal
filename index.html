@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-144247";</script>
+<script>window.FP_BUILD="20261123-145445";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -30299,19 +30299,20 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         /* ⚙️ beállítások ennél a boltnál — eltérés az általánostól */
         const DS = [["chat","💬 Chat"],["dm","🏬 Boltok egymás közt"],["gif","🎞️ GIF-ek"],["bug","🐞 Hibabejelentés"]].concat((window.FP_APPS || []).map(a=> ["mod:" + a.k, a.i + " " + a.t])).concat([["wolt","🛵 Wolt cetli"]]);
         const isKapX = ()=> /^kaposv[aá]r/i.test(String(((stOf(x).settings || {}).location) || x.loc || "").trim());
-        const lockX = ()=> !!((stOf(x).settings || {}).cetliLock), reqX = ()=> +((stOf(x).settings || {}).cetliReq) || 0;
-        const dsG = k=> k === "mod:cetli" && lockX() ? false : k === "wolt" ? (appC.wolt === true || (appC.wolt !== false && isKapX())) : k.startsWith("mod:") ? modOnG(k.slice(4)) : appC[k] !== false;
+        const LKA = ["mod:cetli","mod:specko","mod:elado"], lockX = ()=> !!((stOf(x).settings || {}).cetliLock);
+        const reqX = k=>{ const se = stOf(x).settings || {}; const a = k.slice(4); return +((se.appReq || {})[a] || (a === "cetli" ? se.cetliReq : 0)) || 0; };
+        const dsG = k=> LKA.includes(k) && lockX() ? false : k === "wolt" ? (appC.wolt === true || (appC.wolt !== false && isKapX())) : k.startsWith("mod:") ? modOnG(k.slice(4)) : appC[k] !== false;
         const dsOv = k=>{ const p = perOf(x); if(!p) return false; return k.startsWith("mod:") ? !!(p.mods && p.mods[k.slice(4)] !== undefined) : p[k] !== undefined; };
-        const dsOn = k=>{ const e = effCfg(x); if(k === "mod:cetli" && lockX() && !(e.mods && e.mods.cetli === true)) return false; if(k === "wolt") return e.wolt === true || (e.wolt !== false && isKapX()); return k.startsWith("mod:") ? !(e.mods && e.mods[k.slice(4)] === false) : e[k] !== false; };
+        const dsOn = k=>{ const e = effCfg(x); if(LKA.includes(k) && lockX() && !(e.mods && e.mods[k.slice(4)] === true)) return false; if(k === "wolt") return e.wolt === true || (e.wolt !== false && isKapX()); return k.startsWith("mod:") ? !(e.mods && e.mods[k.slice(4)] === false) : e[k] !== false; };
         const dsDraw = ()=>{ const w = m.querySelector(".ax-dsetw"); if(!w || !x.email) return; const any = DS.some(([k])=> dsOv(k)), nOv = DS.filter(([k])=> dsOv(k)).length;
           const AP = {}; (window.FP_APPS || []).forEach(a=> AP["mod:" + a.k] = a);
           const DSC = { chat:"Írhatnak az adminnak", dm:"Írhatnak más boltoknak", gif:"GIF és matrica a chatben", bug:"Hiba bejelentése gomb", wolt:"Csak ahol van Wolt — a Cetli generátorban" };
           const tile = ([k, t])=>{ const on = dsOn(k), ov = dsOv(k), g = dsG(k), sp = t.indexOf(" "), ic = sp > 0 ? t.slice(0, sp) : "•", nm = sp > 0 ? t.slice(sp + 1) : t, a = AP[k];
-            const desc = k === "mod:cetli" && lockX() && !on ? (reqX() ? "ÚJ BOLT — KÉRTE a bekapcsolást (" + new Date(reqX()).toLocaleDateString("hu-HU") + ")" : "Új bolt — alapból ki, amíg nem kérik") : a ? (a.d || "") : (DSC[k] || "");
+            const desc = LKA.includes(k) && lockX() && !on ? (reqX(k) ? "ÚJ BOLT — KÉRTE a bekapcsolást (" + new Date(reqX(k)).toLocaleDateString("hu-HU") + ")" : "Új bolt — alapból ki, amíg nem kérik") : a ? (a.d || "") : (DSC[k] || "");
             return `<button type="button" class="ds2-t${on ? " on" : " off"}${ov ? " ov" : ""}" data-ds="${k}" role="switch" aria-checked="${on}">
               <span class="ds2-ic">${esc(ic)}</span><span class="ds2-tx"><b>${esc(nm)}</b><small>${esc(desc)}</small></span>
               <span class="ds2-r"><i class="ax-sw${on ? " on" : ""}"></i><em class="${ov ? "o" : ""}">${ov ? (on ? "csak itt BE" : "csak itt KI") : (g ? "általános: be" : "általános: ki")}</em></span></button>`; };
-          const isKap2 = /^kaposv[aá]r/i.test(String(((stOf(x).settings || {}).location) || x.loc || "").trim()), KOM = DS.filter(([k])=> !k.startsWith("mod:") && k !== "wolt"), PRG = DS.filter(([k])=> k === "wolt" || k.startsWith("mod:") && (k !== "mod:specko" || isKap2 || dsOv(k)));
+          const isKap2 = /^kaposv[aá]r/i.test(String(((stOf(x).settings || {}).location) || x.loc || "").trim()), KOM = DS.filter(([k])=> !k.startsWith("mod:") && k !== "wolt"), PRG = DS.filter(([k])=> k === "wolt" || k.startsWith("mod:") && (k !== "mod:specko" || isKap2 || dsOv(k) || lockX()));
           w.innerHTML = `<section class="ds2">
             <header class="ds2-h"><div><h4>Mit lát ez a bolt?</h4><small>Kapcsold ki, amit ennél a boltnál nem szeretnél — a bolt gépén pár másodpercen belül eltűnik (a bolt oldala magától frissül).</small></div>
               ${any ? `<span class="ds2-cnt">${nOv} eltérés</span><button type="button" class="ax-btn sm" data-dsr="1">↺ Vissza az általánosra</button>` : `<span class="ds2-cnt g">minden az általános szerint</span>`}</header>
@@ -61499,11 +61500,18 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   window.fpAdmOff = admOff;
   const isKapSet = set=> /^kaposv[aá]r/i.test(String((set && set.location) || "").trim());
   /* Martin: az ÚJ boltoknál (az első beállításkor `cetliLock`) a Cetli generátor alapból zárva, amíg az admin be nem kapcsolja (mods.cetli = true) */
-  const cetliLockIn = set=>{ if(!(set && set.cetliLock)) return false; let c = {}; try{ c = (window.fpAdminCfg && fpAdminCfg()) || {}; }catch(e){} return !(c.mods && c.mods.cetli === true); };
-  window.fpCetliLocked = ()=>{ try{ return cetliLockIn(state.settings); }catch(e){ return false; } };
-  window.fpCetliReq = set=>{ try{ if(set){ state.settings.cetliReq = Date.now(); saveState(); } return +state.settings.cetliReq || 0; }catch(e){ return 0; } };
+  /* Martin: új boltnál a Cetli, a Speckó és az Eladássegéd a „Továbbiak” közt, zárva — kérésre az admin kapcsolja be */
+  const LOCK_APPS = ["cetli","specko","elado"];
+  const admModOn = k=>{ let c = {}; try{ c = (window.fpAdminCfg && fpAdminCfg()) || {}; }catch(e){} return !!(c.mods && c.mods[k] === true); };
+  const appLockIn = (set, k)=> !!(set && set.cetliLock) && LOCK_APPS.includes(k) && !admModOn(k);
+  const cetliLockIn = set=> appLockIn(set, "cetli");
+  window.FP_LOCK_APPS = LOCK_APPS;
+  window.fpAppLocked = k=>{ try{ return appLockIn(state.settings, k); }catch(e){ return false; } };
+  window.fpCetliLocked = ()=> window.fpAppLocked("cetli");
+  window.fpAppReq = (k, set)=>{ try{ const s = state.settings; if(set){ s.appReq = Object.assign({}, s.appReq, { [k]:Date.now() }); if(k === "cetli") s.cetliReq = Date.now(); saveState(); } return +((s.appReq || {})[k] || (k === "cetli" ? s.cetliReq : 0)) || 0; }catch(e){ return 0; } };
+  window.fpCetliReq = set=> window.fpAppReq("cetli", set);
   window.__fpCetliLockTest = on=>{ state.settings.cetliLock = on ? Date.now() : undefined; saveState(); try{ fpApplyFeats(); }catch(e){} document.querySelectorAll("#pageSwitch .ps-btn[data-page]").forEach(b=> b.classList.toggle("ps-off", !modOn(b.dataset.page))); };
-  const modOnIn = (set, k)=> !(k === "cetli" && cetliLockIn(set)) && (k === "tudastar" || (k === "specko" ? isKapSet(set) : true) && (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false)));
+  const modOnIn = (set, k)=> !appLockIn(set, k) && (k === "tudastar" || (k === "specko" ? isKapSet(set) || admModOn(k) : true) && (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false)));
   const modOn = k=> modOnIn(state.settings, k);
   window.fpModOn = modOn;
   /* funkciók programonként — minden bolt mindent kap (a P-touch nyomtatás csak Kaposváron), itt kapcsolhatók ki egyenként */
@@ -74886,6 +74894,10 @@ html body #fcDocs#fcDocs .fc-docs-e{padding:30px;text-align:center;color:#a99f8c
 <style id="cetliLockCss">
 /* ===== Új bolt: a Cetli generátor zárva, kérésre kapcsolja be az admin ===== */
 #pageSwitch .ps-btn.ps-lockc{position:relative;opacity:.72}
+#pageSwitch .clk-more{flex:none;display:flex;align-items:center;gap:8px;margin:10px 14px 4px;font:800 10.5px Manrope,Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--udim,var(--text-dim,#8f8f8f));white-space:nowrap}
+#pageSwitch .clk-more::after{content:"";flex:1;height:1px;background:currentColor;opacity:.25}
+html:not(.ui-uj) #pageSwitch .clk-more{margin:0 4px;align-self:center}html:not(.ui-uj) #pageSwitch .clk-more span{display:none}html:not(.ui-uj) #pageSwitch .clk-more::after{width:1px;height:24px;flex:none}
+html.ui-uj.ui-rail #pageSwitch .clk-more span{display:none}
 #pageSwitch .ps-btn.ps-lockc:hover{opacity:1}
 #pageSwitch .ps-btn.ps-lockc .clk-b{position:absolute;top:2px;right:4px;font-size:11px;line-height:1;filter:grayscale(.2)}
 html.ui-uj #pageSwitch .ps-btn.ps-lockc .clk-b{top:50%;right:12px;transform:translateY(-50%);font-size:12px}
@@ -74911,18 +74923,24 @@ body.light-theme .clk-x{color:#6b6458}
 html body .clk-back .clk-x{background:none !important;border:0 !important;box-shadow:none !important}
 </style>
 <script id="cetliLockJs">
+/* Új bolt: Cetli generátor, Speckó, Eladássegéd a menü alján a „Továbbiak” közt, lakattal — „Szeretném használni” kérés az adminnak */
 (function(){
-  var SK = "firstphone_beosztas_tervezo_v2";
-  function locked(){ try{ return !!(window.fpCetliLocked && fpCetliLocked()); }catch(e){ return false; } }
-  function reqAt(){ try{ return window.fpCetliReq ? fpCetliReq(false) : 0; }catch(e){ return 0; } }
+  var INFO = {
+    cetli:{ ic:"🏷️", t:"Cetli generátor", d:"szállítási címke, megérkezett rendelés, foglaló, visszaáru, köszönő cetli — nyomtatható cetlik a bolti munkához.", ch:["🚚 Szállítási címke","📬 Megérkezett rendelés","🔖 Foglaló","↩️ Visszaáru","💚 Köszönő cetli"] },
+    specko:{ ic:"📱", t:"Speckó", d:"telefonok adatlapja A4-re, árral és logóval — a kirakatba, a pultra.", ch:["📄 A4 adatlap","💰 Ár","🖼️ Logók"] },
+    elado:{ ic:"💡", t:"Eladássegéd", d:"eladási puska bármilyen termékre: mit kérdezz, mit ajánlj mellé, gyakorló tréning.", ch:["💬 Mit kérdezz","➕ Mit ajánlj mellé","🎯 Tréning"] }
+  };
+  function apps(){ return window.FP_LOCK_APPS || ["cetli","specko","elado"]; }
+  function locked(k){ try{ return !!(window.fpAppLocked && fpAppLocked(k)); }catch(e){ return false; } }
+  function reqAt(k){ try{ return window.fpAppReq ? fpAppReq(k, false) : 0; }catch(e){ return 0; } }
   function hu(t){ try{ return new Date(t).toLocaleString("hu-HU", { month:"long", day:"numeric", hour:"2-digit", minute:"2-digit" }); }catch(e){ return ""; } }
-  function open(){
-    if(document.querySelector(".clk-back")) return;
+  function open(k){
+    if(document.querySelector(".clk-back")) return; var I = INFO[k] || INFO.cetli;
     var b = document.createElement("div"); b.className = "clk-back";
-    var draw = function(){ var r = reqAt();
-      b.innerHTML = '<div class="clk-c" role="dialog" aria-label="Cetli generátor"><div class="clk-ic">🏷️</div><h3>A Cetli generátor még nincs bekapcsolva</h3>'
-        + '<p>Új boltként a Cetli generátor <b>alapból ki van kapcsolva</b>. Ha szeretnétek használni, jelezzétek — az admin bekapcsolja, és utána itt, a menüben megtaláljátok.</p>'
-        + '<div class="clk-ls"><span>🚚 Szállítási címke</span><span>📬 Megérkezett rendelés</span><span>🔖 Foglaló</span><span>↩️ Visszaáru</span><span>💚 Köszönő cetli</span></div>'
+    var draw = function(){ var r = reqAt(k);
+      b.innerHTML = '<div class="clk-c" role="dialog" aria-label="' + I.t + '"><div class="clk-ic">' + I.ic + '</div><h3>' + I.t + ' — még nincs bekapcsolva</h3>'
+        + '<p>Új boltként a <b>' + I.t + '</b> alapból ki van kapcsolva: ' + I.d + ' Ha szeretnétek használni, jelezzétek — az admin bekapcsolja, és utána a menüben a helyén lesz.</p>'
+        + '<div class="clk-ls">' + I.ch.map(function(c){ return "<span>" + c + "</span>"; }).join("") + '</div>'
         + (r ? '<div class="clk-ok">✓ Jeleztétek: ' + hu(r) + '<br>Az admin hamarosan bekapcsolja.</div>' : '')
         + '<button type="button" class="clk-go" data-c="go">' + (r ? "Újra jelzem" : "Szeretném használni") + '</button>'
         + '<button type="button" class="clk-x" data-c="x">Most nem</button></div>'; };
@@ -74933,27 +74951,47 @@ html body .clk-back .clk-x{background:none !important;border:0 !important;box-sh
       var x = e.target.closest("[data-c]"); if(!x) return;
       if(x.dataset.c === "x"){ close(); return; }
       x.disabled = true; x.textContent = "Küldés…";
-      try{ window.fpCetliReq && fpCetliReq(true); }catch(_){}
-      var done = function(ok){ draw(); try{ (window.toast || function(){})(ok ? "🏷️ Jelezve az adminnak — hamarosan bekapcsolja a Cetli generátort." : "🏷️ Jelezve — az admin a bolt adatlapján látja."); }catch(_){} try{ window.fpSound && fpSound("send", .4); }catch(_){} };
-      var p = window.fpAutoMsg ? fpAutoMsg("🏷️ Ez a bolt szeretné használni a Cetli generátort. Bekapcsolás: Boltok → a bolt adatlapja → Beállítások → Cetli generátor.") : null;
+      try{ window.fpAppReq && fpAppReq(k, true); }catch(_){}
+      var done = function(ok){ draw(); try{ (window.toast || function(){})(ok ? I.ic + " Jelezve az adminnak — hamarosan bekapcsolja: " + I.t + "." : I.ic + " Jelezve — az admin a bolt adatlapján látja."); }catch(_){} try{ window.fpSound && fpSound("send", .4); }catch(_){} };
+      var p = window.fpAutoMsg ? fpAutoMsg(I.ic + " Ez a bolt szeretné használni: " + I.t + ". Bekapcsolás: Boltok → a bolt adatlapja → Beállítások → " + I.t + ".") : null;
       if(p && p.then) p.then(function(){ done(true); }, function(){ done(false); }); else done(false);
     });
     document.body.appendChild(b);
   }
-  window.fpCetliAsk = open;
-  /* a kezdőlap „＋ Cetli” és gyors gombjai is ide visznek, amíg zárva van */
-  document.addEventListener("click", function(e){ var g = e.target.closest && e.target.closest('[data-ma-go="cetli"]'); if(!g || !locked()) return; e.preventDefault(); e.stopPropagation(); open(); }, true);
-  /* a menü Cetli gombja zárva is látszik (lakattal); kattintásra a kérő ablak nyílik */
-  document.addEventListener("click", function(e){ var g = e.target.closest && e.target.closest('#pageSwitch .ps-btn[data-page="cetli"], #mTab [data-page="cetli"]'); if(!g || !locked()) return; e.preventDefault(); e.stopImmediatePropagation(); open(); }, true);
+  window.fpAppAsk = open; window.fpCetliAsk = function(){ open("cetli"); };
+  var SEL = function(k){ return '#pageSwitch .ps-btn[data-page="' + k + '"], #mTab [data-page="' + k + '"]'; };
+  /* a zárt programok gombjára kattintva (menü, kezdőlap gombjai) a kérő ablak nyílik */
+  document.addEventListener("click", function(e){ if(!e.target.closest) return;
+    var hit = null; apps().forEach(function(k){ if(!hit && locked(k) && e.target.closest(SEL(k) + ', [data-ma-go="' + k + '"], #pageSwitch [data-clk="' + k + '"]')) hit = k; });
+    if(!hit) return; e.preventDefault(); e.stopImmediatePropagation(); open(hit); }, true);
   setInterval(function(){
     var ps = document.getElementById("pageSwitch"); if(!ps) return;
-    var lk = locked(), cb = ps.querySelector('.ps-btn[data-page="cetli"]'); if(!cb) return;
-    if(!lk){ if(cb.classList.contains("ps-lockc")){ cb.classList.remove("ps-lockc"); cb.style.removeProperty("display"); var bd = cb.querySelector(".clk-b"); if(bd) bd.remove(); } return; }
-    if(!cb.classList.contains("ps-lockc")){ cb.classList.add("ps-lockc"); cb.title = "Cetli generátor — még nincs bekapcsolva (kattints, ha szeretnétek használni)"; if(!cb.querySelector(".clk-b")) cb.insertAdjacentHTML("beforeend", '<i class="clk-b">🔒</i>'); }
-    var sib = [].find.call(ps.querySelectorAll(".ps-btn[data-page]"), function(x){ return x !== cb && !x.classList.contains("ps-off") && x.getClientRects().length; });
-    var d = sib ? getComputedStyle(sib).display : "flex"; if(cb.style.getPropertyValue("display") !== d) cb.style.setProperty("display", d, "important");
-    /* ha épp a Cetli oldalon áll (pl. régi mentésből), vissza a kezdőlapra */
-    try{ if(document.body.classList.contains("page-cetli")){ var mb = ps.querySelector('.ps-btn[data-page="ma"]') || ps.querySelector('.ps-btn[data-page="beosztas"]'); if(mb) mb.click(); } }catch(_){}
+    var L = apps().filter(locked), hd = ps.querySelector(".clk-more");
+    /* a régi (helyben átrendezett) gombok visszaállítása, ha korábbi változat még rajta hagyta */
+    ps.querySelectorAll('.ps-btn.ps-lockc[data-page]:not([data-clk])').forEach(function(b){ b.classList.remove("ps-lockc"); b.style.removeProperty("display"); var bd = b.querySelector(".clk-b"); if(bd) bd.remove(); });
+    ps.querySelectorAll(".ps-btn[data-clk]").forEach(function(b){ if(L.indexOf(b.dataset.clk) < 0) b.remove(); });
+    if(!L.length){ if(hd) hd.remove(); return; }
+    var sib = [].find.call(ps.querySelectorAll(".ps-btn[data-page]:not([data-clk])"), function(x){ return !x.classList.contains("ps-off") && x.getClientRects().length; });
+    var disp = sib ? getComputedStyle(sib).display : "flex";
+    if(!hd){ hd = document.createElement("div"); hd.className = "clk-more"; hd.innerHTML = "<span>Továbbiak</span>"; }
+    var vis = [].filter.call(ps.querySelectorAll(".ps-btn[data-page]:not([data-clk]):not(.ui-nav-rend)"), function(x){ return x.getClientRects().length; }), last = vis[vis.length - 1];
+    if(last && hd.previousElementSibling !== last) last.after(hd);
+    var prev = hd;
+    L.forEach(function(k){
+      var cp = ps.querySelector('.ps-btn[data-clk="' + k + '"]');
+      if(!cp){ var src = ps.querySelector('.ps-btn[data-page="' + k + '"]:not([data-clk])'); if(!src) return;
+        cp = src.cloneNode(true); cp.removeAttribute("id"); cp.classList.remove("ps-off", "active", "kaponly", "on"); cp.classList.add("ps-lockc");
+        cp.setAttribute("data-page", "lk-" + k); cp.setAttribute("data-clk", k); cp.title = INFO[k].t + " — még nincs bekapcsolva (kattints, ha szeretnétek használni)";
+        if(!cp.querySelector(".clk-b")) cp.insertAdjacentHTML("beforeend", '<i class="clk-b">🔒</i>');
+        /* az új kinézet ikonja a gomb azonosítójából jön (maszk) — átmásoljuk a másolatra */
+        try{ var si = src.querySelector(".ps-i"), ci = cp.querySelector(".ps-i"); if(si && ci){ var cs = getComputedStyle(si);
+          ["-webkit-mask-image","mask-image","-webkit-mask-size","mask-size","-webkit-mask-position","mask-position","-webkit-mask-repeat","mask-repeat","background-color","background-image"].forEach(function(p){ var v = cs.getPropertyValue(p); if(v && v !== "none") ci.style.setProperty(p, v, "important"); }); }
+          var c0 = getComputedStyle(src).getPropertyValue("--c"); if(c0) cp.style.setProperty("--c", c0.trim()); }catch(_){} }
+      if(cp.style.getPropertyValue("display") !== disp) cp.style.setProperty("display", disp, "important");
+      if(prev.nextElementSibling !== cp) prev.after(cp); prev = cp;
+    });
+    try{ var pg = L.find(function(k){ return document.body.classList.contains("page-" + k); });
+      if(pg){ var mb = ps.querySelector('.ps-btn[data-page="ma"]') || ps.querySelector('.ps-btn[data-page="beosztas"]'); if(mb) mb.click(); } }catch(_){}
   }, 1000);
 })();
 </script>
