@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-191504";</script>
+<script>window.FP_BUILD="20261123-195102";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -29837,7 +29837,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
             <span class="ax-title" hidden>Irányítópult</span>
             <div class="ax-search">${axI("srch")}<input class="ax-gq" type="search" placeholder="Bolt vagy jegy keresése…" autocomplete="off" spellcheck="false"><kbd>Ctrl K</kbd><div class="ax-gres" hidden></div></div>
             <div class="ax-hbtns"><div class="ax-status"><span class="ax-ldot"></span><span class="ax-lt">Betöltés…</span></div>
-              <button type="button" class="ax-ib ax-rl" data-x="reload" title="Adatok frissítése most">${axI("rl")}</button><button type="button" class="ax-ib ax-thb" data-x="theme" title="Világos / sötét mód"><span class="ax-thi-d">${axI("moon")}</span><span class="ax-thi-l">${axI("sun")}</span></button>
+              <button type="button" class="ax-ib ax-rl" data-x="reload" title="Teljes újratöltés">${axI("rl")}</button><button type="button" class="ax-ib ax-thb" data-x="theme" title="Világos / sötét mód"><span class="ax-thi-d">${axI("moon")}</span><span class="ax-thi-l">${axI("sun")}</span></button>
               <button type="button" class="ax-ib" data-x="mypw" title="Jelszavam módosítása">${axI("key")}</button>${S.target ? `<button type="button" class="ax-ib" data-x="back" title="Vissza a bolthoz">${axI("back")}</button>` : ""}
               <span class="ax-me" title="${esc(S.user.email)}"><span class="ax-meav">${esc((S.adminName || "A").trim().charAt(0).toUpperCase() || "A")}</span><span class="ax-men"><b>${esc(S.adminName || "Admin")}${S.sup ? ` <i class="ax-mesup" title="Fő admin">👑</i>` : ""}</b><small>${S.sup ? "fő admin" : "admin"}</small></span></span>
               <button type="button" class="ax-ib ax-tout" data-x="out" title="Kijelentkezés">${axI("out")}</button></div></div>
@@ -30096,7 +30096,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         if(a === "menu"){ b.classList.toggle("menu"); return; }
         if(a === "back"){ close(null); return; }
         if(a === "out"){ await firebase.auth().signOut(); lsDel(ADMIN_KEY); SYNC.forEach(lsDel); location.reload(); return; }
-        if(a === "reload"){ softReload(); return; }
+        /* Martin: a ↻ gomb TELJES újratöltés (az oldal újra betölt, ugyanazon az admin oldalon marad) */
+        if(a === "reload"){ const rl = $(".ax-rl"); if(rl) rl.classList.add("spin");
+          try{ sessionStorage.setItem("fp_admin_soft", "1"); }catch(e){}
+          (async()=>{ try{ if(S.pending && S.pending.size){ for(const k of Array.from(S.pending)) await push(k); } }catch(e){} location.reload(); })(); return; }
         if(a === "accgo"){ accCreate(b, x); return; }
         if(a === "bak"){ backup(); return; }
         if(a === "chk"){ drawChk(); return; }
