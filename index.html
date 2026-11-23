@@ -2,6 +2,14 @@
 <html lang="hu">
 <head>
 <meta charset="utf-8">
+<script>/* 🧪 Próba-belépés (?proba=ujbolt): a program felhő nélkül, memóriában fut — a gép mentett adataihoz és a felhőhöz nem nyúl */
+(function(){ if(!/[?&]proba=ujbolt\b/.test(location.search)) return;
+  function mk(){ var d = {}; var o = { getItem:function(k){ return Object.prototype.hasOwnProperty.call(d, k) ? d[k] : null; }, setItem:function(k, v){ d[k] = String(v); }, removeItem:function(k){ delete d[k]; }, clear:function(){ d = {}; }, key:function(i){ var k = Object.keys(d)[i]; return k === undefined ? null : k; } };
+    Object.defineProperty(o, "length", { get:function(){ return Object.keys(d).length; } }); return o; }
+  try{ var L = mk(), S = mk(); Object.defineProperty(window, "localStorage", { value:L, configurable:true }); Object.defineProperty(window, "sessionStorage", { value:S, configurable:true });
+    if(window.localStorage !== L) throw 0; window.FP_DEMO = 1; document.documentElement.classList.add("fp-demo"); }
+  catch(e){ document.write('<p style="font:16px sans-serif;padding:30px">A próba-belépés ebben a böngészőben nem indítható. Próbáld Chrome-ban.</p>'); window.stop && window.stop(); } })();
+</script>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
@@ -25473,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-142824";</script>
+<script>window.FP_BUILD="20261123-144247";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -25501,6 +25509,8 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
     if(c.huAuto !== false){ const y = new Date().getFullYear(); for(let k = 0; k < 3; k++) huHolidays(y + k).forEach(h=>{ if(!L.some(z=> z.d === h.d) && !off.includes(h.d)) L.push({ d:h.d, n:h.n, at:1, auto:1 }); }); }
     return L.sort((a, b)=> a.d.localeCompare(b.d)); };
   window.fpAdminCfg = ()=>{ try{ return S.admin && !S.target ? {} : appCfg(); }catch(e){ return {}; } };
+  /* automatikus üzenet a bolt nevében az adminnak (pl. „szeretné használni a Cetli generátort”) */
+  window.fpAutoMsg = text=>{ if(!S.user || S.admin) return Promise.reject(new Error("nincs belépve")); return chatSend(S.user.uid, "s", "Automatikus értesítés · " + shopName(), text, { auto:1 }); };
   /* belépés boltnévvel: „kaposvar” → kaposvar@firstphone.hu, „admin” → admin@admin.com; teljes e-mail cím is megy */
   const FP_DOMAIN = "firstphone.hu";
   const toEmail = v=>{ v = String(v || "").trim(); if(v.includes("@")) return v.toLowerCase(); const n = v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9._-]/g, ""); if(!n) return ""; if(n === "admin") return "admin@admin.com";
@@ -26255,7 +26265,9 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
       av.classList.toggle("ok", !!ini); av.innerHTML = ini ? `<span class="in">${esc(ini)}</span>` : "<span>🏬</span>"; });
     b.querySelector("#fcEye").onclick = ()=>{ pw.type = pw.type === "password" ? "text" : "password"; pw.focus(); };
     const done = ()=>{ document.documentElement.classList.remove("fc-locked"); };
-    f.onsubmit = async e=>{ e.preventDefault(); go.disabled = true; go.textContent = "Belépés…"; err.textContent = ""; f.classList.remove("shake");
+    f.onsubmit = async e=>{ e.preventDefault();
+      if(window.FP_DEMO){ if(!em.value.trim() || !pw.value){ err.textContent = "Írj be egy boltnevet és bármilyen jelszót (próba)."; return; } b.classList.add("out"); done(); setTimeout(()=> b.remove(), 260); window.fpDemoAfterLogin && fpDemoAfterLogin(em.value); return; }
+      go.disabled = true; go.textContent = "Belépés…"; err.textContent = ""; f.classList.remove("shake");
       try{ let okL = false, lastEx = null;
         for(const c of loginCands(em.value)){ try{ await firebase.auth().signInWithEmailAndPassword(c, pw.value); okL = true; break; }catch(x1){ lastEx = x1; if(!/wrong-password|invalid-credential|user-not-found|invalid-login/.test(x1 && x1.code || "")) break; } }
         if(!okL) throw lastEx || new Error("login"); lsDel(OFF_KEY); if(em.value.trim().toLowerCase() !== "admin") lsSet("firstphone_last_login", em.value.trim()); done(); }
@@ -30287,14 +30299,15 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         /* ⚙️ beállítások ennél a boltnál — eltérés az általánostól */
         const DS = [["chat","💬 Chat"],["dm","🏬 Boltok egymás közt"],["gif","🎞️ GIF-ek"],["bug","🐞 Hibabejelentés"]].concat((window.FP_APPS || []).map(a=> ["mod:" + a.k, a.i + " " + a.t])).concat([["wolt","🛵 Wolt cetli"]]);
         const isKapX = ()=> /^kaposv[aá]r/i.test(String(((stOf(x).settings || {}).location) || x.loc || "").trim());
-        const dsG = k=> k === "wolt" ? (appC.wolt === true || (appC.wolt !== false && isKapX())) : k.startsWith("mod:") ? modOnG(k.slice(4)) : appC[k] !== false;
+        const lockX = ()=> !!((stOf(x).settings || {}).cetliLock), reqX = ()=> +((stOf(x).settings || {}).cetliReq) || 0;
+        const dsG = k=> k === "mod:cetli" && lockX() ? false : k === "wolt" ? (appC.wolt === true || (appC.wolt !== false && isKapX())) : k.startsWith("mod:") ? modOnG(k.slice(4)) : appC[k] !== false;
         const dsOv = k=>{ const p = perOf(x); if(!p) return false; return k.startsWith("mod:") ? !!(p.mods && p.mods[k.slice(4)] !== undefined) : p[k] !== undefined; };
-        const dsOn = k=>{ const e = effCfg(x); if(k === "wolt") return e.wolt === true || (e.wolt !== false && isKapX()); return k.startsWith("mod:") ? !(e.mods && e.mods[k.slice(4)] === false) : e[k] !== false; };
+        const dsOn = k=>{ const e = effCfg(x); if(k === "mod:cetli" && lockX() && !(e.mods && e.mods.cetli === true)) return false; if(k === "wolt") return e.wolt === true || (e.wolt !== false && isKapX()); return k.startsWith("mod:") ? !(e.mods && e.mods[k.slice(4)] === false) : e[k] !== false; };
         const dsDraw = ()=>{ const w = m.querySelector(".ax-dsetw"); if(!w || !x.email) return; const any = DS.some(([k])=> dsOv(k)), nOv = DS.filter(([k])=> dsOv(k)).length;
           const AP = {}; (window.FP_APPS || []).forEach(a=> AP["mod:" + a.k] = a);
           const DSC = { chat:"Írhatnak az adminnak", dm:"Írhatnak más boltoknak", gif:"GIF és matrica a chatben", bug:"Hiba bejelentése gomb", wolt:"Csak ahol van Wolt — a Cetli generátorban" };
           const tile = ([k, t])=>{ const on = dsOn(k), ov = dsOv(k), g = dsG(k), sp = t.indexOf(" "), ic = sp > 0 ? t.slice(0, sp) : "•", nm = sp > 0 ? t.slice(sp + 1) : t, a = AP[k];
-            const desc = a ? (a.d || "") : (DSC[k] || "");
+            const desc = k === "mod:cetli" && lockX() && !on ? (reqX() ? "ÚJ BOLT — KÉRTE a bekapcsolást (" + new Date(reqX()).toLocaleDateString("hu-HU") + ")" : "Új bolt — alapból ki, amíg nem kérik") : a ? (a.d || "") : (DSC[k] || "");
             return `<button type="button" class="ds2-t${on ? " on" : " off"}${ov ? " ov" : ""}" data-ds="${k}" role="switch" aria-checked="${on}">
               <span class="ds2-ic">${esc(ic)}</span><span class="ds2-tx"><b>${esc(nm)}</b><small>${esc(desc)}</small></span>
               <span class="ds2-r"><i class="ax-sw${on ? " on" : ""}"></i><em class="${ov ? "o" : ""}">${ov ? (on ? "csak itt BE" : "csak itt KI") : (g ? "általános: be" : "általános: ki")}</em></span></button>`; };
@@ -32478,8 +32491,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     return false;
   }
   function loadSdk(){ if(!sdkP) sdkP = loadSdk1().then(ok=>{ if(!ok) sdkP = null; return ok; }); return sdkP; }
-  try{ if(!(window.self !== window.top) && lsGet(OFF_KEY) !== "1") loadSdk(); }catch(e){}
+  try{ if(!window.FP_DEMO && !(window.self !== window.top) && lsGet(OFF_KEY) !== "1") loadSdk(); }catch(e){}
   async function start(){
+    /* próba-belépés: nincs felhő, csak a belépő oldal → saját jelszó → bolt beállítása */
+    if(window.FP_DEMO){ document.readyState === "loading" ? await new Promise(r=> document.addEventListener("DOMContentLoaded", r)) : 0; S.authKnown = true; bootHide(); status(); login(); return; }
     const sdk = loadSdk();
     document.readyState === "loading" ? await new Promise(r=> document.addEventListener("DOMContentLoaded", r)) : 0;
     status();
@@ -33292,6 +33307,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
 <script type="text/plain" id="cetliDoc"><!DOCTYPE html>
 <html lang="hu">
 <head>
+<script>try{if(parent.FP_DEMO){Object.defineProperty(window,"localStorage",{value:parent.localStorage,configurable:true});Object.defineProperty(window,"sessionStorage",{value:parent.sessionStorage,configurable:true});}}catch(e){}<\/script>
 <script>/* letöltés: a szülő oldal közös letöltőjén át (Safari / iPhone / Claude előnézet) */
 (function(){ var nc = HTMLAnchorElement.prototype.click;
   HTMLAnchorElement.prototype.click = function(){
@@ -59154,8 +59170,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
   function defaultState(){
     return {
-      year: 2026,
-      month: 8,
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,   /* új bolt: a mostani hónap (régen fixen 2026. augusztus) */
       targets: {},
       schedule: {}, // "YYYY-MM-DD" -> { type: <dolgozó id> } | { type:"split", am, pm } | { type:"unnep" }
       subs: {},     // "YYYY-MM-DD" -> [{ name, part, forId, origPart }] — helyettesítők
@@ -61482,7 +61498,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   const admOff = (kind, k)=>{ try{ const c = window.fpAdminCfg ? window.fpAdminCfg() : null; return !!(c && c[kind] && c[kind][k] === false); }catch(e){ return false; } };
   window.fpAdmOff = admOff;
   const isKapSet = set=> /^kaposv[aá]r/i.test(String((set && set.location) || "").trim());
-  const modOnIn = (set, k)=> k === "tudastar" || (k === "specko" ? isKapSet(set) : true) && (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false));
+  /* Martin: az ÚJ boltoknál (az első beállításkor `cetliLock`) a Cetli generátor alapból zárva, amíg az admin be nem kapcsolja (mods.cetli = true) */
+  const cetliLockIn = set=>{ if(!(set && set.cetliLock)) return false; let c = {}; try{ c = (window.fpAdminCfg && fpAdminCfg()) || {}; }catch(e){} return !(c.mods && c.mods.cetli === true); };
+  window.fpCetliLocked = ()=>{ try{ return cetliLockIn(state.settings); }catch(e){ return false; } };
+  window.fpCetliReq = set=>{ try{ if(set){ state.settings.cetliReq = Date.now(); saveState(); } return +state.settings.cetliReq || 0; }catch(e){ return 0; } };
+  window.__fpCetliLockTest = on=>{ state.settings.cetliLock = on ? Date.now() : undefined; saveState(); try{ fpApplyFeats(); }catch(e){} document.querySelectorAll("#pageSwitch .ps-btn[data-page]").forEach(b=> b.classList.toggle("ps-off", !modOn(b.dataset.page))); };
+  const modOnIn = (set, k)=> !(k === "cetli" && cetliLockIn(set)) && (k === "tudastar" || (k === "specko" ? isKapSet(set) : true) && (!admOff("mods", k) && !(set && set.modules && set.modules[k] === false)));
   const modOn = k=> modOnIn(state.settings, k);
   window.fpModOn = modOn;
   /* funkciók programonként — minden bolt mindent kap (a P-touch nyomtatás csak Kaposváron), itt kapcsolhatók ki egyenként */
@@ -62083,6 +62104,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     next.employees = next.employees.filter(e=>e.name.trim()).map(e=>{ const live = state.settings.employees.find(x=> x.id === e.id), ph = e._phSet || !live ? e.photo : live.photo;
       const nm2 = e.name.trim().replace(/\s+/g," "), no = nickOpts(nm2), nk = e.nick && no.includes(e.nick) ? { nick:e.nick } : {};
       return Object.assign({ id:e.id, name:nm2, hex:e.hex }, nk, phOkM(ph) ? { photo:ph } : {}); });
+    /* új bolt (első beállítás): a Cetli generátor alapból zárva, amíg nem kérik és az admin be nem kapcsolja */
+    if(!state.settings.configured && !(window.FP_CLOUD && FP_CLOUD.admin)) next.cetliLock = Date.now();
     next.configured = true;
     // eltávolított dolgozók beosztott napjai
     const removed = state.settings.employees.filter(o=>!next.employees.some(e=>e.id===o.id));
@@ -71636,7 +71659,11 @@ setInterval(function(){ try{ var h = document.getElementById("ksHero"); if(!h ||
     var h = 0; for(var i = 0; i < n.id.length; i++) h = (h * 31 + n.id.charCodeAt(i)) >>> 0; return NEWS_ANIM[NEWS_GEN[h % NEWS_GEN.length]]; }
   var K = "fp_ui_news_seen";
   function seen(){ try{ return JSON.parse(localStorage.getItem(K) || "[]"); }catch(e){ return []; } }
-  function show(){ var S0 = seen(), n0 = NEWS.filter(function(x){ return S0.indexOf(x.id) < 0; })[0]; if(!n0) return true; if(document.querySelector(".tts-back")) return false; if((!n0.both && !document.documentElement.classList.contains("ui-uj")) || document.getElementById("fcLogin") || (function(){ var a = document.getElementById("fcAdmin"); return !!(a && a.getClientRects().length && getComputedStyle(a).display !== "none" && getComputedStyle(a).visibility !== "hidden"); })() || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
+  function show(){
+    /* új (még be nem állított) bolt: a régi újdonságokat nem mutatjuk, mind „látott” */
+    try{ var C0 = window.FP_CLOUD, s0 = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null");
+      if((window.FP_DEMO || (C0 && C0.on && !C0.admin)) && !(s0 && s0.settings && s0.settings.configured)){ localStorage.setItem(K, JSON.stringify(NEWS.map(function(x){ return x.id; }))); return true; } }catch(e){}
+    var S0 = seen(), n0 = NEWS.filter(function(x){ return S0.indexOf(x.id) < 0; })[0]; if(!n0) return true; if(document.querySelector(".tts-back")) return false; if((!n0.both && !document.documentElement.classList.contains("ui-uj")) || document.getElementById("fcLogin") || (function(){ var a = document.getElementById("fcAdmin"); return !!(a && a.getClientRects().length && getComputedStyle(a).display !== "none" && getComputedStyle(a).visibility !== "hidden"); })() || document.querySelector(".ui-newsback, .modal-backdrop.show, .help-modal.show")) return false;
     var S = seen(), uj = document.documentElement.classList.contains("ui-uj"), L = NEWS.filter(function(x){ return S.indexOf(x.id) < 0 && (x.both || uj); }); if(!L.length) return true;
     if(window.fpDia){ try{
       var Es = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
@@ -72294,7 +72321,7 @@ html.fp-lite.fp-setup #settingsPanel .set-body > *{animation:none !important;}
   function cloudBusy(){ var C = window.FP_CLOUD; try{ if(!C || !C.enabled || localStorage.getItem("firstphone_cloud_off") === "1" || C.state === "offl" || C.lastErr) return false; }catch(e){ return false; }
     if(C.user && !C.on) return true; if(!C.authKnown && Date.now() - T0 < 15000) return true; return false; }
   var T0 = Date.now();
-  function busy(){ var H = document.documentElement; return !!(vis("fpBoot") || vis("fcLogin") || cloudBusy() || (H.classList.contains("fc-locked") && (vis("fcLogin") || vis("fcAdmin")))); }
+  function busy(){ var H = document.documentElement; return !!(vis("fpBoot") || vis("fcLogin") || vis("fpShopPw") || cloudBusy() || (H.classList.contains("fc-locked") && (vis("fcLogin") || vis("fcAdmin")))); }
   function tick(){
     var p = document.getElementById("settingsPanel"), H = document.documentElement;
     /* a beállítás mindig teljes képernyőn nyílik — csak ez látszik (Martin kérése), a beállított boltnál is */
@@ -74856,5 +74883,245 @@ html body #fcDocs#fcDocs .fc-docs-e{padding:30px;text-align:center;color:#a99f8c
 @media (max-width:520px){html body #fcDocs#fcDocs .fc-doc-a{flex-wrap:wrap;} html body #fcDocs#fcDocs .fc-doc-a button{flex:1;justify-content:center;} html body #fcDocs#fcDocs .fc-docs-h b{font-size:18px !important;}}
 @media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fcDocs *{animation:none !important;}}
 </style>
+<style id="cetliLockCss">
+/* ===== Új bolt: a Cetli generátor zárva, kérésre kapcsolja be az admin ===== */
+#pageSwitch .ps-btn.ps-lockc{position:relative;opacity:.72}
+#pageSwitch .ps-btn.ps-lockc:hover{opacity:1}
+#pageSwitch .ps-btn.ps-lockc .clk-b{position:absolute;top:2px;right:4px;font-size:11px;line-height:1;filter:grayscale(.2)}
+html.ui-uj #pageSwitch .ps-btn.ps-lockc .clk-b{top:50%;right:12px;transform:translateY(-50%);font-size:12px}
+.clk-back{position:fixed;inset:0;z-index:100020;display:grid;place-items:center;padding:16px;background:rgba(6,6,8,.62);font-family:Manrope,Inter,system-ui,sans-serif;animation:clkF .2s ease both}
+.clk-back.out{opacity:0;transition:opacity .18s}
+html body .clk-back .clk-c.clk-c{width:min(460px,100%);box-sizing:border-box;padding:26px 24px 20px;border-radius:24px;background:#16130f !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;color:#f4efe6;border:1px solid rgba(255,255,255,.09);box-shadow:0 30px 80px rgba(0,0,0,.55);text-align:center;animation:clkP .35s cubic-bezier(.2,.9,.3,1.2) both}
+body.light-theme html body .clk-back .clk-c.clk-c{background:#fffdf8 !important;color:#1d1a14;border-color:rgba(0,0,0,.08)}
+html body .clk-back .clk-ic{width:62px;height:62px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:radial-gradient(circle at 30% 30%,#FFD45C,#FBAC01 60%,#E08A00) !important;background-color:#FBAC01 !important;box-shadow:0 10px 26px -8px rgba(251,172,1,.8)}
+.clk-c h3{margin:0 0 8px;font-size:20px;font-weight:800;letter-spacing:-.01em}
+.clk-c p{margin:0 0 14px;font-size:14px;line-height:1.55;color:rgba(244,239,230,.72)}
+body.light-theme .clk-c p{color:#5c564b}
+.clk-ls{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0 0 18px}
+html body .clk-back .clk-ls span{font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(251,172,1,.12);color:#FBAC01}
+body.light-theme html body .clk-back .clk-ls span{color:#8a5a00}
+html body .clk-back .clk-go.clk-go{all:unset;box-sizing:border-box;display:block;width:100%;padding:13px 16px;border-radius:99px;cursor:pointer;font-weight:800;font-size:15px;color:#1a1200 !important;background:linear-gradient(180deg,#FFC93D,#FBAC01 55%,#F09A00) !important;background-color:#FBAC01 !important;border:0 !important;box-shadow:0 12px 26px -12px rgba(251,172,1,.9);transition:transform .15s}
+.clk-go:hover{transform:translateY(-1px)}.clk-go[disabled]{opacity:.6;cursor:default;transform:none}
+html body .clk-back .clk-ok{margin:0 0 14px;padding:12px;border-radius:14px;background:rgba(52,195,143,.12);color:#34C38F;font-size:13.5px;font-weight:700;line-height:1.45}
+.clk-x{all:unset;cursor:pointer;display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:rgba(244,239,230,.6);text-decoration:underline}
+body.light-theme .clk-x{color:#6b6458}
+@keyframes clkF{from{opacity:0}}@keyframes clkP{from{opacity:0;transform:translateY(10px) scale(.97)}}
+@media (prefers-reduced-motion:reduce){.clk-back,html body .clk-back .clk-c.clk-c{animation:none}}
+
+html body .clk-back .clk-x{background:none !important;border:0 !important;box-shadow:none !important}
+</style>
+<script id="cetliLockJs">
+(function(){
+  var SK = "firstphone_beosztas_tervezo_v2";
+  function locked(){ try{ return !!(window.fpCetliLocked && fpCetliLocked()); }catch(e){ return false; } }
+  function reqAt(){ try{ return window.fpCetliReq ? fpCetliReq(false) : 0; }catch(e){ return 0; } }
+  function hu(t){ try{ return new Date(t).toLocaleString("hu-HU", { month:"long", day:"numeric", hour:"2-digit", minute:"2-digit" }); }catch(e){ return ""; } }
+  function open(){
+    if(document.querySelector(".clk-back")) return;
+    var b = document.createElement("div"); b.className = "clk-back";
+    var draw = function(){ var r = reqAt();
+      b.innerHTML = '<div class="clk-c" role="dialog" aria-label="Cetli generátor"><div class="clk-ic">🏷️</div><h3>A Cetli generátor még nincs bekapcsolva</h3>'
+        + '<p>Új boltként a Cetli generátor <b>alapból ki van kapcsolva</b>. Ha szeretnétek használni, jelezzétek — az admin bekapcsolja, és utána itt, a menüben megtaláljátok.</p>'
+        + '<div class="clk-ls"><span>🚚 Szállítási címke</span><span>📬 Megérkezett rendelés</span><span>🔖 Foglaló</span><span>↩️ Visszaáru</span><span>💚 Köszönő cetli</span></div>'
+        + (r ? '<div class="clk-ok">✓ Jeleztétek: ' + hu(r) + '<br>Az admin hamarosan bekapcsolja.</div>' : '')
+        + '<button type="button" class="clk-go" data-c="go">' + (r ? "Újra jelzem" : "Szeretném használni") + '</button>'
+        + '<button type="button" class="clk-x" data-c="x">Most nem</button></div>'; };
+    draw();
+    var close = function(){ b.classList.add("out"); setTimeout(function(){ b.remove(); }, 180); };
+    b.addEventListener("click", function(e){
+      if(e.target === b){ close(); return; }
+      var x = e.target.closest("[data-c]"); if(!x) return;
+      if(x.dataset.c === "x"){ close(); return; }
+      x.disabled = true; x.textContent = "Küldés…";
+      try{ window.fpCetliReq && fpCetliReq(true); }catch(_){}
+      var done = function(ok){ draw(); try{ (window.toast || function(){})(ok ? "🏷️ Jelezve az adminnak — hamarosan bekapcsolja a Cetli generátort." : "🏷️ Jelezve — az admin a bolt adatlapján látja."); }catch(_){} try{ window.fpSound && fpSound("send", .4); }catch(_){} };
+      var p = window.fpAutoMsg ? fpAutoMsg("🏷️ Ez a bolt szeretné használni a Cetli generátort. Bekapcsolás: Boltok → a bolt adatlapja → Beállítások → Cetli generátor.") : null;
+      if(p && p.then) p.then(function(){ done(true); }, function(){ done(false); }); else done(false);
+    });
+    document.body.appendChild(b);
+  }
+  window.fpCetliAsk = open;
+  /* a kezdőlap „＋ Cetli” és gyors gombjai is ide visznek, amíg zárva van */
+  document.addEventListener("click", function(e){ var g = e.target.closest && e.target.closest('[data-ma-go="cetli"]'); if(!g || !locked()) return; e.preventDefault(); e.stopPropagation(); open(); }, true);
+  /* a menü Cetli gombja zárva is látszik (lakattal); kattintásra a kérő ablak nyílik */
+  document.addEventListener("click", function(e){ var g = e.target.closest && e.target.closest('#pageSwitch .ps-btn[data-page="cetli"], #mTab [data-page="cetli"]'); if(!g || !locked()) return; e.preventDefault(); e.stopImmediatePropagation(); open(); }, true);
+  setInterval(function(){
+    var ps = document.getElementById("pageSwitch"); if(!ps) return;
+    var lk = locked(), cb = ps.querySelector('.ps-btn[data-page="cetli"]'); if(!cb) return;
+    if(!lk){ if(cb.classList.contains("ps-lockc")){ cb.classList.remove("ps-lockc"); cb.style.removeProperty("display"); var bd = cb.querySelector(".clk-b"); if(bd) bd.remove(); } return; }
+    if(!cb.classList.contains("ps-lockc")){ cb.classList.add("ps-lockc"); cb.title = "Cetli generátor — még nincs bekapcsolva (kattints, ha szeretnétek használni)"; if(!cb.querySelector(".clk-b")) cb.insertAdjacentHTML("beforeend", '<i class="clk-b">🔒</i>'); }
+    var sib = [].find.call(ps.querySelectorAll(".ps-btn[data-page]"), function(x){ return x !== cb && !x.classList.contains("ps-off") && x.getClientRects().length; });
+    var d = sib ? getComputedStyle(sib).display : "flex"; if(cb.style.getPropertyValue("display") !== d) cb.style.setProperty("display", d, "important");
+    /* ha épp a Cetli oldalon áll (pl. régi mentésből), vissza a kezdőlapra */
+    try{ if(document.body.classList.contains("page-cetli")){ var mb = ps.querySelector('.ps-btn[data-page="ma"]') || ps.querySelector('.ps-btn[data-page="beosztas"]'); if(mb) mb.click(); } }catch(_){}
+  }, 1000);
+})();
+</script>
+<style id="shopPwCss">
+/* ===== PRÓBA 59: bolt első belépése — saját jelszó (egyszer használatos jelszó után) + próba-belépés (?proba=ujbolt) ===== */
+#fpShopPw{position:fixed;inset:0;z-index:2147483000;overflow:auto;background:#060606;color:#f4efe6;font-family:Manrope,Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+#fpShopPw::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(60vmax 38vmax at 50% -12%,rgba(251,172,1,.22),transparent 70%),radial-gradient(40vmax 30vmax at 100% 110%,rgba(255,106,40,.10),transparent 70%)}
+#fpShopPw .sp-w{position:relative;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;padding:22px 16px 40px}
+html.fp-demo #fpShopPw .sp-w{padding-top:54px}
+@media (max-width:520px){#fpDemoBar span{display:none}}
+#fpShopPw .sp-steps{display:flex;align-items:center;gap:8px;margin:0 0 26px;flex-wrap:wrap;justify-content:center}
+#fpShopPw .sp-st{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:rgba(244,239,230,.45);white-space:nowrap}
+#fpShopPw .sp-st i{font-style:normal;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;border:1.5px solid rgba(255,255,255,.16)}
+#fpShopPw .sp-st.ok{color:#34C38F}#fpShopPw .sp-st.ok i{background:#34C38F;border-color:#34C38F;color:#06140e}
+#fpShopPw .sp-st.on{color:#FBAC01}#fpShopPw .sp-st.on i{background:#FBAC01;border-color:#FBAC01;color:#1a1200;box-shadow:0 0 0 5px rgba(251,172,1,.16)}
+#fpShopPw .sp-ln{width:26px;height:2px;border-radius:2px;background:rgba(255,255,255,.12)}#fpShopPw .sp-ln.ok{background:#34C38F}
+#fpShopPw#fpShopPw .sp-c{width:min(520px,100%);box-sizing:border-box;padding:28px 26px 22px;border-radius:28px;background:#121110 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 100px -30px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.04);animation:spIn .5s cubic-bezier(.2,.9,.3,1.1) both}
+#fpShopPw#fpShopPw .sp-ic{width:64px;height:64px;margin:0 auto 14px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(160deg,#FFD45C,#FBAC01 55%,#E08A00) !important;background-color:#FBAC01 !important;box-shadow:0 14px 34px -10px rgba(251,172,1,.85)}
+#fpShopPw .sp-ic svg{width:30px;height:30px}
+#fpShopPw h1{margin:0 0 8px;text-align:center;font-size:24px;line-height:1.2;font-weight:800;letter-spacing:-.02em}
+#fpShopPw .sp-lead{margin:0 0 18px;text-align:center;font-size:14px;line-height:1.55;color:rgba(244,239,230,.66)}
+#fpShopPw .sp-acc{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:0 0 16px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+#fpShopPw .sp-acc span{width:38px;height:38px;flex:none;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:14px;background:rgba(251,172,1,.14);color:#FBAC01}
+#fpShopPw .sp-acc b{display:block;font-size:14px}#fpShopPw .sp-acc small{font-size:12px;color:rgba(244,239,230,.5)}
+#fpShopPw label.sp-f{display:block;margin:0 0 10px}
+#fpShopPw .sp-f > span{display:block;margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:rgba(244,239,230,.55)}
+#fpShopPw .sp-f div{position:relative}
+#fpShopPw .sp-f input{width:100%;box-sizing:border-box;height:50px;padding:0 48px 0 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.12) !important;background:#0b0a09 !important;color:#fff !important;font:600 17px Manrope,Inter,sans-serif;letter-spacing:.02em;outline:none;transition:border-color .2s,box-shadow .2s}
+#fpShopPw .sp-f input:focus{border-color:#FBAC01 !important;box-shadow:0 0 0 4px rgba(251,172,1,.16)}
+#fpShopPw .sp-eye{all:unset;cursor:pointer;position:absolute;right:8px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:rgba(244,239,230,.55)}
+#fpShopPw .sp-eye:hover{color:#FBAC01;background:rgba(255,255,255,.05)}#fpShopPw .sp-eye svg{width:19px;height:19px}
+#fpShopPw .sp-bar{height:6px;border-radius:9px;background:rgba(255,255,255,.08);margin:2px 0 4px;overflow:hidden}
+#fpShopPw .sp-bar i{display:block;height:100%;width:0;border-radius:9px;background:#e2585a;transition:width .3s,background .3s}
+#fpShopPw .sp-bar i[data-s="mid"]{background:#FBAC01}#fpShopPw .sp-bar i[data-s="hi"]{background:#34C38F}
+#fpShopPw .sp-bl{display:block;margin:0 0 12px;font-size:11.5px;font-weight:700;color:rgba(244,239,230,.45);text-align:right}
+#fpShopPw .sp-req{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
+#fpShopPw .sp-req li{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:rgba(244,239,230,.5);transition:color .2s}
+#fpShopPw .sp-req li::before{content:"";width:16px;height:16px;flex:none;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);box-sizing:border-box;transition:all .2s}
+#fpShopPw .sp-req li.ok{color:#34C38F}#fpShopPw .sp-req li.ok::before{background:#34C38F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%2306140e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;border-color:#34C38F}
+#fpShopPw .sp-keep{margin:0 0 18px;padding:14px 14px 12px;border-radius:18px;background:rgba(251,172,1,.07);border:1px solid rgba(251,172,1,.22)}
+#fpShopPw .sp-keep h4{margin:0 0 4px;font-size:14px;font-weight:800;color:#FBAC01;display:flex;align-items:center;gap:8px}
+#fpShopPw .sp-keep p{margin:0 0 10px;font-size:12.5px;line-height:1.5;color:rgba(244,239,230,.62)}
+#fpShopPw .sp-ck{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;margin:0 0 6px;border-radius:12px;cursor:pointer;font-size:13.5px;font-weight:600;line-height:1.4;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);transition:border-color .2s,background .2s}
+#fpShopPw .sp-ck:hover{border-color:rgba(251,172,1,.4)}
+#fpShopPw .sp-ck input{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:none;margin:0;border-radius:6px;border:1.5px solid rgba(255,255,255,.3);background:transparent;cursor:pointer;transition:all .15s}
+#fpShopPw .sp-ck input:checked{background:#FBAC01 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%231a1200' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border-color:#FBAC01}
+#fpShopPw .sp-ck small{display:block;font-weight:500;font-size:12px;color:rgba(244,239,230,.5)}
+#fpShopPw .sp-pr{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;margin:6px 0 0;padding:8px 13px;border-radius:99px;font-size:12.5px;font-weight:800;color:#FBAC01;border:1px solid rgba(251,172,1,.4);transition:background .2s}
+#fpShopPw .sp-pr:hover{background:rgba(251,172,1,.1)}#fpShopPw .sp-pr svg{width:15px;height:15px}#fpShopPw .sp-pr[disabled]{opacity:.4;cursor:default}
+#fpShopPw .sp-err{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:rgba(226,88,90,.12);color:#ff8a8c;font-size:13px;font-weight:700}
+#fpShopPw#fpShopPw .sp-go{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;border-radius:99px;cursor:pointer;font-size:16px;font-weight:800;color:#1a1200 !important;background:linear-gradient(180deg,#FFC93D,#FBAC01 55%,#F09A00) !important;background-color:#FBAC01 !important;box-shadow:0 16px 34px -14px rgba(251,172,1,.95),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .15s,opacity .2s}
+#fpShopPw .sp-go:hover:not([disabled]){transform:translateY(-2px)}#fpShopPw .sp-go[disabled]{opacity:.35;cursor:default;box-shadow:none}
+#fpShopPw .sp-why{margin:10px 0 0;text-align:center;font-size:12px;color:rgba(244,239,230,.45);min-height:16px}
+#fpShopPw .sp-out{all:unset;cursor:pointer;display:block;margin:14px auto 0;font-size:12.5px;font-weight:700;color:rgba(244,239,230,.45);text-decoration:underline}
+#fpShopPw .sp-done{text-align:center;padding:10px 0 4px}
+#fpShopPw#fpShopPw .sp-ok{width:84px;height:84px;margin:4px auto 16px;border-radius:50%;display:grid;place-items:center;background:#34C38F !important;box-shadow:0 0 0 10px rgba(52,195,143,.14),0 18px 40px -12px rgba(52,195,143,.8);animation:spPop .5s cubic-bezier(.2,1.4,.4,1) both}
+#fpShopPw .sp-ok svg{width:40px;height:40px}#fpShopPw .sp-ok path{stroke-dasharray:30;stroke-dashoffset:30;animation:spDraw .45s .25s ease-out forwards}
+#fpShopPw .sp-tips{text-align:left;margin:16px 0 20px;padding:0;list-style:none;display:grid;gap:8px}
+#fpShopPw .sp-tips li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:rgba(244,239,230,.75);padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.035)}
+#fpShopPw .sp-tips b{color:#fff}
+#fpShopPw .sp-tips i{font-style:normal;flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;background:rgba(251,172,1,.16);color:#FBAC01}
+@keyframes spIn{from{opacity:0;transform:translateY(16px) scale(.98)}}
+@keyframes spPop{from{opacity:0;transform:scale(.4)}}
+@keyframes spDraw{to{stroke-dashoffset:0}}
+@media (max-width:520px){#fpShopPw .sp-c{padding:22px 16px 18px;border-radius:24px}#fpShopPw h1{font-size:21px}#fpShopPw .sp-req{grid-template-columns:1fr}#fpShopPw .sp-st b{display:none}#fpShopPw .sp-st.on b{display:inline}}
+@media (prefers-reduced-motion:reduce){#fpShopPw .sp-c,#fpShopPw .sp-ok{animation:none}#fpShopPw .sp-ok path{animation:none;stroke-dashoffset:0}}
+/* próba-belépés szalag */
+#fpDemoBar{position:fixed;left:50%;top:6px;transform:translateX(-50%);white-space:nowrap;z-index:2147483600;display:flex;align-items:center;gap:8px;padding:7px 8px 7px 13px;border-radius:99px;background:#1b1408;border:1px solid rgba(251,172,1,.55);color:#FBAC01;font:800 12px Manrope,Inter,system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#fpDemoBar span{font-weight:600;color:rgba(255,236,200,.75)}
+#fpDemoBar button{all:unset;cursor:pointer;padding:5px 11px;border-radius:99px;background:#FBAC01;color:#1a1200;font-weight:800}
+@media print{#fpDemoBar,#fpShopPw{display:none !important}}
+</style>
+<script id="shopPwJs">
+/* Bolt első belépése: saját jelszó választása. opts: { demo, email, label, onDone(pw), onOut() } */
+(function(){
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); };
+  var EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1200" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.6" r="1.4" fill="#1a1200"/></svg>';
+  var PRN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>';
+  function steps(at){ var L = ["Belépés", "Saját jelszó", "Bolt beállítása", "Munka"];
+    return '<div class="sp-steps">' + L.map(function(t, i){ return (i ? '<span class="sp-ln' + (i <= at ? " ok" : "") + '"></span>' : "") + '<span class="sp-st' + (i < at ? " ok" : i === at ? " on" : "") + '"><i>' + (i < at ? "✓" : i + 1) + '</i><b>' + t + '</b></span>'; }).join("") + '</div>'; }
+  function printCard(label, login, pw){
+    var d = new Date(), ds = d.getFullYear() + ". " + String(d.getMonth() + 1).padStart(2, "0") + ". " + String(d.getDate()).padStart(2, "0") + ".";
+    var html = '<!doctype html><html lang="hu"><head><meta charset="utf-8"><title>Bolti jelszó</title><style>@page{size:A4;margin:14mm}body{font-family:Arial,Helvetica,sans-serif;color:#000;margin:0}'
+      + '.c{width:120mm;border:1.4mm solid #000;border-radius:5mm;padding:7mm 8mm}.t{font-size:9pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase}.h{font-size:17pt;font-weight:800;margin:1mm 0 5mm}'
+      + '.r{display:flex;justify-content:space-between;gap:6mm;border-bottom:.3mm solid #000;padding:2.6mm 0;font-size:11pt}.r b{font-family:"Courier New",monospace;font-size:13pt;letter-spacing:.04em}'
+      + '.n{margin-top:5mm;font-size:9pt;line-height:1.5}.cut{margin-top:10mm;font-size:8pt;color:#555}</style></head><body><div class="c"><div class="t">FirstPhone Munkaasztal</div><div class="h">Bolti belépés</div>'
+      + '<div class="r"><span>Bolt</span><b>' + esc(label) + '</b></div><div class="r"><span>Belépési név</span><b>' + esc(login) + '</b></div><div class="r"><span>Jelszó</span><b>' + esc(pw) + '</b></div><div class="r"><span>Beállítva</span><b>' + ds + '</b></div>'
+      + '<div class="n">Tartsd <b>biztonságos, zárt helyen</b> (pl. a fiókban) — ne a pulton, ne a monitorra ragasztva. Ne add ki senkinek, aki nem a bolt dolgozója.</div></div><div class="cut">✂ - - - - - - - - - - - - - - - - - - - -</div>'
+      + '<script>onload=function(){setTimeout(function(){print()},150)}<\/script></body></html>';
+    var f = document.createElement("iframe"); f.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0"; document.body.appendChild(f);
+    f.srcdoc = html; setTimeout(function(){ f.remove(); }, 60000);
+  }
+  window.fpShopPw = function(o){
+    o = o || {}; var old = document.getElementById("fpShopPw"); if(old) old.remove();
+    var label = o.label || "Bolt", email = o.email || "", login = o.login || (email.split("@")[0] || label);
+    var w = document.createElement("div"); w.id = "fpShopPw";
+    var ini = label.replace(/^FirstPhone\s+/i, "").split(/[\s-]+/).filter(Boolean).slice(0, 2).map(function(s){ return s.charAt(0).toUpperCase(); }).join("") || "FP";
+    w.innerHTML = '<div class="sp-w">' + steps(1) + '<form class="sp-c" autocomplete="on" onsubmit="return false">'
+      + '<div class="sp-ic">' + LOCK + '</div><h1>Válassz saját bolti jelszót</h1>'
+      + '<p class="sp-lead">Az ideiglenes jelszó <b>csak az első belépéshez</b> szólt. Adjatok meg egy saját jelszót — ezzel léptek be ezentúl a bolt <b>minden gépén</b>.</p>'
+      + '<div class="sp-acc"><span>' + esc(ini) + '</span><div><b>' + esc(label) + '</b><small>Belépési név: ' + esc(login) + '</small></div></div>'
+      + '<input type="text" name="username" autocomplete="username" value="' + esc(email || login) + '" hidden>'
+      + '<label class="sp-f"><span>Új jelszó</span><div><input type="password" class="sp-a" name="new-password" autocomplete="new-password" spellcheck="false"><button type="button" class="sp-eye" data-p="eye" title="Mutasd / rejtsd">' + EYE + '</button></div></label>'
+      + '<div class="sp-bar"><i></i></div><small class="sp-bl"> </small>'
+      + '<label class="sp-f"><span>Még egyszer</span><div><input type="password" class="sp-b" autocomplete="new-password" spellcheck="false"></div></label>'
+      + '<ul class="sp-req"><li data-r="len">Legalább 8 karakter</li><li data-r="let">Van benne betű</li><li data-r="num">Van benne szám</li><li data-r="eq">A kettő egyezik</li></ul>'
+      + '<div class="sp-keep"><h4>📝 Mielőtt továbbmész</h4><p>Ha elfelejtitek, csak az admin tud újat adni — addig nem tudtok belépni.</p>'
+      + '<label class="sp-ck"><input type="checkbox" data-k="save"><span>Elmentettem a böngészőben<small>Ha a böngésző felajánlja („Jelszó mentése?”), kattints a <b>Mentés</b>re.</small></span></label>'
+      + '<label class="sp-ck"><input type="checkbox" data-k="paper"><span>Leírtam egy papírra, és biztonságos helyre tettem<small>Fiókba, zárt helyre — ne a pultra, ne a monitorra.</small></span></label>'
+      + '<button type="button" class="sp-pr" data-p="print" disabled>' + PRN + 'Jelszó-cetli nyomtatása</button></div>'
+      + '<div class="sp-err" hidden></div>'
+      + '<button type="submit" class="sp-go" data-p="go" disabled>Jelszó mentése</button><p class="sp-why"></p>'
+      + '<button type="button" class="sp-out" data-p="out">Kijelentkezés</button></form></div>';
+    document.body.appendChild(w);
+    var A = w.querySelector(".sp-a"), B = w.querySelector(".sp-b"), go = w.querySelector(".sp-go"), bar = w.querySelector(".sp-bar i"), bl = w.querySelector(".sp-bl"), why = w.querySelector(".sp-why"), er = w.querySelector(".sp-err"), pr = w.querySelector(".sp-pr");
+    var chk = function(){
+      var p = A.value, R = { len:p.length >= 8, let:/[a-zA-ZÀ-ž]/.test(p), num:/[0-9]/.test(p), eq:!!p && p === B.value };
+      Object.keys(R).forEach(function(k){ w.querySelector('[data-r="' + k + '"]').classList.toggle("ok", R[k]); });
+      var sc = (p.length >= 8) + (p.length >= 12) + (/[a-z]/.test(p) && /[A-Z]/.test(p)) + /[0-9]/.test(p) + /[^a-zA-Z0-9]/.test(p);
+      bar.style.width = (p ? Math.max(12, Math.min(100, sc * 20)) : 0) + "%"; bar.dataset.s = sc <= 2 ? "lo" : sc <= 3 ? "mid" : "hi";
+      bl.textContent = p ? (sc <= 2 ? "Gyenge" : sc <= 3 ? "Közepes" : "Erős") : " ";
+      var pwOk = R.len && R.let && R.num && R.eq, ckOk = [].every.call(w.querySelectorAll(".sp-ck input"), function(c){ return c.checked; });
+      pr.disabled = !pwOk; go.disabled = !(pwOk && ckOk);
+      why.textContent = !pwOk ? "" : ckOk ? "" : "Pipáld ki: elmentetted és leírtad a jelszót.";
+      return !go.disabled;
+    };
+    A.oninput = chk; B.oninput = chk; w.querySelectorAll(".sp-ck input").forEach(function(c){ c.onchange = chk; });
+    setTimeout(function(){ try{ A.focus(); }catch(e){} }, 120);
+    var finish = function(){
+      var c = w.querySelector(".sp-c");
+      w.querySelector(".sp-w").innerHTML = steps(2) + '<div class="sp-c"><div class="sp-done"><div class="sp-ok"><svg viewBox="0 0 24 24" fill="none" stroke="#06140e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>'
+        + '<h1>Kész, a jelszó elmentve!</h1><p class="sp-lead">Ezentúl ezzel léptek be. Most állítsuk be a boltot — pár perc az egész.</p>'
+        + '<ul class="sp-tips"><li><i>1</i><span><b>Bolt adatai</b> — melyik bolt, nyitvatartás.</span></li><li><i>2</i><span><b>Dolgozók</b> — kik dolgoznak nálatok.</span></li><li><i>3</i><span>Utána jöhet a <b>munka</b>: beosztás, leltár, kassza, csomag…</span></li></ul>'
+        + '<button type="button" class="sp-go" data-p="next">Tovább a bolt beállításához →</button></div></div>';
+      try{ window.fpSound && fpSound("done", .5); }catch(e){}
+    };
+    w.addEventListener("click", function(e){
+      var b = e.target.closest("[data-p]"); if(!b) return; var a = b.dataset.p;
+      if(a === "eye"){ var t = A.type === "password" ? "text" : "password"; A.type = t; B.type = t; return; }
+      if(a === "print"){ if(chk() || !pr.disabled) printCard(label, login, A.value); return; }
+      if(a === "out"){ if(o.onOut) o.onOut(); return; }
+      if(a === "next"){ w.style.transition = "opacity .3s"; w.style.opacity = "0"; setTimeout(function(){ w.remove(); if(o.onNext) o.onNext(); }, 300); return; }
+      if(a === "go"){ if(!chk()) return; go.disabled = true; go.textContent = "Mentés…"; er.hidden = true;
+        Promise.resolve(o.onDone ? o.onDone(A.value) : true).then(function(r){
+          if(r === true || (r && r.ok)){ finish(); return; }
+          er.hidden = false; er.textContent = "✗ " + ((r && r.error) || "Nem sikerült menteni — próbáld újra."); go.textContent = "Jelszó mentése"; chk();
+        }, function(x){ er.hidden = false; er.textContent = "✗ " + (x && x.message || "Nem sikerült menteni — próbáld újra."); go.textContent = "Jelszó mentése"; chk(); }); }
+    });
+    return w;
+  };
+  /* ===== Próba-belépés: https://…/?proba=ujbolt — a valódi program, felhő nélkül, a gép mentett adataihoz nem nyúl ===== */
+  if(!window.FP_DEMO) return;
+  var bar = function(){ if(document.getElementById("fpDemoBar")) return; var d = document.createElement("div"); d.id = "fpDemoBar";
+    d.innerHTML = 'PRÓBA <span>— új bolt első belépése, semmi nem mentődik</span><button type="button">↺ Újrakezdés</button>';
+    d.querySelector("button").onclick = function(){ location.reload(); }; document.body.appendChild(d); };
+  window.fpDemoAfterLogin = function(name){
+    var st = null; try{ st = window.fpStoreFromEmail && fpStoreFromEmail(String(name || "").trim().toLowerCase() + "@firstphone.hu"); }catch(e){}
+    var nm = String(name || "").trim() || "probabolt";
+    fpShopPw({ demo:true, label:(st && st.label) || ("FirstPhone " + nm.charAt(0).toUpperCase() + nm.slice(1)), login:nm,
+      onDone:function(){ return new Promise(function(r){ setTimeout(function(){ r(true); }, 700); }); },
+      onOut:function(){ location.reload(); },
+      onNext:function(){ try{ window.fpNotice ? fpNotice("info", "Most jön a bolt beállítása — ugyanaz, amit egy új bolt lát.") : 0; }catch(e){} } });
+    /* az üdvözlő ablak helyett a jelszó-képernyő „Kész” lapja mondja el a következő lépéseket */
+    try{ localStorage.setItem("firstphone_welcome_seen", String(Date.now())); }catch(e){}
+  };
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", bar); else bar();
+})();
+</script>
 </body>
 </html>
