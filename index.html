@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261123-180417";</script>
+<script>window.FP_BUILD="20261123-183321";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -74715,7 +74715,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-card.ax-stw{background:transparent !impor
 html body #fcAdmin#fcAdmin#fcAdmin .ax-card.ax-stw::before{display:none !important;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw .ax-tblw{overflow-x:auto;padding:2px 2px 6px;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl{border-collapse:separate !important;border-spacing:0 8px !important;}
-html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl thead th{background:transparent !important;border:0 !important;padding:4px 10px !important;font:800 10.5px Inter,sans-serif !important;letter-spacing:.09em;color:#8d8472 !important;white-space:nowrap;}
+html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl thead th{position:static !important;background:transparent !important;border:0 !important;padding:4px 10px !important;font:800 10.5px Inter,sans-serif !important;letter-spacing:.09em;color:#8d8472 !important;white-space:nowrap;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl thead th.s{color:#FBAC01 !important;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody tr{cursor:pointer;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl tbody td{background:rgba(255,255,255,.035) !important;border-top:1px solid rgba(255,255,255,.06) !important;border-bottom:1px solid rgba(255,255,255,.06) !important;padding:11px 10px !important;vertical-align:middle;transition:background .2s ease;}
@@ -74732,6 +74732,10 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .v4n{display:inline-fle
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl .v4n.z{opacity:.55;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl th .v4h{display:inline-block;width:13px;height:13px;margin-right:5px;vertical-align:-2px;color:#a99f8c;}
 html body #fcAdmin#fcAdmin#fcAdmin .ax-stw table.ax-stbl th .v4h svg{width:100%;height:100%;display:block;}
+html body #fcAdmin#fcAdmin#fcAdmin .fc-pw-r.pw2 .pw2-m > span:nth-child(3):last-child{grid-column:1/-1;}
+/* felső sáv: tömör (könnyített módban az áttetsző sáv alatt átlátszott a görgetett tartalom) */
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin .ax-hdr{background:rgba(12,10,8,.95) !important;}
+html body #fcAdmin#fcAdmin#fcAdmin#fcAdmin.th-light .ax-hdr{background:rgba(250,247,241,.95) !important;}
 html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-stw table.ax-stbl tbody td{background:#fff !important;border-color:rgba(0,0,0,.07) !important;}
 html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-stw table.ax-stbl tbody tr:hover td{background:#fff8e8 !important;}
 html body #fcAdmin#fcAdmin#fcAdmin.th-light .ax-stw table.ax-stbl .ax-sc .ax-av{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--st,#b8ad98) !important;}
