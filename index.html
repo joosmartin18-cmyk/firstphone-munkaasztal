@@ -63734,8 +63734,249 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.restore();
   }
   window.fpLtStampPng = (wmm, hmm)=>{ const c = document.createElement("canvas"); c.width = mm(wmm) + 40; c.height = mm(hmm) + 40; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); ltDrawStamp(x, 20, 20, mm(wmm), mm(hmm), { date:"2026.10.12.", time:"16:40", id:"LT-7Q2K" }); return c.toDataURL("image/png"); };
+  /* ===== SZÍNES LELTÁRÍV v2 (más elrendezés): sötét fejléc-sáv, adat-csempék, összesítő kártyák körrel,
+     „Hiányzik” doboz elöl, tömör színes szakaszcímek, állapot szerint színezett sorok ===== */
+  async function ltDrawPagesC(secs, typeKey, meta){
+    const T = LT_TYPES[typeKey];
+    const X0 = mm(12), FULLW = LT_W - 2*X0, top0 = mm(10);
+    const prog = !!(ltProg && ltAnyProgress());
+    const day = meta.exportDate || ltToday();
+    const loc = [state.settings.location, state.settings.placeDetail].filter(Boolean).join(" · ");
+    const DARK = "#17140f", SOFT = "#f6f4ef", LINE = "#e2ddd2", INK2 = "#6b6458";
+    /* hiányzó tételek (pipálós listák) + listán kívüli */
+    const miss = [];
+    if(prog) secs.forEach(sec=>{ if(sec.mode !== "serial") return; const st = ltStats(sec); if(!st.done) return; st.missing.forEach(r=> miss.push({ r, cat:sec.cat })); });
+    const extra = prog ? ltProg.extra : [];
+    const MC = 3, mLines = Math.min(Math.ceil(miss.length / MC), 5);
+    const missH = (miss.length || extra.length) ? mm(9) + Math.max(mLines, miss.length ? 1 : 0) * mm(4.5) + (extra.length ? mm(4.8) : 0) + mm(1.5) : 0;
+    const headH = mm(22), infoH = mm(11.5), cardH = mm(23);
+    const infoY = top0 + headH + mm(3), cardY = infoY + infoH + mm(3), missY = cardY + cardH + mm(3.5);
+    const firstTop = missY + (missH ? missH + mm(4.5) : mm(1));
+    const contTop = top0 + mm(15);
+    const sigH = mm(23), footH = sigH, bottom = LT_H - mm(9) - footH - mm(2);
+    let chosen = null, P = null;
+    for(const rhmm of [6.2, 5.8, 5.4, 5.0, 4.7, 4.45, 4.25, 4.05, 3.9, 3.75, 3.6, 3.48, 3.36]){
+      const p = { rh:mm(rhmm), rhmm, secH:mm(Math.min(8.5, rhmm*1.55)), thH:mm(Math.min(5.6, rhmm*1.1)), gap:mm(1.4), secGap:mm(4.5), firstTop, contTop, bottom };
+      const pages = ltLayout(secs, p); chosen = pages; P = p;
+      if(pages.length === 1) break;
+    }
+    let logo = null;
+    try{ logo = await loadImage(await getLogoDataUrl("color")); }catch(e){}
+    const fs = Math.min(8.4, P.rhmm * 1.9), out = [];
+    const tot = sec=> sec.mode === "serial" ? [].concat(...sec.groups.map(g=> g.rows)).length : sec.rows.length;
+    const fill = (col, x, y, w, h, r)=>{ ctx0.fillStyle = col; ltRR(ctx0, x, y, w, h, r); ctx0.fill(); ctx0.fillStyle = "#000"; };
+    let ctx0 = null;
+    chosen.forEach((pg, pi)=>{
+      const cv = document.createElement("canvas"); cv.width = LT_W; cv.height = LT_H;
+      const ctx = cv.getContext("2d"); ctx0 = ctx;
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, LT_W, LT_H); ctx.fillStyle = "#000"; ctx.textBaseline = "alphabetic";
+      if(pi === 0){
+        /* ---- fejléc-sáv ---- */
+        fill(DARK, X0, top0, FULLW, headH, mm(3.2));
+        ctx.save(); ltRR(ctx, X0, top0, FULLW, headH, mm(3.2)); ctx.clip();
+        ctx.fillStyle = LT_Y; ctx.fillRect(X0, top0 + headH - mm(1.3), FULLW, mm(1.3));
+        const gr = ctx.createRadialGradient(X0 + FULLW*0.55, top0, 0, X0 + FULLW*0.55, top0, mm(70)); gr.addColorStop(0, "rgba(251,172,1,.28)"); gr.addColorStop(1, "rgba(251,172,1,0)");
+        ctx.fillStyle = gr; ctx.fillRect(X0, top0, FULLW, headH); ctx.restore();
+        const bs = mm(13), bx = X0 + mm(5), by = top0 + (headH - mm(1.3) - bs)/2;
+        fill(LT_Y, bx, by, bs, bs, mm(2.6));
+        ltFont(ctx, "900", 22); ctx.fillStyle = DARK; ctx.textAlign = "center"; ctx.fillText(typeKey, bx + bs/2, by + bs*0.75);
+        ltFont(ctx, "900", 24); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Leltárív", bx + bs + mm(4.5), by + mm(7));
+        ltFont(ctx, "700", 9); ctx.fillStyle = "#f0c766"; ctx.fillText(`${T.name}  ·  ${T.cats.join(" + ")}  ·  ${ltFmt(day)} ${ltWd(day).toLowerCase()}`, bx + bs + mm(4.6), by + mm(12));
+        if(logo){ const lh = mm(9), lw = lh * logo.width / logo.height, pw = lw + mm(7), ph = lh + mm(4.4), px = X0 + FULLW - pw - mm(4.5), py = top0 + (headH - mm(1.3) - ph)/2;
+          fill("#fff", px, py, pw, ph, mm(2.2)); ctx.drawImage(logo, px + mm(3.5), py + mm(2.2), lw, lh); }
+        ctx.fillStyle = "#000";
+        /* ---- adat-csempék ---- */
+        const cells = [
+          { l:"DÁTUM", v:`${ltFmt(day)} · ${ltWd(day)}`, w:.2 },
+          { l:"ÜZLET", v:loc || "FirstPhone", w:.19 },
+          { l:"FORRÁS (EXCEL EXPORT)", v:[meta.file || "Excel export", meta.store, meta.exported ? meta.exported : ""].filter(Boolean).join(" · "), w:.38 },
+          { l:"LELTÁROZTA", v:meta.by || "", w:.23 }
+        ];
+        { const g = mm(2.5), W = FULLW - g * (cells.length - 1); let cx = X0;
+          cells.forEach(c=>{ const cw = W * c.w;
+            fill(SOFT, cx, infoY, cw, infoH, mm(2.2));
+            ltLabel(ctx, c.l, cx + mm(3), infoY + mm(4.3), "left", 5.8);
+            ltFont(ctx, "800", 9); ctx.textAlign = "left";
+            if(c.v) ctx.fillText(ltFit(ctx, c.v, cw - mm(5.5)), cx + mm(3), infoY + mm(9)); else ltDots(ctx, cx + mm(3), infoY + mm(9.2), cw - mm(6));
+            cx += cw + g; }); }
+        /* ---- összesítő kártyák ---- */
+        { const g = mm(3.5), cw = (FULLW - g * (secs.length - 1)) / secs.length;
+          secs.forEach((sec, k)=>{
+            const cc = LTC[(LT_CAT[sec.cat] || {}).cls] || LTC.oth, x = X0 + k * (cw + g), n = tot(sec);
+            const st = prog ? ltStats(sec) : null, has = !!(st && st.done);
+            fill(cc.t, x, cardY, cw, cardH, mm(3));
+            ctx.fillStyle = cc.c; ctx.save(); ltRR(ctx, x, cardY, cw, cardH, mm(3)); ctx.clip(); ctx.fillRect(x, cardY, mm(1.6), cardH); ctx.restore();
+            /* kör */
+            const R = mm(8), rx = x + mm(5) + R, ry = cardY + cardH/2;
+            const frac = has ? (sec.mode === "serial" ? st.done / n : st.done / n) : 0;
+            ctx.lineWidth = mm(2.1); ctx.strokeStyle = "rgba(0,0,0,.08)"; ctx.beginPath(); ctx.arc(rx, ry, R, 0, Math.PI*2); ctx.stroke();
+            if(frac > 0){ ctx.strokeStyle = sec.mode === "serial" ? (st.done === n ? LT_OK : cc.c) : cc.c; ctx.lineCap = "round"; ctx.beginPath(); ctx.arc(rx, ry, R, -Math.PI/2, -Math.PI/2 + Math.PI*2*Math.min(1, frac)); ctx.stroke(); ctx.lineCap = "butt"; }
+            ctx.strokeStyle = "#000";
+            ltFont(ctx, "900", 10.5); ctx.fillStyle = cc.d; ctx.textAlign = "center"; ctx.fillText(has ? Math.round(frac * 100) + "%" : LT_CAT[sec.cat].letter, rx, ry + mm(1.3));
+            ltFont(ctx, "600", 5.2); ctx.fillStyle = INK2; ctx.fillText(sec.mode === "serial" ? "megvan" : "számolva", rx, ry + mm(4.2));
+            /* szöveg */
+            const tx = rx + R + mm(5), tw = x + cw - tx - mm(3);
+            ltFont(ctx, "900", 7); ctx.fillStyle = cc.d; ctx.textAlign = "left"; ltSpaced(ctx, LT_CAT[sec.cat].plural.toUpperCase(), tx, cardY + mm(6), mm(0.4), "left");
+            let big, small, ok = null;
+            if(sec.mode === "serial"){ big = has ? `${st.done} / ${n}` : `___ / ${n}`; small = has ? (st.done === n ? "minden megvan" : `hiányzik ${n - st.done} db`) : `${n} db a listán`; if(has) ok = st.done === n; }
+            else { big = has ? (st.diff === 0 ? "0" : (st.diff > 0 ? "+" : "−") + Math.abs(st.diff)) : "____"; small = has ? (st.diff === 0 && !st.neg ? "nincs eltérés" : `hiány ${Math.abs(st.neg)} · többlet ${st.pos} db`) : `${n} termék`; if(has) ok = st.diff === 0 && !st.neg; }
+            ltFont(ctx, "900", 17); ctx.fillStyle = ok === null ? "#1b1b1b" : ok ? LT_OK : LT_BAD; ctx.fillText(ltFit(ctx, big, tw), tx, cardY + mm(13.6));
+            if(sec.mode !== "serial"){ const bw0 = ctx.measureText(big).width; ltFont(ctx, "700", 7.2); ctx.fillStyle = INK2; ctx.fillText("db eltérés", tx + bw0 + mm(1.6), cardY + mm(13.4)); }
+            /* állapot-chip */
+            ltFont(ctx, "800", 6.6); const chT = ltFit(ctx, small, tw - mm(4)), chW = ctx.measureText(chT).width + mm(4.4), chH = mm(4.4), chY = cardY + mm(16.2);
+            const chBg = ok === null ? "#fff" : ok ? "#dcf5e3" : "#fde2e2", chFg = ok === null ? INK2 : ok ? "#11753a" : "#b31b1b";
+            fill(chBg, tx, chY, chW, chH, chH/2); ctx.fillStyle = chFg; ctx.fillText(chT, tx + mm(2.2), chY + chH*0.7); ctx.fillStyle = "#000";
+          }); }
+        /* ---- Hiányzik doboz ---- */
+        if(missH){
+          const red = LT_BAD;
+          fill("#fff1f1", X0, missY, FULLW, missH, mm(3));
+          ctx.strokeStyle = "#f3b4b4"; ctx.lineWidth = mm(0.3); ltRR(ctx, X0, missY, FULLW, missH, mm(3)); ctx.stroke(); ctx.strokeStyle = "#000";
+          const ic = mm(2.3), icx = X0 + mm(5.5), icy = missY + mm(5);
+          ctx.fillStyle = red; ctx.beginPath(); ctx.arc(icx, icy, ic, 0, Math.PI*2); ctx.fill();
+          ltFont(ctx, "900", 8); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText("!", icx, icy + mm(1.1));
+          ltFont(ctx, "900", 8.4); ctx.fillStyle = "#a11616"; ctx.textAlign = "left";
+          const ttl = miss.length ? `HIÁNYZIK — ${miss.length} db` : "LISTÁN KÍVÜL"; ltSpaced(ctx, ttl, icx + ic + mm(2.5), icy + mm(1.2), mm(0.35), "left");
+          if(miss.length){ ltFont(ctx, "600", 6.8); ctx.fillStyle = "#8a3b3b"; ctx.textAlign = "right"; ctx.fillText("ezeket nem találtátok meg a leltárnál", X0 + FULLW - mm(4), icy + mm(1.1)); }
+          const colW = (FULLW - mm(8)) / MC, maxN = mLines * MC;
+          miss.slice(0, maxN).forEach((it, i)=>{
+            const col = Math.floor(i / mLines), row = i % mLines;
+            const x = X0 + mm(4) + col * colW, y = missY + mm(12.2) + row * mm(4.5);
+            const shown = (i === maxN - 1 && miss.length > maxN);
+            const cc = LTC[(LT_CAT[it.cat] || {}).cls] || LTC.oth;
+            ctx.fillStyle = shown ? INK2 : cc.c; ctx.beginPath(); ctx.arc(x + mm(1), y - mm(1.05), mm(0.9), 0, Math.PI*2); ctx.fill();
+            if(shown){ ltFont(ctx, "800", 7.4); ctx.fillStyle = "#8a3b3b"; ctx.textAlign = "left"; ctx.fillText(`+ még ${miss.length - maxN + 1} db (lásd a listában)`, x + mm(3), y); return; }
+            ltFont(ctx, "700", 7.2, LT_MONO); ctx.fillStyle = "#1b1b1b"; ctx.textAlign = "left";
+            const lot = String(it.r.lot); ctx.fillText(lot, x + mm(3), y); const lw = ctx.measureText(lot).width;
+            ltFont(ctx, "600", 7); ctx.fillStyle = "#5c4b4b"; ctx.fillText(ltFit(ctx, it.r.main, colW - lw - mm(6)), x + mm(4.6) + lw, y);
+          });
+          if(extra.length){ const y = missY + missH - mm(3.2); ltFont(ctx, "800", 6.8); ctx.fillStyle = "#8a3b3b"; ctx.textAlign = "left";
+            ctx.fillText(ltFit(ctx, `Listán kívül (beolvasva, de nincs az exportban): ${extra.slice(0, 10).join(", ")}${extra.length > 10 ? " …" : ""}`, FULLW - mm(8)), X0 + mm(4), y); }
+          ctx.fillStyle = "#000";
+        }
+      } else {
+        fill(DARK, X0, top0, FULLW, mm(10), mm(2.4));
+        ctx.fillStyle = LT_Y; ctx.save(); ltRR(ctx, X0, top0, FULLW, mm(10), mm(2.4)); ctx.clip(); ctx.fillRect(X0, top0 + mm(9.1), FULLW, mm(0.9)); ctx.restore();
+        ltFont(ctx, "900", 10); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Leltárív", X0 + mm(4), top0 + mm(6.4));
+        ltFont(ctx, "700", 8.4); ctx.fillStyle = "#f0c766"; ctx.textAlign = "right"; ctx.fillText(`${typeKey} · ${T.name} · ${ltFmt(day)} · folytatás`, LT_W - X0 - mm(4), top0 + mm(6.2)); ctx.fillStyle = "#000";
+      }
+      /* ---- tartalom ---- */
+      let lastSec = null;
+      pg.ops.forEach(op=>{
+        const sec = op.sec || lastSec; lastSec = sec; const cc = LTC[(LT_CAT[sec.cat] || {}).cls] || LTC.oth;
+        if(op.t === "sec"){
+          const h = P.secH, bh = h * 0.9, by = op.y + (h - bh)/2 - mm(0.3), cy = by + bh/2;
+          fill(cc.c, X0, by, FULLW, bh, mm(2));
+          const r = bh * 0.32, ccx = X0 + mm(3) + r;
+          ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(ccx, cy, r, 0, Math.PI*2); ctx.fill();
+          ltFont(ctx, "900", Math.min(8, P.rhmm * 1.6)); ctx.fillStyle = cc.c; ctx.textAlign = "center"; ctx.fillText(LT_CAT[sec.cat].letter, ccx, cy + r*0.45);
+          const title = LT_CAT[sec.cat].plural.toUpperCase() + (op.cont ? " · FOLYTATÁS" : ""), sp = mm(0.4);
+          ltFont(ctx, "900", Math.min(10, P.rhmm * 1.9)); ctx.fillStyle = "#fff"; ltSpaced(ctx, title, ccx + r + mm(2.6), cy + mm(1.25), sp, "left");
+          const tw = ctx.measureText(title).width + title.length * sp, n = tot(sec);
+          const st = prog ? ltStats(sec) : null;
+          ltFont(ctx, "700", Math.min(7.6, P.rhmm * 1.55)); ctx.fillStyle = "rgba(255,255,255,.82)"; ctx.textAlign = "left";
+          ctx.fillText(sec.mode === "serial" ? (st && st.done ? `${st.done} / ${n} megvan` : `${n} db`) : `${n} termék`, ccx + r + mm(5) + tw, cy + mm(1.15));
+          ltFont(ctx, "600", Math.min(7, P.rhmm * 1.45)); ctx.fillStyle = "#fff"; ctx.textAlign = "right";
+          ctx.fillText(sec.mode === "serial" ? "pipáld ki, ami megvan" : "a SZÁMOLT mezőbe írd a darabszámot", LT_W - X0 - mm(4), cy + mm(1.15));
+          ctx.fillStyle = "#000";
+        }
+        if(op.t === "th"){
+          const y = op.y, h = P.thH, cols = ltQtyCols(FULLW);
+          fill(cc.t, X0, y + mm(0.2), FULLW, h - mm(0.6), mm(1.2));
+          cols.forEach(c=>{ const x = c.align === "right" ? X0 + c.x + c.w - mm(1.5) : c.align === "center" ? X0 + c.x + c.w/2 : X0 + c.x + mm(1);
+            ltFont(ctx, "800", Math.min(6.2, P.rhmm*1.28)); ctx.fillStyle = cc.d; ltSpaced(ctx, c.t, x, y + h*0.64, mm(0.3), c.align); });
+          ctx.fillStyle = "#000";
+        }
+        if(op.t === "cells"){
+          const gapC = mm(6), cw = (FULLW - gapC * (op.cols - 1)) / op.cols;
+          op.colCells.forEach((arr, c)=>{
+            const x = X0 + c * (cw + gapC);
+            arr.forEach((cell, k)=>{
+              const y = op.y + k * op.rh;
+              if(cell.t === "row") ltRowSerC(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0);
+              else ltRowQtyC(ctx, cell.r, X0, y, FULLW, op.rh, fs, cc);
+            });
+            if(arr.length){ ctx.fillStyle = LINE; ctx.fillRect(op.cols > 1 ? x : X0, op.y + arr.length * op.rh + mm(0.3), op.cols > 1 ? cw : FULLW, mm(0.25)); ctx.fillStyle = "#000"; }
+          });
+        }
+      });
+      /* ---- aláírás + pecsét: két kártya ---- */
+      const sy = LT_H - mm(9) - footH, stampW = mm(52), sigW = FULLW - stampW - mm(3.5);
+      fill(SOFT, X0, sy, sigW, sigH, mm(3)); fill(SOFT, X0 + sigW + mm(3.5), sy, stampW, sigH, mm(3));
+      const signedAt = meta.signedAt || new Date(), nowS = `${ltFmt(signedAt)} ${pad2(signedAt.getHours())}:${pad2(signedAt.getMinutes())}`;
+      { const x = X0 + mm(4), v = meta.by || "", lineW = sigW - mm(8);
+        ltLabel(ctx, "LELTÁROZTA", x, sy + mm(4.6), "left", 6.2);
+        if(v){ ltFont(ctx, "800", 11); ctx.textAlign = "left"; ctx.fillText(v, x, sy + mm(11)); }
+        let nameW = 0; if(v){ ltFont(ctx, "800", 11); nameW = ctx.measureText(v).width; }
+        if(meta.sig){ const ax = x + Math.max(mm(40), nameW + mm(8)), aw = x + lineW - ax, ah = mm(13.5), sc = Math.min(aw / meta.sig.width, ah / meta.sig.height), dw = meta.sig.width * sc, dh = meta.sig.height * sc; ctx.drawImage(meta.sig, ax + (aw - dw)/2, sy + mm(17.4) - dh, dw, dh); }
+        ctx.fillStyle = "#9b9385"; ctx.fillRect(x, sy + mm(17.4), lineW, mm(0.3));
+        ltFont(ctx, "600", 6.2); ctx.fillStyle = LT_GREY; ctx.textAlign = "left"; ctx.fillText(meta.sig ? `név, aláírás · elektronikusan aláírva: ${nowS} · azonosító: ${meta.docId}` : "név, aláírás", x, sy + mm(20.6)); ctx.fillStyle = "#000"; }
+      { const sx = X0 + sigW + mm(3.5);
+        if(meta.sig){ ltDrawStamp(ctx, sx + mm(2.5), sy + mm(1.8), stampW - mm(5), sigH - mm(3.6), { loc:(state.settings.location || "").toUpperCase(), date:ltFmt(signedAt), time:`${pad2(signedAt.getHours())}:${pad2(signedAt.getMinutes())}`, id:meta.docId }); }
+        else { ltLabel(ctx, "PECSÉT", sx + mm(4), sy + mm(4.6), "left", 6.2); ltFont(ctx, "700", 12); ctx.fillStyle = "#c3bcae"; ctx.textAlign = "center"; ctx.fillText("P. H.", sx + stampW/2, sy + sigH/2 + mm(2.4)); ctx.fillStyle = "#000"; } }
+      /* ---- lábléc ---- */
+      const gy = LT_H - mm(4.6);
+      ctx.fillStyle = LT_Y; ctx.fillRect(X0, gy - mm(3.4), mm(12), mm(0.6)); ctx.fillStyle = LINE; ctx.fillRect(X0 + mm(12), gy - mm(3.25), FULLW - mm(12), mm(0.3));
+      ltFont(ctx, "600", 6.4); ctx.fillStyle = LT_GREY; ctx.textAlign = "left";
+      ctx.fillText(`FirstPhone Munkaasztal · generálva: ${ltFmt(new Date())} ${pad2(new Date().getHours())}:${pad2(new Date().getMinutes())}`, X0, gy);
+      ctx.textAlign = "center"; ctx.fillText(`${typeKey} · ${T.name} · ${ltFmt(day)}`, LT_W/2, gy);
+      ctx.textAlign = "right"; ctx.fillText(`${pi+1} / ${chosen.length}. oldal`, LT_W - X0, gy);
+      ctx.fillStyle = "#000";
+      out.push(cv);
+    });
+    return out;
+  }
+  function ltRowSerC(ctx, cell, x, y, w, h, fs, cc, prog, showBrand){
+    const r = cell.r, okk = !!(ltProg && ltProg.ok[r.key]), bad = prog && !okk;
+    if(bad){ ctx.fillStyle = "#fdecec"; ltRR(ctx, x, y + mm(0.2), w, h - mm(0.4), mm(1.2)); ctx.fill(); ctx.fillStyle = LT_BAD; ltRR(ctx, x, y + mm(0.2), mm(0.9), h - mm(0.4), mm(0.45)); ctx.fill(); }
+    else if(r.n % 2 === 0){ ctx.fillStyle = cc.t; ltRR(ctx, x, y + mm(0.2), w, h - mm(0.4), mm(1.2)); ctx.fill(); }
+    if(cell.first && !showBrand){}
+    const base = y + h*0.69;
+    ltFont(ctx, "600", fs*0.74); ctx.fillStyle = LT_GREY; ctx.textAlign = "right"; ctx.fillText(r.n + ".", x + mm(5.4), base);
+    const bx = x + mm(6.8), bw = mm(15.5);
+    if(showBrand){ ltFont(ctx, "900", fs*0.6); ctx.textAlign = "left"; ctx.fillStyle = cc.d; ltSpaced(ctx, ltFit(ctx, cell.brand.toUpperCase(), bw - mm(1.5)), bx, y + h*0.66, mm(0.2)); }
+    const bs = Math.min(h*0.66, mm(3.6)), sx = x + w - bs - mm(0.8), sy = y + (h - bs)/2, cx = sx + bs/2, cy = sy + bs/2;
+    ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+    if(okk){ ctx.fillStyle = LT_OK; ctx.beginPath(); ctx.arc(cx, cy, bs/2, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = mm(0.55); ctx.beginPath(); ctx.moveTo(sx + bs*0.24, sy + bs*0.53); ctx.lineTo(sx + bs*0.43, sy + bs*0.72); ctx.lineTo(sx + bs*0.78, sy + bs*0.3); ctx.stroke(); }
+    else if(bad){ ctx.fillStyle = "#fff"; ctx.strokeStyle = LT_BAD; ctx.lineWidth = mm(0.45); ctx.beginPath(); ctx.arc(cx, cy, bs/2, 0, Math.PI*2); ctx.fill(); ctx.stroke(); const d = bs*0.2; ctx.lineWidth = mm(0.42); ctx.beginPath(); ctx.moveTo(cx - d, cy - d); ctx.lineTo(cx + d, cy + d); ctx.moveTo(cx + d, cy - d); ctx.lineTo(cx - d, cy + d); ctx.stroke(); }
+    else { ctx.fillStyle = "#fff"; ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.35); ctx.beginPath(); ctx.arc(cx, cy, bs/2, 0, Math.PI*2); ctx.fill(); ctx.stroke(); }
+    ctx.restore();
+    ltFont(ctx, "700", fs*0.95, LT_MONO); ctx.fillStyle = bad ? "#a11616" : "#000"; ctx.textAlign = "right";
+    const lot = String(r.lot), lx = sx - mm(2.2); ctx.fillText(lot, lx, base);
+    const lotW = ctx.measureText(lot).width, nx = bx + bw, avail = lx - lotW - mm(2.5) - nx;
+    let tagW = 0; if(r.bundle){ ltFont(ctx, "800", fs*0.58); tagW = ctx.measureText(r.bundle.toUpperCase()).width + mm(2.4); }
+    ltFont(ctx, "700", fs); ctx.fillStyle = "#000"; ctx.textAlign = "left";
+    let name = ltFit(ctx, r.main, avail - (tagW ? tagW + mm(1.2) : 0));
+    if(name.endsWith("…") && tagW){ tagW = 0; name = ltFit(ctx, r.main, avail); }
+    ctx.fillText(name, nx, base);
+    if(tagW){ const tx = nx + ctx.measureText(name).width + mm(1.2), th = Math.min(h*0.56, mm(3));
+      ctx.fillStyle = cc.c; ltRR(ctx, tx, y + (h - th)/2, tagW, th, th/2); ctx.fill();
+      ltFont(ctx, "800", fs*0.58); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(r.bundle.toUpperCase(), tx + tagW/2, y + h/2 + th*0.24); }
+    ctx.fillStyle = "#000"; ctx.strokeStyle = "#000";
+  }
+  function ltRowQtyC(ctx, r, X, y, W, h, fs, cc){
+    const cnt = ltProg ? ltCounted(r) : null, d = cnt === null ? null : cnt - r.qty;
+    if(d !== null && d < 0){ ctx.fillStyle = "#fdecec"; ltRR(ctx, X, y + mm(0.2), W, h - mm(0.4), mm(1.2)); ctx.fill(); ctx.fillStyle = LT_BAD; ltRR(ctx, X, y + mm(0.2), mm(0.9), h - mm(0.4), mm(0.45)); ctx.fill(); }
+    else if(r.n % 2 === 0){ ctx.fillStyle = cc.t; ltRR(ctx, X, y + mm(0.2), W, h - mm(0.4), mm(1.2)); ctx.fill(); }
+    const cols = ltQtyCols(W), c = k=> cols.find(x=> x.k === k), base = y + h*0.68;
+    ltFont(ctx, "600", fs*0.76); ctx.fillStyle = LT_GREY; ctx.textAlign = "right"; ctx.fillText(r.n + ".", X + c("n").x + c("n").w - mm(1.5), base); ctx.fillStyle = "#000";
+    ltFont(ctx, "700", fs); ctx.textAlign = "left"; ctx.fillText(ltFit(ctx, r.main, c("name").w - mm(2)), X + c("name").x + mm(1), base);
+    ltFont(ctx, "600", fs*0.8, LT_MONO); ctx.fillStyle = "#4a4a4a"; ctx.fillText(ltFit(ctx, r.code, c("code").w - mm(2)), X + c("code").x + mm(1), base);
+    ltFont(ctx, "600", fs*0.8); ctx.textAlign = "center"; ctx.fillText(String(Math.max(1, r.lots.length)), X + c("lots").x + c("lots").w/2, base); ctx.fillStyle = "#000";
+    ltFont(ctx, "900", fs*1.08); ctx.textAlign = "right"; ctx.fillText(String(r.qty), X + c("qty").x + c("qty").w - mm(1.5), base);
+    const cc0 = c("cnt"), bh = h * 0.74;
+    ctx.fillStyle = "#fff"; ltRR(ctx, X + cc0.x + mm(2.5), y + (h - bh)/2, cc0.w - mm(5), bh, mm(1.2)); ctx.fill(); ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.3); ctx.stroke(); ctx.strokeStyle = "#000"; ctx.fillStyle = "#000";
+    const dc = c("diff");
+    if(cnt !== null){
+      ltFont(ctx, "900", fs*1.02); ctx.textAlign = "center"; ctx.fillText(String(cnt), X + cc0.x + cc0.w/2, base);
+      const t = d === 0 ? "0" : (d > 0 ? "+" : "−") + Math.abs(d), col = d < 0 ? LT_BAD : d > 0 ? "#ea8a00" : LT_OK, pw = dc.w - mm(8), ph = h*0.7;
+      ctx.fillStyle = col; ltRR(ctx, X + dc.x + mm(4), y + (h - ph)/2, pw, ph, ph/2); ctx.fill();
+      ltFont(ctx, "900", fs); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(d === 0 ? "0" : t, X + dc.x + dc.w/2, base); ctx.fillStyle = "#000";
+    } else { ctx.fillStyle = "#fff"; ltRR(ctx, X + dc.x + mm(2.5), y + (h - bh)/2, dc.w - mm(5), bh, mm(1.2)); ctx.fill(); ctx.strokeStyle = "#cfc8b8"; ctx.lineWidth = mm(0.25); ctx.stroke(); ctx.strokeStyle = "#000"; ctx.fillStyle = "#000"; }
+  }
   async function ltDrawPages(secs, typeKey, meta){
     try{ window.fpDocFonts && await window.fpDocFonts(); }catch(e){}
+    if(ltPdfMode === "color") return ltDrawPagesC(secs, typeKey, meta);
     const T = LT_TYPES[typeKey];
     const X0 = mm(12), FULLW = LT_W - 2*X0;
     const top0 = mm(10);
