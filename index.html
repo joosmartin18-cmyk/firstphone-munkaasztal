@@ -63737,7 +63737,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* ===== SZÍNES LELTÁRÍV v2 (más elrendezés): sötét fejléc-sáv, adat-csempék, összesítő kártyák körrel,
      „Hiányzik” doboz elöl, tömör színes szakaszcímek, állapot szerint színezett sorok ===== */
   async function ltDrawPagesC(secs, typeKey, meta){
-    const T = LT_TYPES[typeKey]; ltVS = window.__ltCStyle || "c"; const V = ltVS[0];
+    const T = LT_TYPES[typeKey]; ltVS = window.__ltCStyle || "a2"; const V = ltVS[0];
     const ltcBak = JSON.stringify(LTC);
     if(ltVS === "a2") Object.keys(LTC).forEach(k=> LTC[k] = { c:"#17140f", t:"#f5f3ee", d:"#17140f" });
     try{
