@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261124-140701";</script>
+<script>window.FP_BUILD="20261124-141338";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -26271,9 +26271,13 @@ window.fpBrkNote=function(){return window.fpBrkMin()?"Munkaközi szünet: 6 ór�
       try{ let okL = false, lastEx = null;
         for(const c of loginCands(em.value)){ try{ await firebase.auth().signInWithEmailAndPassword(c, pw.value); okL = true; break; }catch(x1){ lastEx = x1; if(!/wrong-password|invalid-credential|user-not-found|invalid-login/.test(x1 && x1.code || "")) break; } }
         if(!okL) throw lastEx || new Error("login"); lsDel(OFF_KEY); if(em.value.trim().toLowerCase() !== "admin") lsSet("firstphone_last_login", em.value.trim()); done(); }
-      catch(ex){ const c = ex && ex.code || ""; err.textContent = /wrong-password|invalid-credential|user-not-found|invalid-email|invalid-login/.test(c) ? "Hibás boltnév vagy jelszó." : /too-many/.test(c) ? "Túl sok próbálkozás — várj pár percet." : /network/.test(c) ? "Nincs internet — próbáld újra." : "Nem sikerült belépni: " + (ex.message || c);
-        void f.offsetWidth; f.classList.add("shake"); go.disabled = false; go.textContent = "Belépés →"; } };
+      catch(ex){ const c = ex && ex.code || ""; err.textContent = f._auto && /wrong-password|invalid-credential|invalid-login/.test(c) ? "Nana! Ez a bolt már saját jelszót választott — azzal lépjetek be." : /wrong-password|invalid-credential|user-not-found|invalid-email|invalid-login/.test(c) ? "Hibás boltnév vagy jelszó." : /too-many/.test(c) ? "Túl sok próbálkozás — várj pár percet." : /network/.test(c) ? "Nincs internet — próbáld újra." : "Nem sikerült belépni: " + (ex.message || c);
+        f._auto = 0; void f.offsetWidth; f.classList.add("shake"); go.disabled = false; go.textContent = "Belépés →"; } };
     b.querySelector("#fcOff").onclick = ()=>{ lsSet(OFF_KEY, "1"); b.classList.add("out"); done(); setTimeout(()=> b.remove(), 260); S.state = "offl"; status(); };
+    /* /belepes oldalról érkezve: a bolt neve és az egyszer használatos jelszó magától beíródik, és belép (utána jön a saját jelszó) */
+    try{ const al = JSON.parse(sessionStorage.getItem("fp_autologin") || "null"); sessionStorage.removeItem("fp_autologin");
+      if(al && al.e && al.p && Date.now() - (+al.t || 0) < 5 * 60000){ em.value = al.e; em.dispatchEvent(new Event("input")); pw.value = al.p; f._auto = 1;
+        setTimeout(()=>{ if(!b.isConnected) return; if(f.requestSubmit) f.requestSubmit(); else go.click(); }, 900); } }catch(_){}
   }
   /* boltok, amelyek nem használják a Munkaasztalt: az admin listákban nem látszanak (boltkód) */
   window.FP_HIDE_SHOPS = [];   /* Vásárosnamény 2026-11-23-tól újra látszik (Martin) */
