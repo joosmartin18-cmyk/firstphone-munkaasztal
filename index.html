@@ -63661,13 +63661,13 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const cells = [];
       if(sec.mode === "serial") sec.groups.forEach(g=> g.rows.forEach((r, k)=> cells.push({ t:"row", r, brand:g.brand, first:k === 0, gcount:g.rows.length })));
       else sec.rows.forEach(r=> cells.push({ t:"qrow", r }));
-      const cols = sec.mode === "serial" && sec.lines > 14 ? 2 : 1;
+      const cols = P.one ? 1 : sec.mode === "serial" && sec.lines > 14 ? 2 : 1;
       let i = 0, cont = false;
       while(i < cells.length){
-        const need = P.secH + P.gap + (sec.mode === "qty" ? P.thH : 0) + P.rh*2;
+        const need = P.secH + P.gap + (sec.mode === "qty" || P.thAll ? P.thH : 0) + P.rh*2;
         if(y + need > P.bottom){ newPage(); }
         page.ops.push({ t:"sec", sec, y, cont }); y += P.secH + P.gap;
-        if(sec.mode === "qty"){ page.ops.push({ t:"th", y }); y += P.thH; }
+        if(sec.mode === "qty" || P.thAll){ page.ops.push({ t:"th", y, sec }); y += P.thH; }
         const cap = Math.max(1, Math.floor((P.bottom - y) / P.rh));
         const rem = cells.length - i;
         const per = Math.min(cap, Math.ceil(rem / cols));
@@ -63737,7 +63737,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* ===== SZÍNES LELTÁRÍV v2 (más elrendezés): sötét fejléc-sáv, adat-csempék, összesítő kártyák körrel,
      „Hiányzik” doboz elöl, tömör színes szakaszcímek, állapot szerint színezett sorok ===== */
   async function ltDrawPagesC(secs, typeKey, meta){
-    const T = LT_TYPES[typeKey];
+    const T = LT_TYPES[typeKey], V = window.__ltCStyle || "c";
     const X0 = mm(12), FULLW = LT_W - 2*X0, top0 = mm(10);
     const prog = !!(ltProg && ltAnyProgress());
     const day = meta.exportDate || ltToday();
@@ -63748,15 +63748,15 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     if(prog) secs.forEach(sec=>{ if(sec.mode !== "serial") return; const st = ltStats(sec); if(!st.done) return; st.missing.forEach(r=> miss.push({ r, cat:sec.cat })); });
     const extra = prog ? ltProg.extra : [];
     const MC = 3, mLines = Math.min(Math.ceil(miss.length / MC), 5);
-    const missH = (miss.length || extra.length) ? mm(9) + Math.max(mLines, miss.length ? 1 : 0) * mm(4.5) + (extra.length ? mm(4.8) : 0) + mm(1.5) : 0;
-    const headH = mm(22), infoH = mm(11.5), cardH = mm(23);
+    const missH = V === "c" && (miss.length || extra.length) ? mm(9) + Math.max(mLines, miss.length ? 1 : 0) * mm(4.5) + (extra.length ? mm(4.8) : 0) + mm(1.5) : 0;
+    const headH = V === "c" ? mm(22) : mm(20), infoH = mm(11.5), cardH = V === "c" ? mm(23) : mm(9);
     const infoY = top0 + headH + mm(3), cardY = infoY + infoH + mm(3), missY = cardY + cardH + mm(3.5);
     const firstTop = missY + (missH ? missH + mm(4.5) : mm(1));
     const contTop = top0 + mm(15);
     const sigH = mm(23), footH = sigH, bottom = LT_H - mm(9) - footH - mm(2);
     let chosen = null, P = null;
     for(const rhmm of [6.2, 5.8, 5.4, 5.0, 4.7, 4.45, 4.25, 4.05, 3.9, 3.75, 3.6, 3.48, 3.36]){
-      const p = { rh:mm(rhmm), rhmm, secH:mm(Math.min(8.5, rhmm*1.55)), thH:mm(Math.min(5.6, rhmm*1.1)), gap:mm(1.4), secGap:mm(4.5), firstTop, contTop, bottom };
+      const p = { rh:mm(rhmm), rhmm, secH:mm(Math.min(8.5, rhmm*1.55)), thH:mm(Math.min(5.6, rhmm*1.1)), gap:mm(V === "a" ? 0.6 : 1.4), secGap:mm(4.5), firstTop, contTop, bottom, one:V === "b", thAll:V === "b" };
       const pages = ltLayout(secs, p); chosen = pages; P = p;
       if(pages.length === 1) break;
     }
@@ -63771,6 +63771,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const ctx = cv.getContext("2d"); ctx0 = ctx;
       ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, LT_W, LT_H); ctx.fillStyle = "#000"; ctx.textBaseline = "alphabetic";
       if(pi === 0){
+        if(V !== "c"){ ltHeadAB(ctx, V, X0, top0, FULLW, headH, typeKey, T, day, logo, fill); } else {
         /* ---- fejléc-sáv ---- */
         fill(DARK, X0, top0, FULLW, headH, mm(3.2));
         ctx.save(); ltRR(ctx, X0, top0, FULLW, headH, mm(3.2)); ctx.clip();
@@ -63784,6 +63785,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         ltFont(ctx, "700", 9); ctx.fillStyle = "#f0c766"; ctx.fillText(`${T.name}  ·  ${T.cats.join(" + ")}  ·  ${ltFmt(day)} ${ltWd(day).toLowerCase()}`, bx + bs + mm(4.6), by + mm(12));
         if(logo){ const lh = mm(9), lw = lh * logo.width / logo.height, pw = lw + mm(7), ph = lh + mm(4.4), px = X0 + FULLW - pw - mm(4.5), py = top0 + (headH - mm(1.3) - ph)/2;
           fill("#fff", px, py, pw, ph, mm(2.2)); ctx.drawImage(logo, px + mm(3.5), py + mm(2.2), lw, lh); }
+        }
         ctx.fillStyle = "#000";
         /* ---- adat-csempék ---- */
         const cells = [
@@ -63793,13 +63795,15 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           { l:"LELTÁROZTA", v:meta.by || "", w:.23 }
         ];
         { const g = mm(2.5), W = FULLW - g * (cells.length - 1); let cx = X0;
-          cells.forEach(c=>{ const cw = W * c.w;
-            fill(SOFT, cx, infoY, cw, infoH, mm(2.2));
+          cells.forEach((c, k)=>{ const cw = W * c.w;
+            if(V === "a"){ if(k){ ctx.fillStyle = LINE; ctx.fillRect(cx - g/2, infoY + mm(1.5), mm(0.25), infoH - mm(3)); } }
+            else fill(SOFT, cx, infoY, cw, infoH, mm(2.2));
             ltLabel(ctx, c.l, cx + mm(3), infoY + mm(4.3), "left", 5.8);
             ltFont(ctx, "800", 9); ctx.textAlign = "left";
             if(c.v) ctx.fillText(ltFit(ctx, c.v, cw - mm(5.5)), cx + mm(3), infoY + mm(9)); else ltDots(ctx, cx + mm(3), infoY + mm(9.2), cw - mm(6));
             cx += cw + g; }); }
-        /* ---- összesítő kártyák ---- */
+        if(V !== "c") ltSumStrip(ctx, V, secs, X0, cardY, FULLW, cardH, prog, tot, fill);
+        else /* ---- összesítő kártyák ---- */
         { const g = mm(3.5), cw = (FULLW - g * (secs.length - 1)) / secs.length;
           secs.forEach((sec, k)=>{
             const cc = LTC[(LT_CAT[sec.cat] || {}).cls] || LTC.oth, x = X0 + k * (cw + g), n = tot(sec);
@@ -63854,6 +63858,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
             ctx.fillText(ltFit(ctx, `Listán kívül (beolvasva, de nincs az exportban): ${extra.slice(0, 10).join(", ")}${extra.length > 10 ? " …" : ""}`, FULLW - mm(8)), X0 + mm(4), y); }
           ctx.fillStyle = "#000";
         }
+      } else if(V !== "c"){
+        ctx.fillStyle = V === "b" ? LT_Y : "#000"; ctx.fillRect(X0, top0 + mm(9.2), FULLW, mm(V === "b" ? 1.2 : 0.4));
+        ltFont(ctx, "900", 11); ctx.fillStyle = "#000"; ctx.textAlign = "left"; ctx.fillText("Leltárív", X0, top0 + mm(6.6));
+        ltFont(ctx, "700", 8.4); ctx.fillStyle = LT_GREY; ctx.textAlign = "right"; ctx.fillText(`${typeKey} · ${T.name} · ${ltFmt(day)} · folytatás`, LT_W - X0, top0 + mm(6.4)); ctx.fillStyle = "#000";
       } else {
         fill(DARK, X0, top0, FULLW, mm(10), mm(2.4));
         ctx.fillStyle = LT_Y; ctx.save(); ltRR(ctx, X0, top0, FULLW, mm(10), mm(2.4)); ctx.clip(); ctx.fillRect(X0, top0 + mm(9.1), FULLW, mm(0.9)); ctx.restore();
@@ -63864,6 +63872,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       let lastSec = null;
       pg.ops.forEach(op=>{
         const sec = op.sec || lastSec; lastSec = sec; const cc = LTC[(LT_CAT[sec.cat] || {}).cls] || LTC.oth;
+        if(op.t === "sec" && V === "a"){ ltSecA(ctx, op, sec, cc, X0, FULLW, P, prog, tot); return; }
         if(op.t === "sec"){
           const h = P.secH, bh = h * 0.9, by = op.y + (h - bh)/2 - mm(0.3), cy = by + bh/2;
           fill(cc.c, X0, by, FULLW, bh, mm(2));
@@ -63881,8 +63890,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           ctx.fillStyle = "#000";
         }
         if(op.t === "th"){
-          const y = op.y, h = P.thH, cols = ltQtyCols(FULLW);
-          fill(cc.t, X0, y + mm(0.2), FULLW, h - mm(0.6), mm(1.2));
+          const y = op.y, h = P.thH, cols = sec.mode === "serial" ? ltSerCols(FULLW) : ltQtyCols(FULLW);
+          if(V === "a"){ ctx.fillStyle = cc.c; ctx.fillRect(X0, y + h - mm(0.5), FULLW, mm(0.35)); } else fill(cc.t, X0, y + mm(0.2), FULLW, h - mm(0.6), mm(1.2));
           cols.forEach(c=>{ const x = c.align === "right" ? X0 + c.x + c.w - mm(1.5) : c.align === "center" ? X0 + c.x + c.w/2 : X0 + c.x + mm(1);
             ltFont(ctx, "800", Math.min(6.2, P.rhmm*1.28)); ctx.fillStyle = cc.d; ltSpaced(ctx, c.t, x, y + h*0.64, mm(0.3), c.align); });
           ctx.fillStyle = "#000";
@@ -63893,8 +63902,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
             const x = X0 + c * (cw + gapC);
             arr.forEach((cell, k)=>{
               const y = op.y + k * op.rh;
-              if(cell.t === "row") ltRowSerC(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0);
-              else ltRowQtyC(ctx, cell.r, X0, y, FULLW, op.rh, fs, cc);
+              if(cell.t === "row"){ if(V === "b") ltRowSerT(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0); else ltRowSerC(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0, V === "a"); }
+              else ltRowQtyC(ctx, cell.r, X0, y, FULLW, op.rh, fs, cc, V === "a");
             });
             if(arr.length){ ctx.fillStyle = LINE; ctx.fillRect(op.cols > 1 ? x : X0, op.y + arr.length * op.rh + mm(0.3), op.cols > 1 ? cw : FULLW, mm(0.25)); ctx.fillStyle = "#000"; }
           });
@@ -63902,7 +63911,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       });
       /* ---- aláírás + pecsét: két kártya ---- */
       const sy = LT_H - mm(9) - footH, stampW = mm(52), sigW = FULLW - stampW - mm(3.5);
-      fill(SOFT, X0, sy, sigW, sigH, mm(3)); fill(SOFT, X0 + sigW + mm(3.5), sy, stampW, sigH, mm(3));
+      if(V === "a"){ ctx.strokeStyle = "#cfc8b8"; ctx.lineWidth = mm(0.3); ltRR(ctx, X0, sy, sigW, sigH, mm(2.4)); ctx.stroke(); ltRR(ctx, X0 + sigW + mm(3.5), sy, stampW, sigH, mm(2.4)); ctx.stroke(); ctx.strokeStyle = "#000"; }
+      else { fill(SOFT, X0, sy, sigW, sigH, mm(3)); fill(SOFT, X0 + sigW + mm(3.5), sy, stampW, sigH, mm(3)); }
       const signedAt = meta.signedAt || new Date(), nowS = `${ltFmt(signedAt)} ${pad2(signedAt.getHours())}:${pad2(signedAt.getMinutes())}`;
       { const x = X0 + mm(4), v = meta.by || "", lineW = sigW - mm(8);
         ltLabel(ctx, "LELTÁROZTA", x, sy + mm(4.6), "left", 6.2);
@@ -63926,9 +63936,73 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     });
     return out;
   }
-  function ltRowSerC(ctx, cell, x, y, w, h, fs, cc, prog, showBrand){
+  /* --- A (letisztult) és B (táblázatos) minta segédjei --- */
+  function ltHeadAB(ctx, V, X0, top0, FULLW, headH, typeKey, T, day, logo, fill){
+    if(V === "b"){ fill(LT_Y, X0, top0, FULLW, headH, mm(3)); }
+    const bs = mm(12), bx = X0 + (V === "b" ? mm(4.5) : 0), by = top0 + (headH - bs)/2;
+    fill(V === "b" ? "#17140f" : LT_Y, bx, by, bs, bs, mm(2.4));
+    ltFont(ctx, "900", 20); ctx.fillStyle = V === "b" ? LT_Y : "#17140f"; ctx.textAlign = "center"; ctx.fillText(typeKey, bx + bs/2, by + bs*0.74);
+    ltFont(ctx, "900", 24); ctx.fillStyle = "#111"; ctx.textAlign = "left"; ctx.fillText("Leltárív", bx + bs + mm(4), by + mm(6.6));
+    ltFont(ctx, "700", 8.6); ctx.fillStyle = V === "b" ? "#3d2c00" : LT_GREY; ctx.fillText(`${T.name}  ·  ${T.cats.join(" + ")}  ·  ${ltFmt(day)} ${ltWd(day).toLowerCase()}`, bx + bs + mm(4.1), by + mm(11.3));
+    if(logo){ const lh = mm(V === "b" ? 8.6 : 10.5), lw = lh * logo.width / logo.height;
+      if(V === "b"){ const pw = lw + mm(6), ph = lh + mm(4), px = X0 + FULLW - pw - mm(4), py = top0 + (headH - ph)/2; fill("#fff", px, py, pw, ph, mm(2)); ctx.drawImage(logo, px + mm(3), py + mm(2), lw, lh); }
+      else ctx.drawImage(logo, X0 + FULLW - lw, top0 + (headH - lh)/2, lw, lh); }
+    if(V === "a"){ ctx.fillStyle = LT_Y; ctx.fillRect(X0, top0 + headH + mm(0.6), mm(30), mm(1.1)); ctx.fillStyle = "#e6e1d6"; ctx.fillRect(X0 + mm(30), top0 + headH + mm(0.85), FULLW - mm(30), mm(0.35)); }
+    ctx.fillStyle = "#000";
+  }
+  function ltSumStrip(ctx, V, secs, X0, y, FULLW, h, prog, tot, fill){
+    const g = mm(3), w = (FULLW - g * (secs.length - 1)) / secs.length;
+    secs.forEach((sec, k)=>{
+      const cc = LTC[(LT_CAT[sec.cat] || {}).cls] || LTC.oth, x = X0 + k * (w + g), n = tot(sec), st = prog ? ltStats(sec) : null, has = !!(st && st.done);
+      let txt, ok = null;
+      if(sec.mode === "serial"){ txt = has ? (st.done === n ? `${n} / ${n} · minden megvan` : `${st.done} / ${n} megvan · hiányzik ${n - st.done}`) : `___ / ${n} megvan`; if(has) ok = st.done === n; }
+      else { txt = has ? (st.diff === 0 && !st.neg ? "nincs eltérés" : `${st.diff > 0 ? "+" : st.diff < 0 ? "−" : ""}${Math.abs(st.diff)} db eltérés`) : `${n} termék · eltérés: ____`; if(has) ok = st.diff === 0 && !st.neg; }
+      if(V === "b") fill(cc.t, x, y, w, h, h/2); else { ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.3); ltRR(ctx, x, y, w, h, h/2); ctx.stroke(); ctx.strokeStyle = "#000"; }
+      const r = h * 0.3; ctx.fillStyle = cc.c; ctx.beginPath(); ctx.arc(x + h/2, y + h/2, r, 0, Math.PI*2); ctx.fill();
+      ltFont(ctx, "900", 7); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(LT_CAT[sec.cat].letter, x + h/2, y + h/2 + r*0.42);
+      ltFont(ctx, "900", 7); ctx.fillStyle = cc.d; ctx.textAlign = "left"; const lb = LT_CAT[sec.cat].plural.toUpperCase(); ltSpaced(ctx, lb, x + h + mm(0.5), y + h*0.64, mm(0.35), "left");
+      const lw = ctx.measureText(lb).width + lb.length * mm(0.35);
+      ltFont(ctx, "800", 9); ctx.fillStyle = ok === null ? "#222" : ok ? LT_OK : LT_BAD; ctx.textAlign = "right"; ctx.fillText(ltFit(ctx, txt, w - h - lw - mm(6)), x + w - mm(4), y + h*0.66);
+      ctx.fillStyle = "#000";
+    });
+  }
+  function ltSecA(ctx, op, sec, cc, X0, FULLW, P, prog, tot){
+    const h = P.secH, cy = op.y + h/2 - mm(0.3), r = h * 0.3;
+    ctx.fillStyle = cc.c; ctx.beginPath(); ctx.arc(X0 + r, cy, r, 0, Math.PI*2); ctx.fill();
+    ltFont(ctx, "900", Math.min(7.6, P.rhmm * 1.5)); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(LT_CAT[sec.cat].letter, X0 + r, cy + r*0.42);
+    const title = LT_CAT[sec.cat].plural.toUpperCase() + (op.cont ? " · FOLYTATÁS" : ""), sp = mm(0.4);
+    ltFont(ctx, "900", Math.min(10.5, P.rhmm * 2)); ctx.fillStyle = cc.d; ltSpaced(ctx, title, X0 + 2*r + mm(2.4), cy + mm(1.3), sp, "left");
+    const tw = ctx.measureText(title).width + title.length * sp, n = tot(sec), st = prog ? ltStats(sec) : null;
+    ltFont(ctx, "700", Math.min(7.6, P.rhmm * 1.55)); ctx.fillStyle = LT_GREY; ctx.textAlign = "left";
+    ctx.fillText(sec.mode === "serial" ? (st && st.done ? `${st.done} / ${n} megvan` : `${n} db`) : `${n} termék`, X0 + 2*r + mm(5) + tw, cy + mm(1.2));
+    ltFont(ctx, "600", Math.min(7, P.rhmm * 1.45)); ctx.textAlign = "right";
+    ctx.fillText(sec.mode === "serial" ? "pipáld ki, ami megvan" : "a SZÁMOLT mezőbe írd a darabszámot", LT_W - X0, cy + mm(1.2));
+    ctx.fillStyle = cc.c; ctx.fillRect(X0, op.y + h - mm(0.4), FULLW, mm(0.45)); ctx.fillStyle = "#000";
+  }
+  function ltSerCols(W){
+    const f = [{ k:"n", t:"#", w:mm(9), align:"right" }, { k:"brand", t:"MÁRKA", w:mm(24), align:"left" }, { k:"name", t:"TÍPUS", w:0, align:"left" }, { k:"lot", t:"IMEI / SOROZATSZÁM", w:mm(50), align:"left" }, { k:"st", t:"ÁLLAPOT", w:mm(30), align:"center" }];
+    const rest = W - f.reduce((s, c)=> s + c.w, 0); let x = 0; f.forEach(c=>{ if(!c.w) c.w = rest; c.x = x; x += c.w; }); return f;
+  }
+  function ltRowSerT(ctx, cell, X, y, W, h, fs, cc, prog, showBrand){
+    const r = cell.r, okk = !!(ltProg && ltProg.ok[r.key]), bad = prog && !okk, cols = ltSerCols(W), c = k=> cols.find(x=> x.k === k), base = y + h*0.68;
+    if(bad){ ctx.fillStyle = "#fdecec"; ctx.fillRect(X, y, W, h); }
+    else if(r.n % 2 === 0){ ctx.fillStyle = cc.t; ctx.fillRect(X, y, W, h); }
+    ctx.fillStyle = "#e6e1d6"; ctx.fillRect(X, y + h - mm(0.12), W, mm(0.2));
+    cols.slice(1).forEach(cl=>{ ctx.fillRect(X + cl.x, y, mm(0.2), h); });
+    ltFont(ctx, "600", fs*0.76); ctx.fillStyle = LT_GREY; ctx.textAlign = "right"; ctx.fillText(r.n + ".", X + c("n").x + c("n").w - mm(1.8), base);
+    if(showBrand){ ltFont(ctx, "900", fs*0.66); ctx.fillStyle = cc.d; ctx.textAlign = "left"; ltSpaced(ctx, ltFit(ctx, cell.brand.toUpperCase(), c("brand").w - mm(3)), X + c("brand").x + mm(2), base, mm(0.2), "left"); }
+    ltFont(ctx, "700", fs); ctx.fillStyle = "#000"; ctx.textAlign = "left";
+    ctx.fillText(ltFit(ctx, r.main + (r.bundle ? " · " + r.bundle : ""), c("name").w - mm(4)), X + c("name").x + mm(2), base);
+    ltFont(ctx, "700", fs*0.95, LT_MONO); ctx.fillStyle = bad ? "#a11616" : "#000"; ctx.fillText(String(r.lot), X + c("lot").x + mm(2), base);
+    const sc = c("st"), ph = h*0.68, pw = sc.w - mm(6), px = X + sc.x + mm(3), py = y + (h - ph)/2;
+    if(okk || bad){ ctx.fillStyle = okk ? LT_OK : LT_BAD; ltRR(ctx, px, py, pw, ph, ph/2); ctx.fill(); ltFont(ctx, "900", fs*0.72); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ltSpaced(ctx, okk ? "MEGVAN" : "HIÁNYZIK", px + pw/2, y + h*0.66, mm(0.25), "center"); }
+    else { const bs = Math.min(h*0.6, mm(3.4)); ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.35); ltRR(ctx, px + pw/2 - bs/2, y + (h - bs)/2, bs, bs, mm(0.7)); ctx.stroke(); ctx.strokeStyle = "#000"; }
+    ctx.fillStyle = "#000";
+  }
+  function ltRowSerC(ctx, cell, x, y, w, h, fs, cc, prog, showBrand, lite){
     const r = cell.r, okk = !!(ltProg && ltProg.ok[r.key]), bad = prog && !okk;
-    if(bad){ ctx.fillStyle = "#fdecec"; ltRR(ctx, x, y + mm(0.2), w, h - mm(0.4), mm(1.2)); ctx.fill(); ctx.fillStyle = LT_BAD; ltRR(ctx, x, y + mm(0.2), mm(0.9), h - mm(0.4), mm(0.45)); ctx.fill(); }
+    if(lite){ ctx.fillStyle = "#e6e1d6"; ctx.fillRect(x, y + h - mm(0.15), w, mm(0.2)); }
+    else if(bad){ ctx.fillStyle = "#fdecec"; ltRR(ctx, x, y + mm(0.2), w, h - mm(0.4), mm(1.2)); ctx.fill(); ctx.fillStyle = LT_BAD; ltRR(ctx, x, y + mm(0.2), mm(0.9), h - mm(0.4), mm(0.45)); ctx.fill(); }
     else if(r.n % 2 === 0){ ctx.fillStyle = cc.t; ltRR(ctx, x, y + mm(0.2), w, h - mm(0.4), mm(1.2)); ctx.fill(); }
     if(cell.first && !showBrand){}
     const base = y + h*0.69;
@@ -63954,9 +64028,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       ltFont(ctx, "800", fs*0.58); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(r.bundle.toUpperCase(), tx + tagW/2, y + h/2 + th*0.24); }
     ctx.fillStyle = "#000"; ctx.strokeStyle = "#000";
   }
-  function ltRowQtyC(ctx, r, X, y, W, h, fs, cc){
+  function ltRowQtyC(ctx, r, X, y, W, h, fs, cc, lite){
     const cnt = ltProg ? ltCounted(r) : null, d = cnt === null ? null : cnt - r.qty;
-    if(d !== null && d < 0){ ctx.fillStyle = "#fdecec"; ltRR(ctx, X, y + mm(0.2), W, h - mm(0.4), mm(1.2)); ctx.fill(); ctx.fillStyle = LT_BAD; ltRR(ctx, X, y + mm(0.2), mm(0.9), h - mm(0.4), mm(0.45)); ctx.fill(); }
+    if(lite){ ctx.fillStyle = "#e6e1d6"; ctx.fillRect(X, y + h - mm(0.15), W, mm(0.2)); }
+    else if(d !== null && d < 0){ ctx.fillStyle = "#fdecec"; ltRR(ctx, X, y + mm(0.2), W, h - mm(0.4), mm(1.2)); ctx.fill(); ctx.fillStyle = LT_BAD; ltRR(ctx, X, y + mm(0.2), mm(0.9), h - mm(0.4), mm(0.45)); ctx.fill(); }
     else if(r.n % 2 === 0){ ctx.fillStyle = cc.t; ltRR(ctx, X, y + mm(0.2), W, h - mm(0.4), mm(1.2)); ctx.fill(); }
     const cols = ltQtyCols(W), c = k=> cols.find(x=> x.k === k), base = y + h*0.68;
     ltFont(ctx, "600", fs*0.76); ctx.fillStyle = LT_GREY; ctx.textAlign = "right"; ctx.fillText(r.n + ".", X + c("n").x + c("n").w - mm(1.5), base); ctx.fillStyle = "#000";
