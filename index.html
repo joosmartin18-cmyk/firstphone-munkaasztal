@@ -63737,7 +63737,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   /* ===== SZÍNES LELTÁRÍV v2 (más elrendezés): sötét fejléc-sáv, adat-csempék, összesítő kártyák körrel,
      „Hiányzik” doboz elöl, tömör színes szakaszcímek, állapot szerint színezett sorok ===== */
   async function ltDrawPagesC(secs, typeKey, meta){
-    const T = LT_TYPES[typeKey], V = window.__ltCStyle || "c";
+    const T = LT_TYPES[typeKey]; ltVS = window.__ltCStyle || "c"; const V = ltVS[0];
+    const ltcBak = JSON.stringify(LTC);
+    if(ltVS === "a2") Object.keys(LTC).forEach(k=> LTC[k] = { c:"#17140f", t:"#f5f3ee", d:"#17140f" });
+    try{
     const X0 = mm(12), FULLW = LT_W - 2*X0, top0 = mm(10);
     const prog = !!(ltProg && ltAnyProgress());
     const day = meta.exportDate || ltToday();
@@ -63749,14 +63752,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     const extra = prog ? ltProg.extra : [];
     const MC = 3, mLines = Math.min(Math.ceil(miss.length / MC), 5);
     const missH = V === "c" && (miss.length || extra.length) ? mm(9) + Math.max(mLines, miss.length ? 1 : 0) * mm(4.5) + (extra.length ? mm(4.8) : 0) + mm(1.5) : 0;
-    const headH = V === "c" ? mm(22) : mm(20), infoH = mm(11.5), cardH = V === "c" ? mm(23) : mm(9);
+    const headH = V === "c" ? mm(22) : mm(20), infoH = mm(11.5), cardH = V === "c" ? mm(23) : ltVS === "a3" ? mm(13) : mm(9);
     const infoY = top0 + headH + mm(3), cardY = infoY + infoH + mm(3), missY = cardY + cardH + mm(3.5);
     const firstTop = missY + (missH ? missH + mm(4.5) : mm(1));
     const contTop = top0 + mm(15);
     const sigH = mm(23), footH = sigH, bottom = LT_H - mm(9) - footH - mm(2);
     let chosen = null, P = null;
     for(const rhmm of [6.2, 5.8, 5.4, 5.0, 4.7, 4.45, 4.25, 4.05, 3.9, 3.75, 3.6, 3.48, 3.36]){
-      const p = { rh:mm(rhmm), rhmm, secH:mm(Math.min(8.5, rhmm*1.55)), thH:mm(Math.min(5.6, rhmm*1.1)), gap:mm(V === "a" ? 0.6 : 1.4), secGap:mm(4.5), firstTop, contTop, bottom, one:V === "b", thAll:V === "b" };
+      const p = { rh:mm(rhmm), rhmm, secH:mm(Math.min(8.5, rhmm*1.55)), thH:mm(Math.min(5.6, rhmm*1.1)), gap:mm(V === "a" ? 0.6 : 1.4), secGap:mm(4.5), firstTop, contTop, bottom, one:V === "b" || ltVS === "a4", thAll:V === "b" || ltVS === "a4" };
       const pages = ltLayout(secs, p); chosen = pages; P = p;
       if(pages.length === 1) break;
     }
@@ -63902,7 +63905,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
             const x = X0 + c * (cw + gapC);
             arr.forEach((cell, k)=>{
               const y = op.y + k * op.rh;
-              if(cell.t === "row"){ if(V === "b") ltRowSerT(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0); else ltRowSerC(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0, V === "a"); }
+              if(cell.t === "row"){ if(V === "b" || ltVS === "a4") ltRowSerT(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0, ltVS === "a4"); else ltRowSerC(ctx, cell, x, y, cw, op.rh, fs, cc, prog, cell.first || k === 0, V === "a"); }
               else ltRowQtyC(ctx, cell.r, X0, y, FULLW, op.rh, fs, cc, V === "a");
             });
             if(arr.length){ ctx.fillStyle = LINE; ctx.fillRect(op.cols > 1 ? x : X0, op.y + arr.length * op.rh + mm(0.3), op.cols > 1 ? cw : FULLW, mm(0.25)); ctx.fillStyle = "#000"; }
@@ -63935,7 +63938,9 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       out.push(cv);
     });
     return out;
+    } finally { const b = JSON.parse(ltcBak); Object.keys(b).forEach(k=> LTC[k] = b[k]); }
   }
+  let ltVS = "c";
   /* --- A (letisztult) és B (táblázatos) minta segédjei --- */
   function ltHeadAB(ctx, V, X0, top0, FULLW, headH, typeKey, T, day, logo, fill){
     if(V === "b"){ fill(LT_Y, X0, top0, FULLW, headH, mm(3)); }
@@ -63957,8 +63962,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       let txt, ok = null;
       if(sec.mode === "serial"){ txt = has ? (st.done === n ? `${n} / ${n} · minden megvan` : `${st.done} / ${n} megvan · hiányzik ${n - st.done}`) : `___ / ${n} megvan`; if(has) ok = st.done === n; }
       else { txt = has ? (st.diff === 0 && !st.neg ? "nincs eltérés" : `${st.diff > 0 ? "+" : st.diff < 0 ? "−" : ""}${Math.abs(st.diff)} db eltérés`) : `${n} termék · eltérés: ____`; if(has) ok = st.diff === 0 && !st.neg; }
-      if(V === "b") fill(cc.t, x, y, w, h, h/2); else { ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.3); ltRR(ctx, x, y, w, h, h/2); ctx.stroke(); ctx.strokeStyle = "#000"; }
-      const r = h * 0.3; ctx.fillStyle = cc.c; ctx.beginPath(); ctx.arc(x + h/2, y + h/2, r, 0, Math.PI*2); ctx.fill();
+      if(V === "b") fill(cc.t, x, y, w, h, h/2); else if(ltVS === "a3"){} else { ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.3); ltRR(ctx, x, y, w, h, h/2); ctx.stroke(); ctx.strokeStyle = "#000"; }
+      if(ltVS === "a3"){
+      ctx.fillStyle = cc.c; ltRR(ctx, x, y, mm(1.3), h, mm(0.65)); ctx.fill();
+      ltFont(ctx, "900", 7); ctx.fillStyle = cc.d; ctx.textAlign = "left"; ltSpaced(ctx, LT_CAT[sec.cat].plural.toUpperCase(), x + mm(4), y + mm(4.2), mm(0.35), "left");
+      ltFont(ctx, "900", 15); ctx.fillStyle = ok === null ? "#222" : ok ? LT_OK : LT_BAD; ctx.fillText(ltFit(ctx, txt, w - mm(6)), x + mm(4), y + mm(11.3)); ctx.fillStyle = "#000"; return; }
+    const r = h * 0.3; ctx.fillStyle = cc.c; ctx.beginPath(); ctx.arc(x + h/2, y + h/2, r, 0, Math.PI*2); ctx.fill();
       ltFont(ctx, "900", 7); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(LT_CAT[sec.cat].letter, x + h/2, y + h/2 + r*0.42);
       ltFont(ctx, "900", 7); ctx.fillStyle = cc.d; ctx.textAlign = "left"; const lb = LT_CAT[sec.cat].plural.toUpperCase(); ltSpaced(ctx, lb, x + h + mm(0.5), y + h*0.64, mm(0.35), "left");
       const lw = ctx.measureText(lb).width + lb.length * mm(0.35);
@@ -63968,6 +63977,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   }
   function ltSecA(ctx, op, sec, cc, X0, FULLW, P, prog, tot){
     const h = P.secH, cy = op.y + h/2 - mm(0.3), r = h * 0.3;
+    if(ltVS === "a3"){ ctx.fillStyle = cc.t; ltRR(ctx, X0 - mm(1.5), op.y + mm(0.2), FULLW + mm(3), h - mm(0.8), (h - mm(0.8))/2); ctx.fill(); }
     ctx.fillStyle = cc.c; ctx.beginPath(); ctx.arc(X0 + r, cy, r, 0, Math.PI*2); ctx.fill();
     ltFont(ctx, "900", Math.min(7.6, P.rhmm * 1.5)); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(LT_CAT[sec.cat].letter, X0 + r, cy + r*0.42);
     const title = LT_CAT[sec.cat].plural.toUpperCase() + (op.cont ? " · FOLYTATÁS" : ""), sp = mm(0.4);
@@ -63977,25 +63987,35 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     ctx.fillText(sec.mode === "serial" ? (st && st.done ? `${st.done} / ${n} megvan` : `${n} db`) : `${n} termék`, X0 + 2*r + mm(5) + tw, cy + mm(1.2));
     ltFont(ctx, "600", Math.min(7, P.rhmm * 1.45)); ctx.textAlign = "right";
     ctx.fillText(sec.mode === "serial" ? "pipáld ki, ami megvan" : "a SZÁMOLT mezőbe írd a darabszámot", LT_W - X0, cy + mm(1.2));
-    ctx.fillStyle = cc.c; ctx.fillRect(X0, op.y + h - mm(0.4), FULLW, mm(0.45)); ctx.fillStyle = "#000";
+    if(ltVS === "a2"){ ctx.fillStyle = LT_Y; ctx.fillRect(X0, op.y + h - mm(0.6), mm(24), mm(0.9)); ctx.fillStyle = "#17140f"; ctx.fillRect(X0 + mm(24), op.y + h - mm(0.4), FULLW - mm(24), mm(0.3)); }
+    else if(ltVS !== "a3"){ ctx.fillStyle = cc.c; ctx.fillRect(X0, op.y + h - mm(0.4), FULLW, mm(0.45)); }
+    ctx.fillStyle = "#000";
   }
   function ltSerCols(W){
     const f = [{ k:"n", t:"#", w:mm(9), align:"right" }, { k:"brand", t:"MÁRKA", w:mm(24), align:"left" }, { k:"name", t:"TÍPUS", w:0, align:"left" }, { k:"lot", t:"IMEI / SOROZATSZÁM", w:mm(50), align:"left" }, { k:"st", t:"ÁLLAPOT", w:mm(30), align:"center" }];
     const rest = W - f.reduce((s, c)=> s + c.w, 0); let x = 0; f.forEach(c=>{ if(!c.w) c.w = rest; c.x = x; x += c.w; }); return f;
   }
-  function ltRowSerT(ctx, cell, X, y, W, h, fs, cc, prog, showBrand){
+  function ltRowSerT(ctx, cell, X, y, W, h, fs, cc, prog, showBrand, lite){
     const r = cell.r, okk = !!(ltProg && ltProg.ok[r.key]), bad = prog && !okk, cols = ltSerCols(W), c = k=> cols.find(x=> x.k === k), base = y + h*0.68;
-    if(bad){ ctx.fillStyle = "#fdecec"; ctx.fillRect(X, y, W, h); }
+    if(lite){ ctx.fillStyle = "#e6e1d6"; ctx.fillRect(X, y + h - mm(0.12), W, mm(0.2)); }
+    else if(bad){ ctx.fillStyle = "#fdecec"; ctx.fillRect(X, y, W, h); }
     else if(r.n % 2 === 0){ ctx.fillStyle = cc.t; ctx.fillRect(X, y, W, h); }
-    ctx.fillStyle = "#e6e1d6"; ctx.fillRect(X, y + h - mm(0.12), W, mm(0.2));
-    cols.slice(1).forEach(cl=>{ ctx.fillRect(X + cl.x, y, mm(0.2), h); });
+    if(!lite){ ctx.fillStyle = "#e6e1d6"; ctx.fillRect(X, y + h - mm(0.12), W, mm(0.2));
+    cols.slice(1).forEach(cl=>{ ctx.fillRect(X + cl.x, y, mm(0.2), h); }); }
     ltFont(ctx, "600", fs*0.76); ctx.fillStyle = LT_GREY; ctx.textAlign = "right"; ctx.fillText(r.n + ".", X + c("n").x + c("n").w - mm(1.8), base);
     if(showBrand){ ltFont(ctx, "900", fs*0.66); ctx.fillStyle = cc.d; ctx.textAlign = "left"; ltSpaced(ctx, ltFit(ctx, cell.brand.toUpperCase(), c("brand").w - mm(3)), X + c("brand").x + mm(2), base, mm(0.2), "left"); }
     ltFont(ctx, "700", fs); ctx.fillStyle = "#000"; ctx.textAlign = "left";
     ctx.fillText(ltFit(ctx, r.main + (r.bundle ? " · " + r.bundle : ""), c("name").w - mm(4)), X + c("name").x + mm(2), base);
     ltFont(ctx, "700", fs*0.95, LT_MONO); ctx.fillStyle = bad ? "#a11616" : "#000"; ctx.fillText(String(r.lot), X + c("lot").x + mm(2), base);
     const sc = c("st"), ph = h*0.68, pw = sc.w - mm(6), px = X + sc.x + mm(3), py = y + (h - ph)/2;
-    if(okk || bad){ ctx.fillStyle = okk ? LT_OK : LT_BAD; ltRR(ctx, px, py, pw, ph, ph/2); ctx.fill(); ltFont(ctx, "900", fs*0.72); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ltSpaced(ctx, okk ? "MEGVAN" : "HIÁNYZIK", px + pw/2, y + h*0.66, mm(0.25), "center"); }
+    if(lite){ const bs = Math.min(h*0.66, mm(3.6)), cx = px + pw/2, cy = y + h/2, sx = cx - bs/2, sy = cy - bs/2; ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+      if(okk){ ctx.fillStyle = LT_OK; ctx.beginPath(); ctx.arc(cx, cy, bs/2, 0, Math.PI*2); ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = mm(0.55); ctx.beginPath(); ctx.moveTo(sx + bs*0.24, sy + bs*0.53); ctx.lineTo(sx + bs*0.43, sy + bs*0.72); ctx.lineTo(sx + bs*0.78, sy + bs*0.3); ctx.stroke();
+        ltFont(ctx, "800", fs*0.7); ctx.fillStyle = LT_OK; ctx.textAlign = "left"; ctx.fillText("megvan", cx + bs/2 + mm(1.5), base); }
+      else if(bad){ ctx.strokeStyle = LT_BAD; ctx.lineWidth = mm(0.45); ctx.beginPath(); ctx.arc(cx, cy, bs/2, 0, Math.PI*2); ctx.stroke(); const d = bs*0.2; ctx.beginPath(); ctx.moveTo(cx - d, cy - d); ctx.lineTo(cx + d, cy + d); ctx.moveTo(cx + d, cy - d); ctx.lineTo(cx - d, cy + d); ctx.stroke();
+        ltFont(ctx, "800", fs*0.7); ctx.fillStyle = LT_BAD; ctx.textAlign = "left"; ctx.fillText("hiányzik", cx + bs/2 + mm(1.5), base); }
+      else { ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.35); ctx.beginPath(); ctx.arc(cx, cy, bs/2, 0, Math.PI*2); ctx.stroke(); }
+      ctx.restore(); }
+    else if(okk || bad){ ctx.fillStyle = okk ? LT_OK : LT_BAD; ltRR(ctx, px, py, pw, ph, ph/2); ctx.fill(); ltFont(ctx, "900", fs*0.72); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ltSpaced(ctx, okk ? "MEGVAN" : "HIÁNYZIK", px + pw/2, y + h*0.66, mm(0.25), "center"); }
     else { const bs = Math.min(h*0.6, mm(3.4)); ctx.strokeStyle = cc.c; ctx.lineWidth = mm(0.35); ltRR(ctx, px + pw/2 - bs/2, y + (h - bs)/2, bs, bs, mm(0.7)); ctx.stroke(); ctx.strokeStyle = "#000"; }
     ctx.fillStyle = "#000";
   }
