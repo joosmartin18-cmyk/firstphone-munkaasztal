@@ -33355,6 +33355,11 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
     <div class="modal-sub">A név rákerül a leltárívre. Utána válaszd ki, hogyan írod alá.</div>
     <div class="lt-bychips" id="ltByChips"></div>
     <input class="lt-byin" id="ltByInput" list="ltByList" autocomplete="off" placeholder="pl. Kiss Anna"><datalist id="ltByList"></datalist>
+    <div class="lt-mode-q">Milyen legyen a leltárív?</div>
+    <div class="lt-mode lt-pmode" id="ltPdfMode" role="radiogroup">
+      <button type="button" data-pm="color" role="radio" aria-checked="true" class="on"><i>🎨</i><span><b>Színes</b><small>átlátható, színes jelölésekkel, a csatolt képekkel</small></span></button>
+      <button type="button" data-pm="bw" role="radio" aria-checked="false"><i>🖨️</i><span><b>Nyomtatáshoz</b><small>fekete-fehér, tintatakarékos, képek nélkül</small></span></button>
+    </div>
     <div class="lt-mode-q">Hogyan írod alá a leltárívet?</div>
     <div class="lt-mode" id="ltSignMode" role="radiogroup">
       <button type="button" data-m="e" role="radio" aria-checked="false"><i>✍️</i><span><b>Elektronikus aláírás</b><small>itt aláírsz, a PDF-re elektronikus pecsét kerül</small></span></button>
@@ -63683,6 +63688,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
   /* ===== LELTÁRÍV v2 — űrlap-stílus: vékony vonalak, kevés festék, fekete-fehér ===== */
   const LT_GREY = "#5a5a5a", LT_HAIR = "#b9b9b9";
+  /* 🎨 színes leltárív (alap) — nyomtatáshoz fekete-fehér, képek nélkül (ltPdfMode = "bw") */
+  let ltPdfMode = "color";
+  const LTC = { tel:{ c:"#2563eb", t:"#eef4ff", d:"#1e3a8a" }, shu:{ c:"#0d9488", t:"#eafaf7", d:"#115e59" }, air:{ c:"#9333ea", t:"#f6efff", d:"#581c87" }, oth:{ c:"#ea8a00", t:"#fff6e6", d:"#7c4a03" } };
+  const ltCC = cat=> ltPdfMode === "color" ? (LTC[(LT_CAT[cat] || {}).cls] || LTC.oth) : null;
+  const LT_OK = "#16a34a", LT_BAD = "#dc2626", LT_Y = "#FBAC01";
   function ltHair(ctx, x, y, w, col, th){ if(!col){ ctx.save(); ctx.fillStyle = "#8f8f8f"; const st = mm(1.05), r = mm(0.14); for(let xx = x + r; xx < x + w; xx += st){ ctx.beginPath(); ctx.arc(xx, y + r, r, 0, Math.PI * 2); ctx.fill(); } ctx.restore(); ctx.fillStyle = "#000"; return; } ctx.fillStyle = col || LT_HAIR; ctx.fillRect(x, y, w, th || mm(0.18)); ctx.fillStyle = "#000"; }
   function ltDots(ctx, x, y, w){ ctx.save(); ctx.strokeStyle = "#8a8a8a"; ctx.lineWidth = mm(0.2); ctx.setLineDash([mm(0.5), mm(0.9)]); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.stroke(); ctx.restore(); }
   function ltLabel(ctx, t, x, y, align, pt){ ltFont(ctx, "800", pt || 6.2); ctx.fillStyle = LT_GREY; ltSpaced(ctx, t, x, y, mm(0.32), align); ctx.fillStyle = "#000"; }
@@ -63744,7 +63754,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(pages.length === 1) break;
     }
     let logo = null;
-    try{ logo = await loadImage(await getLogoDataUrl("black")); }catch(e){}
+    try{ logo = await loadImage(await getLogoDataUrl(ltPdfMode === "color" ? "color" : "black")); }catch(e){}
     const day = meta.exportDate || ltToday();
     const prog = !!(ltProg && ltAnyProgress());
     const loc = [state.settings.location, state.settings.placeDetail].filter(Boolean).join(" · ");
@@ -63757,11 +63767,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       ctx.fillStyle = "#000"; ctx.strokeStyle = "#000"; ctx.textBaseline = "alphabetic";
       if(pi === 0){
         /* ---- fejléc (v4): vastag felső csík, nagy cím + fekete típus-jelvény, logó jobbra ---- */
-        ctx.fillRect(X0, top0, FULLW, mm(0.9));
+        if(ltPdfMode === "color"){ ctx.fillStyle = LT_Y; ltRR(ctx, X0, top0, FULLW, mm(1.6), mm(0.8)); ctx.fill(); ctx.fillStyle = "#000"; } else ctx.fillRect(X0, top0, FULLW, mm(0.9));
         ltFont(ctx, "900", 30); ctx.textAlign = "left"; ctx.fillText("Leltárív", X0, top0 + mm(14.2));
         { const tw = ctx.measureText("Leltárív").width, ts = mm(9.4), tx = X0 + tw + mm(4), ty = top0 + mm(5.6);
-          ltRR(ctx, tx, ty, ts, ts, mm(1.8)); ctx.fill();
-          ltFont(ctx, "900", 17); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(typeKey, tx + ts/2, ty + ts*0.74); ctx.fillStyle = "#000";
+          if(ltPdfMode === "color") ctx.fillStyle = LT_Y; ltRR(ctx, tx, ty, ts, ts, mm(1.8)); ctx.fill();
+          ltFont(ctx, "900", 17); ctx.fillStyle = ltPdfMode === "color" ? "#1a1200" : "#fff"; ctx.textAlign = "center"; ctx.fillText(typeKey, tx + ts/2, ty + ts*0.74); ctx.fillStyle = "#000";
           ltFont(ctx, "800", 11); ctx.textAlign = "left"; ctx.fillText(T.name, tx + ts + mm(3), ty + mm(4));
           ltFont(ctx, "600", 7.6); ctx.fillStyle = LT_GREY; ctx.fillText(`${T.cats.join(" + ")}  ·  ${ltFmt(day)} ${ltWd(day).toLowerCase()}`, tx + ts + mm(3), ty + mm(8.6)); ctx.fillStyle = "#000"; }
         if(logo){ const lh = mm(11); const lw = lh * logo.width / logo.height; ctx.drawImage(logo, LT_W - X0 - lw, top0 + mm(3.6), lw, lh); }
@@ -63772,7 +63782,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
           { l:"FORRÁS (EXCEL EXPORT)", v:[meta.file || "Excel export", meta.store, meta.exported ? meta.exported : ""].filter(Boolean).join(" · "), w:.385 },
           { l:"LELTÁROZTA", v:meta.by || "", w:.22 }
         ];
-        ctx.fillStyle = "#f1f1f1"; ctx.save(); ltRR(ctx, X0, infoY, FULLW, infoH + statH, mm(2.6)); ctx.clip(); ctx.fillRect(X0, infoY, FULLW, infoH); ctx.restore(); ctx.fillStyle = "#000";
+        ctx.fillStyle = ltPdfMode === "color" ? "#fff5d6" : "#f1f1f1"; ctx.save(); ltRR(ctx, X0, infoY, FULLW, infoH + statH, mm(2.6)); ctx.clip(); ctx.fillRect(X0, infoY, FULLW, infoH); ctx.restore(); ctx.fillStyle = "#000";
         ctx.lineWidth = mm(0.3); ltRR(ctx, X0, infoY, FULLW, infoH + statH, mm(2.6)); ctx.stroke();
         ctx.fillRect(X0, statY, FULLW, mm(0.22));
         { let cx = X0;
@@ -63786,17 +63796,20 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         const boxes = secs.map(sec=>{
           const st = prog ? ltStats(sec) : null;
           const tot = sec.mode === "serial" ? [].concat(...sec.groups.map(g=> g.rows)).length : sec.rows.length;
-          if(sec.mode === "serial") return { l:LT_CAT[sec.cat].plural.toUpperCase(), big: st && st.done ? `${st.done} / ${tot}` : `___ / ${tot}`, small: st && st.done ? (st.done === tot ? "megvan mind" : `hiányzik ${tot - st.done} db`) : "db megvan" };
-          return { l:LT_CAT[sec.cat].plural.toUpperCase(), big: st && st.done ? (st.diff === 0 ? "0" : (st.diff > 0 ? "+" : "−") + Math.abs(st.diff)) : "____", small: st && st.done ? `db eltérés · ${st.done}/${tot} számolva` : `db eltérés · ${tot} termék` };
+          if(sec.mode === "serial") return { cat:sec.cat, ok: st && st.done ? st.done === tot : null, l:LT_CAT[sec.cat].plural.toUpperCase(), big: st && st.done ? `${st.done} / ${tot}` : `___ / ${tot}`, small: st && st.done ? (st.done === tot ? "megvan mind" : `hiányzik ${tot - st.done} db`) : "db megvan" };
+          return { cat:sec.cat, ok: st && st.done ? st.diff === 0 && !st.neg : null, l:LT_CAT[sec.cat].plural.toUpperCase(), big: st && st.done ? (st.diff === 0 ? "0" : (st.diff > 0 ? "+" : "−") + Math.abs(st.diff)) : "____", small: st && st.done ? `db eltérés · ${st.done}/${tot} számolva` : `db eltérés · ${tot} termék` };
         });
         const bw = FULLW / boxes.length;
         boxes.forEach((b, k)=>{
           const x = X0 + k * bw;
           if(k) ctx.fillRect(x, statY + mm(2), mm(0.2), statH - mm(4));
-          ltLabel(ctx, b.l, x + mm(3), statY + mm(4.3), "left", 6);
-          ltFont(ctx, "900", 15); ctx.textAlign = "left"; ctx.fillText(b.big, x + mm(3), statY + mm(10.6));
+          const cc0 = ltCC(b.cat), ox = cc0 ? mm(2.6) : 0;
+          if(cc0){ ctx.fillStyle = cc0.c; ltRR(ctx, x + mm(3), statY + mm(2.2), mm(1.2), statH - mm(4.4), mm(0.6)); ctx.fill(); ctx.fillStyle = "#000"; }
+          ltLabel(ctx, b.l, x + mm(3) + ox, statY + mm(4.3), "left", 6);
+          ltFont(ctx, "900", 15); ctx.textAlign = "left"; if(cc0 && b.ok !== null) ctx.fillStyle = b.ok ? LT_OK : LT_BAD;
+          ctx.fillText(b.big, x + mm(3) + ox, statY + mm(10.6)); ctx.fillStyle = "#000";
           const bwid = ctx.measureText(b.big).width;
-          ltFont(ctx, "600", 7.2); ctx.fillStyle = LT_GREY; ctx.fillText(ltFit(ctx, b.small, bw - bwid - mm(8)), x + mm(4.5) + bwid, statY + mm(10.4)); ctx.fillStyle = "#000";
+          ltFont(ctx, "600", 7.2); ctx.fillStyle = LT_GREY; ctx.fillText(ltFit(ctx, b.small, bw - bwid - mm(8) - ox), x + mm(4.5) + bwid + ox, statY + mm(10.4)); ctx.fillStyle = "#000";
         });
       } else {
         if(logo){ const lh = mm(8); ctx.drawImage(logo, X0, top0, lh * logo.width / logo.height, lh); }
@@ -63808,12 +63821,14 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         const sec = op.sec;
         if(op.t === "sec"){
           const h = P.secH, y = op.y, bh = h * 0.86, by = y + (h - bh) / 2 - mm(0.3), cy = by + bh / 2;
-          ctx.fillStyle = "#ececec"; ltRR(ctx, X0, by, FULLW, bh, bh / 2); ctx.fill(); ctx.fillStyle = "#000";
+          const scc = ltCC(sec.cat);
+          ctx.fillStyle = scc ? scc.t : "#ececec"; ltRR(ctx, X0, by, FULLW, bh, bh / 2); ctx.fill(); ctx.fillStyle = "#000";
+          if(scc){ ctx.strokeStyle = scc.c; ctx.lineWidth = mm(0.3); ltRR(ctx, X0, by, FULLW, bh, bh / 2); ctx.stroke(); ctx.strokeStyle = "#000"; }
           const r = bh * 0.36, ccx = X0 + bh / 2;
-          ctx.beginPath(); ctx.arc(ccx, cy, r, 0, Math.PI * 2); ctx.fill();
+          if(scc) ctx.fillStyle = scc.c; ctx.beginPath(); ctx.arc(ccx, cy, r, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#000";
           ltFont(ctx, "900", Math.min(8.4, P.rhmm * 1.7)); ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.fillText(LT_CAT[sec.cat].letter, ccx, cy + r * 0.42); ctx.fillStyle = "#000";
           const title = LT_CAT[sec.cat].plural.toUpperCase() + (op.cont ? " · FOLYTATÁS" : ""), sp = mm(0.4);
-          ltFont(ctx, "900", Math.min(10.5, P.rhmm * 2)); ltSpaced(ctx, title, ccx + r + mm(2.6), cy + mm(1.3), sp, "left");
+          ltFont(ctx, "900", Math.min(10.5, P.rhmm * 2)); if(scc) ctx.fillStyle = scc.d; ltSpaced(ctx, title, ccx + r + mm(2.6), cy + mm(1.3), sp, "left"); ctx.fillStyle = "#000";
           const tw = ctx.measureText(title).width + title.length * sp;
           const tot = sec.mode === "serial" ? [].concat(...sec.groups.map(g=> g.rows)).length : sec.rows.length;
           ltFont(ctx, "700", Math.min(8, P.rhmm * 1.6)); ctx.fillStyle = LT_GREY; ctx.textAlign = "left"; ctx.fillText(`${tot} ${sec.mode === "serial" ? "db" : "termék"}`, ccx + r + mm(5) + tw, cy + mm(1.2));
@@ -63835,11 +63850,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
             arr.forEach((cell, k)=>{
               const y = op.y + k * op.rh;
               if(cell.t === "row"){
-                if(cell.r.n % 2 === 0){ ctx.fillStyle = "#f2f2f2"; ltRR(ctx, x, y + mm(0.15), cw, op.rh - mm(0.3), mm(1.2)); ctx.fill(); ctx.fillStyle = "#000"; }
+                if(cell.r.n % 2 === 0){ const zc = ltCC(cell.r.cat); ctx.fillStyle = zc ? zc.t : "#f2f2f2"; ltRR(ctx, x, y + mm(0.15), cw, op.rh - mm(0.3), mm(1.2)); ctx.fill(); ctx.fillStyle = "#000"; }
                 if(cell.first && k > 0) ltHair(ctx, x, y - mm(0.1), cw, "#000", mm(0.22));
                 ltDrawSerial(ctx, cell, x, y, cw, op.rh, fs, false, cell.first || k === 0);
               }
-              else{ if(cell.r.n % 2 === 0){ ctx.fillStyle = "#f2f2f2"; ltRR(ctx, X0, y + mm(0.15), FULLW, op.rh - mm(0.3), mm(1.2)); ctx.fill(); ctx.fillStyle = "#000"; } ltDrawQty(ctx, cell.r, X0, y, FULLW, op.rh, fs, false); }
+              else{ if(cell.r.n % 2 === 0){ const zc = ltCC(cell.r.cat); ctx.fillStyle = zc ? zc.t : "#f2f2f2"; ltRR(ctx, X0, y + mm(0.15), FULLW, op.rh - mm(0.3), mm(1.2)); ctx.fill(); ctx.fillStyle = "#000"; } ltDrawQty(ctx, cell.r, X0, y, FULLW, op.rh, fs, false); }
             });
             if(arr.length) ltHair(ctx, op.cols > 1 ? x : X0, op.y + arr.length * op.rh + mm(0.3), op.cols > 1 ? cw : FULLW, "#000", mm(0.3));
           });
@@ -63848,7 +63863,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       /* ---- lábléc: eredmény-keret, két aláírás, P.H. ---- */
       let fy = LT_H - mm(9) - footH;
       if(res.length){
-        ctx.fillStyle = "#f1f1f1"; ltRR(ctx, X0, fy, FULLW, resH, mm(2.6)); ctx.fill(); ctx.fillStyle = "#000";
+        ctx.fillStyle = ltPdfMode === "color" ? "#fff5d6" : "#f1f1f1"; ltRR(ctx, X0, fy, FULLW, resH, mm(2.6)); ctx.fill(); ctx.fillStyle = "#000";
         ltLabel(ctx, "EREDMÉNY", X0 + mm(3), fy + mm(4.6), "left", 6.4);
         ltFont(ctx, "900", 6.6);
         const lw = Math.max(...res.map(ln=> ctx.measureText(ln.label.toUpperCase()).width + mm(0.3) * ln.label.length)) + mm(5);
@@ -63937,8 +63952,11 @@ if(window.parent && window.parent !== window) document.documentElement.classList
     /* jobb szélen a pipálandó négyzet, előtte a kód */
     const bs = Math.min(h*0.64, mm(3.5)), sx = x + w - bs - mm(0.6), sy = y + (h - bs)/2;
     ctx.lineWidth = mm(0.32); ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(sx + bs/2, sy + bs/2, bs/2, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.fillStyle = "#000";
+    if(ltPdfMode === "color" && ltProg && ltAnyProgress() && !ltProg.ok[r.key]){ ctx.save(); ctx.strokeStyle = LT_BAD; ctx.lineWidth = mm(0.4); ctx.beginPath(); ctx.arc(sx + bs/2, sy + bs/2, bs/2, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
     if(ltProg && ltProg.ok[r.key]){
-      ctx.save(); ctx.lineWidth = mm(0.55); ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.beginPath();
+      ctx.save();
+      if(ltPdfMode === "color"){ ctx.fillStyle = LT_OK; ctx.beginPath(); ctx.arc(sx + bs/2, sy + bs/2, bs/2, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#fff"; }
+      ctx.lineWidth = mm(0.55); ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.beginPath();
       ctx.moveTo(sx + bs*0.18, sy + bs*0.52); ctx.lineTo(sx + bs*0.42, sy + bs*0.78); ctx.lineTo(sx + bs*0.86, sy + bs*0.2); ctx.stroke(); ctx.restore();
     }
     ltFont(ctx, "700", fs*0.95, LT_MONO); ctx.textAlign = "right";
@@ -63975,8 +63993,10 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       const d = cnt - r.qty;
       ltFont(ctx, "900", fs*1.02); ctx.textAlign = "center"; ctx.fillText(String(cnt), X + cc.x + cc.w/2, base);
       const t = d === 0 ? "0" : (d > 0 ? "+" : "−") + Math.abs(d);
-      if(d !== 0){ const pw = dc.w - mm(8), ph = h*0.7; ctx.lineWidth = mm(0.4); ltRR(ctx, X + dc.x + mm(4), y + (h - ph)/2, pw, ph, ph/2); ctx.stroke(); }
-      ltFont(ctx, d ? "900" : "600", fs); ctx.fillStyle = d ? "#000" : LT_GREY; ctx.textAlign = "center"; ctx.fillText(t, X + dc.x + dc.w/2, base); ctx.fillStyle = "#000";
+      const dcol = ltPdfMode === "color" ? (d < 0 ? LT_BAD : d > 0 ? "#ea8a00" : LT_OK) : null;
+      if(d !== 0 || dcol){ const pw = dc.w - mm(8), ph = h*0.7; ctx.lineWidth = mm(0.4);
+        if(dcol){ ctx.fillStyle = dcol; ltRR(ctx, X + dc.x + mm(4), y + (h - ph)/2, pw, ph, ph/2); ctx.fill(); } else { ltRR(ctx, X + dc.x + mm(4), y + (h - ph)/2, pw, ph, ph/2); ctx.stroke(); } }
+      ltFont(ctx, d ? "900" : "600", fs); ctx.fillStyle = dcol ? "#fff" : d ? "#000" : LT_GREY; ctx.textAlign = "center"; ctx.fillText(t, X + dc.x + dc.w/2, base); ctx.fillStyle = "#000";
     } else wbox(X + dc.x, dc.w);
   }
   function ltAskName(){
@@ -64016,6 +64036,8 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       if(ltSignMode === "e"){ ltSigCommit(v); sig = ltSigImage(); }
       animHide(md); ltExportPdf(v, sig);
     };
+    document.getElementById("ltPdfMode").addEventListener("click", e=>{ const b = e.target.closest("[data-pm]"); if(!b) return; ltPdfMode = b.dataset.pm;
+      e.currentTarget.querySelectorAll("[data-pm]").forEach(x=>{ const on = x === b; x.classList.toggle("on", on); x.setAttribute("aria-checked", on ? "true" : "false"); }); });
     document.getElementById("ltSignMode").addEventListener("click", e=>{
       const b = e.target.closest("[data-m]"); if(!b) return;
       ltSetSignMode(b.dataset.m);
@@ -64124,7 +64146,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
         docId: ltDocId([ltData.meta.file, ltData.meta.exported, ltType, byName, JSON.stringify(ltProg || {}), Date.now()]) });
       let canv = await ltDrawPages(secs, ltType, pmeta);
       const mainN = canv.length;
-      if(ltAtt.length && !ltViewOld) canv = canv.concat(await ltDrawAttPages(Object.assign({}, pmeta, { typeName: ltType === "H" ? "Hétfői leltár" : "Pénteki leltár" })));
+      if(ltAtt.length && !ltViewOld && ltPdfMode === "color") canv = canv.concat(await ltDrawAttPages(Object.assign({}, pmeta, { typeName: ltType === "H" ? "Hétfői leltár" : "Pénteki leltár" })));
       const pages = [];
       for(const cv of canv){
         const blob = await new Promise(res=> cv.toBlob(res, "image/jpeg", 0.95));
@@ -64132,12 +64154,12 @@ if(window.parent && window.parent !== window) document.documentElement.classList
       }
       const bytes = ltBuildPdf(pages);
       const day = ltData.meta.exportDate || ltToday();
-      const fn = `FirstPhone_${fileSafe(state.settings.location)}_leltar_${day.getFullYear()}-${pad2(day.getMonth()+1)}-${pad2(day.getDate())}_${ltType === "H" ? "hetfoi" : "penteki"}.pdf`.replace(/__+/g, "_");
+      const fn = `FirstPhone_${fileSafe(state.settings.location)}_leltar_${day.getFullYear()}-${pad2(day.getMonth()+1)}-${pad2(day.getDate())}_${ltType === "H" ? "hetfoi" : "penteki"}${ltPdfMode === "bw" ? "_nyomtatashoz" : ""}.pdf`.replace(/__+/g, "_");
       const url = URL.createObjectURL(new Blob([bytes], { type:"application/pdf" }));
       const a = document.createElement("a"); a.href = url; a.download = fn;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(()=> URL.revokeObjectURL(url), 4000);
-      toast(`Leltárív letöltve (${mainN} oldal${ltAtt.length && !ltViewOld ? ` + ${ltAtt.length} kép melléklet` : ""}) ✓`);
+      toast(`Leltárív letöltve (${mainN} oldal${ltPdfMode === "bw" ? " · nyomtatáshoz, fekete-fehér" : ltAtt.length && !ltViewOld ? ` + ${ltAtt.length} kép melléklet` : ""}) ✓`);
       if(!ltViewOld) setTimeout(()=> ltFinish(), 1200);
     }catch(err){
       toast("Hiba a leltárív készítésekor: " + (err && err.message ? err.message : "ismeretlen hiba"));
@@ -67955,7 +67977,7 @@ if(window.parent && window.parent !== window) document.documentElement.classList
 
     // ---- Fejléc: logó + cím, alatta vastag elválasztó sáv ----
     let logo = null;
-    try{ logo = await loadImage(await getLogoDataUrl("black")); }catch(e){}
+    try{ logo = await loadImage(await getLogoDataUrl(ltPdfMode === "color" ? "color" : "black")); }catch(e){}
     const logoH = H*0.056;
     if(logo){
       const logoW = logoH * (logo.width/logo.height);
