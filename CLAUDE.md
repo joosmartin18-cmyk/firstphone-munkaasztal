@@ -40,7 +40,7 @@ A tulajdonos (Martin) nem programozó: ő mondja meg, mit szeretne, te csinálod
 | `version.json` | `{"b": "<build>"}` — egyeznie kell az `index.html`-beli `FP_BUILD` értékkel. |
 | `functions/api/*.js` | Cloudflare Pages Functions: `admin.js` (boltfiókok — csak az admin hívhatja), `ai.js`, `ocr.js`, `qr.js`, `specs.js`, `staff.js`, `workcal.js`. |
 | `functions/cal/[[p]].js`, `cal-sw.js` | Naptár-feliratkozás és határidő-értesítések. |
-| `belepes.html` | **Belépési oldal** a boltoknak (`/belepes`, Martin kérése): lépések, kereshető bolt-lista (üzlet, boltkód, e-mail, kimásolás). Az egyszer használatos **jelszavak titkosítva** (AES-GCM, PBKDF2 310 000), csak a Martinnak átadott **hozzáférési kóddal** nyílnak meg a böngészőben; a kód és a nyers jelszó NEM kerülhet a tárolóba. Új jelszólistánál újra kell titkosítani. Könnyű: csak egyszeri beúszás, nincs elmosás. |
+| `belepes.html` | **Belépési oldal** a boltoknak (`/belepes`, Martin kérése): lépések + **kereső**; a bolt adatai (boltkód, e-mail, egyszer használatos jelszó, kimásolható) **csak keresés után** jelennek meg, legfeljebb 3 találatig (többnél „írj be többet”). A jelszavak az oldalon AES-GCM-mel kódolva, a kulcs az oldalban (csak elrejtés, nem védelem — Martin döntése: a jelszót belépéskor úgyis lecserélik). Új jelszólistánál újra kell kódolni. Könnyű: egyszeri beúszás, nincs elmosás. |
 | `scan/` | Külön telefonos vonalkódolvasó kisalkalmazás. |
 | `.github/workflows/hatarido.yml` | 20 percenként szól a szervernek a határidő-emlékeztetők miatt. |
 | `.assetsignore` | Ami itt szerepel, azt a Cloudflare nem teszi ki a weboldalra (ez a fájl és a `tools/` is itt van). |
