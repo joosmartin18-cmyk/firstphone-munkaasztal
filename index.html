@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261125-100442";</script>
+<script>window.FP_BUILD="20261125-101525";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -75751,10 +75751,20 @@ html.fp-demo #fpShopPw .sp-w{padding-top:54px}
 <script id="funMsgJs">
 /* Egyszeri vicces felugró üzenet: csak a megadott boltnál (settings.location), gépenként egyszer, a határidőig. Próba: fpFunMsg(1) */
 (function(){
-  var M = { id:"szh1", shop:/szombathely/i, until:"2026-12-02", e:"📱", h:"Szia, Szombathely!",
-    p:"A rendszer megállapította, hogy a mai nap 87%-ban telefonozásból és a csoportba írásból fog állni. A maradék 13% vevő. Nyugodtan folytassátok — minket is nagyon érdekelnek a pletykák! 👀",
-    s:"— szeretettel: Admin 💛", b:"Lebuktunk 🙈", r:"💬" };
-  var KEY = "firstphone_fun_" + M.id;
+  /* sorban jönnek: mindig az első, még nem látott; a név NEM a kódban van — a bolt mai beosztásából jön ({nev}) */
+  var LIST = [
+    { id:"szh1", shop:/szombathely/i, until:"2026-12-02", e:"📱", h:"Szia, Szombathely!",
+      p:"A rendszer megállapította, hogy a mai nap 87%-ban telefonozásból és a csoportba írásból fog állni. A maradék 13% vevő. Nyugodtan folytassátok — minket is nagyon érdekelnek a pletykák! 👀",
+      s:"— szeretettel: Admin 💛", b:"Lebuktunk 🙈", r:"💬" },
+    { id:"szh2", shop:/szombathely/i, until:"2026-12-02", e:"😂", h:"Szia, {nev}!",
+      p:"Ne haragudj, hogy megijedtél… de az arcodat láttam volna! 😂 Nyugi, senki nem figyel. Vagy mégis? 👀",
+      s:"— szeretettel: Admin 💛", b:"Na, megálljatok! 😤", r:"👀" } ];
+  var M = LIST[0], KEY = "";
+  function seen(x){ try{ return !!localStorage.getItem("firstphone_fun_" + x.id); }catch(e){ return true; } }
+  function nev(){ try{ var w = window.fpWhoName && fpWhoName(); if(w) return w; var st = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"), d = new Date(), k = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      var a = st && st.schedule && st.schedule[k], E = (st && st.settings && st.settings.employees) || []; if(!a || a.type === "unnep") return "";
+      var ids = a.type === "split" ? [a.am, a.pm] : a.type === "multi" ? [].concat(a.full || [], a.am || [], a.pm || []) : [a.type], N = [];
+      ids.forEach(function(id){ var e = E.find(function(z){ return z.id === id; }); if(e && e.name && N.indexOf(e.name) < 0) N.push(e.name); }); return N.length === 1 ? N[0] : ""; }catch(e){ return ""; } }
   function loc(){ try{ var st = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"); return (st && st.settings && st.settings.location) || ""; }catch(e){ return ""; } }
   function vis(id){ var x = document.getElementById(id); if(!x) return false; var s = getComputedStyle(x); return s.display !== "none" && s.visibility !== "hidden" && +s.opacity > 0.05 && x.offsetParent !== null; }
   function ready(){
@@ -75766,9 +75776,11 @@ html.fp-demo #fpShopPw .sp-w{padding-top:54px}
     if(document.querySelector(".hsd-on, #shiftModal.show, .ui-newsback")) return false;
     return true; }
   function show(force){
+    KEY = "firstphone_fun_" + M.id;
     var el = document.createElement("div"); el.id = "fpFun"; el.setAttribute("role", "dialog");
-    var k = 0, h = M.h.split(" ").map(function(w){ return "<b>" + Array.from(w).map(function(c){ return '<span style="animation-delay:' + (.55 + (k++) * .035).toFixed(3) + 's">' + c + "</span>"; }).join("") + "</b>"; }).join(" ");
-    var d = .6 + M.h.length * .035;
+    var H = M.h.indexOf("{nev}") > -1 ? (nev() ? M.h.replace("{nev}", nev()) : "Szia, " + (String(loc()).match(M.shop) || ["csapat"])[0].replace(/^./, function(c){ return c.toUpperCase(); }) + "!") : M.h;
+    var k = 0, h = H.split(" ").map(function(w){ return "<b>" + Array.from(w).map(function(c){ return '<span style="animation-delay:' + (.55 + (k++) * .035).toFixed(3) + 's">' + c + "</span>"; }).join("") + "</b>"; }).join(" ");
+    var d = .6 + H.length * .035;
     el.innerHTML = '<div class="fb"><div class="fe">' + M.e + '</div><div class="ft">Üzenet a FirstPhone csapattól</div><h2>' + h + '</h2><p style="animation-delay:' + (d + .1) + 's">' + M.p + '</p><div class="fs" style="animation-delay:' + (d + .4) + 's">' + M.s + '</div><button type="button" class="fo" style="animation-delay:' + (d + .6) + 's">' + M.b + '</button><div class="fr">' + M.r + '</div></div>';
     var box = el.firstChild, CL = ["#FBAC01", "#f0c766", "#ffffff", "#ff8a3d", "#3ddc84"];
     for(var i = 0; i < 26; i++){ var s = document.createElement("i"); s.className = "fc"; s.style.left = (Math.random() * 100) + "%"; s.style.background = CL[i % CL.length]; s.style.animationDuration = (1.6 + Math.random() * 1.6) + "s"; s.style.animationDelay = (.2 + Math.random() * .8) + "s"; box.appendChild(s); }
@@ -75776,22 +75788,24 @@ html.fp-demo #fpShopPw .sp-w{padding-top:54px}
     if(!force){ try{ localStorage.setItem(KEY, String(Date.now())); }catch(e){} }
     try{ window.fpSound && window.fpSound("msg", .9); }catch(e){}
     setTimeout(function(){ try{ window.fpSound && window.fpSound("done", .6); }catch(e){} }, Math.round((d + .6) * 1000));
-    var close = function(){ el.classList.add("out"); setTimeout(function(){ el.remove(); }, 380); };
+    var close = function(){ el.classList.add("out"); setTimeout(function(){ el.remove(); if(!force) setTimeout(run, 2500); }, 380); };
     el.querySelector(".fo").onclick = close;
     el.addEventListener("click", function(ev){ if(ev.target === el) close(); });
   }
-  window.fpFunMsg = function(force){ show(!!force); };
-  var n = 0, t = setInterval(function(){
-    if(++n > 400){ clearInterval(t); return; }
-    try{
-      if(localStorage.getItem(KEY)){ clearInterval(t); return; }
-      var now = new Date(), ymd = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
-      if(ymd > M.until){ clearInterval(t); return; }
-      if(!M.shop.test(loc())) return;
-      if(n < 3 || !ready()) return;
-      clearInterval(t); show(false);
-    }catch(e){}
-  }, 1500);
+  window.fpFunMsg = function(i){ M = LIST[typeof i === "number" ? i : LIST.length - 1] || LIST[0]; show(true); };
+  function run(){
+    var n = 0, t = setInterval(function(){
+      if(++n > 400){ clearInterval(t); return; }
+      try{
+        var now = new Date(), ymd = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0"), L = loc();
+        var nx = LIST.filter(function(x){ return !seen(x) && ymd <= x.until; });
+        if(!nx.length){ clearInterval(t); return; }
+        nx = nx.filter(function(x){ return x.shop.test(L); }); if(!nx.length) return;
+        if(n < 3 || !ready()) return;
+        clearInterval(t); M = nx[0]; show(false);
+      }catch(e){}
+    }, 1500); }
+  run();
 })();
 </script>
 </body>
