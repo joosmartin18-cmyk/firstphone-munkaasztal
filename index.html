@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261124-150545";</script>
+<script>window.FP_BUILD="20261125-094043";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -29833,7 +29833,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         tix:["Hibajegyek","A boltok bejelentései — állapot, prioritás, válasz a bejelentőnek."], ann:["Közlemények","Üzenet a munkaasztal tetejére, egy vagy több boltnak, lejárattal."], docs:["Dokumentumok","Fájlok a boltoknak — árlista, útmutató, nyomtatvány. Te töltöd fel, ők letöltik."],
         news:["Újdonságok","Diás bemutató a boltoknak a változásokról — be/ki, diák, ki nézte meg."], set:["Beállítások","Mit használhatnak a boltok — chat, programok, karbantartás —, és hogyan működjön ez a felület."],
         data:["Adatok és napló","Biztonsági mentés, régi adatok, és minden admin művelet naplója."] };
-      const PHA = { shops:()=> `<button type="button" class="ax-btn" data-x="csvshops">⬇ Táblázat (CSV)</button>`, tix:()=> `<button type="button" class="ax-btn" data-x="csvtix">⬇ Jegyek (CSV)</button>`, data:()=> `<button type="button" class="ax-btn pri" data-x="bak">⬇ Teljes mentés</button>`,
+      const PHA = { shops:()=> `<button type="button" class="ax-btn" data-x="csvshops">⬇ Táblázat (Excel)</button>`, tix:()=> `<button type="button" class="ax-btn" data-x="csvtix">⬇ Jegyek (Excel)</button>`, data:()=> `<button type="button" class="ax-btn pri" data-x="bak">⬇ Teljes mentés</button>`,
         inbox:()=> `<button type="button" class="ax-btn" data-x="readall">✓ Mind olvasott</button>` };
       const seg = (cls, attr, items, on)=> `<div class="ax-seg ${cls}">${items.map(([k, t])=> `<button type="button" data-${attr}="${k}" class="${String(k) === String(on) ? "on" : ""}">${t}</button>`).join("")}</div>`;
       const sw = (attr, k, on, lbl)=> `<button type="button" class="ax-sw${on ? " on" : ""}" data-${attr}="${k}" role="switch" aria-checked="${on ? "true" : "false"}" aria-label="${esc(lbl || k)}"></button>`;
@@ -30111,8 +30111,8 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
         if(a === "bak"){ backup(); return; }
         if(a === "chk"){ drawChk(); return; }
         if(a === "shopdl"){ const u = $(".ax-dlsel").value, s = list.concat(orph).find(y=> y.uid === u); if(s) shopDl(s); return; }
-        if(a === "csvshops"){ dlFile(`FirstPhone_boltok_${ymd()}.csv`, csv([["Bolt","E-mail","Cím","Utolsó mentés","Csomag vár","Selejt ma (db)","Kassza eltérés (Ft)","Utolsó leltár","Dolgozók","Nyitott jegyek"]].concat(list.map(s=> [nameOf(s), s.email, s.addr, s.ms ? full(s.ms) : "", s.wait, s.sx, s.ks && s.ks.diff != null ? s.ks.diff : "", s.lt && s.lt.at ? String(s.lt.at).slice(0, 10) : "", s.emp, openOf(s.uid)]))), "text/csv;charset=utf-8"); return; }
-        if(a === "csvtix"){ dlFile(`FirstPhone_hibajegyek_${ymd()}.csv`, csv([["Azonosító","Beküldve","Bolt","Bejelentő","Típus","Oldal","Állapot","Prioritás","Leírás","Válasz"]].concat(tixAll().map(m=> [tixId(m), full(m.ms), m.shop, m.who || m.name || "", (BUG_CATS[m.cat] || BUG_CATS.bug)[1], pageName(m.page).replace(/^\S+\s/, ""), (BUG_ST[m.st || "new"] || BUG_ST.new)[1], TIX_PR[m.prio || "mid"][1], m.text, m.ans || ""]))), "text/csv;charset=utf-8"); return; }
+        if(a === "csvshops"){ xlDl(`FirstPhone_boltok_${ymd()}.xlsx`, fpXlsxSimple({ name:"Boltok", title:"FirstPhone · Boltok áttekintése", head:[{ t:"Bolt", k:"b" },{ t:"E-mail" },{ t:"Cím" },{ t:"Utolsó mentés", k:"" },{ t:"Csomag vár", k:"num" },{ t:"Selejt ma (db)", k:"num" },{ t:"Kassza eltérés", k:"ft" },{ t:"Utolsó leltár", al:"c" },{ t:"Dolgozók", k:"num" },{ t:"Nyitott jegyek", k:"num" }], rows:list.map(s=>{ const r = [nameOf(s), s.email, s.addr, s.ms ? full(s.ms) : "", +s.wait || 0, +s.sx || 0, s.ks && s.ks.diff != null ? +s.ks.diff : "", s.lt && s.lt.at ? String(s.lt.at).slice(0, 10).replace(/-/g, ".") + "." : "", +s.emp || 0, +openOf(s.uid) || 0]; if(s.ks && s.ks.diff) r._k = "r"; return r; }), total:{ label:"Összesen", sum:[4, 5, 6, 9], cnt:1, cntCol:0, unit:"bolt" } }), "Boltlista"); return; }
+        if(a === "csvtix"){ xlDl(`FirstPhone_hibajegyek_${ymd()}.xlsx`, fpXlsxSimple({ name:"Hibajegyek", title:"FirstPhone · Hibajegyek", head:[{ t:"Azonosító", w:12 },{ t:"Beküldve", w:17 },{ t:"Bolt", k:"b", w:22 },{ t:"Bejelentő", w:16 },{ t:"Típus", w:14 },{ t:"Oldal", w:14 },{ t:"Állapot", k:"st", w:15 },{ t:"Prioritás", w:11 },{ t:"Leírás", w:60 },{ t:"Válasz", w:45 }], rows:tixAll().map(m=>{ const st = m.st || "new", r = [tixId(m), full(m.ms), m.shop, m.who || m.name || "", (BUG_CATS[m.cat] || BUG_CATS.bug)[1], pageName(m.page).replace(/^\S+\s/, ""), (BUG_ST[st] || BUG_ST.new)[1], TIX_PR[m.prio || "mid"][1], m.text, m.ans || ""]; r._st = /done|fix|ok|closed/.test(st) ? "ok" : st === "new" ? "bad" : "wait"; return r; }), total:{ label:"Összesen", cnt:2, cntCol:0, unit:"jegy" } }), "Hibajegyek"); return; }
         if(a === "readall"){ list.forEach(s=>{ const T = (threads[s.uid] || []).filter(m=> m.type !== "bug"); if(T.length) lsSet(adSeenK(s.uid), String(T[T.length - 1].ms)); }); drawCts(); drawDash(); toast2("✓ Minden üzenet olvasottnak jelölve"); return; }
         if(a === "bcast"){ pick("*"); return; }
         if(a === "cback"){ $(".ax-chat").classList.remove("conv"); return; }
@@ -31148,7 +31148,9 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
           if(sd.hol) rows.push([nameOf(x), kk, HU_D[sd.dow], "", "ünnep", "", ""]);
           else if(!sd.closed && !sd.people.length) rows.push([nameOf(x), kk, HU_D[sd.dow], "", "NINCS BEOSZTVA", fromM(sd.open), fromM(sd.close)]);
           sd.people.forEach(pp=> rows.push([nameOf(x), kk, HU_D[sd.dow], pp.name + (pp.sub ? " (helyettes)" : ""), PART_T[pp.part], fromM(pp.from), fromM(pp.to)])); }); });
-        dlFile(`FirstPhone_beosztas_${kind === "day" ? scDay : scYm}.csv`, csv(rows), "text/csv;charset=utf-8"); }
+        const H = rows.shift(), R2 = rows.map(r=>{ const d = String(r[1]).split("-"), a = [r[0], d.length === 3 ? { v:Math.round((Date.UTC(+d[0], +d[1] - 1, +d[2]) - Date.UTC(1899, 11, 30)) / 864e5), nf:"yyyy.mm.dd." } : r[1]].concat(r.slice(2)); if(r[4] === "NINCS BEOSZTVA") a._k = "r"; else if(r[4] === "ünnep") a._k = "dim"; return a; });
+        xlDl(`FirstPhone_beosztas_${kind === "day" ? scDay : scYm}.xlsx`, fpXlsxSimple({ name:"Beosztás", title:"FirstPhone · Beosztás — " + (kind === "day" ? scDay.replace(/-/g, ".") + "." : scYm.replace("-", ". ") + "."), sub:shops.length + " bolt   ·   Készült: " + new Date().toLocaleString("hu-HU") + "   ·   Az oszlopfejlécen a ▾ nyíllal szűrhetsz (pl. boltra, dolgozóra, „NINCS BEOSZTVA”).", head:[{ t:H[0], k:"b", w:24 }, { t:H[1], w:12, al:"c" }, { t:H[2], w:11 }, { t:H[3], w:24 }, { t:H[4], w:18 }, { t:H[5], w:8, al:"c" }, { t:H[6], w:8, al:"c" }], rows:R2, total:{ label:"Összesen", cnt:3, cntCol:0, unit:"sor" } }), "Beosztás"); }
+      function xlDl(name, blob, what){ try{ if(window.fpSave) window.fpSave(blob, name); else docSave(blob, name); toast2("✓ Excel letöltve: " + name); try{ logAdd("⬇", what + " (Excel)"); }catch(e){} }catch(e){ toast2("Hiba a letöltésnél: " + (e && e.message || e)); } }
       let pdK = "month", pdAll = true, pdSel = new Set(), pdBusy = false;
       const fSafe = t=> String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "");
       const pdShops = ()=> list.filter(x=> pdAll || pdSel.has(x.uid)).sort((a, c)=> shortN(a).localeCompare(shortN(c), "hu"));
@@ -31191,7 +31193,7 @@ html body #fcAdmin#fcAdmin#fcAdmin .ax-stbl th{ white-space:nowrap; }
           <div class="ax-pds"><b>2 · Melyik boltok?</b><div class="ax-seg ax-pda"><button type="button" data-pda="1" class="${pdAll ? "on" : ""}">🏬 Minden bolt <em>${list.length}</em></button><button type="button" data-pda="0" class="${pdAll ? "" : "on"}">☑️ Kiválasztott boltok</button></div>
             ${pdAll ? "" : `<div class="ax-pdl"><div class="ax-pdlt"><div class="ax-inp">${axI("srch")}<input class="ax-in ax-pdq" type="search" placeholder="Bolt keresése" autocomplete="off"></div><button type="button" class="ax-btn sm" data-pdsa="1">Mind</button><button type="button" class="ax-btn sm" data-pdsa="0">Egyik sem</button></div><div class="ax-pdlg">${sorted.map(x=> `<label><input type="checkbox" value="${esc(x.uid)}"${pdSel.has(x.uid) ? " checked" : ""}><span>${esc(shortN(x))}</span></label>`).join("")}</div></div>`}</div>
           <div class="ax-pds"><b>3 · Stílus</b><div class="ax-pdt"><button type="button" data-pdt="dark" class="${thm === "dark" ? "on" : ""}"><i class="d"></i><span><b>Sötét</b><small>mint a Munkaasztal</small></span></button><button type="button" data-pdt="light" class="${thm === "light" ? "on" : ""}"><i class="l"></i><span><b>Világos</b><small>nyomtatáshoz</small></span></button></div></div>
-          <div class="ax-pdf"><small class="ax-pdinfo"></small><span class="ax-sp"></span><button type="button" class="ax-btn" data-pd="csv" title="Táblázat (Excel-be is betölthető)">📊 CSV</button><button type="button" class="ax-btn pri" data-pd="go">⬇ PDF letöltése</button></div></div>`;
+          <div class="ax-pdf"><small class="ax-pdinfo"></small><span class="ax-sp"></span><button type="button" class="ax-btn" data-pd="csv" title="FirstPhone Excel táblázat (szűrhető)">📊 Excel</button><button type="button" class="ax-btn pri" data-pd="go">⬇ PDF letöltése</button></div></div>`;
         pdFoot(); }
       async function pdGo(btn){
         const K = window.fpAdmPdf; if(!K){ toast2("A PDF-készítő még töltődik — próbáld újra pár másodperc múlva."); return; }
@@ -67719,32 +67721,19 @@ if(window.parent && window.parent !== window) document.documentElement.classList
   let exjsP = null;
   const loadExcelJS = ()=> exjsP || (exjsP = new Promise((res, rej)=>{ if(window.ExcelJS) return res(window.ExcelJS); const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"; s.onload = ()=> window.ExcelJS ? res(window.ExcelJS) : rej(new Error("Excel modul")); s.onerror = ()=>{ exjsP = null; rej(new Error("Nem sikerült betölteni az Excel modult (internet?)")); }; document.head.appendChild(s); }));
   async function drawReportXlsx(R){
-    const EX = await loadExcelJS(), wb = new EX.Workbook(); wb.creator = "FirstPhone Munkaasztal"; wb.created = new Date();
-    const used = new Set(), sheetName = t=>{ let n = String(t).replace(/[\\\/\?\*\[\]:]/g, " ").slice(0, 31).trim() || "Lap", i = 2, b = n; while(used.has(n.toLowerCase())){ n = (b.slice(0, 27) + " " + i++); } used.add(n.toLowerCase()); return n; };
-    const thin = { style:"thin", color:{ argb:"FFDFE2E8" } }, KF = { r:"FFFDECEC", a:"FFFFF4E5", sh:"FFF7EFD9" }, KT = { r:"FFC62828", a:"FFB45309", g:"FF1B7F4B", dim:"FF8A8F99" };
-    (R.sections || []).forEach((S, si)=>{
-      const ws = wb.addWorksheet(sheetName(S.sheet || S.title), { views:[{ state:"frozen", ySplit:(si === 0 && R.kpis ? 5 : 4) }], pageSetup:{ orientation:R.land !== false ? "landscape" : "portrait", fitToPage:true, fitToWidth:1, fitToHeight:0, paperSize:9 } });
-      const nC = S.cols.length;
-      ws.mergeCells(1, 1, 1, Math.max(1, nC)); ws.getCell(1, 1).value = `${R.title} — ${S.title}`; ws.getCell(1, 1).font = { bold:true, size:15, color:{ argb:"FF111111" } };
-      ws.mergeCells(2, 1, 2, Math.max(1, nC)); ws.getCell(2, 1).value = [R.sub, S.note].filter(Boolean).join(" · "); ws.getCell(2, 1).font = { size:10, color:{ argb:"FF5B6070" } };
-      let hr = 4;
-      if(si === 0 && R.kpis){ ws.mergeCells(3, 1, 3, Math.max(1, nC)); ws.getCell(3, 1).value = R.kpis.map(k=> `${k.l}: ${k.v}${k.s ? " (" + k.s + ")" : ""}`).join("   ·   "); ws.getCell(3, 1).font = { bold:true, size:10 }; hr = 5; }
-      const h = ws.getRow(hr); S.cols.forEach((k, i)=>{ const cl = h.getCell(i + 1); cl.value = k.h; cl.font = { bold:true, color:{ argb:"FF000000" } }; cl.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:"FFFBAC01" } }; cl.alignment = { vertical:"middle", horizontal:k.al === "r" ? "right" : k.al === "c" ? "center" : "left", wrapText:true }; cl.border = { top:thin, bottom:thin, left:thin, right:thin }; });
-      h.height = 22;
-      (S.rows || []).forEach((r, ri)=>{ const row = ws.getRow(hr + 1 + ri);
-        r.c.forEach((v, i)=>{ const cl = row.getCell(i + 1), k = S.cols[i] || {};
-          if(v && typeof v === "object"){ if(v.v != null && !isNaN(v.v)){ cl.value = Math.round(v.v * 100) / 100; cl.numFmt = v.nf || (v.u ? `0.0"${v.u.replace(/"/g, "")}"` : "0.0"); } else cl.value = v.t != null ? String(v.t) : ""; }
-          else if(typeof v === "number"){ cl.value = v; cl.numFmt = Number.isInteger(v) ? "0" : "0.0"; } else cl.value = v == null ? "" : String(v);
-          cl.alignment = { vertical:"middle", horizontal:k.al === "r" ? "right" : k.al === "c" ? "center" : "left", indent:i === 0 && r.ind ? 2 : 0 };
-          cl.border = { bottom:thin, left:thin, right:thin };
-          const last = i === r.c.length - 1;
-          cl.font = { bold:r.k === "sh" || !!r.b || (last && !!KT[r.k]), color:{ argb:(last || r.k === "dim") && KT[r.k] ? KT[r.k] : "FF1C1F26" } };
-          if(KF[r.k]) cl.fill = { type:"pattern", pattern:"solid", fgColor:{ argb:KF[r.k] } }; }); });
-      ws.autoFilter = { from:{ row:hr, column:1 }, to:{ row:hr, column:nC } };
-      S.cols.forEach((k, i)=>{ ws.getColumn(i + 1).width = k.xw || Math.max(10, Math.min(60, Math.round((k.w || 1) * 11))); });
-    });
-    const buf = await wb.xlsx.writeBuffer();
-    return new Blob([buf], { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    /* FirstPhone-stílusú Excel (fpXlsx): lapok = a jelentés szakaszai; az első lapon a fő számok külön sorban */
+    if(!window.fpXlsx) throw new Error("Az Excel-készítő még nem töltődött be — próbáld újra.");
+    const sub0 = (R.sub || "") + "   ·   Készült: " + new Date().toLocaleString("hu-HU") + "   ·   Az oszlopfejlécen a ▾ nyíllal szűrhetsz.";
+    const sheets = (R.sections || []).map((S, si)=> ({
+      name:S.sheet || S.title, title:"FirstPhone · " + R.title + (S.title && S.title !== R.title ? " — " + S.title : ""),
+      sub:[sub0, S.note].filter(Boolean).join("   ·   "),
+      sub2: si === 0 && R.kpis ? R.kpis.map(k=> `${k.l}: ${k.v}${k.s ? " (" + k.s + ")" : ""}`).join("     ·     ") : "",
+      cols:S.cols.map(k=> ({ t:k.h, al:k.al, w:k.xw || Math.max(10, Math.min(60, Math.round((k.w || 1) * 11))) })),
+      rows:(S.rows || []).map(r=>{ const a = r.c.map(v=> v && typeof v === "object" ? (v.v != null && !isNaN(v.v) ? { v:Math.round(v.v * 100) / 100, nf:v.nf || (v.u ? `0.0"${String(v.u).replace(/"/g, "")}"` : "0.0") } : (v.t != null ? String(v.t) : "")) : v);
+        a._k = r.k; a._b = !!r.b; a._ind = !!r.ind; return a; })
+    }));
+    if(!sheets.length) sheets.push({ name:"Lap", title:"FirstPhone · " + R.title, sub:sub0, cols:[{ t:"(nincs adat)", w:30 }], rows:[] });
+    return window.fpXlsx(sheets);
   }
   window.fpAdmPdf.report = R=> drawReportPdf(R);
   window.fpAdmPdf.xlsx = R=> drawReportXlsx(R);
@@ -74022,6 +74011,112 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
     dl:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>',
     chev:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>' };
   var MS = ["jan.","febr.","márc.","ápr.","máj.","jún.","júl.","aug.","szept.","okt.","nov.","dec."];
+  /* ===== FirstPhone-stílusú .xlsx (saját kis író, külső könyvtár nélkül): fekete fejléc sárga címmel, sárga oszlopfejléc,
+     zebra-sorok, rögzített fejléc, szűrő (▾) minden oszlopon, összesítő sor SUBTOTAL-lal (a szűrt sorokra számol), A4 fekvő nyomtatás.
+     window.fpXlsx(sheets) → Blob.  sheet: { name, title, sub, sub2?, cols:[{ t, w, k:"txt"|"b"|"num"|"ft"|"pct"|"date"|"st", al:"r"|"c" }],
+       rows:[[...értékek]] — egy érték lehet szám, szöveg vagy { v, nf } (szám saját formátummal); sor-jelzők: _st (ok|bad|wait az "st" oszlophoz),
+       _k (sh = alcím-sor, r = piros, a = narancs, g = zöld, dim = halvány), _b (félkövér), _ind (behúzás); total:{ label, sum:[i], cnt:i, cntCol:i, pct:[i, eredeti, kedv] } } */
+  var XL = (function(){
+    var CRC = (function(){ var t = []; for(var n = 0; n < 256; n++){ var c = n; for(var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+    function crc(b){ var c = 0xFFFFFFFF; for(var i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+    function zip(files){ var enc = new TextEncoder(), parts = [], cen = [], off = 0;
+      files.forEach(function(f){ var nm = enc.encode(f[0]), d = enc.encode(f[1]), c = crc(d), h = new DataView(new ArrayBuffer(30));
+        h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true); h.setUint16(10, 0, true); h.setUint16(12, 0x5821, true);
+        h.setUint32(14, c, true); h.setUint32(18, d.length, true); h.setUint32(22, d.length, true); h.setUint16(26, nm.length, true); h.setUint16(28, 0, true);
+        parts.push(new Uint8Array(h.buffer), nm, d);
+        var e = new DataView(new ArrayBuffer(46)); e.setUint32(0, 0x02014b50, true); e.setUint16(4, 20, true); e.setUint16(6, 20, true); e.setUint16(8, 0x0800, true); e.setUint16(10, 0, true); e.setUint16(12, 0, true); e.setUint16(14, 0x5821, true);
+        e.setUint32(16, c, true); e.setUint32(20, d.length, true); e.setUint32(24, d.length, true); e.setUint16(28, nm.length, true); e.setUint32(42, off, true);
+        cen.push(new Uint8Array(e.buffer), nm); off += 30 + nm.length + d.length; });
+      var cs = cen.reduce(function(a, x){ return a + x.length; }, 0), z = new DataView(new ArrayBuffer(22));
+      z.setUint32(0, 0x06054b50, true); z.setUint16(8, files.length, true); z.setUint16(10, files.length, true); z.setUint32(12, cs, true); z.setUint32(16, off, true);
+      return new Blob(parts.concat(cen, [new Uint8Array(z.buffer)]), { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }); }
+    function esc(s){ return String(s == null ? "" : s).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+    function col(i){ var s = ""; i++; while(i > 0){ var r = (i - 1) % 26; s = String.fromCharCode(65 + r) + s; i = Math.floor((i - 1) / 26); } return s; }
+    var F = function(b, sz, c, it){ return '<font>' + (b ? '<b/>' : '') + (it ? '<i/>' : '') + '<sz val="' + sz + '"/>' + (c ? '<color rgb="' + c + '"/>' : '') + '<name val="Calibri"/></font>'; };
+    /* betűk: 0 alap · 1 félkövér · 2 cím · 3 alcím · 4 zöld · 5 piros · 6 narancs · 7 fejléc · 8 halvány · 9 alcím-sor (kpi) */
+    var FONTS = [F(0, 10), F(1, 10), F(1, 16, "FFFBAC01"), F(0, 9, "FFD9D2C3", 1), F(1, 10, "FF15803D"), F(1, 10, "FFC81E1E"), F(1, 10, "FFB45309"), F(1, 10, "FF17140F"), F(0, 10, "FF8A8F99"), F(1, 9, "FFFBAC01")];
+    var P = function(c){ return '<fill><patternFill patternType="solid"><fgColor rgb="' + c + '"/></patternFill></fill>'; };
+    /* kitöltés: 0 nincs · 1 kötelező · 2 sárga · 3 fekete · 4 zebra · 5 összesítő · 6 piros · 7 narancs · 8 alcím-sor · 9 zöld */
+    var FILLS = ['<fill><patternFill patternType="none"/></fill>', '<fill><patternFill patternType="gray125"/></fill>', P("FFFBAC01"), P("FF17140F"), P("FFFBF7EE"), P("FFFFEFC2"), P("FFFDECEC"), P("FFFFF4E5"), P("FFF3E9D2"), P("FFE9F7EE")];
+    var BORD = ['<border><left/><right/><top/><bottom/><diagonal/></border>', '<border><left/><right/><top/><bottom style="thin"><color rgb="FFE6E0D2"/></bottom><diagonal/></border>', '<border><left/><right/><top style="medium"><color rgb="FF17140F"/></top><bottom style="medium"><color rgb="FF17140F"/></bottom><diagonal/></border>'];
+    var XF = [], XK = {}, NF = {}, NFL = [];
+    var FIX = { ft:'#,##0" Ft"', date:"yyyy.mm.dd.", pct:'0"%"' };
+    function nf(code){ if(!code) return 0; if(code === "num") return 3; if(NF[code] != null) return NF[code]; var id = 164 + NFL.length; NFL.push('<numFmt numFmtId="' + id + '" formatCode="' + esc(code) + '"/>'); return (NF[code] = id); }
+    function xf(font, fill, bord, num, ha, wrap, ind){ var k = [font, fill, bord, num, ha, wrap, ind].join(","); if(XK[k] != null) return XK[k];
+      XF.push('<xf numFmtId="' + (num || 0) + '" fontId="' + font + '" fillId="' + fill + '" borderId="' + bord + '" xfId="0"' + (num ? ' applyNumberFormat="1"' : '') + ' applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"' + (ha ? ' horizontal="' + ha + '"' : '') + (ind ? ' indent="' + ind + '"' : '') + (wrap ? ' wrapText="1"' : '') + '/></xf>');
+      return (XK[k] = XF.length - 1); }
+    function reset(){ XF.length = 0; NFL.length = 0; var k; for(k in XK) delete XK[k]; for(k in NF) delete NF[k]; xf(0, 0, 0, 0, "", 0, 0); }
+    function sheetXml(sh){
+      var C = sh.cols, n = C.length, HR = 4, rows = sh.rows || [], last = HR + rows.length, out = [];
+      var c = function(r, i, v, s, kind){ var ref = col(i) + r;
+        if(v == null || v === "") return '<c r="' + ref + '" s="' + s + '"/>';
+        if(kind === "f") return '<c r="' + ref + '" s="' + s + '"><f>' + esc(v) + '</f></c>';
+        if(typeof v === "number" && isFinite(v)) return '<c r="' + ref + '" s="' + s + '"><v>' + v + '</v></c>';
+        return '<c r="' + ref + '" s="' + s + '" t="inlineStr"><is><t xml:space="preserve">' + esc(v) + '</t></is></c>'; };
+      var tS = xf(2, 3, 0, 0, "", 0, 0), sS = xf(3, 3, 0, 0, "", 0, 0), s2 = xf(9, 3, 0, 0, "", 0, 0), hS = xf(7, 2, 2, 0, "", 1, 0);
+      var line = function(r, v, s, ht){ var a = [c(r, 0, v, s)]; for(var i = 1; i < n; i++) a.push(c(r, i, "", s)); return '<row r="' + r + '" ht="' + ht + '" customHeight="1">' + a.join("") + '</row>'; };
+      out.push(line(1, sh.title, tS, 30), line(2, sh.sub, sS, 18));
+      out.push(sh.sub2 ? line(3, sh.sub2, s2, 18) : '<row r="3" ht="6" customHeight="1"/>');
+      out.push('<row r="4" ht="30" customHeight="1">' + C.map(function(cl, i){ return c(HR, i, cl.t, hS); }).join("") + '</row>');
+      var zi = 0;
+      rows.forEach(function(rw, j){ var r = HR + 1 + j, K = rw._k, z = K === "sh" ? 8 : K === "r" ? 6 : K === "a" ? 7 : (zi++ % 2 ? 4 : 0); if(K === "sh") zi = 0;
+        out.push('<row r="' + r + '" ht="17" customHeight="1">' + C.map(function(cl, i){ var v = rw[i], k = cl.k || "txt", lastC = i === n - 1, num = 0, ha = cl.al === "r" ? "right" : cl.al === "c" ? "center" : "";
+          if(v && typeof v === "object"){ if(v.v != null && !isNaN(v.v)){ num = nf(v.nf || "0.0"); v = +v.v; } else v = v.t != null ? String(v.t) : ""; }
+          if(!num){ if(k === "ft") num = nf(FIX.ft); else if(k === "pct") num = nf(FIX.pct); else if(k === "date") num = nf(FIX.date); else if(k === "num" || (typeof v === "number" && !Number.isInteger(v))) num = typeof v === "number" && !Number.isInteger(v) ? nf("0.0") : 3; }
+          if(!ha) ha = k === "ft" ? "right" : k === "pct" || k === "date" || k === "num" ? "center" : "";
+          var font = K === "sh" || rw._b || k === "b" ? 1 : 0;
+          if(k === "st") font = rw._st === "ok" ? 4 : rw._st === "bad" ? 5 : rw._st === "wait" ? 6 : font;
+          if(K === "dim") font = 8;
+          if(lastC && (K === "r" || K === "a" || K === "g")) font = K === "r" ? 5 : K === "a" ? 6 : 4;
+          return c(r, i, v, xf(font, z, 1, num, ha, 0, i === 0 && rw._ind ? 2 : 0)); }).join("") + '</row>'); });
+      if(sh.total && rows.length){ var r = last + 1, tl = xf(1, 5, 2, 0, "", 0, 0), T = sh.total;
+        out.push('<row r="' + r + '" ht="20" customHeight="1">' + C.map(function(cl, i){ var R = col(i) + (HR + 1) + ":" + col(i) + last;
+          if(i === 0) return c(r, i, T.label, tl);
+          if(T.cnt === i) return c(r, i, "SUBTOTAL(103," + col(T.cntCol || 0) + (HR + 1) + ":" + col(T.cntCol || 0) + last + ')&" ' + (T.unit || "tétel") + '"', xf(1, 5, 2, 0, "center", 0, 0), "f");
+          if((T.sum || []).indexOf(i) > -1) return c(r, i, "SUBTOTAL(109," + R + ")", xf(1, 5, 2, nf(cl.k === "ft" ? FIX.ft : "num"), cl.k === "ft" ? "right" : "center", 0, 0), "f");
+          if(T.pct && T.pct[0] === i){ var a = col(T.pct[1]) + r, b = col(T.pct[2]) + r; return c(r, i, "IF(" + a + "=0,0,ROUND(" + b + "/" + a + "*100,0))", xf(1, 5, 2, nf(FIX.pct), "center", 0, 0), "f"); }
+          return c(r, i, "", tl); }).join("") + '</row>'); }
+      var ref = "A" + HR + ":" + col(n - 1) + Math.max(last, HR + 1);
+      return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+        + '<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:' + col(n - 1) + (last + 1) + '"/>'
+        + '<sheetViews><sheetView workbookViewId="0" showGridLines="0" zoomScale="110"><pane ySplit="' + HR + '" topLeftCell="A' + (HR + 1) + '" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+        + '<sheetFormatPr defaultRowHeight="15"/><cols>' + C.map(function(cl, i){ return '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + (cl.w || 14) + '" customWidth="1"/>'; }).join("") + '</cols>'
+        + '<sheetData>' + out.join("") + '</sheetData><autoFilter ref="' + ref + '"/>'
+        + '<mergeCells count="3"><mergeCell ref="A1:' + col(n - 1) + '1"/><mergeCell ref="A2:' + col(n - 1) + '2"/><mergeCell ref="A3:' + col(n - 1) + '3"/></mergeCells>'
+        + '<pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="' + (sh.portrait ? "portrait" : "landscape") + '" fitToWidth="1" fitToHeight="0"/>'
+        + '<headerFooter><oddFooter>&amp;L' + esc(sh.name) + '&amp;C&amp;P / &amp;N&amp;RFirstPhone</oddFooter></headerFooter></worksheet>'; }
+    /* oszlopszélesség a tartalomból, ha nincs megadva */
+    function autoW(sh){ sh.cols.forEach(function(cl, i){ if(cl.w) return; var mx = String(cl.t || "").length + 2;
+      (sh.rows || []).slice(0, 400).forEach(function(r){ var v = r[i]; v = v && typeof v === "object" ? (v.t != null ? v.t : v.v) : v; var L = String(v == null ? "" : v).length + (cl.k === "ft" ? 4 : 1); if(L > mx) mx = L; });
+      cl.w = Math.max(8, Math.min(50, Math.round(mx * 1.05))); }); }
+    return function(sheets){
+      reset();
+      var used = {}, sname = function(s){ var b = String(s || "Lap").replace(/[\\\/\?\*\[\]:]/g, " ").trim().slice(0, 31) || "Lap", nm = b, i = 2; while(used[nm.toLowerCase()]) nm = b.slice(0, 27) + " " + i++; used[nm.toLowerCase()] = 1; return nm; };
+      sheets.forEach(function(s){ s._nm = sname(s.name); autoW(s); });
+      var sx = sheets.map(sheetXml);
+      var styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+        + (NFL.length ? '<numFmts count="' + NFL.length + '">' + NFL.join("") + '</numFmts>' : '')
+        + '<fonts count="' + FONTS.length + '">' + FONTS.join("") + '</fonts><fills count="' + FILLS.length + '">' + FILLS.join("") + '</fills><borders count="' + BORD.length + '">' + BORD.join("") + '</borders>'
+        + '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="' + XF.length + '">' + XF.join("") + '</cellXfs>'
+        + '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+      var files = [
+        ["[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+          + sheets.map(function(_, i){ return '<Override PartName="/xl/worksheets/sheet' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join("") + '</Types>'],
+        ["_rels/.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+        ["xl/workbook.xml", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView/></bookViews><sheets>'
+          + sheets.map(function(s, i){ return '<sheet name="' + esc(s._nm) + '" sheetId="' + (i + 1) + '" r:id="rId' + (i + 1) + '"/>'; }).join("") + '</sheets><definedNames>'
+          + sheets.map(function(s, i){ var q = "'" + esc(s._nm.replace(/'/g, "''")) + "'"; return '<definedName name="_xlnm._FilterDatabase" localSheetId="' + i + '" hidden="1">' + q + '!$A$4:$' + col(s.cols.length - 1) + '$' + Math.max(4 + (s.rows || []).length, 5) + '</definedName><definedName name="_xlnm.Print_Titles" localSheetId="' + i + '">' + q + '!$4:$4</definedName>'; }).join("") + '</definedNames></workbook>'],
+        ["xl/_rels/workbook.xml.rels", '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+          + sheets.map(function(_, i){ return '<Relationship Id="rId' + (i + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' + (i + 1) + '.xml"/>'; }).join("")
+          + '<Relationship Id="rId' + (sheets.length + 1) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+        ["xl/styles.xml", styles]
+      ].concat(sx.map(function(x, i){ return ["xl/worksheets/sheet" + (i + 1) + ".xml", x]; }));
+      return zip(files); };
+  })();
+  window.fpXlsx = XL;
+  /* egyszerű táblázat (fejléc + sorok) → FirstPhone Excel; számok magától számként */
+  window.fpXlsxSimple = function(o){ var H = o.head, sh = { name:o.name || "Lap", title:o.title, sub:o.sub || ("Készült: " + new Date().toLocaleString("hu-HU") + "   ·   Az oszlopfejlécen a ▾ nyíllal szűrhetsz."), cols:H.map(function(h, i){ return typeof h === "string" ? { t:h, k:(o.kinds || [])[i] } : h; }), rows:o.rows, total:o.total };
+    return XL([sh]); };
   window.fpKdAdmin = function(el, api){
     if(!el) return; el.classList.add("kda"); el.classList.add("kda2");
     var shops = (api.list() || []).filter(function(x){ return !x.orph && !(window.fpShopHidden && fpShopHidden(x)); }), APL = apprOf(api.cfg());
@@ -74144,10 +74239,31 @@ html.ui-uj.m-app body #mTab button[data-p="kedv"] i::before{-webkit-mask-image:u
         if(okk){ A.edit = ""; api.toast("✓ Javítás elmentve — a tétel ellenőrzöttnek jelölve"); } re(); };
     });
     el.querySelector("#kdaX").onclick = function(){
-      var H = ["Dátum","Bolt","Típus","Termék","Vonalkód","FT/FP szám","IMEI / sorozatszám","Eredeti ár","Kedvezményes ár","Kedvezmény (Ft)","Kedvezmény (%)","Ki kérte","Ki engedélyezte","Megjegyzés","Állapot"];
-      var q2 = function(v){ v = String(v == null ? "" : v); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
-      var lines = [H.join(";")].concat(L0.slice().sort(function(a, b){ return String(a.d).localeCompare(String(b.d)); }).map(function(r){ return [String(r.d).replace(/-/g, "."), api.name(r._x), r.t === "ph" ? "Telefon / fülhallgató" : "Tartozék", r.nm, r.code ? "​" + r.code : "", r.ft || "", r.imei ? "​" + r.imei : "", r.o, r.n, r.o - r.n, pct(r.o, r.n), r.ask, r.giv, r.note || "", [r._bad ? "elrontott (javítva)" : r.fix || r.corr ? "helyes rögzítés (javított)" : "", r.aed ? "admin javította" : "", r.chk ? "ellenőrizve" : r._bad ? "" : "ellenőrzésre vár"].filter(Boolean).join(", ")].map(q2).join(";"); }));
-      var bl = new Blob(["﻿" + lines.join("\r\n")], { type:"text/csv;charset=utf-8" }), a = document.createElement("a"); a.href = URL.createObjectURL(bl); a.download = "FirstPhone_dolgozoi_kedvezmeny_" + dk(new Date()) + ".csv"; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      var xd = function(s){ var p = String(s || "").split("-"); if(p.length !== 3) return s || ""; return Math.round((Date.UTC(+p[0], +p[1] - 1, +p[2]) - Date.UTC(1899, 11, 30)) / 864e5); };
+      var stOf = function(r){ return r._bad ? ["Elrontott (javítva)", "bad"] : r.aed ? ["Admin javította", "ok"] : r.chk ? ["Ellenőrizve", "ok"] : ["Ellenőrzésre vár", "wait"]; };
+      var L = L0.slice().sort(function(a, b){ return String(b.d).localeCompare(String(a.d)) || String(a._s).localeCompare(String(b._s)); });
+      var per = A.m === "all" ? "minden idő" : A.m === "cur" ? "ez a hónap" : A.m === "prev" ? "előző hónap" : "idei év";
+      var flt = [per, A.s ? "bolt: " + api.name((shops.find(function(x){ return x.uid === A.s; }) || {})) : "minden bolt", A.t ? (A.t === "ph" ? "csak telefon / fülhallgató" : "csak tartozék") : "", A.unc ? "csak ellenőrizetlen" : "", A.q ? "keresés: „" + A.q + "”" : ""].filter(Boolean).join(" · ");
+      var sub = "Szűrés: " + flt + "   ·   Készült: " + String(dk(new Date())).replace(/-/g, ".") + ". " + pad(new Date().getHours()) + ":" + pad(new Date().getMinutes()) + "   ·   Az oszlopfejlécen a ▾ nyíllal tovább szűrhetsz.";
+      var items = { name:"Tételek", title:"FirstPhone · Dolgozói kedvezmény — tételek", sub:sub,
+        cols:[{ t:"Dátum", w:12, k:"date" }, { t:"Bolt", w:24, k:"b" }, { t:"Típus", w:13 }, { t:"Termék", w:34 }, { t:"Vonalkód", w:16 }, { t:"FT/FP szám", w:13 }, { t:"IMEI / sorozatszám", w:19 },
+              { t:"Eredeti ár", w:13, k:"ft" }, { t:"Fizetett", w:13, k:"ft" }, { t:"Kedvezmény", w:13, k:"ft" }, { t:"%", w:7, k:"pct" }, { t:"Ki kérte", w:18 }, { t:"Ki engedélyezte", w:18 }, { t:"Állapot", w:19, k:"st" }, { t:"Megjegyzés", w:34 }],
+        rows:L.map(function(r){ var s = stOf(r), x = [xd(r.d), r._s, r.t === "ph" ? "Telefon / fülh." : "Tartozék", r.nm, r.code || "", r.ft || "", r.imei || "", r._bad ? "" : +r.o || 0, r._bad ? "" : +r.n || 0, r._bad ? "" : (r.o - r.n) || 0, r._bad ? "" : pct(r.o, r.n), r.ask || "", r.giv || "", s[0], (r._bad ? "Elrontott rögzítés — nem számít bele. " : "") + (r.note || "")]; x._st = s[1]; return x; }),
+        total:{ label:"Összesen (a szűrt sorok)", sum:[7, 8, 9], cnt:3, cntCol:3, pct:[10, 7, 9] } };
+      var grp = function(keyf){ var g = {}; ok(L).forEach(function(r){ var k = keyf(r); (g[k] = g[k] || []).push(r); }); return g; };
+      var sumR = function(arr, f){ return arr.reduce(function(a, r){ return a + (f(r) || 0); }, 0); };
+      var gs = grp(function(r){ return r._s; }), bs = Object.keys(gs).sort(function(a, b){ return sumR(gs[b], function(r){ return r.o - r.n; }) - sumR(gs[a], function(r){ return r.o - r.n; }); });
+      var stores = { name:"Boltonként", title:"FirstPhone · Dolgozói kedvezmény — boltonként", sub:sub,
+        cols:[{ t:"Bolt", w:22, k:"b" }, { t:"Tételek", w:10, k:"num" }, { t:"Tartozék", w:10, k:"num" }, { t:"Telefon / fülh.", w:13, k:"num" }, { t:"Eredeti ár", w:15, k:"ft" }, { t:"Fizetett", w:15, k:"ft" }, { t:"Kedvezmény", w:15, k:"ft" }, { t:"Arány", w:9, k:"pct" }, { t:"Ellenőrzésre vár", w:15, k:"num" }],
+        rows:bs.map(function(k){ var a = gs[k], o = sumR(a, function(r){ return +r.o; }), d = sumR(a, function(r){ return r.o - r.n; }); return [k, a.length, a.filter(function(r){ return r.t !== "ph"; }).length, a.filter(function(r){ return r.t === "ph"; }).length, o, o - d, d, o ? Math.round(d / o * 100) : 0, a.filter(function(r){ return !r.chk; }).length]; }),
+        total:{ label:"Összesen", sum:[1, 2, 3, 4, 5, 6, 8], pct:[7, 4, 6] } };
+      var ge = grp(function(r){ return (r.ask || "—") + "\u0001" + r._s; }), es = Object.keys(ge).sort(function(a, b){ return sumR(ge[b], function(r){ return r.o - r.n; }) - sumR(ge[a], function(r){ return r.o - r.n; }); });
+      var emps = { name:"Dolgozónként", title:"FirstPhone · Dolgozói kedvezmény — dolgozónként (ki kérte)", sub:sub,
+        cols:[{ t:"Dolgozó", w:24, k:"b" }, { t:"Bolt", w:18 }, { t:"Tételek", w:10, k:"num" }, { t:"Eredeti ár", w:15, k:"ft" }, { t:"Fizetett", w:15, k:"ft" }, { t:"Kedvezmény", w:15, k:"ft" }, { t:"Utolsó vásárlás", w:15, k:"date" }],
+        rows:es.map(function(k){ var a = ge[k], p = k.split("\u0001"), o = sumR(a, function(r){ return +r.o; }), d = sumR(a, function(r){ return r.o - r.n; }); return [p[0], p[1], a.length, o, o - d, d, xd(a.map(function(r){ return r.d; }).sort().pop())]; }),
+        total:{ label:"Összesen", sum:[2, 3, 4, 5] } };
+      var bl = XL([items, stores, emps]), a = document.createElement("a"); a.href = URL.createObjectURL(bl); a.download = "FirstPhone_dolgozoi_kedvezmeny_" + dk(new Date()) + ".xlsx"; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      api.toast("✓ Excel letöltve — " + L.length + " tétel, 3 lap (Tételek · Boltonként · Dolgozónként)");
     };
     el.querySelectorAll("[data-kdel]").forEach(function(b){ b.onclick = async function(ev){ ev.stopPropagation();
       if(!b.classList.contains("arm")){ b.classList.add("arm"); b.textContent = "Biztosan?"; setTimeout(function(){ if(b.isConnected){ b.classList.remove("arm"); b.textContent = "Törlés"; } }, 4000); return; }
