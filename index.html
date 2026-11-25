@@ -25481,7 +25481,7 @@
 <style>html:not(.ui-uj) #pageSwitch .ps-btn[data-page="ma"], html:not(.ui-uj) #pageSwitch .ui-nav-rend{display:none !important;}</style>
 </head>
 <body>
-<script>window.FP_BUILD="20261125-094043";</script>
+<script>window.FP_BUILD="20261125-100442";</script>
 <script>/* ☕ munkaközi szünet: 6 óránál hosszabb műszakban (alap: 60 perc, az admin munkaidő-beállítása szerint) — csak egyszer, összesítve jelenik meg */
 window.fpBrkMin=function(){try{var c=JSON.parse(localStorage.getItem("firstphone_admin_cfg")||"null"),w=c&&c.wt;if(!w||!w.brkV)return 60;var u=window.FP_CLOUD&&FP_CLOUD.user&&FP_CLOUD.user.uid,s=u&&w.st&&w.st[u];if(s&&s.brk!==""&&s.brk!=null)return +s.brk;return +w.brk||0;}catch(e){return 60;}};
 window.fpBrk=function(a,b){function m(x){if(typeof x==="number")return x;var r=/(\d{1,2})[:.](\d{2})/.exec(String(x||""));return r?+r[1]*60+ +r[2]:null;}var s=m(a),e=m(b);if(s==null||e==null||e-s<=360)return 0;return window.fpBrkMin();};
@@ -75718,6 +75718,80 @@ html.fp-demo #fpShopPw .sp-w{padding-top:54px}
     try{ localStorage.setItem("firstphone_welcome_seen", String(Date.now())); }catch(e){}
   };
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", bar); else bar();
+})();
+</script>
+<style id="funMsgCss">
+/* ===== Egyszeri vicces üzenet egy boltnak (Martin, 2026-11-25: Szombathely) — mindkét kinézet ===== */
+#fpFun{position:fixed;inset:0;z-index:2147483000;background:rgba(5,4,3,.72);display:grid;place-items:center;padding:16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#fpFun .fb{position:relative;width:min(440px,100%);background:#1b1712;border:1px solid #3a3226;border-radius:26px;padding:34px 26px 46px;text-align:center;color:#f4efe4;box-shadow:0 30px 80px rgba(0,0,0,.6);overflow:hidden;animation:fpFunPop .7s cubic-bezier(.2,1.4,.4,1) both}
+#fpFun .fb::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,#FBAC01,#f0c766)}
+#fpFun .fe{font-size:64px;line-height:1;display:inline-block;animation:fpFunWig 1.6s ease-in-out .7s infinite;transform-origin:50% 90%}
+#fpFun .ft{margin:14px 0 4px;font-size:12px;letter-spacing:.18em;font-weight:800;color:#FBAC01;text-transform:uppercase;animation:fpFunUp .5s ease .5s both}
+#fpFun h2{margin:0 0 10px;font-size:26px;line-height:1.2;font-weight:800;color:#fff}
+#fpFun h2 b{display:inline-block;white-space:nowrap;font-weight:inherit}
+#fpFun h2 span{display:inline-block;animation:fpFunCh .45s cubic-bezier(.2,1.5,.4,1) both}
+#fpFun p{margin:0 auto 18px;max-width:340px;color:#cfc5b2;font-size:15px;line-height:1.5;animation:fpFunUp .6s ease both}
+#fpFun .fs{font-size:12px;color:#8f8573;margin-bottom:18px;animation:fpFunUp .6s ease both}
+#fpFun .fo{all:unset;box-sizing:border-box;cursor:pointer;display:inline-block;padding:13px 26px;border-radius:99px;font-weight:800;font-size:16px;color:#1a1200;background:linear-gradient(135deg,#FBAC01,#f0c766);box-shadow:0 8px 24px rgba(251,172,1,.3);animation:fpFunUp .5s ease both;transition:transform .15s}
+#fpFun .fo:hover{transform:translateY(-2px) scale(1.03)}
+#fpFun .fc{position:absolute;top:-12px;width:8px;height:14px;border-radius:2px;opacity:0;animation:fpFunFall linear both}
+#fpFun .fr{position:absolute;bottom:8px;left:-40px;font-size:22px;animation:fpFunRun 5s linear 1.2s infinite}
+#fpFun.out{animation:fpFunOut .35s ease forwards}
+#fpFun#fpFun .fo{background:linear-gradient(135deg,#FBAC01,#f0c766) !important;color:#1a1200 !important;border:0 !important;box-shadow:0 8px 24px rgba(251,172,1,.3) !important;min-height:0 !important;width:auto !important}
+#fpFun#fpFun .fb{background:#1b1712 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important}
+@keyframes fpFunPop{0%{transform:scale(.6) rotate(-4deg);opacity:0}100%{transform:none;opacity:1}}
+@keyframes fpFunWig{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg) scale(1.08)}30%{transform:rotate(12deg)}45%{transform:rotate(-8deg)}60%{transform:rotate(0) scale(1)}}
+@keyframes fpFunCh{from{opacity:0;transform:translateY(14px) rotate(6deg)}to{opacity:1;transform:none}}
+@keyframes fpFunUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fpFunFall{0%{opacity:.9;transform:none}100%{transform:translateY(560px) rotate(720deg);opacity:0}}
+@keyframes fpFunRun{to{left:110%}}
+@keyframes fpFunOut{to{opacity:0}}
+@media (prefers-reduced-motion:reduce){html:not(.fp-anim-full) #fpFun .fe,html:not(.fp-anim-full) #fpFun .fr,html:not(.fp-anim-full) #fpFun .fc{animation:none;display:none}html:not(.fp-anim-full) #fpFun .fe{display:inline-block}}
+</style>
+<script id="funMsgJs">
+/* Egyszeri vicces felugró üzenet: csak a megadott boltnál (settings.location), gépenként egyszer, a határidőig. Próba: fpFunMsg(1) */
+(function(){
+  var M = { id:"szh1", shop:/szombathely/i, until:"2026-12-02", e:"📱", h:"Szia, Szombathely!",
+    p:"A rendszer megállapította, hogy a mai nap 87%-ban telefonozásból és a csoportba írásból fog állni. A maradék 13% vevő. Nyugodtan folytassátok — minket is nagyon érdekelnek a pletykák! 👀",
+    s:"— szeretettel: Admin 💛", b:"Lebuktunk 🙈", r:"💬" };
+  var KEY = "firstphone_fun_" + M.id;
+  function loc(){ try{ var st = JSON.parse(localStorage.getItem("firstphone_beosztas_tervezo_v2") || "null"); return (st && st.settings && st.settings.location) || ""; }catch(e){ return ""; } }
+  function vis(id){ var x = document.getElementById(id); if(!x) return false; var s = getComputedStyle(x); return s.display !== "none" && s.visibility !== "hidden" && +s.opacity > 0.05 && x.offsetParent !== null; }
+  function ready(){
+    if(document.getElementById("fpFun")) return false;
+    if(vis("fpBoot") || vis("fcLogin")) return false;
+    var R = document.documentElement.classList; if(R.contains("fp-setup") || R.contains("fp-setwait")) return false;
+    var C = window.FP_CLOUD || {}; if(C.admin || window.FP_EMBED) return false;
+    if(document.querySelector("#fcAdmin:not([hidden])") && vis("fcAdmin")) return false;
+    if(document.querySelector(".hsd-on, #shiftModal.show, .ui-newsback")) return false;
+    return true; }
+  function show(force){
+    var el = document.createElement("div"); el.id = "fpFun"; el.setAttribute("role", "dialog");
+    var k = 0, h = M.h.split(" ").map(function(w){ return "<b>" + Array.from(w).map(function(c){ return '<span style="animation-delay:' + (.55 + (k++) * .035).toFixed(3) + 's">' + c + "</span>"; }).join("") + "</b>"; }).join(" ");
+    var d = .6 + M.h.length * .035;
+    el.innerHTML = '<div class="fb"><div class="fe">' + M.e + '</div><div class="ft">Üzenet a FirstPhone csapattól</div><h2>' + h + '</h2><p style="animation-delay:' + (d + .1) + 's">' + M.p + '</p><div class="fs" style="animation-delay:' + (d + .4) + 's">' + M.s + '</div><button type="button" class="fo" style="animation-delay:' + (d + .6) + 's">' + M.b + '</button><div class="fr">' + M.r + '</div></div>';
+    var box = el.firstChild, CL = ["#FBAC01", "#f0c766", "#ffffff", "#ff8a3d", "#3ddc84"];
+    for(var i = 0; i < 26; i++){ var s = document.createElement("i"); s.className = "fc"; s.style.left = (Math.random() * 100) + "%"; s.style.background = CL[i % CL.length]; s.style.animationDuration = (1.6 + Math.random() * 1.6) + "s"; s.style.animationDelay = (.2 + Math.random() * .8) + "s"; box.appendChild(s); }
+    document.body.appendChild(el);
+    if(!force){ try{ localStorage.setItem(KEY, String(Date.now())); }catch(e){} }
+    try{ window.fpSound && window.fpSound("msg", .9); }catch(e){}
+    setTimeout(function(){ try{ window.fpSound && window.fpSound("done", .6); }catch(e){} }, Math.round((d + .6) * 1000));
+    var close = function(){ el.classList.add("out"); setTimeout(function(){ el.remove(); }, 380); };
+    el.querySelector(".fo").onclick = close;
+    el.addEventListener("click", function(ev){ if(ev.target === el) close(); });
+  }
+  window.fpFunMsg = function(force){ show(!!force); };
+  var n = 0, t = setInterval(function(){
+    if(++n > 400){ clearInterval(t); return; }
+    try{
+      if(localStorage.getItem(KEY)){ clearInterval(t); return; }
+      var now = new Date(), ymd = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+      if(ymd > M.until){ clearInterval(t); return; }
+      if(!M.shop.test(loc())) return;
+      if(n < 3 || !ready()) return;
+      clearInterval(t); show(false);
+    }catch(e){}
+  }, 1500);
 })();
 </script>
 </body>
